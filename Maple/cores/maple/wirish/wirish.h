@@ -34,6 +34,16 @@
 #ifndef _WIRISH_WIRISH_H_
 #define _WIRISH_WIRISH_H_
 
+/* 
+ * 20141030. Roger Clark
+   Added the block of includes up to avr/interrupt so that stdlib functions like memcpy would be included and could be used.
+ */
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <avr/pgmspace.h>
+#include <avr/interrupt.h>
+
 #include <libmaple/stm32.h>
 
 #include <wirish/boards.h>
@@ -55,6 +65,8 @@
 #include <libmaple/libmaple.h>
 
 #include <stdint.h>
+
+
 
 /* Wiring macros and bit defines */
 
