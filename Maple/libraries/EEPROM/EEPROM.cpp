@@ -1,5 +1,5 @@
-#include "wirish.h"
 #include "EEPROM.h"
+// See http://www.st.com/web/en/resource/technical/document/application_note/CD00165693.pdf
 
 /**
   * @brief  Check page for blank

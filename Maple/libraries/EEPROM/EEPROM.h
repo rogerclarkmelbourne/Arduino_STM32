@@ -1,8 +1,12 @@
 #ifndef __EEPROM_H
 #define __EEPROM_H
 
-#include "wirish.h"
+#include <wirish/wirish.h>
 #include "flash_stm32.h"
+
+// HACK ALERT. This definition may not match your processor
+// To Do. Work out correct value for EEPROM_PAGE_SIZE on the STM32F103CT6 etc 
+#define MCU_STM32F103RB
 
 #ifndef EEPROM_PAGE_SIZE
 	#if defined (MCU_STM32F103RB)
