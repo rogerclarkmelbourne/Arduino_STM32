@@ -123,7 +123,7 @@ maple_STM32.upload.auto_reset=true
 maple_STM32.build.mcu=cortex-m3
 maple_STM32.build.f_cpu=72000000L
 maple_STM32.build.core=maple
-maple_STM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY  -march=armv7-m -DSerial=Serial1
+maple_STM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY  -march=armv7-m 
 maple_STM32.build.ldscript=ld/jtag.ld
 maple_STM32.build.variant=maple_mini
 maple_STM32.build.variant_system_lib=libmaple.a

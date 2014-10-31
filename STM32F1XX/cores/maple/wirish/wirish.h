@@ -39,6 +39,8 @@
    Added the block of includes up to avr/interrupt so that stdlib functions like memcpy would be included and could be used.
  */
 #include <stdlib.h>
+#include <stdio.h>
+
 #include <string.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>

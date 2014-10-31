@@ -42,25 +42,45 @@
                         BOARD_USART##n##_TX_PIN,                   \
                         BOARD_USART##n##_RX_PIN)
 
-#if BOARD_HAVE_USART1
-DEFINE_HWSERIAL(Serial1, 1);
+#ifdef BOOTLOADER_maple 
+	#if BOARD_HAVE_USART1
+	DEFINE_HWSERIAL(Serial1, 1);
+	#endif
+	#if BOARD_HAVE_USART2
+	DEFINE_HWSERIAL(Serial2, 2);
+	#endif
+	#if BOARD_HAVE_USART3
+	DEFINE_HWSERIAL(Serial3, 3);
+	#endif
+	#if BOARD_HAVE_UART4
+	DEFINE_HWSERIAL(Serial4, 4);
+	#endif
+	#if BOARD_HAVE_UART5
+	DEFINE_HWSERIAL(Serial5, 5);
+	#endif
+	#if BOARD_HAVE_USART6
+	DEFINE_HWSERIAL(Serial6, 6);
+	#endif
+#else
+	#if BOARD_HAVE_USART1
+	DEFINE_HWSERIAL(Serial, 1);
+	#endif
+	#if BOARD_HAVE_USART2
+	DEFINE_HWSERIAL(Serial1, 2);
+	#endif
+	#if BOARD_HAVE_USART3
+	DEFINE_HWSERIAL(Serial2, 3);
+	#endif
+	#if BOARD_HAVE_UART4
+	DEFINE_HWSERIAL(Serial3, 4);
+	#endif
+	#if BOARD_HAVE_UART5
+	DEFINE_HWSERIAL(Serial4, 5);
+	#endif
+	#if BOARD_HAVE_USART6
+	DEFINE_HWSERIAL(Serial5, 6);
+	#endif
 #endif
-#if BOARD_HAVE_USART2
-DEFINE_HWSERIAL(Serial2, 2);
-#endif
-#if BOARD_HAVE_USART3
-DEFINE_HWSERIAL(Serial3, 3);
-#endif
-#if BOARD_HAVE_UART4
-DEFINE_HWSERIAL(Serial4, 4);
-#endif
-#if BOARD_HAVE_UART5
-DEFINE_HWSERIAL(Serial5, 5);
-#endif
-#if BOARD_HAVE_USART6
-DEFINE_HWSERIAL(Serial6, 6);
-#endif
-
 HardwareSerial::HardwareSerial(usart_dev *usart_device,
                                uint8 tx_pin,
                                uint8 rx_pin) {

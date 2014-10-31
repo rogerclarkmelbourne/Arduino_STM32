@@ -166,6 +166,25 @@ void Print::println(double n, int digits) {
     println();
 }
 
+#ifdef SUPPORTS_PRINTF
+#include <stdio.h>
+#include <stdarg.h>
+// TWork in progress to support printf.
+// Need to implement stream FILE to write individual chars to chosen serial port
+int Print::printf (__const char *__restrict __format, ...)
+ {
+FILE *__restrict __stream;
+     int ret_status = 0;
+
+
+     va_list args;
+     va_start(args,__format);
+     ret_status = vfprintf(__stream, __format, args);
+     va_end(args);
+     return ret_status;
+ }
+ #endif
+
 /*
  * Private methods
  */

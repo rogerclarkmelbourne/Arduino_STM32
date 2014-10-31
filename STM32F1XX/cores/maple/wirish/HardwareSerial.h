@@ -80,23 +80,44 @@ private:
     uint8 rx_pin;
 };
 
-#if BOARD_HAVE_USART1
-extern HardwareSerial Serial1;
-#endif
-#if BOARD_HAVE_USART2
-extern HardwareSerial Serial2;
-#endif
-#if BOARD_HAVE_USART3
-extern HardwareSerial Serial3;
-#endif
-#if BOARD_HAVE_UART4
-extern HardwareSerial Serial4;
-#endif
-#if BOARD_HAVE_UART5
-extern HardwareSerial Serial5;
-#endif
-#if BOARD_HAVE_USART6
-extern HardwareSerial Serial6;
+#ifdef BOOTLOADER_maple 
+	#if BOARD_HAVE_USART1
+	extern HardwareSerial Serial1;
+	#endif
+	#if BOARD_HAVE_USART2
+	extern HardwareSerial Serial2;
+	#endif
+	#if BOARD_HAVE_USART3
+	extern HardwareSerial Serial3;
+	#endif
+	#if BOARD_HAVE_UART4
+	extern HardwareSerial Serial4;
+	#endif
+	#if BOARD_HAVE_UART5
+	extern HardwareSerial Serial5;
+	#endif
+	#if BOARD_HAVE_USART6
+	extern HardwareSerial Serial6;
+	#endif
+#else
+	#if BOARD_HAVE_USART1
+	extern HardwareSerial Serial;
+	#endif
+	#if BOARD_HAVE_USART2
+	extern HardwareSerial Serial1;
+	#endif
+	#if BOARD_HAVE_USART3
+	extern HardwareSerial Serial2;
+	#endif
+	#if BOARD_HAVE_UART4
+	extern HardwareSerial Serial3;
+	#endif
+	#if BOARD_HAVE_UART5
+	extern HardwareSerial Serial4;
+	#endif
+	#if BOARD_HAVE_USART6
+	extern HardwareSerial Serial5;
+	#endif
 #endif
 
 #endif

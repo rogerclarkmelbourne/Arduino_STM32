@@ -59,6 +59,10 @@ public:
     void println(long long, int=DEC);
     void println(unsigned long long, int=DEC);
     void println(double, int=2);
+#ifdef SUPPORTS_PRINTF
+// Roger Clark. Work in progress to add printf support
+	int printf(const char * format, ...);
+#endif
 private:
     void printNumber(unsigned long long, uint8);
     void printFloat(double, uint8);
