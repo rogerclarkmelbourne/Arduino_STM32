@@ -41,7 +41,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #include <string.h>
+#include <wirish/WString.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
@@ -58,6 +60,7 @@
 #if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
 #include <wirish/HardwareSPI.h>
 #endif
+
 #include <wirish/HardwareSerial.h>
 #include <wirish/HardwareTimer.h>
 #include <wirish/usb_serial.h>

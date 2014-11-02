@@ -63,6 +63,11 @@ void Print::print(uint8 b, int base) {
     print((uint64)b, base);
 }
 
+void Print::print(const String &s)
+{
+  return write(s.c_str(), s.length());
+}
+
 void Print::print(char c) {
     write(c);
 }
@@ -114,6 +119,17 @@ void Print::print(double n, int digits) {
 void Print::println(void) {
     print('\r');
     print('\n');
+}
+
+void Print::println(const String &s)
+{
+/* SAM version
+  size_t n = print(s);
+  n += println();
+  return n;
+  */
+  print(s);
+  println();
 }
 
 void Print::println(char c) {

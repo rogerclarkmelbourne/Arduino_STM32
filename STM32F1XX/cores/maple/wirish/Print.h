@@ -24,6 +24,7 @@
 #define _WIRISH_PRINT_H_
 
 #include <libmaple/libmaple_types.h>
+#include "WString.h"
 
 enum {
     BYTE = 0,
@@ -38,6 +39,8 @@ public:
     virtual void write(uint8 ch) = 0;
     virtual void write(const char *str);
     virtual void write(const void *buf, uint32 len);
+	
+	void print(const String &);
     void print(char);
     void print(const char[]);
     void print(uint8, int=DEC);
@@ -49,8 +52,9 @@ public:
     void print(unsigned long long, int=DEC);
     void print(double, int=2);
     void println(void);
-    void println(char);
-    void println(const char[]);
+	void println(const String &s);
+	void println(char);
+	void println(const char[]);
     void println(uint8, int=DEC);
     void println(int, int=DEC);
     void println(unsigned int, int=DEC);
