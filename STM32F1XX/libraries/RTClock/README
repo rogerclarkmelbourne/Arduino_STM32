@@ -1,0 +1,19 @@
+Real Time Clock implementation for the STM32F1xx family of microcontrollers. 
+
+It has been tested in: 
+
+- Maple
+- Maple Mini
+- Olimexino. 
+
+RTClockTest.pde is an example to use all the features in the library. 
+
+Instructions: 
+
+- Copy the folder to the MapleIDE\libraries folder. You may have to create a new folder named libraries
+
+- Copy the files in the New RCC folder and replace the same files in your libmaple installation with them. 
+
+- Open the example PDE
+
+- Compile, Download and Test. 
