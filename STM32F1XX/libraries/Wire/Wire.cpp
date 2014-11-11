@@ -36,6 +36,10 @@
  * Code was derived from the original Wire for maple code by leaflabs and the
  * modifications by gke and ala42.
  */
+ /*
+  * Updated by Roger Clark. 20141111. Fixed issue when process() returned because of missing ACK (often caused by invalid device address being used), caused SCL to be left
+  * LOW so that in the next call to process() , the first clock pulse was not sent, because SCL was LOW when it should have been high.
+  */
 
 #include "Wire.h"
 
@@ -57,7 +61,7 @@ void TwoWire::set_scl(bool state) {
 }
 
 void TwoWire::set_sda(bool state) {
-    I2C_DELAY(this->i2c_delay);
+	I2C_DELAY(this->i2c_delay);
     digitalWrite(this->sda_pin, state);
 }
 
@@ -127,16 +131,21 @@ uint8 TwoWire::process() {
     i2c_start();
     // shift out the address we're transmitting to
     i2c_shift_out(sla_addr);
-    if (!i2c_get_ack()) {
+    if (!i2c_get_ack()) 
+	{
+		set_scl(HIGH);// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
         return ENACKADDR;
     }
     // Recieving
     if (itc_msg.flags == I2C_MSG_READ) {
         while (itc_msg.xferred < itc_msg.length) {
             itc_msg.data[itc_msg.xferred++] = i2c_shift_in();
-            if (itc_msg.xferred < itc_msg.length) {
+            if (itc_msg.xferred < itc_msg.length) 
+			{
                 i2c_send_ack();
-            } else {
+            } 
+			else 
+			{
                 i2c_send_nack();
             }
         }
@@ -145,7 +154,9 @@ uint8 TwoWire::process() {
     else {
         for (uint8 i = 0; i < itc_msg.length; i++) {
             i2c_shift_out(itc_msg.data[i]);
-            if (!i2c_get_ack()) {
+            if (!i2c_get_ack()) 
+			{
+				set_scl(HIGH);// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
                 return ENACKTRNS;
             }
             itc_msg.xferred++;
@@ -180,4 +191,4 @@ TwoWire::~TwoWire() {
 
 // Declare the instance that the users of the library can use
 //TwoWire Wire(SCL, SDA, SOFT_STANDARD);
-TwoWire Wire(PB7, PB6, SOFT_FAST);
+TwoWire Wire(PB6, PB7, SOFT_FAST);

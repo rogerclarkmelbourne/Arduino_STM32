@@ -60,13 +60,15 @@ void WireBase::beginTransmission(int slave_address) {
 }
 
 uint8 WireBase::endTransmission(void) {
-    if (tx_buf_overflow) {
+    uint8 retVal;
+	
+	if (tx_buf_overflow) {
         return EDATA;
     }
-    process();
+    retVal=process();// Changed so that the return value from process is returned by this function see also the return line below
     tx_buf_idx = 0;
     tx_buf_overflow = false;
-    return SUCCESS;
+    return retVal;//SUCCESS;
 }
 
 //TODO: Add the ability to queue messages (adding a boolean to end of function

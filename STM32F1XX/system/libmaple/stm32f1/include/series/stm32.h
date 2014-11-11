@@ -28,6 +28,10 @@
  * @file libmaple/stm32f1/include/series/stm32.h
  * @brief STM32F1 chip- and series-specific definitions.
  */
+ /*
+  * Modified by Roger Clark. 20141111. Wrapped #define STM32_MEDIUM_DENSITY in #ifndef 
+  * to prevent redefinition warnings as SSTM32_MEDIUM_DENSITY is defined in boards.txt as a compilor define.
+  */
 
 #ifndef _LIBMAPLE_STM32F1_H_
 #define _LIBMAPLE_STM32F1_H_
@@ -68,7 +72,9 @@ extern "C" {
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_NR_GPIO_PORTS          4
 #   define STM32_SRAM_END               ((void*)0x20005000)
+#ifndef STM32_MEDIUM_DENSITY
 #   define STM32_MEDIUM_DENSITY
+#endif
 
 #elif defined(MCU_STM32F103ZE)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
@@ -83,13 +89,17 @@ extern "C" {
      * so we'll live with this for now. */
 #   define STM32_NR_GPIO_PORTS          3
 #   define STM32_SRAM_END               ((void*)0x20005000)
+#ifndef STM32_MEDIUM_DENSITY
 #   define STM32_MEDIUM_DENSITY
+#endif
 
 #elif defined(MCU_STM32F103RE)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_NR_GPIO_PORTS          4
 #   define STM32_SRAM_END               ((void*)0x20010000)
-#   define STM32_HIGH_DENSITY
+#ifndef STM32_MEDIUM_DENSITY
+#   define STM32_MEDIUM_DENSITY
+#endif
 
 #elif defined(MCU_STM32F100RB)
 #   define STM32_F1_LINE                STM32_F1_LINE_VALUE
@@ -103,7 +113,9 @@ extern "C" {
 #   define STM32_SRAM_END               ((void*)0x20005000)
 #   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#ifndef STM32_MEDIUM_DENSITY
 #   define STM32_MEDIUM_DENSITY
+#endif
 
 #else
 #warning "Unsupported or unspecified STM32F1 MCU."
