@@ -30,7 +30,7 @@
 #include <libmaple/libmaple_types.h>
 #include <libmaple/timer.h>
 
-#include <wirish/wirish_types.h>
+#include <wirish_types.h>
 
 /*
  * Note on Arduino compatibility:

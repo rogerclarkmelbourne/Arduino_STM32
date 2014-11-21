@@ -27,7 +27,7 @@
 #ifndef _WIRISH_WPROGRAM_H_
 #define _WIRISH_WPROGRAM_H_
 
-#include <wirish/wirish.h>
+#include "wirish.h"
 
 void setup();
 void loop();

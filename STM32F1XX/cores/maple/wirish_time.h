@@ -35,7 +35,7 @@
 #include <libmaple/libmaple_types.h>
 #include <libmaple/systick.h>
 
-#include <wirish/boards.h>
+#include <boards.h>
 
 /**
  * Returns time (in milliseconds) since the beginning of program

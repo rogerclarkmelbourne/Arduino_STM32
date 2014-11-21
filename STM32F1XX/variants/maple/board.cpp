@@ -32,7 +32,7 @@
 
 #include <board/board.h>         // For this board's header file
 
-#include <wirish/wirish_types.h> // For stm32_pin_info and its contents
+#include <wirish_types.h> // For stm32_pin_info and its contents
                                  // (these go into PIN_MAP).
 
 #include "boards_private.h"      // For PMAP_ROW(), which makes

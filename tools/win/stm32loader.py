@@ -493,7 +493,7 @@ if __name__ == "__main__":
             raise Exception('Unreasonable bootloader version %d' % bootversion)
 
         chip_id = cmd.cmdGetID()
-        assert len(chip_id) == 2, "Unreasonable chip id: %s" % repr(chip_id)
+#assert len(chip_id) == 2, "Unreasonable chip id: %s" % repr(chip_id)
         chip_id_num = (ord(chip_id[0]) << 8) | ord(chip_id[1])
         chip_id_str = CHIP_ID_STRS.get(chip_id_num, None)
 

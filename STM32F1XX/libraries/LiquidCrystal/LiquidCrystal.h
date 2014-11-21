@@ -2,8 +2,8 @@
 #define LiquidCrystal_h
 
 //#include <inttypes.h>
-#include <wirish/wirish.h>
-#include <wirish/Print.h>
+#include <wirish.h>
+#include <Print.h>
 
 // commands
 #define LCD_CLEARDISPLAY 0x01

@@ -43,33 +43,39 @@
 
 
 #include <string.h>
-#include <wirish/WString.h>
+#include <WString.h>
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
 #include <libmaple/stm32.h>
 
-#include <wirish/boards.h>
-#include <wirish/io.h>
-#include <wirish/bit_constants.h>
-#include <wirish/pwm.h>
-#include <wirish/ext_interrupts.h>
-#include <wirish/wirish_debug.h>
-#include <wirish/wirish_math.h>
-#include <wirish/wirish_time.h>
+#include <boards.h>
+#include <io.h>
+#include <bit_constants.h>
+#include <pwm.h>
+#include <ext_interrupts.h>
+#include <wirish_debug.h>
+#include <wirish_math.h>
+#include <wirish_time.h>
+
 #if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
-#include <wirish/HardwareSPI.h>
+//#include <HardwareSPI.h>
 #endif
 
-#include <wirish/HardwareSerial.h>
-#include <wirish/HardwareTimer.h>
-#include <wirish/usb_serial.h>
-#include <wirish/wirish_types.h>
+#include <HardwareSerial.h>
+#include <HardwareTimer.h>
+#include <usb_serial.h>
+#include <wirish_types.h>
 
 #include <libmaple/libmaple.h>
 
 #include <stdint.h>
 
+#warning these are just here to get SPI to compile they need to be changed and moved!
+#define SS (1)
+#define MOSI 2
+#define MISO 3
+#define SCK 4
 
 
 /* Wiring macros and bit defines */

@@ -62,7 +62,8 @@ extern "C"{
  *
  *   See that function's Doxygen for more restrictions.
  */
-#include <series/flash.h>
+ /* Roger clark. Replaced with line below #include <series/flash.h>*/
+#include "stm32f1/include/series/flash.h"
 
 #ifdef __DOXYGEN__
 /** Flash register map base pointer. */

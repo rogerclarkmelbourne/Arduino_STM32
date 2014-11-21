@@ -35,8 +35,8 @@
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
-#include <wirish/wirish_debug.h>
-#include <wirish/wirish_types.h>
+#include <wirish_debug.h>
+#include <wirish_types.h>
 
 /* Since we want the Serial Wire/JTAG pins as GPIOs, disable both SW
  * and JTAG debug support, unless configured otherwise. */

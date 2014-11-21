@@ -30,7 +30,7 @@
  * @brief Wirish serial port implementation.
  */
 
-#include <wirish/HardwareSerial.h>
+#include "HardwareSerial.h"
 
 #include <libmaple/libmaple.h>
 #include <libmaple/gpio.h>
@@ -148,8 +148,10 @@ uint32 HardwareSerial::available(void) {
     return usart_data_available(this->usart_device);
 }
 
-void HardwareSerial::write(unsigned char ch) {
+size_t HardwareSerial::write(unsigned char ch) {
+
     usart_putc(this->usart_device, ch);
+	return 1;
 }
 
 void HardwareSerial::flush(void) {

@@ -33,7 +33,7 @@
 #define _WIRISH_IO_H_
 
 #include <libmaple/libmaple_types.h>
-#include <wirish/boards.h>
+#include <boards.h>
 
 /**
  * Specifies a GPIO pin behavior.

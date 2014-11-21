@@ -29,7 +29,7 @@
  * @brief High level debug port configuration
  */
 
-#include <wirish/wirish_debug.h>
+#include <wirish_debug.h>
 #include <libmaple/gpio.h>
 
 void disableDebugPorts(void) {

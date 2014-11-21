@@ -24,7 +24,7 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include <wirish/wirish.h>
+#include "wirish.h"
 
 void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 value) {
     digitalWrite(clockPin, LOW);

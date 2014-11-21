@@ -30,12 +30,12 @@
  * @brief Wiring-like interface for external interrupts
  */
 
-#include <wirish/ext_interrupts.h>
+#include "ext_interrupts.h"
 
 #include <libmaple/gpio.h>
 #include <libmaple/exti.h>
 
-#include <wirish/boards.h>
+#include "boards.h"
 
 static inline exti_trigger_mode exti_out_mode(ExtIntTriggerMode mode);
 

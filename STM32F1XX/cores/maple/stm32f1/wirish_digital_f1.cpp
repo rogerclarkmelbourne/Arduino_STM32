@@ -29,12 +29,12 @@
  * STM32F1 implementations for basic GPIO functionality.
  */
 
-#include <wirish/io.h>
+#include <io.h>
 
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
-#include <wirish/boards.h>
+#include <boards.h>
 
 void pinMode(uint8 pin, WiringPinMode mode) {
     gpio_pin_mode outputMode;

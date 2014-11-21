@@ -29,13 +29,13 @@
  * Arduino-compatible digital I/O implementation.
  */
 
-#include <wirish/io.h>
+#include "io.h"
 
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
-#include <wirish/wirish_time.h>
-#include <wirish/boards.h>
+#include "wirish_time.h"
+#include "boards.h"
 
 uint32 digitalRead(uint8 pin) {
     if (pin >= BOARD_NR_GPIO_PINS) {

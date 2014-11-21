@@ -1,7 +1,7 @@
 #ifndef __EEPROM_H
 #define __EEPROM_H
 
-#include <wirish/wirish.h>
+#include <wirish.h>
 #include "flash_stm32.h"
 
 // HACK ALERT. This definition may not match your processor

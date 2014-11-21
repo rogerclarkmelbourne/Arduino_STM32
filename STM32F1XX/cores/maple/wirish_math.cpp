@@ -21,8 +21,8 @@
  * USA
  */
 
-#include <stdlib.h>
-#include <wirish/wirish_math.h>
+#include "stdlib.h"
+#include "wirish_math.h"
 
 void randomSeed(unsigned int seed) {
     if (seed != 0) {

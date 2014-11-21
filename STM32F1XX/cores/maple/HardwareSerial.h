@@ -35,9 +35,9 @@
 
 #include <libmaple/libmaple_types.h>
 
-#include <wirish/Print.h>
-#include <wirish/boards.h>
-
+#include "Print.h"
+#include "boards.h"
+#include "stream.h"
 /*
  * IMPORTANT:
  *
@@ -64,12 +64,14 @@ public:
     uint32 available(void);
     uint8 read(void);
     void flush(void);
-    virtual void write(unsigned char);
+    virtual size_t  write(unsigned char);
     using Print::write;
 
     /* Pin accessors */
     int txPin(void) { return this->tx_pin; }
     int rxPin(void) { return this->rx_pin; }
+	
+	operator bool() { return true; }
 
     /* Escape hatch into libmaple */
     /* FIXME [0.0.13] documentation */

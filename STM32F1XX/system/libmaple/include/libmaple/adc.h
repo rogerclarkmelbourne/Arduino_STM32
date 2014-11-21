@@ -102,7 +102,10 @@ typedef struct adc_dev {
  *   2, 4, 6, or 8) must provide the same tokens as enumerators, for
  *   portability.
  */
-#include <series/adc.h>
+ 
+ /* Roger clark. Replaced with line below #include <series/adc.h>*/
+#include "stm32f1/include/series/adc.h"
+
 
 /*
  * Register bit definitions

@@ -41,7 +41,7 @@
 #ifndef _WIREBASE_H_
 #define _WIREBASE_H_
 
-#include <wirish/wirish.h>
+#include "wirish.h"
 #include <libmaple/i2c.h>
 
 #define WIRE_BUFSIZ 32

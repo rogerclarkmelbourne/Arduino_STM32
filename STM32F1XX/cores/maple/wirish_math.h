@@ -90,6 +90,23 @@ static inline long map(long value, long fromStart, long fromEnd,
 #define DEG_TO_RAD  0.017453292519943295769236907684886
 #define RAD_TO_DEG 57.295779513082320876798154814105
 
+
+/*
+ * Roger Clark 20141113
+ *
+ * Added BitOrder definition from SAM wiring_constants.h, as its needed for SPI
+ * as Maple doesn't have a wiring_constants file (though it probably should have in the long term to make it more compatible with the Arduino 1.0 + API
+ * also added definition for EULER and SERIAL and DISPLAY, also from the same SAM header
+ */
+ 
+#define EULER 2.718281828459045235360287471352
+#define SERIAL  0x0
+#define DISPLAY 0x1 
+enum BitOrder {
+	LSBFIRST = 0,
+	MSBFIRST = 1
+};
+
 #define min(a,b)                ((a)<(b)?(a):(b))
 #define max(a,b)                ((a)>(b)?(a):(b))
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))

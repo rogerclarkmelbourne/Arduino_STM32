@@ -30,9 +30,9 @@
  * @brief Wiring-style analogRead() implementation.
  */
 
-#include <wirish/io.h>
+#include "io.h"
 #include <libmaple/adc.h>
-#include <wirish/boards.h>
+#include "boards.h"
 
 /* Unlike Wiring and Arduino, this assumes that the pin's mode is set
  * to INPUT_ANALOG. That's faster, but it does require some extra work

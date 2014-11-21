@@ -33,13 +33,17 @@
 
 /* TODO [0.1.0] Remove deprecated methods. */
 
+
+
+#ifndef _SPI_H_INCLUDED
+#define _SPI_H_INCLUDED
+
 #include <libmaple/libmaple_types.h>
 #include <libmaple/spi.h>
 
-#include <wirish/boards.h>
-
-#ifndef _WIRISH_HARDWARESPI_H_
-#define _WIRISH_HARDWARESPI_H_
+#include <boards.h>
+#include <stdint.h>
+//#include <wirish_math.h>
 
 /**
  * @brief Defines the possible SPI communication speeds.
@@ -57,18 +61,141 @@ typedef enum SPIFrequency {
 
 #define MAX_SPI_FREQS 8
 
+
+#define SPI_CLOCK_DIV4 0x00
+#define SPI_CLOCK_DIV16 0x01
+#define SPI_CLOCK_DIV64 0x02
+#define SPI_CLOCK_DIV128 0x03
+#define SPI_CLOCK_DIV2 0x04
+#define SPI_CLOCK_DIV8 0x05
+#define SPI_CLOCK_DIV32 0x06
+
+#define SPI_MODE0 0x00
+#define SPI_MODE1 0x04
+#define SPI_MODE2 0x08
+#define SPI_MODE3 0x0C
+
+#define SPI_MODE_MASK 0x0C  // CPOL = bit 3, CPHA = bit 2 on SPCR
+#define SPI_CLOCK_MASK 0x03  // SPR1 = bit 1, SPR0 = bit 0 on SPCR
+#define SPI_2XCLOCK_MASK 0x01  // SPI2X = bit 0 on SPSR
+
+// define SPI_AVR_EIMSK for AVR boards with external interrupt pins
+#if defined(EIMSK)
+  #define SPI_AVR_EIMSK  EIMSK
+#elif defined(GICR)
+  #define SPI_AVR_EIMSK  GICR
+#elif defined(GIMSK)
+  #define SPI_AVR_EIMSK  GIMSK
+#endif
+
+
+#ifndef STM32_LSBFIRST
+#define STM32_LSBFIRST 0
+#endif
+#ifndef STM32_MSBFIRST
+#define STM32_MSBFIRST 1
+#endif
+
+#define BOARD_SPI_DEFAULT_SS PC14
+
+class SPISettings {
+public:
+  SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
+    if (__builtin_constant_p(clock)) {
+      init_AlwaysInline(clock, bitOrder, dataMode);
+    } else {
+      init_MightInline(clock, bitOrder, dataMode);
+    }
+  }
+  SPISettings() {
+    init_AlwaysInline(4000000, STM32_MSBFIRST, SPI_MODE0);
+  }
+private:
+  void init_MightInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
+    init_AlwaysInline(clock, bitOrder, dataMode);
+  }
+  void init_AlwaysInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode)
+    __attribute__((__always_inline__)) {
+    // Clock settings are defined as follows. Note that this shows SPI2X
+    // inverted, so the bits form increasing numbers. Also note that
+    // fosc/64 appears twice
+    // SPR1 SPR0 ~SPI2X Freq
+    //   0    0     0   fosc/2
+    //   0    0     1   fosc/4
+    //   0    1     0   fosc/8
+    //   0    1     1   fosc/16
+    //   1    0     0   fosc/32
+    //   1    0     1   fosc/64
+    //   1    1     0   fosc/64
+    //   1    1     1   fosc/128
+
+    // We find the fastest clock that is less than or equal to the
+    // given clock rate. The clock divider that results in clock_setting
+    // is 2 ^^ (clock_div + 1). If nothing is slow enough, we'll use the
+    // slowest (128 == 2 ^^ 7, so clock_div = 6).
+    uint8_t clockDiv;
+
+    // When the clock is known at compiletime, use this if-then-else
+    // cascade, which the compiler knows how to completely optimize
+    // away. When clock is not known, use a loop instead, which generates
+    // shorter code.
+    if (__builtin_constant_p(clock)) {
+      if (clock >= F_CPU / 2) {
+        clockDiv = 0;
+      } else if (clock >= F_CPU / 4) {
+        clockDiv = 1;
+      } else if (clock >= F_CPU / 8) {
+        clockDiv = 2;
+      } else if (clock >= F_CPU / 16) {
+        clockDiv = 3;
+      } else if (clock >= F_CPU / 32) {
+        clockDiv = 4;
+      } else if (clock >= F_CPU / 64) {
+        clockDiv = 5;
+      } else {
+        clockDiv = 6;
+      }
+    } else {
+      uint32_t clockSetting = F_CPU / 2;
+      clockDiv = 0;
+      while (clockDiv < 6 && clock < clockSetting) {
+        clockSetting /= 2;
+        clockDiv++;
+      }
+    }
+
+    // Compensate for the duplicate fosc/64
+    if (clockDiv == 6)
+    clockDiv = 7;
+
+    // Invert the SPI2X bit
+    clockDiv ^= 0x1;
+
+    // Pack into the SPISettings class
+//    spcr = _BV(SPE) | _BV(MSTR) | ((bitOrder == LSBFIRST) ? _BV(DORD) : 0) |  (dataMode & SPI_MODE_MASK) | ((clockDiv >> 1) & SPI_CLOCK_MASK);
+//    spsr = clockDiv & SPI_2XCLOCK_MASK;
+  
+// Roger Clark. To Do. Need to reinstate what the two lines above from AVR do. Probably SPI config / setup  
+  }
+  uint8_t spcr;
+  uint8_t spsr;
+  friend class SPIClass;
+};
+
+
+
 /**
  * @brief Wirish SPI interface.
  *
  * This implementation uses software slave management, so the caller
  * is responsible for controlling the slave select line.
  */
-class HardwareSPI {
+class SPIClass {
 public:
     /**
      * @param spiPortNumber Number of the SPI port to manage.
      */
-    HardwareSPI(uint32 spiPortNumber);
+    SPIClass(uint32 spiPortNumber);
 
     /*
      * Set up/tear down
@@ -110,6 +237,10 @@ public:
      * @brief Disables the SPI port, but leaves its GPIO pin modes unchanged.
      */
     void end(void);
+
+	void beginTransaction(SPISettings settings) { beginTransaction(BOARD_SPI_DEFAULT_SS, settings); }
+	void beginTransaction(uint8_t pin, SPISettings settings);
+	void endTransaction(void);
 
     /*
      * I/O
@@ -222,4 +353,5 @@ private:
     spi_dev *spi_d;
 };
 
+extern SPIClass SPI;//(1);// dummy params
 #endif

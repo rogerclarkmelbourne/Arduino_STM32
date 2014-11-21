@@ -50,7 +50,8 @@ typedef enum rcc_sysclk_src {
     RCC_CLKSRC_PLL = 0x2,
 } rcc_sysclk_src;
 
-#include <series/rcc.h>
+/* Roger clark. Replaced with line below #include <series/rcc.h>*/
+#include "stm32f1/include/series/rcc.h"
 
 /* Note: Beyond the usual (registers, etc.), it's up to the series
  * header to define the following types:

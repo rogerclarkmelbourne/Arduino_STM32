@@ -35,7 +35,7 @@
 #define _WIRISH_BOARDS_H_
 
 #include <libmaple/libmaple_types.h>
-#include <wirish/wirish_types.h>
+#include <wirish_types.h>
 #include <board/board.h>
 
 /* Set of all possible pin names; not all boards have all these (note

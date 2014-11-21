@@ -29,14 +29,14 @@
  * @brief Wirish SPI implementation.
  */
 
-#include <wirish/HardwareSPI.h>
+#include "SPI.h"
 
 #include <libmaple/timer.h>
 #include <libmaple/util.h>
 #include <libmaple/rcc.h>
 
-#include <wirish/wirish.h>
-#include <wirish/boards.h>
+#include "wirish.h"
+#include "boards.h"
 
 #if CYCLES_PER_MICROSECOND != 72
 /* TODO [0.2.0?] something smarter than this */
@@ -80,7 +80,7 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
  * Constructor
  */
 
-HardwareSPI::HardwareSPI(uint32 spi_num) {
+SPIClass::SPIClass(uint32 spi_num) {
     switch (spi_num) {
     case 1:
         this->spi_d = SPI1;
@@ -102,7 +102,7 @@ HardwareSPI::HardwareSPI(uint32 spi_num) {
  * Set up/tear down
  */
 
-void HardwareSPI::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
+void SPIClass::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
     if (mode >= 4) {
         ASSERT(0);
         return;
@@ -112,11 +112,11 @@ void HardwareSPI::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
     enable_device(this->spi_d, true, frequency, end, m);
 }
 
-void HardwareSPI::begin(void) {
+void SPIClass::begin(void) {
     this->begin(SPI_1_125MHZ, MSBFIRST, 0);
 }
 
-void HardwareSPI::beginSlave(uint32 bitOrder, uint32 mode) {
+void SPIClass::beginSlave(uint32 bitOrder, uint32 mode) {
     if (mode >= 4) {
         ASSERT(0);
         return;
@@ -126,11 +126,11 @@ void HardwareSPI::beginSlave(uint32 bitOrder, uint32 mode) {
     enable_device(this->spi_d, false, (SPIFrequency)0, end, m);
 }
 
-void HardwareSPI::beginSlave(void) {
+void SPIClass::beginSlave(void) {
     this->beginSlave(MSBFIRST, 0);
 }
 
-void HardwareSPI::end(void) {
+void SPIClass::end(void) {
     if (!spi_is_enabled(this->spi_d)) {
         return;
     }
@@ -148,17 +148,60 @@ void HardwareSPI::end(void) {
     spi_peripheral_disable(this->spi_d);
 }
 
+
+void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
+{
+/*
+	uint8_t mode = interruptMode;
+	if (mode > 0) {
+		if (mode < 16) {
+			if (mode & 1) PIOA->PIO_IDR = interruptMask[0];
+			if (mode & 2) PIOB->PIO_IDR = interruptMask[1];
+			if (mode & 4) PIOC->PIO_IDR = interruptMask[2];
+			if (mode & 8) PIOD->PIO_IDR = interruptMask[3];
+		} else {
+			interruptSave = interruptsStatus();
+			noInterrupts();
+		}
+	}
+	uint32_t ch = BOARD_PIN_TO_SPI_CHANNEL(pin);
+	bitOrder[ch] = settings.border;
+	SPI_ConfigureNPCS(spi, ch, settings.config);
+	//setBitOrder(pin, settings.border);
+	//setDataMode(pin, settings.datamode);
+	//setClockDivider(pin, settings.clockdiv);
+	*/
+}
+
+void SPIClass::endTransaction(void)
+{
+/*
+	uint8_t mode = interruptMode;
+	if (mode > 0) {
+		if (mode < 16) {
+			if (mode & 1) PIOA->PIO_IER = interruptMask[0];
+			if (mode & 2) PIOB->PIO_IER = interruptMask[1];
+			if (mode & 4) PIOC->PIO_IER = interruptMask[2];
+			if (mode & 8) PIOD->PIO_IER = interruptMask[3];
+		} else {
+			if (interruptSave) interrupts();
+		}
+	}
+	*/
+}
+
+
 /*
  * I/O
  */
 
-uint8 HardwareSPI::read(void) {
+uint8 SPIClass::read(void) {
     uint8 buf[1];
     this->read(buf, 1);
     return buf[0];
 }
 
-void HardwareSPI::read(uint8 *buf, uint32 len) {
+void SPIClass::read(uint8 *buf, uint32 len) {
     uint32 rxed = 0;
     while (rxed < len) {
         while (!spi_is_rx_nonempty(this->spi_d))
@@ -167,18 +210,18 @@ void HardwareSPI::read(uint8 *buf, uint32 len) {
     }
 }
 
-void HardwareSPI::write(uint8 byte) {
+void SPIClass::write(uint8 byte) {
     this->write(&byte, 1);
 }
 
-void HardwareSPI::write(const uint8 *data, uint32 length) {
+void SPIClass::write(const uint8 *data, uint32 length) {
     uint32 txed = 0;
     while (txed < length) {
         txed += spi_tx(this->spi_d, data + txed, length - txed);
     }
 }
 
-uint8 HardwareSPI::transfer(uint8 byte) {
+uint8 SPIClass::transfer(uint8 byte) {
     this->write(byte);
     return this->read();
 }
@@ -187,19 +230,19 @@ uint8 HardwareSPI::transfer(uint8 byte) {
  * Pin accessors
  */
 
-uint8 HardwareSPI::misoPin(void) {
+uint8 SPIClass::misoPin(void) {
     return dev_to_spi_pins(this->spi_d)->miso;
 }
 
-uint8 HardwareSPI::mosiPin(void) {
+uint8 SPIClass::mosiPin(void) {
     return dev_to_spi_pins(this->spi_d)->mosi;
 }
 
-uint8 HardwareSPI::sckPin(void) {
+uint8 SPIClass::sckPin(void) {
     return dev_to_spi_pins(this->spi_d)->sck;
 }
 
-uint8 HardwareSPI::nssPin(void) {
+uint8 SPIClass::nssPin(void) {
     return dev_to_spi_pins(this->spi_d)->nss;
 }
 
@@ -207,12 +250,12 @@ uint8 HardwareSPI::nssPin(void) {
  * Deprecated functions
  */
 
-uint8 HardwareSPI::send(uint8 data) {
+uint8 SPIClass::send(uint8 data) {
     uint8 buf[] = {data};
     return this->send(buf, 1);
 }
 
-uint8 HardwareSPI::send(uint8 *buf, uint32 len) {
+uint8 SPIClass::send(uint8 *buf, uint32 len) {
     uint32 txed = 0;
     uint8 ret = 0;
     while (txed < len) {
@@ -222,7 +265,7 @@ uint8 HardwareSPI::send(uint8 *buf, uint32 len) {
     return ret;
 }
 
-uint8 HardwareSPI::recv(void) {
+uint8 SPIClass::recv(void) {
     return this->read();
 }
 
@@ -246,7 +289,7 @@ static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
 
 /* Enables the device in master or slave full duplex mode.  If you
  * change this code, you must ensure that appropriate changes are made
- * to HardwareSPI::end(). */
+ * to SPIClass::end(). */
 static void enable_device(spi_dev *dev,
                           bool as_master,
                           SPIFrequency freq,
@@ -318,3 +361,5 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq) {
             baud_rates[freq + 1] :
             baud_rates[freq]);
 }
+
+SPIClass SPI(1);

@@ -40,7 +40,7 @@
 #define _HARDWIRE_H_
 
 #include "WireBase.h"
-#include <wirish/wirish.h>
+#include "wirish.h"
 #include <libmaple/i2c.h>
 
 class HardWire : public WireBase {

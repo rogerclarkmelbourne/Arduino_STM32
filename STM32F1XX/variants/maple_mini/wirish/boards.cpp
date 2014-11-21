@@ -45,7 +45,7 @@
  * notice.
  */
 
-#include <wirish/boards.h>
+#include <boards.h>
 #include <libmaple/libmaple_types.h>
 #include <libmaple/flash.h>
 #include <libmaple/nvic.h>

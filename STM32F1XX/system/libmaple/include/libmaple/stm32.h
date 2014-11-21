@@ -67,7 +67,8 @@ extern "C" {
  * - STM32_HAVE_USB: 1 if the MCU has a USB peripheral, and 0
  *   otherwise.
  */
-#include <series/stm32.h>
+ /* roger clark. replaced with line below  #include <series/stm32.h> */
+#include "stm32f1/include/series/stm32.h"
 
 /* Ensure the series header isn't broken. */
 #if (!defined(STM32_PCLK1)         ||     \

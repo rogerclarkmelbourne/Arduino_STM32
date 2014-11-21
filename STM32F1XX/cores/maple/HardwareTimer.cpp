@@ -24,11 +24,11 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include <wirish/HardwareTimer.h>
+#include "HardwareTimer.h"
 
 #include <libmaple/rcc.h>
-#include <wirish/ext_interrupts.h> // for noInterrupts(), interrupts()
-#include <wirish/wirish_math.h>
+#include "ext_interrupts.h" // for noInterrupts(), interrupts()
+#include "wirish_math.h"
 #include <board/board.h>           // for CYCLES_PER_MICROSECOND
 
 // TODO [0.1.0] Remove deprecated pieces

@@ -1,0 +1,4618 @@
+# 1 "C:\\Users\\rclark\\AppData\\Local\\Temp\\build7306151877588851736.tmp\\sketch_nov16a.cpp"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\libraries\\SPI//"
+# 1 "<command-line>"
+# 1 "C:\\Users\\rclark\\AppData\\Local\\Temp\\build7306151877588851736.tmp\\sketch_nov16a.cpp"
+# 1 "sketch_nov16a.ino"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/SPI.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/SPI.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple_types.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple_types.h"
+extern "C" {
+
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef unsigned long long uint64;
+
+typedef signed char int8;
+typedef short int16;
+typedef int int32;
+typedef long long int64;
+
+typedef void (*voidFuncPtr)(void);
+typedef void (*voidArgumentFuncPtr)(void *);
+# 70 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple_types.h"
+}
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/SPI.h" 2
+
+
+extern "C" {
+
+
+
+
+
+
+struct spi_reg_map;
+# 57 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/SPI.h"
+struct spi_dev;
+
+extern struct spi_dev *SPI1;
+extern struct spi_dev *SPI2;
+# 70 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/SPI.h"
+struct gpio_dev;
+extern void spi_config_gpios(struct spi_dev*, uint8,
+                             struct gpio_dev*, uint8,
+                             struct gpio_dev*, uint8, uint8, uint8);
+
+
+
+
+static inline __attribute__((always_inline)) void spi_gpio_cfg(uint8 as_master,
+                                         struct gpio_dev *nss_dev,
+                                         uint8 nss_bit,
+                                         struct gpio_dev *comm_dev,
+                                         uint8 sck_bit,
+                                         uint8 miso_bit,
+                                         uint8 mosi_bit) {
+
+
+
+
+
+
+    spi_config_gpios(0, as_master, nss_dev, nss_bit,
+                     comm_dev, sck_bit, miso_bit, mosi_bit);
+}
+
+
+}
+# 2 "sketch_nov16a.ino" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Arduino.h" 1
+# 30 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Arduino.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 1
+# 41 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h"
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 1 3
+# 10 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\ieeefp.h" 1 3
+# 11 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\_ansi.h" 1 3
+# 15 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\_ansi.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\newlib.h" 1 3
+# 16 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\_ansi.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\config.h" 1 3
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\ieeefp.h" 1 3
+# 5 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\config.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\features.h" 1 3
+# 25 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\features.h" 3
+extern "C" {
+# 227 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\features.h" 3
+}
+# 6 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\config.h" 2 3
+# 17 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\_ansi.h" 2 3
+# 12 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 212 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 3 4
+typedef unsigned int size_t;
+# 17 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 1 3
+# 9 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+extern "C" {
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\_ansi.h" 1 3
+# 14 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 147 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 3 4
+typedef int ptrdiff_t;
+# 15 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 1 3
+# 12 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_types.h" 1 3
+
+
+
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 1 3
+# 23 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+extern "C" {
+
+
+
+typedef signed char __int8_t;
+typedef unsigned char __uint8_t;
+# 37 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef short int __int16_t;
+typedef short unsigned int __uint16_t;
+# 55 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef long int __int32_t;
+typedef long unsigned int __uint32_t;
+# 77 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef long long int __int64_t;
+typedef long long unsigned int __uint64_t;
+# 104 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef signed char __int_least8_t;
+typedef unsigned char __uint_least8_t;
+# 126 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef short int __int_least16_t;
+typedef short unsigned int __uint_least16_t;
+# 144 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef long int __int_least32_t;
+typedef long unsigned int __uint_least32_t;
+# 158 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef long long int __int_least64_t;
+typedef long long unsigned int __uint_least64_t;
+# 168 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+typedef int __intptr_t;
+typedef unsigned int __uintptr_t;
+# 181 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_default_types.h" 3
+}
+# 8 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\_types.h" 2 3
+# 13 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\lock.h" 1 3
+
+
+
+
+
+typedef int _LOCK_T;
+typedef int _LOCK_RECURSIVE_T;
+# 14 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 2 3
+
+
+typedef long _off_t;
+
+
+
+typedef short __dev_t;
+
+
+
+typedef unsigned short __uid_t;
+
+
+typedef unsigned short __gid_t;
+
+
+
+__extension__ typedef long long _off64_t;
+
+
+
+
+
+
+
+typedef long _fpos_t;
+# 55 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 3
+typedef signed int _ssize_t;
+# 67 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 353 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 3 4
+typedef unsigned int wint_t;
+# 68 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\_types.h" 2 3
+
+
+
+typedef struct
+{
+  int __count;
+  union
+  {
+    wint_t __wch;
+    unsigned char __wchb[4];
+  } __value;
+} _mbstate_t;
+
+
+
+typedef _LOCK_RECURSIVE_T _flock_t;
+
+
+
+
+typedef void *_iconv_t;
+# 16 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 2 3
+
+
+
+
+
+
+typedef unsigned long __ULong;
+# 38 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct _reent;
+
+
+
+
+
+
+struct _Bigint
+{
+  struct _Bigint *_next;
+  int _k, _maxwds, _sign, _wds;
+  __ULong _x[1];
+};
+
+
+struct __tm
+{
+  int __tm_sec;
+  int __tm_min;
+  int __tm_hour;
+  int __tm_mday;
+  int __tm_mon;
+  int __tm_year;
+  int __tm_wday;
+  int __tm_yday;
+  int __tm_isdst;
+};
+
+
+
+
+
+
+
+struct _on_exit_args {
+ void * _fnargs[32];
+ void * _dso_handle[32];
+
+ __ULong _fntypes;
+
+
+ __ULong _is_cxa;
+};
+# 91 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct _atexit {
+ struct _atexit *_next;
+ int _ind;
+
+ void (*_fns[32])(void);
+        struct _on_exit_args _on_exit_args;
+};
+# 115 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct __sbuf {
+ unsigned char *_base;
+ int _size;
+};
+# 179 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct __sFILE {
+  unsigned char *_p;
+  int _r;
+  int _w;
+  short _flags;
+  short _file;
+  struct __sbuf _bf;
+  int _lbfsize;
+
+
+
+
+
+
+  void * _cookie;
+
+  int (* _read) (struct _reent *, void *, char *, int)
+                                          ;
+  int (* _write) (struct _reent *, void *, const char *, int)
+
+                                   ;
+  _fpos_t (* _seek) (struct _reent *, void *, _fpos_t, int);
+  int (* _close) (struct _reent *, void *);
+
+
+  struct __sbuf _ub;
+  unsigned char *_up;
+  int _ur;
+
+
+  unsigned char _ubuf[3];
+  unsigned char _nbuf[1];
+
+
+  struct __sbuf _lb;
+
+
+  int _blksize;
+  _off_t _offset;
+
+
+  struct _reent *_data;
+
+
+
+  _flock_t _lock;
+
+  _mbstate_t _mbstate;
+  int _flags2;
+};
+# 285 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+typedef struct __sFILE __FILE;
+
+
+
+struct _glue
+{
+  struct _glue *_next;
+  int _niobs;
+  __FILE *_iobs;
+};
+# 317 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct _rand48 {
+  unsigned short _seed[3];
+  unsigned short _mult[3];
+  unsigned short _add;
+
+
+
+
+};
+# 569 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+struct _reent
+{
+  int _errno;
+
+
+
+
+  __FILE *_stdin, *_stdout, *_stderr;
+
+  int _inc;
+  char _emergency[25];
+
+  int _current_category;
+  const char *_current_locale;
+
+  int __sdidinit;
+
+  void (* __cleanup) (struct _reent *);
+
+
+  struct _Bigint *_result;
+  int _result_k;
+  struct _Bigint *_p5s;
+  struct _Bigint **_freelist;
+
+
+  int _cvtlen;
+  char *_cvtbuf;
+
+  union
+    {
+      struct
+        {
+          unsigned int _unused_rand;
+          char * _strtok_last;
+          char _asctime_buf[26];
+          struct __tm _localtime_buf;
+          int _gamma_signgam;
+          __extension__ unsigned long long _rand_next;
+          struct _rand48 _r48;
+          _mbstate_t _mblen_state;
+          _mbstate_t _mbtowc_state;
+          _mbstate_t _wctomb_state;
+          char _l64a_buf[8];
+          char _signal_buf[24];
+          int _getdate_err;
+          _mbstate_t _mbrlen_state;
+          _mbstate_t _mbrtowc_state;
+          _mbstate_t _mbsrtowcs_state;
+          _mbstate_t _wcrtomb_state;
+          _mbstate_t _wcsrtombs_state;
+   int _h_errno;
+        } _reent;
+
+
+
+      struct
+        {
+
+          unsigned char * _nextf[30];
+          unsigned int _nmalloc[30];
+        } _unused;
+    } _new;
+
+
+
+  struct _atexit *_atexit;
+  struct _atexit _atexit0;
+
+
+
+  void (**(_sig_func))(int);
+
+
+
+
+  struct _glue __sglue;
+  __FILE __sf[3];
+};
+# 762 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+extern struct _reent *_impure_ptr ;
+extern struct _reent *const _global_impure_ptr ;
+
+void _reclaim_reent (struct _reent *);
+# 788 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\reent.h" 3
+}
+# 19 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\stdlib.h" 1 3
+# 20 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\alloca.h" 1 3
+# 22 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 2 3
+
+
+
+
+
+
+extern "C" {
+
+typedef struct
+{
+  int quot;
+  int rem;
+} div_t;
+
+typedef struct
+{
+  long quot;
+  long rem;
+} ldiv_t;
+
+
+
+
+typedef struct
+{
+  long long int quot;
+  long long int rem;
+} lldiv_t;
+
+
+
+
+typedef int (*__compar_fn_t) (const void *, const void *);
+
+
+
+
+
+
+
+int __locale_mb_cur_max (void);
+
+
+
+void abort (void) __attribute__ ((noreturn));
+int abs (int);
+int atexit (void (*__func)(void));
+double atof (const char *__nptr);
+
+float atoff (const char *__nptr);
+
+int atoi (const char *__nptr);
+int _atoi_r (struct _reent *, const char *__nptr);
+long atol (const char *__nptr);
+long _atol_r (struct _reent *, const char *__nptr);
+void * bsearch (const void * __key, const void * __base, size_t __nmemb, size_t __size, __compar_fn_t _compar)
+
+
+
+                                ;
+void * calloc (size_t __nmemb, size_t __size) __attribute__ ((nothrow));
+div_t div (int __numer, int __denom);
+void exit (int __status) __attribute__ ((noreturn));
+void free (void *) __attribute__ ((nothrow));
+char * getenv (const char *__string);
+char * _getenv_r (struct _reent *, const char *__string);
+char * _findenv (const char *, int *);
+char * _findenv_r (struct _reent *, const char *, int *);
+
+extern char *suboptarg;
+int getsubopt (char **, char * const *, char **);
+
+long labs (long);
+ldiv_t ldiv (long __numer, long __denom);
+void * malloc (size_t __size) __attribute__ ((nothrow));
+int mblen (const char *, size_t);
+int _mblen_r (struct _reent *, const char *, size_t, _mbstate_t *);
+int mbtowc (wchar_t *__restrict, const char *__restrict, size_t);
+int _mbtowc_r (struct _reent *, wchar_t *__restrict, const char *__restrict, size_t, _mbstate_t *);
+int wctomb (char *, wchar_t);
+int _wctomb_r (struct _reent *, char *, wchar_t, _mbstate_t *);
+size_t mbstowcs (wchar_t *__restrict, const char *__restrict, size_t);
+size_t _mbstowcs_r (struct _reent *, wchar_t *__restrict, const char *__restrict, size_t, _mbstate_t *);
+size_t wcstombs (char *__restrict, const wchar_t *__restrict, size_t);
+size_t _wcstombs_r (struct _reent *, char *__restrict, const wchar_t *__restrict, size_t, _mbstate_t *);
+
+
+char * mkdtemp (char *);
+int mkostemp (char *, int);
+int mkostemps (char *, int, int);
+int mkstemp (char *);
+int mkstemps (char *, int);
+char * mktemp (char *) __attribute__ ((__warning__ ("the use of `mktemp' is dangerous; use `mkstemp' instead")));
+
+char * _mkdtemp_r (struct _reent *, char *);
+int _mkostemp_r (struct _reent *, char *, int);
+int _mkostemps_r (struct _reent *, char *, int, int);
+int _mkstemp_r (struct _reent *, char *);
+int _mkstemps_r (struct _reent *, char *, int);
+char * _mktemp_r (struct _reent *, char *) __attribute__ ((__warning__ ("the use of `mktemp' is dangerous; use `mkstemp' instead")));
+
+void qsort (void * __base, size_t __nmemb, size_t __size, __compar_fn_t _compar);
+int rand (void);
+void * realloc (void * __r, size_t __size) __attribute__ ((nothrow));
+
+void * reallocf (void * __r, size_t __size);
+char * realpath (const char *__restrict path, char *__restrict resolved_path);
+
+void srand (unsigned __seed);
+double strtod (const char *__restrict __n, char **__restrict __end_PTR);
+double _strtod_r (struct _reent *,const char *__restrict __n, char **__restrict __end_PTR);
+
+float strtof (const char *__restrict __n, char **__restrict __end_PTR);
+
+
+
+
+
+
+
+long strtol (const char *__restrict __n, char **__restrict __end_PTR, int __base);
+long _strtol_r (struct _reent *,const char *__restrict __n, char **__restrict __end_PTR, int __base);
+unsigned long strtoul (const char *__restrict __n, char **__restrict __end_PTR, int __base);
+unsigned long _strtoul_r (struct _reent *,const char *__restrict __n, char **__restrict __end_PTR, int __base);
+
+int system (const char *__string);
+
+
+long a64l (const char *__input);
+char * l64a (long __input);
+char * _l64a_r (struct _reent *,long __input);
+int on_exit (void (*__func)(int, void *),void * __arg);
+void _Exit (int __status) __attribute__ ((noreturn));
+int putenv (char *__string);
+int _putenv_r (struct _reent *, char *__string);
+void * _reallocf_r (struct _reent *, void *, size_t);
+int setenv (const char *__string, const char *__value, int __overwrite);
+int _setenv_r (struct _reent *, const char *__string, const char *__value, int __overwrite);
+
+char * gcvt (double,int,char *);
+char * gcvtf (float,int,char *);
+char * fcvt (double,int,int *,int *);
+char * fcvtf (float,int,int *,int *);
+char * ecvt (double,int,int *,int *);
+char * ecvtbuf (double, int, int*, int*, char *);
+char * fcvtbuf (double, int, int*, int*, char *);
+char * ecvtf (float,int,int *,int *);
+char * dtoa (double, int, int, int *, int*, char**);
+int rand_r (unsigned *__seed);
+
+double drand48 (void);
+double _drand48_r (struct _reent *);
+double erand48 (unsigned short [3]);
+double _erand48_r (struct _reent *, unsigned short [3]);
+long jrand48 (unsigned short [3]);
+long _jrand48_r (struct _reent *, unsigned short [3]);
+void lcong48 (unsigned short [7]);
+void _lcong48_r (struct _reent *, unsigned short [7]);
+long lrand48 (void);
+long _lrand48_r (struct _reent *);
+long mrand48 (void);
+long _mrand48_r (struct _reent *);
+long nrand48 (unsigned short [3]);
+long _nrand48_r (struct _reent *, unsigned short [3]);
+unsigned short *
+       seed48 (unsigned short [3]);
+unsigned short *
+       _seed48_r (struct _reent *, unsigned short [3]);
+void srand48 (long);
+void _srand48_r (struct _reent *, long);
+long long atoll (const char *__nptr);
+long long _atoll_r (struct _reent *, const char *__nptr);
+long long llabs (long long);
+lldiv_t lldiv (long long __numer, long long __denom);
+
+
+long long strtoll (const char *__restrict __n, char **__restrict __end_PTR, int __base);
+
+
+long long _strtoll_r (struct _reent *, const char *__restrict __n, char **__restrict __end_PTR, int __base);
+
+
+unsigned long long strtoull (const char *__restrict __n, char **__restrict __end_PTR, int __base);
+
+
+unsigned long long _strtoull_r (struct _reent *, const char *__restrict __n, char **__restrict __end_PTR, int __base);
+
+
+void cfree (void *);
+int unsetenv (const char *__string);
+int _unsetenv_r (struct _reent *, const char *__string);
+# 221 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdlib.h" 3
+char * _dtoa_r (struct _reent *, double, int, int, int *, int*, char**);
+
+void * _malloc_r (struct _reent *, size_t) __attribute__ ((nothrow));
+void * _calloc_r (struct _reent *, size_t, size_t) __attribute__ ((nothrow));
+void _free_r (struct _reent *, void *) __attribute__ ((nothrow));
+void * _realloc_r (struct _reent *, void *, size_t) __attribute__ ((nothrow));
+void _mstats_r (struct _reent *, char *);
+
+int _system_r (struct _reent *, const char *);
+
+void __eprintf (const char *, const char *, unsigned int, const char *);
+
+
+
+
+extern long double strtold (const char *__restrict, char **__restrict);
+
+
+
+}
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 1 3
+# 35 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 36 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 2 3
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stdarg.h" 1 3 4
+# 40 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stdarg.h" 3 4
+typedef __builtin_va_list __gnuc_va_list;
+# 39 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 2 3
+# 47 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 1 3
+# 69 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 70 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 2 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\types.h" 1 3
+# 19 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\types.h" 3
+typedef long int __off_t;
+typedef int __pid_t;
+
+__extension__ typedef long long int __loff_t;
+# 71 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 2 3
+# 93 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef unsigned char u_char;
+
+
+
+typedef unsigned short u_short;
+
+
+
+typedef unsigned int u_int;
+
+
+
+typedef unsigned long u_long;
+
+
+
+
+
+typedef unsigned short ushort;
+typedef unsigned int uint;
+typedef unsigned long ulong;
+
+
+
+typedef unsigned long clock_t;
+
+
+
+
+typedef long time_t;
+
+
+
+
+
+
+
+struct timespec {
+  time_t tv_sec;
+  long tv_nsec;
+};
+
+
+struct itimerspec {
+  struct timespec it_interval;
+  struct timespec it_value;
+};
+
+
+typedef long daddr_t;
+
+
+
+typedef char * caddr_t;
+# 155 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef unsigned short ino_t;
+# 184 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef _off_t off_t;
+typedef __dev_t dev_t;
+typedef __uid_t uid_t;
+typedef __gid_t gid_t;
+
+
+
+
+
+typedef int pid_t;
+
+
+
+
+
+
+
+typedef long key_t;
+
+typedef _ssize_t ssize_t;
+# 217 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef unsigned int mode_t __attribute__ ((__mode__ (__SI__)));
+
+
+
+
+typedef unsigned short nlink_t;
+# 244 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef long fd_mask;
+
+
+
+
+
+
+
+typedef struct _types_fd_set {
+ fd_mask fds_bits[(((64)+(((sizeof (fd_mask) * 8))-1))/((sizeof (fd_mask) * 8)))];
+} _types_fd_set;
+# 275 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\types.h" 3
+typedef unsigned long clockid_t;
+
+
+
+
+typedef unsigned long timer_t;
+
+
+
+typedef unsigned long useconds_t;
+typedef long suseconds_t;
+# 48 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 2 3
+
+extern "C" {
+
+typedef __FILE FILE;
+
+
+
+
+typedef _fpos_t fpos_t;
+
+
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\stdio.h" 1 3
+# 63 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 2 3
+# 162 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+FILE * tmpfile (void);
+char * tmpnam (char *);
+int fclose (FILE *);
+int fflush (FILE *);
+FILE * freopen (const char *__restrict, const char *__restrict, FILE *__restrict);
+void setbuf (FILE *__restrict, char *__restrict);
+int setvbuf (FILE *__restrict, char *__restrict, int, size_t);
+int fprintf (FILE *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int fscanf (FILE *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+int printf (const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 1, 2)))
+                                                            ;
+int scanf (const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 1, 2)))
+                                                           ;
+int sscanf (const char *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+int vfprintf (FILE *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int vprintf (const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 1, 0)))
+                                                            ;
+int vsprintf (char *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int fgetc (FILE *);
+char * fgets (char *__restrict, int, FILE *__restrict);
+int fputc (int, FILE *);
+int fputs (const char *__restrict, FILE *__restrict);
+int getc (FILE *);
+int getchar (void);
+char * gets (char *);
+int putc (int, FILE *);
+int putchar (int);
+int puts (const char *);
+int ungetc (int, FILE *);
+size_t fread (void * __restrict, size_t _size, size_t _n, FILE *__restrict);
+size_t fwrite (const void * __restrict , size_t _size, size_t _n, FILE *);
+
+
+
+int fgetpos (FILE *__restrict, fpos_t *__restrict);
+
+int fseek (FILE *, long, int);
+
+
+
+int fsetpos (FILE *, const fpos_t *);
+
+long ftell ( FILE *);
+void rewind (FILE *);
+void clearerr (FILE *);
+int feof (FILE *);
+int ferror (FILE *);
+void perror (const char *);
+
+FILE * fopen (const char *__restrict _name, const char *__restrict _type);
+int sprintf (char *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int remove (const char *);
+int rename (const char *, const char *);
+# 230 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+int fseeko (FILE *, off_t, int);
+off_t ftello ( FILE *);
+
+
+
+
+int asiprintf (char **, const char *, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+char * asniprintf (char *, size_t *, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+char * asnprintf (char *__restrict, size_t *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int asprintf (char **__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+
+int diprintf (int, const char *, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+
+int fcloseall (void);
+int fiprintf (FILE *, const char *, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int fiscanf (FILE *, const char *, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+int iprintf (const char *, ...) __attribute__ ((__format__ (__printf__, 1, 2)))
+                                                            ;
+int iscanf (const char *, ...) __attribute__ ((__format__ (__scanf__, 1, 2)))
+                                                           ;
+int siprintf (char *, const char *, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int siscanf (const char *, const char *, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+int snprintf (char *__restrict, size_t, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int sniprintf (char *, size_t, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+char * tempnam (const char *, const char *);
+int vasiprintf (char **, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+char * vasniprintf (char *, size_t *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+char * vasnprintf (char *, size_t *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int vasprintf (char **, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int vdiprintf (int, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int vfiprintf (FILE *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int vfiscanf (FILE *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+int vfscanf (FILE *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+int viprintf (const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 1, 0)))
+                                                            ;
+int viscanf (const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 1, 0)))
+                                                           ;
+int vscanf (const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 1, 0)))
+                                                           ;
+int vsiprintf (char *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int vsiscanf (const char *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+int vsniprintf (char *, size_t, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int vsnprintf (char *__restrict, size_t, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int vsscanf (const char *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+# 307 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+FILE * fdopen (int, const char *);
+
+int fileno (FILE *);
+int getw (FILE *);
+int pclose (FILE *);
+FILE * popen (const char *, const char *);
+int putw (int, FILE *);
+void setbuffer (FILE *, char *, int);
+int setlinebuf (FILE *);
+int getc_unlocked (FILE *);
+int getchar_unlocked (void);
+void flockfile (FILE *);
+int ftrylockfile (FILE *);
+void funlockfile (FILE *);
+int putc_unlocked (int, FILE *);
+int putchar_unlocked (int);
+# 332 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+int dprintf (int, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+
+FILE * fmemopen (void *__restrict, size_t, const char *__restrict);
+
+
+FILE * open_memstream (char **, size_t *);
+
+
+
+int vdprintf (int, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+
+
+
+
+
+
+
+int _asiprintf_r (struct _reent *, char **, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+char * _asniprintf_r (struct _reent *, char *, size_t *, const char *, ...) __attribute__ ((__format__ (__printf__, 4, 5)))
+                                                            ;
+char * _asnprintf_r (struct _reent *, char *__restrict, size_t *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 4, 5)))
+                                                            ;
+int _asprintf_r (struct _reent *, char **__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _diprintf_r (struct _reent *, int, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _dprintf_r (struct _reent *, int, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _fclose_r (struct _reent *, FILE *);
+int _fcloseall_r (struct _reent *);
+FILE * _fdopen_r (struct _reent *, int, const char *);
+int _fflush_r (struct _reent *, FILE *);
+int _fgetc_r (struct _reent *, FILE *);
+char * _fgets_r (struct _reent *, char *__restrict, int, FILE *__restrict);
+
+
+
+
+int _fgetpos_r (struct _reent *, FILE *, fpos_t *);
+int _fsetpos_r (struct _reent *, FILE *, const fpos_t *);
+
+int _fiprintf_r (struct _reent *, FILE *, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _fiscanf_r (struct _reent *, FILE *, const char *, ...) __attribute__ ((__format__ (__scanf__, 3, 4)))
+                                                           ;
+FILE * _fmemopen_r (struct _reent *, void *__restrict, size_t, const char *__restrict);
+FILE * _fopen_r (struct _reent *, const char *__restrict, const char *__restrict);
+FILE * _freopen_r (struct _reent *, const char *__restrict, const char *__restrict, FILE *__restrict);
+int _fprintf_r (struct _reent *, FILE *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _fpurge_r (struct _reent *, FILE *);
+int _fputc_r (struct _reent *, int, FILE *);
+int _fputs_r (struct _reent *, const char *__restrict, FILE *__restrict);
+size_t _fread_r (struct _reent *, void * __restrict, size_t _size, size_t _n, FILE *__restrict);
+int _fscanf_r (struct _reent *, FILE *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 3, 4)))
+                                                           ;
+int _fseek_r (struct _reent *, FILE *, long, int);
+int _fseeko_r (struct _reent *, FILE *, _off_t, int);
+long _ftell_r (struct _reent *, FILE *);
+_off_t _ftello_r (struct _reent *, FILE *);
+void _rewind_r (struct _reent *, FILE *);
+size_t _fwrite_r (struct _reent *, const void * __restrict, size_t _size, size_t _n, FILE *__restrict);
+int _getc_r (struct _reent *, FILE *);
+int _getc_unlocked_r (struct _reent *, FILE *);
+int _getchar_r (struct _reent *);
+int _getchar_unlocked_r (struct _reent *);
+char * _gets_r (struct _reent *, char *);
+int _iprintf_r (struct _reent *, const char *, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int _iscanf_r (struct _reent *, const char *, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+FILE * _open_memstream_r (struct _reent *, char **, size_t *);
+void _perror_r (struct _reent *, const char *);
+int _printf_r (struct _reent *, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 2, 3)))
+                                                            ;
+int _putc_r (struct _reent *, int, FILE *);
+int _putc_unlocked_r (struct _reent *, int, FILE *);
+int _putchar_unlocked_r (struct _reent *, int);
+int _putchar_r (struct _reent *, int);
+int _puts_r (struct _reent *, const char *);
+int _remove_r (struct _reent *, const char *);
+int _rename_r (struct _reent *, const char *_old, const char *_new)
+                                          ;
+int _scanf_r (struct _reent *, const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 2, 3)))
+                                                           ;
+int _siprintf_r (struct _reent *, char *, const char *, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _siscanf_r (struct _reent *, const char *, const char *, ...) __attribute__ ((__format__ (__scanf__, 3, 4)))
+                                                           ;
+int _sniprintf_r (struct _reent *, char *, size_t, const char *, ...) __attribute__ ((__format__ (__printf__, 4, 5)))
+                                                            ;
+int _snprintf_r (struct _reent *, char *__restrict, size_t, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 4, 5)))
+                                                            ;
+int _sprintf_r (struct _reent *, char *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__printf__, 3, 4)))
+                                                            ;
+int _sscanf_r (struct _reent *, const char *__restrict, const char *__restrict, ...) __attribute__ ((__format__ (__scanf__, 3, 4)))
+                                                           ;
+char * _tempnam_r (struct _reent *, const char *, const char *);
+FILE * _tmpfile_r (struct _reent *);
+char * _tmpnam_r (struct _reent *, char *);
+int _ungetc_r (struct _reent *, int, FILE *);
+int _vasiprintf_r (struct _reent *, char **, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+char * _vasniprintf_r (struct _reent*, char *, size_t *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 4, 0)))
+                                                            ;
+char * _vasnprintf_r (struct _reent*, char *, size_t *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 4, 0)))
+                                                            ;
+int _vasprintf_r (struct _reent *, char **, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vdiprintf_r (struct _reent *, int, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vdprintf_r (struct _reent *, int, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vfiprintf_r (struct _reent *, FILE *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vfiscanf_r (struct _reent *, FILE *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 3, 0)))
+                                                           ;
+int _vfprintf_r (struct _reent *, FILE *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vfscanf_r (struct _reent *, FILE *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 3, 0)))
+                                                           ;
+int _viprintf_r (struct _reent *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int _viscanf_r (struct _reent *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+int _vprintf_r (struct _reent *, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 2, 0)))
+                                                            ;
+int _vscanf_r (struct _reent *, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 2, 0)))
+                                                           ;
+int _vsiprintf_r (struct _reent *, char *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vsiscanf_r (struct _reent *, const char *, const char *, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 3, 0)))
+                                                           ;
+int _vsniprintf_r (struct _reent *, char *, size_t, const char *, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 4, 0)))
+                                                            ;
+int _vsnprintf_r (struct _reent *, char *__restrict, size_t, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 4, 0)))
+                                                            ;
+int _vsprintf_r (struct _reent *, char *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__printf__, 3, 0)))
+                                                            ;
+int _vsscanf_r (struct _reent *, const char *__restrict, const char *__restrict, __gnuc_va_list) __attribute__ ((__format__ (__scanf__, 3, 0)))
+                                                           ;
+
+
+
+int fpurge (FILE *);
+ssize_t __getdelim (char **, size_t *, int, FILE *);
+ssize_t __getline (char **, size_t *, FILE *);
+# 509 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+int __srget_r (struct _reent *, FILE *);
+int __swbuf_r (struct _reent *, int, FILE *);
+# 533 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+FILE *funopen (const void * __cookie, int (*__readfn)(void * __cookie, char *__buf, int __n), int (*__writefn)(void * __cookie, const char *__buf, int __n), fpos_t (*__seekfn)(void * __cookie, fpos_t __off, int __whence), int (*__closefn)(void * __cookie))
+
+
+
+
+
+                                   ;
+FILE *_funopen_r (struct _reent *, const void * __cookie, int (*__readfn)(void * __cookie, char *__buf, int __n), int (*__writefn)(void * __cookie, const char *__buf, int __n), fpos_t (*__seekfn)(void * __cookie, fpos_t __off, int __whence), int (*__closefn)(void * __cookie))
+
+
+
+
+
+                                   ;
+
+
+
+
+
+
+
+typedef ssize_t cookie_read_function_t(void *__cookie, char *__buf, size_t __n);
+typedef ssize_t cookie_write_function_t(void *__cookie, const char *__buf,
+     size_t __n);
+
+
+
+
+typedef int cookie_seek_function_t(void *__cookie, off_t *__off, int __whence);
+
+typedef int cookie_close_function_t(void *__cookie);
+typedef struct
+{
+
+
+  cookie_read_function_t *read;
+  cookie_write_function_t *write;
+  cookie_seek_function_t *seek;
+  cookie_close_function_t *close;
+} cookie_io_functions_t;
+FILE *fopencookie (void *__cookie, const char *__mode, cookie_io_functions_t __functions)
+                                                         ;
+FILE *_fopencookie_r (struct _reent *, void *__cookie, const char *__mode, cookie_io_functions_t __functions)
+                                                         ;
+# 685 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdio.h" 3
+}
+# 43 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 1 3
+# 12 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include-fixed\\sys\\cdefs.h" 1 3 4
+# 54 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include-fixed\\sys\\cdefs.h" 3 4
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 55 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include-fixed\\sys\\cdefs.h" 2 3 4
+# 13 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 2 3
+
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 18 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 2 3
+
+extern "C" {
+
+void * memchr (const void *, int, size_t);
+int memcmp (const void *, const void *, size_t);
+void * memcpy (void * , const void * , size_t);
+void * memmove (void *, const void *, size_t);
+void * memset (void *, int, size_t);
+char *strcat (char *, const char *);
+char *strchr (const char *, int);
+int strcmp (const char *, const char *);
+int strcoll (const char *, const char *);
+char *strcpy (char *, const char *);
+size_t strcspn (const char *, const char *);
+char *strerror (int);
+size_t strlen (const char *);
+char *strncat (char *, const char *, size_t);
+int strncmp (const char *, const char *, size_t);
+char *strncpy (char *, const char *, size_t);
+char *strpbrk (const char *, const char *);
+char *strrchr (const char *, int);
+size_t strspn (const char *, const char *);
+char *strstr (const char *, const char *);
+
+
+char *strtok (char *, const char *);
+
+
+size_t strxfrm (char *, const char *, size_t);
+
+
+char *strtok_r (char *, const char *, char **);
+
+int bcmp (const void *, const void *, size_t);
+void bcopy (const void *, void *, size_t);
+void bzero (void *, size_t);
+int ffs (int);
+char *index (const char *, int);
+void * memccpy (void * , const void * , int, size_t);
+void * mempcpy (void *, const void *, size_t);
+void * memmem (const void *, size_t, const void *, size_t);
+void * memrchr (const void *, int, size_t);
+void * rawmemchr (const void *, int);
+char *rindex (const char *, int);
+char *stpcpy (char *, const char *);
+char *stpncpy (char *, const char *, size_t);
+int strcasecmp (const char *, const char *);
+char *strcasestr (const char *, const char *);
+char *strchrnul (const char *, int);
+
+
+char *strdup (const char *);
+
+
+char *_strdup_r (struct _reent *, const char *);
+
+
+char *strndup (const char *, size_t);
+
+
+char *_strndup_r (struct _reent *, const char *, size_t);
+# 87 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 3
+int strerror_r (int, char *, size_t) __asm__ ("" "__xpg_strerror_r");
+
+
+
+
+
+size_t strlcat (char *, const char *, size_t);
+size_t strlcpy (char *, const char *, size_t);
+int strncasecmp (const char *, const char *, size_t);
+size_t strnlen (const char *, size_t);
+char *strsep (char **, const char *);
+char *strlwr (char *);
+char *strupr (char *);
+
+char *strsignal (int __signo);
+
+
+
+
+
+
+char * _strerror_r (struct _reent *, int, int, int *);
+# 140 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\sys\\string.h" 1 3
+# 141 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\string.h" 2 3
+
+}
+# 46 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h" 1
+# 28 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h"
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\ctype.h" 1 3
+
+
+
+
+
+extern "C" {
+
+int isalnum (int __c);
+int isalpha (int __c);
+int iscntrl (int __c);
+int isdigit (int __c);
+int isgraph (int __c);
+int islower (int __c);
+int isprint (int __c);
+int ispunct (int __c);
+int isspace (int __c);
+int isupper (int __c);
+int isxdigit (int __c);
+int tolower (int __c);
+int toupper (int __c);
+
+
+int isblank (int __c);
+
+
+
+int isascii (int __c);
+int toascii (int __c);
+# 43 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\ctype.h" 3
+const
+
+extern char *__ctype_ptr__;
+# 109 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\ctype.h" 3
+extern const char _ctype_[];
+
+}
+# 29 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/avr/pgmspace.h" 1
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\inttypes.h" 1 3
+# 17 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\inttypes.h" 3
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stdint.h" 1 3 4
+# 9 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stdint.h" 3 4
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 1 3 4
+# 15 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+extern "C" {
+# 41 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+typedef __int8_t int8_t ;
+typedef __uint8_t uint8_t ;
+
+
+
+
+typedef __int_least8_t int_least8_t;
+typedef __uint_least8_t uint_least8_t;
+
+
+
+
+typedef __int16_t int16_t ;
+typedef __uint16_t uint16_t ;
+
+
+
+
+typedef __int_least16_t int_least16_t;
+typedef __uint_least16_t uint_least16_t;
+
+
+
+
+typedef __int32_t int32_t ;
+typedef __uint32_t uint32_t ;
+
+
+
+
+typedef __int_least32_t int_least32_t;
+typedef __uint_least32_t uint_least32_t;
+
+
+
+
+typedef __int64_t int64_t ;
+typedef __uint64_t uint64_t ;
+
+
+
+
+typedef __int_least64_t int_least64_t;
+typedef __uint_least64_t uint_least64_t;
+# 95 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef int int_fast8_t;
+  typedef unsigned int uint_fast8_t;
+# 105 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef int int_fast16_t;
+  typedef unsigned int uint_fast16_t;
+# 115 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef int int_fast32_t;
+  typedef unsigned int uint_fast32_t;
+# 125 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef long long int int_fast64_t;
+  typedef long long unsigned int uint_fast64_t;
+# 174 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef long long int intmax_t;
+# 183 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+  typedef long long unsigned int uintmax_t;
+
+
+
+
+
+
+typedef __intptr_t intptr_t;
+typedef __uintptr_t uintptr_t;
+# 514 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\stdint.h" 3 4
+}
+# 10 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stdint.h" 2 3 4
+# 18 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\inttypes.h" 2 3
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\lib\\gcc\\arm-none-eabi\\4.8.3\\include\\stddef.h" 1 3 4
+# 20 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\inttypes.h" 2 3
+# 280 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\inttypes.h" 3
+typedef struct {
+  intmax_t quot;
+  intmax_t rem;
+} imaxdiv_t;
+
+
+extern "C" {
+
+
+extern intmax_t imaxabs(intmax_t j);
+extern imaxdiv_t imaxdiv(intmax_t numer, intmax_t denomer);
+extern intmax_t strtoimax(const char *, char **, int);
+extern uintmax_t strtoumax(const char *, char **, int);
+extern intmax_t wcstoimax(const wchar_t *, wchar_t **, int);
+extern uintmax_t wcstoumax(const wchar_t *, wchar_t **, int);
+
+
+}
+# 5 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/avr/pgmspace.h" 2
+
+
+
+
+
+
+
+typedef void prog_void;
+typedef char prog_char;
+typedef unsigned char prog_uchar;
+typedef int8_t prog_int8_t;
+typedef uint8_t prog_uint8_t;
+typedef int16_t prog_int16_t;
+typedef uint16_t prog_uint16_t;
+typedef int32_t prog_int32_t;
+typedef uint32_t prog_uint32_t;
+# 30 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h" 2
+
+
+
+
+
+
+
+class __FlashStringHelper;
+
+
+
+
+class StringSumHelper;
+
+
+class String
+{
+
+
+
+ typedef void (String::*StringIfHelperType)() const;
+ void StringIfHelper() const {}
+
+public:
+
+
+
+
+
+ String(const char *cstr = "");
+ String(const String &str);
+ String(const __FlashStringHelper *str);
+
+
+
+
+ explicit String(char c);
+ explicit String(unsigned char, unsigned char base=10);
+ explicit String(int, unsigned char base=10);
+ explicit String(unsigned int, unsigned char base=10);
+ explicit String(long, unsigned char base=10);
+ explicit String(unsigned long, unsigned char base=10);
+ explicit String(float, unsigned char decimalPlaces=2);
+ explicit String(double, unsigned char decimalPlaces=2);
+ ~String(void);
+
+
+
+
+
+ unsigned char reserve(unsigned int size);
+ inline unsigned int length(void) const {return len;}
+
+
+
+
+ String & operator = (const String &rhs);
+ String & operator = (const char *cstr);
+ String & operator = (const __FlashStringHelper *str);
+# 99 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h"
+ unsigned char concat(const String &str);
+ unsigned char concat(const char *cstr);
+ unsigned char concat(char c);
+ unsigned char concat(unsigned char c);
+ unsigned char concat(int num);
+ unsigned char concat(unsigned int num);
+ unsigned char concat(long num);
+ unsigned char concat(unsigned long num);
+ unsigned char concat(float num);
+ unsigned char concat(double num);
+ unsigned char concat(const __FlashStringHelper * str);
+
+
+
+ String & operator += (const String &rhs) {concat(rhs); return (*this);}
+ String & operator += (const char *cstr) {concat(cstr); return (*this);}
+ String & operator += (char c) {concat(c); return (*this);}
+ String & operator += (unsigned char num) {concat(num); return (*this);}
+ String & operator += (int num) {concat(num); return (*this);}
+ String & operator += (unsigned int num) {concat(num); return (*this);}
+ String & operator += (long num) {concat(num); return (*this);}
+ String & operator += (unsigned long num) {concat(num); return (*this);}
+ String & operator += (float num) {concat(num); return (*this);}
+ String & operator += (double num) {concat(num); return (*this);}
+ String & operator += (const __FlashStringHelper *str){concat(str); return (*this);}
+
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, const String &rhs);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, const char *cstr);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, char c);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, unsigned char num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, int num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, unsigned int num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, long num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, unsigned long num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, float num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, double num);
+ friend StringSumHelper & operator + (const StringSumHelper &lhs, const __FlashStringHelper *rhs);
+
+
+ operator StringIfHelperType() const { return buffer ? &String::StringIfHelper : 0; }
+ int compareTo(const String &s) const;
+ unsigned char equals(const String &s) const;
+ unsigned char equals(const char *cstr) const;
+ unsigned char operator == (const String &rhs) const {return equals(rhs);}
+ unsigned char operator == (const char *cstr) const {return equals(cstr);}
+ unsigned char operator != (const String &rhs) const {return !equals(rhs);}
+ unsigned char operator != (const char *cstr) const {return !equals(cstr);}
+ unsigned char operator < (const String &rhs) const;
+ unsigned char operator > (const String &rhs) const;
+ unsigned char operator <= (const String &rhs) const;
+ unsigned char operator >= (const String &rhs) const;
+ unsigned char equalsIgnoreCase(const String &s) const;
+ unsigned char startsWith( const String &prefix) const;
+ unsigned char startsWith(const String &prefix, unsigned int offset) const;
+ unsigned char endsWith(const String &suffix) const;
+
+
+ char charAt(unsigned int index) const;
+ void setCharAt(unsigned int index, char c);
+ char operator [] (unsigned int index) const;
+ char& operator [] (unsigned int index);
+ void getBytes(unsigned char *buf, unsigned int bufsize, unsigned int index=0) const;
+ void toCharArray(char *buf, unsigned int bufsize, unsigned int index=0) const
+  {getBytes((unsigned char *)buf, bufsize, index);}
+ const char * c_str() const { return buffer; }
+
+
+ int indexOf( char ch ) const;
+ int indexOf( char ch, unsigned int fromIndex ) const;
+ int indexOf( const String &str ) const;
+ int indexOf( const String &str, unsigned int fromIndex ) const;
+ int lastIndexOf( char ch ) const;
+ int lastIndexOf( char ch, unsigned int fromIndex ) const;
+ int lastIndexOf( const String &str ) const;
+ int lastIndexOf( const String &str, unsigned int fromIndex ) const;
+ String substring( unsigned int beginIndex ) const { return substring(beginIndex, len); };
+ String substring( unsigned int beginIndex, unsigned int endIndex ) const;
+
+
+ void replace(char find, char replace);
+ void replace(const String& find, const String& replace);
+ void remove(unsigned int index);
+ void remove(unsigned int index, unsigned int count);
+ void toLowerCase(void);
+ void toUpperCase(void);
+ void trim(void);
+
+
+ long toInt(void) const;
+ float toFloat(void) const;
+
+protected:
+ char *buffer;
+ unsigned int capacity;
+ unsigned int len;
+protected:
+ void init(void);
+ void invalidate(void);
+ unsigned char changeBuffer(unsigned int maxStrLen);
+ unsigned char concat(const char *cstr, unsigned int length);
+
+
+ String & copy(const char *cstr, unsigned int length);
+ String & copy(const __FlashStringHelper *pstr, unsigned int length);
+
+
+
+};
+
+class StringSumHelper : public String
+{
+public:
+ StringSumHelper(const String &s) : String(s) {}
+ StringSumHelper(const char *p) : String(p) {}
+ StringSumHelper(char c) : String(c) {}
+ StringSumHelper(unsigned char num) : String(num) {}
+ StringSumHelper(int num) : String(num) {}
+ StringSumHelper(unsigned int num) : String(num) {}
+ StringSumHelper(long num) : String(num) {}
+ StringSumHelper(unsigned long num) : String(num) {}
+ StringSumHelper(float num) : String(num) {}
+ StringSumHelper(double num) : String(num) {}
+};
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/avr/interrupt.h" 1
+# 49 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/stm32.h" 1
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/stm32.h"
+extern "C" {
+# 70 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/stm32.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/stm32.h" 1
+# 40 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/stm32.h"
+extern "C" {
+# 228 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/stm32.h"
+}
+# 71 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/stm32.h" 2
+# 234 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/stm32.h"
+}
+# 51 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h" 1
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h"
+extern "C"{
+
+
+
+
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h" 1
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+extern "C"{
+
+
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/exti.h" 1
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/exti.h"
+extern "C"{
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/exti.h" 1
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/exti.h"
+struct exti_reg_map;
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/exti.h" 2
+
+
+
+
+
+
+
+typedef struct exti_reg_map {
+    volatile uint32 IMR;
+    volatile uint32 EMR;
+    volatile uint32 RTSR;
+    volatile uint32 FTSR;
+    volatile uint32 SWIER;
+    volatile uint32 PR;
+} exti_reg_map;
+# 66 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/exti.h"
+typedef enum exti_num {
+    EXTI0,
+    EXTI1,
+    EXTI2,
+    EXTI3,
+    EXTI4,
+    EXTI5,
+    EXTI6,
+    EXTI7,
+    EXTI8,
+    EXTI9,
+    EXTI10,
+    EXTI11,
+    EXTI12,
+    EXTI13,
+    EXTI14,
+    EXTI15,
+} exti_num;
+
+
+
+
+
+
+
+typedef enum exti_cfg {
+    EXTI_PA,
+    EXTI_PB,
+    EXTI_PC,
+    EXTI_PD,
+    EXTI_PE,
+    EXTI_PF,
+    EXTI_PG,
+    EXTI_PH,
+    EXTI_PI,
+} exti_cfg;
+
+
+typedef enum exti_trigger_mode {
+    EXTI_RISING,
+    EXTI_FALLING,
+    EXTI_RISING_FALLING
+} exti_trigger_mode;
+
+
+
+
+
+void exti_attach_interrupt(exti_num num,
+                           exti_cfg port,
+                           voidFuncPtr handler,
+                           exti_trigger_mode mode);
+void exti_attach_callback(exti_num num,
+                          exti_cfg port,
+                          voidArgumentFuncPtr handler,
+                          void *arg,
+                          exti_trigger_mode mode);
+void exti_detach_interrupt(exti_num num);
+# 137 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/exti.h"
+extern void exti_select(exti_num num, exti_cfg port);
+
+
+}
+# 44 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h" 2
+
+
+
+
+
+
+typedef struct gpio_reg_map {
+    volatile uint32 CRL;
+    volatile uint32 CRH;
+    volatile uint32 IDR;
+    volatile uint32 ODR;
+    volatile uint32 BSRR;
+    volatile uint32 BRR;
+    volatile uint32 LCKR;
+} gpio_reg_map;
+
+struct gpio_dev;
+extern struct gpio_dev gpioa;
+extern struct gpio_dev* const GPIOA;
+extern struct gpio_dev gpiob;
+extern struct gpio_dev* const GPIOB;
+extern struct gpio_dev gpioc;
+extern struct gpio_dev* const GPIOC;
+extern struct gpio_dev gpiod;
+extern struct gpio_dev* const GPIOD;
+# 119 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef enum gpio_pin_mode {
+
+    GPIO_OUTPUT_PP = (0x0 << 2) | 0x3,
+
+    GPIO_OUTPUT_OD = (0x1 << 2) | 0x3,
+
+    GPIO_AF_OUTPUT_PP = (0x2 << 2) | 0x3,
+
+    GPIO_AF_OUTPUT_OD = (0x3 << 2) | 0x3,
+
+    GPIO_INPUT_ANALOG = (0x0 << 2) | 0x0,
+
+    GPIO_INPUT_FLOATING = (0x1 << 2) | 0x0,
+
+    GPIO_INPUT_PD = (0x2 << 2) | 0x0,
+
+    GPIO_INPUT_PU,
+} gpio_pin_mode;
+# 147 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef struct afio_reg_map {
+    volatile uint32 EVCR;
+    volatile uint32 MAPR;
+    volatile uint32 EXTICR1;
+    volatile uint32 EXTICR2;
+    volatile uint32 EXTICR3;
+    volatile uint32 EXTICR4;
+    volatile uint32 MAPR2;
+
+} afio_reg_map;
+# 313 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+void afio_init(void);
+# 323 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef enum afio_remap_peripheral {
+
+    AFIO_REMAP_ADC2_ETRGREG = (1U << 20),
+
+    AFIO_REMAP_ADC2_ETRGINJ = (1U << 19),
+
+    AFIO_REMAP_ADC1_ETRGREG = (1U << 18),
+
+    AFIO_REMAP_ADC1_ETRGINJ = (1U << 17),
+
+    AFIO_REMAP_TIM5CH4_I = (1U << 16),
+
+    AFIO_REMAP_PD01 = (1U << 15),
+
+    AFIO_REMAP_CAN_1 = (0x2 << 13),
+
+    AFIO_REMAP_CAN_2 = (0x3 << 13),
+
+    AFIO_REMAP_TIM4 = (1U << 12),
+
+    AFIO_REMAP_TIM3_PARTIAL = (0x2 << 10),
+
+    AFIO_REMAP_TIM3_FULL = (0x3 << 10),
+
+
+
+    AFIO_REMAP_TIM2_PARTIAL_1 = (0x1 << 8),
+
+
+
+    AFIO_REMAP_TIM2_PARTIAL_2 = (0x2 << 8),
+
+    AFIO_REMAP_TIM2_FULL = (0x3 << 8),
+
+    AFIO_REMAP_USART2 = (1U << 3),
+
+    AFIO_REMAP_USART1 = (1U << 2),
+
+    AFIO_REMAP_I2C1 = (1U << 1),
+
+    AFIO_REMAP_SPI1 = (1U << 0),
+
+    AFIO_REMAP_FSMC_NADV = (1U << 10) | (1U << 31),
+
+    AFIO_REMAP_TIM14 = (1U << 9) | (1U << 31),
+
+    AFIO_REMAP_TIM13 = (1U << 8) | (1U << 31),
+
+    AFIO_REMAP_TIM11 = (1U << 7) | (1U << 31),
+
+    AFIO_REMAP_TIM10 = (1U << 6) | (1U << 31),
+
+    AFIO_REMAP_TIM9 = (1U << 5) | (1U << 31),
+} afio_remap_peripheral;
+
+void afio_remap(afio_remap_peripheral p);
+# 388 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef enum afio_debug_cfg {
+
+    AFIO_DEBUG_FULL_SWJ = (0x0 << 24),
+
+    AFIO_DEBUG_FULL_SWJ_NO_NJRST = (0x1 << 24),
+
+    AFIO_DEBUG_SW_ONLY = (0x2 << 24),
+
+    AFIO_DEBUG_NONE = (0x4 << 24),
+} afio_debug_cfg;
+
+
+
+
+
+
+static inline void afio_cfg_debug_ports(afio_debug_cfg config) {
+    volatile uint32 *mapr = &((struct afio_reg_map *)0x40010000)->MAPR;
+    *mapr = (*mapr & ~(0x7 << 24)) | config;
+}
+# 422 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef exti_cfg afio_exti_port;
+# 447 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+typedef exti_num afio_exti_num;
+# 485 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/gpio.h"
+static __attribute__((__always_inline__)) void afio_exti_select(exti_num exti, exti_cfg port) {
+    exti_select(exti, port);
+}
+
+
+}
+# 45 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h"
+extern "C"{
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h"
+typedef enum rcc_sysclk_src {
+    RCC_CLKSRC_HSI = 0x0,
+    RCC_CLKSRC_HSE = 0x1,
+    RCC_CLKSRC_PLL = 0x2,
+} rcc_sysclk_src;
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h"
+extern "C"{
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h"
+typedef struct rcc_reg_map {
+    volatile uint32 CR;
+    volatile uint32 CFGR;
+    volatile uint32 CIR;
+    volatile uint32 APB2RSTR;
+    volatile uint32 APB1RSTR;
+    volatile uint32 AHBENR;
+    volatile uint32 APB2ENR;
+    volatile uint32 APB1ENR;
+    volatile uint32 BDCR;
+    volatile uint32 CSR;
+} rcc_reg_map;
+# 393 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h"
+typedef enum rcc_clk_id {
+    RCC_ADC1,
+    RCC_ADC2,
+    RCC_ADC3,
+    RCC_AFIO,
+    RCC_BKP,
+    RCC_CRC,
+    RCC_DAC,
+    RCC_DMA1,
+    RCC_DMA2,
+    RCC_FLITF,
+    RCC_FSMC,
+    RCC_GPIOA,
+    RCC_GPIOB,
+    RCC_GPIOC,
+    RCC_GPIOD,
+    RCC_GPIOE,
+    RCC_GPIOF,
+    RCC_GPIOG,
+    RCC_I2C1,
+    RCC_I2C2,
+    RCC_PWR,
+    RCC_SDIO,
+    RCC_SPI1,
+    RCC_SPI2,
+    RCC_SPI3,
+    RCC_SRAM,
+    RCC_TIMER1,
+    RCC_TIMER2,
+    RCC_TIMER3,
+    RCC_TIMER4,
+    RCC_TIMER5,
+    RCC_TIMER6,
+    RCC_TIMER7,
+    RCC_TIMER8,
+    RCC_TIMER9,
+    RCC_TIMER10,
+    RCC_TIMER11,
+    RCC_TIMER12,
+    RCC_TIMER13,
+    RCC_TIMER14,
+    RCC_USART1,
+    RCC_USART2,
+    RCC_USART3,
+    RCC_UART4,
+    RCC_UART5,
+    RCC_USB,
+} rcc_clk_id;
+
+
+
+
+
+typedef enum rcc_pllsrc {
+    RCC_PLLSRC_HSE = (0x1 << 16),
+    RCC_PLLSRC_HSI_DIV_2 = (0x0 << 16)
+} rcc_pllsrc;
+
+
+
+
+
+typedef enum rcc_clk_domain {
+    RCC_APB1,
+    RCC_APB2,
+    RCC_AHB
+} rcc_clk_domain;
+
+
+
+
+
+typedef enum rcc_prescaler {
+    RCC_PRESCALER_AHB,
+    RCC_PRESCALER_APB1,
+    RCC_PRESCALER_APB2,
+    RCC_PRESCALER_USB,
+    RCC_PRESCALER_ADC
+} rcc_prescaler;
+
+
+
+
+
+typedef enum rcc_adc_divider {
+    RCC_ADCPRE_PCLK_DIV_2 = 0x0 << 14,
+    RCC_ADCPRE_PCLK_DIV_4 = 0x1 << 14,
+    RCC_ADCPRE_PCLK_DIV_6 = 0x2 << 14,
+    RCC_ADCPRE_PCLK_DIV_8 = 0x3 << 14,
+} rcc_adc_divider;
+
+
+
+
+
+typedef enum rcc_apb1_divider {
+    RCC_APB1_HCLK_DIV_1 = 0x0 << 8,
+    RCC_APB1_HCLK_DIV_2 = 0x4 << 8,
+    RCC_APB1_HCLK_DIV_4 = 0x5 << 8,
+    RCC_APB1_HCLK_DIV_8 = 0x6 << 8,
+    RCC_APB1_HCLK_DIV_16 = 0x7 << 8,
+} rcc_apb1_divider;
+
+
+
+
+
+typedef enum rcc_apb2_divider {
+    RCC_APB2_HCLK_DIV_1 = 0x0 << 11,
+    RCC_APB2_HCLK_DIV_2 = 0x4 << 11,
+    RCC_APB2_HCLK_DIV_4 = 0x5 << 11,
+    RCC_APB2_HCLK_DIV_8 = 0x6 << 11,
+    RCC_APB2_HCLK_DIV_16 = 0x7 << 11,
+} rcc_apb2_divider;
+
+
+
+
+
+typedef enum rcc_ahb_divider {
+    RCC_AHB_SYSCLK_DIV_1 = 0x0 << 4,
+    RCC_AHB_SYSCLK_DIV_2 = 0x8 << 4,
+    RCC_AHB_SYSCLK_DIV_4 = 0x9 << 4,
+    RCC_AHB_SYSCLK_DIV_8 = 0xA << 4,
+    RCC_AHB_SYSCLK_DIV_16 = 0xB << 4,
+    RCC_AHB_SYSCLK_DIV_32 = 0xC << 4,
+    RCC_AHB_SYSCLK_DIV_64 = 0xD << 4,
+    RCC_AHB_SYSCLK_DIV_128 = 0xD << 4,
+    RCC_AHB_SYSCLK_DIV_256 = 0xE << 4,
+    RCC_AHB_SYSCLK_DIV_512 = 0xF << 4,
+} rcc_ahb_divider;
+
+
+
+
+typedef enum rcc_clk {
+    RCC_CLK_PLL = (uint16)((__builtin_offsetof (struct rcc_reg_map, CR) << 8) |
+                              24),
+
+    RCC_CLK_HSE = (uint16)((__builtin_offsetof (struct rcc_reg_map, CR) << 8) |
+                              16),
+    RCC_CLK_HSI = (uint16)((__builtin_offsetof (struct rcc_reg_map, CR) << 8) |
+                              0),
+    RCC_CLK_LSE = (uint16)((__builtin_offsetof (struct rcc_reg_map, BDCR) << 8) |
+                              0),
+
+    RCC_CLK_LSI = (uint16)((__builtin_offsetof (struct rcc_reg_map, CSR) << 8) |
+                              0),
+
+} rcc_clk;
+
+
+
+
+typedef enum rcc_pll_multiplier {
+    RCC_PLLMUL_2 = (0x0 << 18),
+    RCC_PLLMUL_3 = (0x1 << 18),
+    RCC_PLLMUL_4 = (0x2 << 18),
+    RCC_PLLMUL_5 = (0x3 << 18),
+    RCC_PLLMUL_6 = (0x4 << 18),
+    RCC_PLLMUL_7 = (0x5 << 18),
+    RCC_PLLMUL_8 = (0x6 << 18),
+    RCC_PLLMUL_9 = (0x7 << 18),
+    RCC_PLLMUL_10 = (0x8 << 18),
+    RCC_PLLMUL_11 = (0x9 << 18),
+    RCC_PLLMUL_12 = (0xA << 18),
+    RCC_PLLMUL_13 = (0xB << 18),
+    RCC_PLLMUL_14 = (0xC << 18),
+    RCC_PLLMUL_15 = (0xD << 18),
+    RCC_PLLMUL_16 = (0xE << 18),
+} rcc_pll_multiplier;
+# 572 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h"
+typedef struct stm32f1_rcc_pll_data {
+     rcc_pll_multiplier pll_mul;
+} stm32f1_rcc_pll_data;
+# 590 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/rcc.h"
+__attribute__((__deprecated__))
+void rcc_clk_init(rcc_sysclk_src sysclk_src,
+                  rcc_pllsrc pll_src,
+                  rcc_pll_multiplier pll_mul);
+
+
+}
+# 54 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h" 2
+# 99 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h"
+extern void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider);
+
+
+
+void rcc_switch_sysclk(rcc_sysclk_src sysclk_src);
+
+
+
+
+
+
+typedef struct rcc_pll_cfg {
+    rcc_pllsrc pllsrc;
+
+
+    void *data;
+} rcc_pll_cfg;
+# 125 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h"
+extern void rcc_configure_pll(rcc_pll_cfg *pll_cfg);
+
+
+
+void rcc_turn_on_clk(rcc_clk clock);
+void rcc_turn_off_clk(rcc_clk clock);
+int rcc_is_clk_on(rcc_clk clock);
+int rcc_is_clk_ready(rcc_clk clock);
+
+
+
+
+
+
+
+extern void rcc_clk_enable(rcc_clk_id id);
+# 151 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/rcc.h"
+extern void rcc_reset_dev(rcc_clk_id id);
+
+rcc_clk_domain rcc_dev_clk(rcc_clk_id id);
+
+
+
+
+
+
+static inline void rcc_enable_css() {
+    ((struct rcc_reg_map*)0x40021000)->CR |= (1U << 19);
+}
+
+
+
+
+static inline void rcc_disable_css() {
+    ((struct rcc_reg_map*)0x40021000)->CR &= ~(1U << 19);
+}
+
+
+}
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h" 2
+
+
+
+
+
+
+
+typedef struct gpio_dev {
+    gpio_reg_map *regs;
+    rcc_clk_id clk_id;
+
+
+
+
+    exti_cfg exti_port;
+} gpio_dev;
+
+
+
+
+
+void gpio_init(gpio_dev *dev);
+void gpio_init_all(void);
+
+void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode);
+
+
+
+
+
+static inline exti_cfg gpio_exti_port(gpio_dev *dev) {
+    return (exti_cfg)(EXTI_PA + (dev->clk_id - RCC_GPIOA));
+}
+# 90 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h"
+static inline void gpio_write_bit(gpio_dev *dev, uint8 pin, uint8 val) {
+    val = !val;
+    dev->regs->BSRR = (1U << pin) << (16 * val);
+}
+# 104 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/gpio.h"
+static inline uint32 gpio_read_bit(gpio_dev *dev, uint8 pin) {
+    return dev->regs->IDR & (1U << pin);
+}
+
+
+
+
+
+
+static inline void gpio_toggle_bit(gpio_dev *dev, uint8 pin) {
+    dev->regs->ODR = dev->regs->ODR ^ (1U << pin);
+}
+
+
+}
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+extern "C"{
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/timer.h" 1
+# 43 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/timer.h"
+typedef struct timer_gen_reg_map {
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    volatile uint32 SMCR;
+    volatile uint32 DIER;
+    volatile uint32 SR;
+    volatile uint32 EGR;
+    volatile uint32 CCMR1;
+    volatile uint32 CCMR2;
+    volatile uint32 CCER;
+    volatile uint32 CNT;
+    volatile uint32 PSC;
+    volatile uint32 ARR;
+    const uint32 RESERVED1;
+    volatile uint32 CCR1;
+    volatile uint32 CCR2;
+    volatile uint32 CCR3;
+    volatile uint32 CCR4;
+    const uint32 RESERVED2;
+    volatile uint32 DCR;
+    volatile uint32 DMAR;
+} timer_gen_reg_map;
+
+struct timer_adv_reg_map;
+struct timer_bas_reg_map;
+# 107 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/timer.h"
+struct timer_dev;
+
+extern struct timer_dev *TIMER1;
+extern struct timer_dev *TIMER2;
+extern struct timer_dev *TIMER3;
+extern struct timer_dev *TIMER4;
+# 41 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple.h"
+extern "C" {
+
+
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/util.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/util.h"
+extern "C"{
+# 58 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/util.h"
+void __error(void);
+void _fail(const char*, int, const char*);
+void throb(void);
+# 108 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/util.h"
+}
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/delay.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/delay.h"
+extern "C" {
+# 48 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/delay.h"
+static inline void delay_us(uint32 us) {
+    us *= 12;
+
+
+    us--;
+    asm volatile("   mov r0, %[us]          \n\t"
+                 "1: subs r0, #1            \n\t"
+                 "   bhi 1b                 \n\t"
+                 :
+                 : [us] "r" (us)
+                 : "r0");
+}
+
+
+}
+# 43 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/libmaple.h" 2
+
+
+}
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/nvic.h" 1
+# 50 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/nvic.h"
+extern "C"{
+
+
+
+
+
+
+typedef struct nvic_reg_map {
+    volatile uint32 ISER[8];
+
+    uint32 RESERVED0[24];
+
+    volatile uint32 ICER[8];
+
+    uint32 RESERVED1[24];
+
+    volatile uint32 ISPR[8];
+
+    uint32 RESERVED2[24];
+
+    volatile uint32 ICPR[8];
+
+    uint32 RESERVED3[24];
+
+    volatile uint32 IABR[8];
+
+    uint32 RESERVED4[56];
+
+    volatile uint8 IP[240];
+
+    uint32 RESERVED5[644];
+
+    volatile uint32 STIR;
+} nvic_reg_map;
+# 100 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/nvic.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/nvic.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/nvic.h"
+extern "C"{
+# 46 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/nvic.h"
+typedef enum nvic_irq_num {
+    NVIC_NMI = -14,
+    NVIC_HARDFAULT = -13,
+    NVIC_MEM_MANAGE = -12,
+    NVIC_BUS_FAULT = -11,
+
+    NVIC_USAGE_FAULT = -10,
+
+    NVIC_SVC = -5,
+    NVIC_DEBUG_MON = -4,
+    NVIC_PEND_SVC = -2,
+    NVIC_SYSTICK = -1,
+    NVIC_WWDG = 0,
+    NVIC_PVD = 1,
+    NVIC_TAMPER = 2,
+    NVIC_RTC = 3,
+    NVIC_FLASH = 4,
+    NVIC_RCC = 5,
+    NVIC_EXTI0 = 6,
+    NVIC_EXTI1 = 7,
+    NVIC_EXTI2 = 8,
+    NVIC_EXTI3 = 9,
+    NVIC_EXTI4 = 10,
+    NVIC_DMA_CH1 = 11,
+    NVIC_DMA_CH2 = 12,
+    NVIC_DMA_CH3 = 13,
+    NVIC_DMA_CH4 = 14,
+    NVIC_DMA_CH5 = 15,
+    NVIC_DMA_CH6 = 16,
+    NVIC_DMA_CH7 = 17,
+    NVIC_ADC_1_2 = 18,
+    NVIC_USB_HP_CAN_TX = 19,
+    NVIC_USB_LP_CAN_RX0 = 20,
+    NVIC_CAN_RX1 = 21,
+    NVIC_CAN_SCE = 22,
+    NVIC_EXTI_9_5 = 23,
+    NVIC_TIMER1_BRK_TIMER9 = 24,
+    NVIC_TIMER1_UP_TIMER10 = 25,
+    NVIC_TIMER1_TRG_COM_TIMER11 = 26,
+
+
+    NVIC_TIMER1_CC = 27,
+    NVIC_TIMER2 = 28,
+    NVIC_TIMER3 = 29,
+    NVIC_TIMER4 = 30,
+    NVIC_I2C1_EV = 31,
+    NVIC_I2C1_ER = 32,
+    NVIC_I2C2_EV = 33,
+    NVIC_I2C2_ER = 34,
+    NVIC_SPI1 = 35,
+    NVIC_SPI2 = 36,
+    NVIC_USART1 = 37,
+    NVIC_USART2 = 38,
+    NVIC_USART3 = 39,
+    NVIC_EXTI_15_10 = 40,
+    NVIC_RTCALARM = 41,
+    NVIC_USBWAKEUP = 42,
+
+    NVIC_TIMER8_BRK_TIMER12 = 43,
+    NVIC_TIMER8_UP_TIMER13 = 44,
+    NVIC_TIMER8_TRG_COM_TIMER14 = 45,
+
+
+    NVIC_TIMER8_CC = 46,
+    NVIC_ADC3 = 47,
+    NVIC_FSMC = 48,
+    NVIC_SDIO = 49,
+    NVIC_TIMER5 = 50,
+    NVIC_SPI3 = 51,
+    NVIC_UART4 = 52,
+    NVIC_UART5 = 53,
+    NVIC_TIMER6 = 54,
+    NVIC_TIMER7 = 55,
+    NVIC_DMA2_CH1 = 56,
+    NVIC_DMA2_CH2 = 57,
+    NVIC_DMA2_CH3 = 58,
+    NVIC_DMA2_CH_4_5 = 59,
+
+
+    NVIC_TIMER1_BRK =
+        NVIC_TIMER1_BRK_TIMER9,
+
+
+
+    NVIC_TIMER1_UP =
+        NVIC_TIMER1_UP_TIMER10,
+
+
+
+    NVIC_TIMER1_TRG_COM =
+        NVIC_TIMER1_TRG_COM_TIMER11,
+
+
+
+
+
+    NVIC_TIMER8_BRK =
+        NVIC_TIMER8_BRK_TIMER12,
+
+
+
+    NVIC_TIMER8_UP =
+        NVIC_TIMER8_UP_TIMER13,
+
+
+    NVIC_TIMER8_TRG_COM =
+        NVIC_TIMER8_TRG_COM_TIMER14,
+
+
+
+
+} nvic_irq_num;
+
+static inline void nvic_irq_disable_all(void) {
+
+    ((struct nvic_reg_map*)0xE000E100)->ICER[0] = 0xFFFFFFFF;
+    ((struct nvic_reg_map*)0xE000E100)->ICER[1] = 0xFFFFFFFF;
+
+
+
+
+}
+
+
+}
+# 101 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/nvic.h" 2
+
+void nvic_init(uint32 address, uint32 offset);
+void nvic_set_vector_table(uint32 address, uint32 offset);
+void nvic_irq_set_priority(nvic_irq_num irqn, uint8 priority);
+void nvic_sys_reset();
+
+
+
+
+static __attribute__((__always_inline__)) void nvic_globalirq_enable() {
+    asm volatile("cpsie i");
+}
+
+
+
+
+static __attribute__((__always_inline__)) void nvic_globalirq_disable() {
+    asm volatile("cpsid i");
+}
+
+
+
+
+
+static inline void nvic_irq_enable(nvic_irq_num irq_num) {
+    if (irq_num < 0) {
+        return;
+    }
+    ((struct nvic_reg_map*)0xE000E100)->ISER[irq_num / 32] = (1UL << (irq_num % 32));
+}
+
+
+
+
+
+static inline void nvic_irq_disable(nvic_irq_num irq_num) {
+    if (irq_num < 0) {
+        return;
+    }
+    ((struct nvic_reg_map*)0xE000E100)->ICER[irq_num / 32] = (1UL << (irq_num % 32));
+}
+
+
+
+
+
+
+
+static inline void nvic_irq_disable_all(void);
+
+
+}
+# 44 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/bitband.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/bitband.h"
+extern "C" {
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/bitband.h"
+static inline volatile uint32* __bb_addr(volatile void*,
+                                         uint32,
+                                         uint32,
+                                         uint32);
+
+
+
+
+
+
+
+static inline volatile uint32* bb_sramp(volatile void *address, uint32 bit) {
+    return __bb_addr(address, bit, 0x22000000, 0x20000000);
+}
+
+
+
+
+
+
+
+static inline uint8 bb_sram_get_bit(volatile void *address, uint32 bit) {
+    return *bb_sramp(address, bit);
+}
+
+
+
+
+
+
+
+static inline void bb_sram_set_bit(volatile void *address,
+                                   uint32 bit,
+                                   uint8 val) {
+    *bb_sramp(address, bit) = val;
+}
+
+
+
+
+
+
+
+static inline volatile uint32* bb_perip(volatile void *address, uint32 bit) {
+    return __bb_addr(address, bit, 0x42000000, 0x40000000);
+}
+
+
+
+
+
+
+
+static inline uint8 bb_peri_get_bit(volatile void *address, uint32 bit) {
+    return *bb_perip(address, bit);
+}
+
+
+
+
+
+
+
+static inline void bb_peri_set_bit(volatile void *address,
+                                   uint32 bit,
+                                   uint8 val) {
+    *bb_perip(address, bit) = val;
+}
+
+static inline volatile uint32* __bb_addr(volatile void *address,
+                                         uint32 bit,
+                                         uint32 bb_base,
+                                         uint32 bb_ref) {
+    return (volatile uint32*)(bb_base + ((uint32)address - bb_ref) * 32 +
+                              bit * 4);
+}
+
+
+}
+# 45 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h" 2
+
+
+
+
+
+
+typedef struct timer_adv_reg_map {
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    volatile uint32 SMCR;
+    volatile uint32 DIER;
+    volatile uint32 SR;
+    volatile uint32 EGR;
+    volatile uint32 CCMR1;
+    volatile uint32 CCMR2;
+    volatile uint32 CCER;
+    volatile uint32 CNT;
+    volatile uint32 PSC;
+    volatile uint32 ARR;
+    volatile uint32 RCR;
+    volatile uint32 CCR1;
+    volatile uint32 CCR2;
+    volatile uint32 CCR3;
+    volatile uint32 CCR4;
+    volatile uint32 BDTR;
+    volatile uint32 DCR;
+    volatile uint32 DMAR;
+} timer_adv_reg_map;
+
+
+
+
+
+
+
+typedef struct timer_bas_reg_map {
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    const uint32 RESERVED1;
+    volatile uint32 DIER;
+    volatile uint32 SR;
+    volatile uint32 EGR;
+    const uint32 RESERVED2;
+    const uint32 RESERVED3;
+    const uint32 RESERVED4;
+    volatile uint32 CNT;
+    volatile uint32 PSC;
+    volatile uint32 ARR;
+} timer_bas_reg_map;
+# 105 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+typedef union timer_reg_map {
+    timer_adv_reg_map *adv;
+    timer_gen_reg_map *gen;
+    timer_bas_reg_map *bas;
+} timer_reg_map;
+# 118 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+typedef enum timer_type {
+    TIMER_ADVANCED,
+    TIMER_GENERAL,
+    TIMER_BASIC,
+} timer_type;
+
+
+typedef struct timer_dev {
+    timer_reg_map regs;
+    rcc_clk_id clk_id;
+    timer_type type;
+    voidFuncPtr handlers[];
+
+
+
+} timer_dev;
+
+
+extern timer_dev *TIMER1;
+
+
+extern timer_dev *TIMER2;
+
+
+extern timer_dev *TIMER3;
+
+
+extern timer_dev *TIMER4;
+# 535 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+typedef enum timer_mode {
+
+
+
+    TIMER_DISABLED,
+
+
+    TIMER_PWM,
+
+
+
+
+
+
+
+    TIMER_OUTPUT_COMPARE,
+
+
+
+
+
+
+} timer_mode;
+
+
+typedef enum timer_channel {
+    TIMER_CH1 = 1,
+    TIMER_CH2 = 2,
+    TIMER_CH3 = 3,
+    TIMER_CH4 = 4
+} timer_channel;
+# 577 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+void timer_init(timer_dev *dev);
+void timer_disable(timer_dev *dev);
+void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode);
+void timer_foreach(void (*fn)(timer_dev*));
+int timer_has_cc_channel(timer_dev *dev, uint8 channel);
+# 592 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+typedef enum timer_interrupt_id {
+    TIMER_UPDATE_INTERRUPT,
+    TIMER_CC1_INTERRUPT,
+    TIMER_CC2_INTERRUPT,
+    TIMER_CC3_INTERRUPT,
+    TIMER_CC4_INTERRUPT,
+    TIMER_COM_INTERRUPT,
+    TIMER_TRG_INTERRUPT,
+    TIMER_BREAK_INTERRUPT,
+} timer_interrupt_id;
+
+void timer_attach_interrupt(timer_dev *dev,
+                            uint8 interrupt,
+                            voidFuncPtr handler);
+void timer_detach_interrupt(timer_dev *dev, uint8 interrupt);
+
+
+
+
+static inline void timer_init_all(void) {
+    timer_foreach(timer_init);
+}
+
+
+
+
+static inline void timer_disable_all(void) {
+    timer_foreach(timer_disable);
+}
+# 629 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_pause(timer_dev *dev) {
+    *bb_perip(&(dev->regs).bas->CR1, 0) = 0;
+}
+# 640 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_resume(timer_dev *dev) {
+    *bb_perip(&(dev->regs).bas->CR1, 0) = 1;
+}
+# 652 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline uint16 timer_get_count(timer_dev *dev) {
+    return (uint16)(dev->regs).bas->CNT;
+}
+
+
+
+
+
+
+static inline void timer_set_count(timer_dev *dev, uint16 value) {
+    (dev->regs).bas->CNT = value;
+}
+# 677 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline uint16 timer_get_prescaler(timer_dev *dev) {
+    return (uint16)(dev->regs).bas->PSC;
+}
+# 691 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_set_prescaler(timer_dev *dev, uint16 psc) {
+    (dev->regs).bas->PSC = psc;
+}
+
+
+
+
+
+static inline uint16 timer_get_reload(timer_dev *dev) {
+    return (uint16)(dev->regs).bas->ARR;
+}
+
+
+
+
+
+
+
+static inline void timer_set_reload(timer_dev *dev, uint16 arr) {
+    (dev->regs).bas->ARR = arr;
+}
+
+
+
+
+
+
+static inline uint16 timer_get_compare(timer_dev *dev, uint8 channel) {
+    volatile uint32 *ccr = &(dev->regs).gen->CCR1 + (channel - 1);
+    return *ccr;
+}
+
+
+
+
+
+
+
+static inline void timer_set_compare(timer_dev *dev,
+                                     uint8 channel,
+                                     uint16 value) {
+    volatile uint32 *ccr = &(dev->regs).gen->CCR1 + (channel - 1);
+    *ccr = value;
+}
+# 746 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_generate_update(timer_dev *dev) {
+    *bb_perip(&(dev->regs).bas->EGR, 0) = 1;
+}
+
+
+
+
+
+static inline void timer_dma_enable_trg_req(timer_dev *dev) {
+    *bb_perip(&(dev->regs).gen->DIER, 14) = 1;
+}
+
+
+
+
+
+static inline void timer_dma_disable_trg_req(timer_dev *dev) {
+    *bb_perip(&(dev->regs).gen->DIER, 14) = 0;
+}
+
+
+
+
+
+
+static inline void timer_dma_enable_req(timer_dev *dev, uint8 channel) {
+    *bb_perip(&(dev->regs).gen->DIER, channel + 8) = 1;
+}
+
+
+
+
+
+
+static inline void timer_dma_disable_req(timer_dev *dev, uint8 channel) {
+    *bb_perip(&(dev->regs).gen->DIER, channel + 8) = 0;
+}
+# 792 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_enable_irq(timer_dev *dev, uint8 interrupt) {
+    *bb_perip(&(dev->regs).adv->DIER, interrupt) = 1;
+}
+# 804 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_disable_irq(timer_dev *dev, uint8 interrupt) {
+    *bb_perip(&(dev->regs).adv->DIER, interrupt) = 0;
+}
+# 819 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_cc_enable(timer_dev *dev, uint8 channel) {
+    *bb_perip(&(dev->regs).gen->CCER, 4 * (channel - 1)) = 1;
+}
+
+
+
+
+
+
+
+static inline void timer_cc_disable(timer_dev *dev, uint8 channel) {
+    *bb_perip(&(dev->regs).gen->CCER, 4 * (channel - 1)) = 0;
+}
+# 840 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline uint8 timer_cc_get_pol(timer_dev *dev, uint8 channel) {
+    return *bb_perip(&(dev->regs).gen->CCER, 4 * (channel - 1) + 1);
+}
+# 861 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_cc_set_pol(timer_dev *dev, uint8 channel, uint8 pol) {
+    *bb_perip(&(dev->regs).gen->CCER, 4 * (channel - 1) + 1) = pol;
+}
+
+
+
+
+
+
+
+static inline uint8 timer_dma_get_burst_len(timer_dev *dev) {
+    uint32 dbl = ((dev->regs).gen->DCR & (0x1F << 8)) >> 8;
+    return dbl + 1;
+}
+
+
+
+
+
+
+
+static inline void timer_dma_set_burst_len(timer_dev *dev, uint8 length) {
+    uint32 tmp = (dev->regs).gen->DCR;
+    tmp &= ~(0x1F << 8);
+    tmp |= (length - 1) << 8;
+    (dev->regs).gen->DCR = tmp;
+}
+
+
+
+
+
+
+typedef enum timer_dma_base_addr {
+
+    TIMER_DMA_BASE_CR1 = 0x0,
+
+    TIMER_DMA_BASE_CR2 = 0x1,
+
+    TIMER_DMA_BASE_SMCR = 0x2,
+
+    TIMER_DMA_BASE_DIER = 0x3,
+
+    TIMER_DMA_BASE_SR = 0x4,
+
+    TIMER_DMA_BASE_EGR = 0x5,
+
+    TIMER_DMA_BASE_CCMR1 = 0x6,
+
+    TIMER_DMA_BASE_CCMR2 = 0x7,
+
+    TIMER_DMA_BASE_CCER = 0x8,
+
+    TIMER_DMA_BASE_CNT = 0x9,
+
+    TIMER_DMA_BASE_PSC = 0xA,
+
+    TIMER_DMA_BASE_ARR = 0xB,
+
+    TIMER_DMA_BASE_RCR = 0xC,
+
+    TIMER_DMA_BASE_CCR1 = 0xD,
+
+    TIMER_DMA_BASE_CCR2 = 0xE,
+
+    TIMER_DMA_BASE_CCR3 = 0xF,
+
+    TIMER_DMA_BASE_CCR4 = 0x10,
+
+    TIMER_DMA_BASE_BDTR = 0x11,
+
+    TIMER_DMA_BASE_DCR = 0x12,
+
+    TIMER_DMA_BASE_DMAR = 0x13,
+} timer_dma_base_addr;
+# 945 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline timer_dma_base_addr timer_dma_get_base_addr(timer_dev *dev) {
+    uint32 dcr = (dev->regs).gen->DCR;
+    return (timer_dma_base_addr)(dcr & 0x1F);
+}
+# 958 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_dma_set_base_addr(timer_dev *dev,
+                                           timer_dma_base_addr dma_base) {
+    uint32 tmp = (dev->regs).gen->DCR;
+    tmp &= ~0x1F;
+    tmp |= dma_base;
+    (dev->regs).gen->DCR = tmp;
+}
+
+
+
+
+typedef enum timer_oc_mode {
+
+
+
+    TIMER_OC_MODE_FROZEN = 0 << 4,
+
+
+
+    TIMER_OC_MODE_ACTIVE_ON_MATCH = 1 << 4,
+
+
+
+    TIMER_OC_MODE_INACTIVE_ON_MATCH = 2 << 4,
+
+
+
+    TIMER_OC_MODE_TOGGLE = 3 << 4,
+
+    TIMER_OC_MODE_FORCE_INACTIVE = 4 << 4,
+
+    TIMER_OC_MODE_FORCE_ACTIVE = 5 << 4,
+
+
+
+
+
+    TIMER_OC_MODE_PWM_1 = 6 << 4,
+
+
+
+
+
+    TIMER_OC_MODE_PWM_2 = 7 << 4,
+} timer_oc_mode;
+
+
+
+
+
+typedef enum timer_oc_mode_flags {
+    TIMER_OC_CE = 1U << 7,
+    TIMER_OC_PE = 1U << 3,
+    TIMER_OC_FE = 1U << 2,
+} timer_oc_mode_flags;
+# 1024 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+static inline void timer_oc_set_mode(timer_dev *dev,
+                                     uint8 channel,
+                                     timer_oc_mode mode,
+                                     uint8 flags) {
+
+    volatile uint32 *ccmr = &(dev->regs).gen->CCMR1 + (((channel - 1) >> 1) & 1);
+
+    uint8 shift = 8 * (1 - (channel & 1));
+
+    uint32 tmp = *ccmr;
+    tmp &= ~(0xFF << shift);
+    tmp |= (mode | flags | 0x0) << shift;
+    *ccmr = tmp;
+}
+# 1107 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/timer.h"
+}
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h" 1
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+extern "C"{
+# 53 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+typedef struct adc_reg_map {
+    volatile uint32 SR;
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    volatile uint32 SMPR1;
+    volatile uint32 SMPR2;
+    volatile uint32 JOFR1;
+    volatile uint32 JOFR2;
+    volatile uint32 JOFR3;
+    volatile uint32 JOFR4;
+    volatile uint32 HTR;
+    volatile uint32 LTR;
+    volatile uint32 SQR1;
+    volatile uint32 SQR2;
+    volatile uint32 SQR3;
+    volatile uint32 JSQR;
+    volatile uint32 JDR1;
+    volatile uint32 JDR2;
+    volatile uint32 JDR3;
+    volatile uint32 JDR4;
+    volatile uint32 DR;
+} adc_reg_map;
+
+
+typedef struct adc_dev {
+    adc_reg_map *regs;
+    rcc_clk_id clk_id;
+} adc_dev;
+# 105 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h" 1
+# 46 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h"
+extern const struct adc_dev *ADC1;
+extern const struct adc_dev *ADC2;
+# 114 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h"
+typedef enum adc_extsel_event {
+# 130 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h"
+    ADC_EXT_EV_TIM1_CC1 = 0x00000,
+    ADC_EXT_EV_TIM1_CC2 = 0x20000,
+    ADC_EXT_EV_TIM2_CC2 = 0x60000,
+    ADC_EXT_EV_TIM3_TRGO = 0x80000,
+    ADC_EXT_EV_TIM4_CC4 = 0xA0000,
+    ADC_EXT_EV_EXTI11 = 0xC0000,
+
+
+    ADC_EXT_EV_TIM1_CC3 = 0x40000,
+    ADC_EXT_EV_SWSTART = 0xE0000,
+
+
+    ADC_EXT_EV_TIM3_CC1 = 0x00000,
+
+
+    ADC_EXT_EV_TIM2_CC3 = 0x20000,
+
+
+    ADC_EXT_EV_TIM8_CC1 = 0x60000,
+
+
+    ADC_EXT_EV_ADC3_TIM8_TRGO = 0x80000,
+
+
+    ADC_EXT_EV_TIM5_CC1 = 0xA0000,
+
+
+    ADC_EXT_EV_ADC12_TIM8_TRGO = 0xC0000,
+
+
+    ADC_EXT_EV_TIM5_CC3 = 0xC0000,
+
+
+} adc_extsel_event;
+# 209 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h"
+typedef enum adc_smp_rate {
+    ADC_SMPR_1_5,
+    ADC_SMPR_7_5,
+    ADC_SMPR_13_5,
+    ADC_SMPR_28_5,
+    ADC_SMPR_41_5,
+    ADC_SMPR_55_5,
+    ADC_SMPR_71_5,
+    ADC_SMPR_239_5,
+} adc_smp_rate;
+
+
+
+
+typedef enum adc_prescaler {
+
+    ADC_PRE_PCLK2_DIV_2 = RCC_ADCPRE_PCLK_DIV_2,
+
+    ADC_PRE_PCLK2_DIV_4 = RCC_ADCPRE_PCLK_DIV_4,
+
+    ADC_PRE_PCLK2_DIV_6 = RCC_ADCPRE_PCLK_DIV_6,
+
+    ADC_PRE_PCLK2_DIV_8 = RCC_ADCPRE_PCLK_DIV_8,
+} adc_prescaler;
+
+
+
+
+
+void adc_calibrate(const adc_dev *dev);
+# 249 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/adc.h"
+static inline void adc_set_exttrig(const adc_dev *dev, uint8 enable) {
+    *bb_perip(&dev->regs->CR2, 20) = !!enable;
+}
+# 106 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h" 2
+# 244 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+void adc_init(const adc_dev *dev);
+void adc_set_extsel(const adc_dev *dev, adc_extsel_event event);
+void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate);
+uint16 adc_read(const adc_dev *dev, uint8 channel);
+
+
+
+
+
+
+extern void adc_set_prescaler(adc_prescaler pre);
+
+
+
+
+
+extern void adc_foreach(void (*fn)(const adc_dev*));
+
+struct gpio_dev;
+
+
+
+
+
+
+
+extern void adc_config_gpio(const struct adc_dev *dev,
+                            struct gpio_dev *gdev,
+                            uint8 bit);
+# 284 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+extern void adc_enable_single_swstart(const adc_dev* dev);
+# 295 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/adc.h"
+static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length) {
+    uint32 tmp = dev->regs->SQR1;
+    tmp &= ~(0x1F << 20);
+    tmp |= (length - 1) << 20;
+    dev->regs->SQR1 = tmp;
+}
+
+
+
+
+
+static inline void adc_enable(const adc_dev *dev) {
+    *bb_perip(&dev->regs->CR2, 0) = 1;
+}
+
+
+
+
+
+static inline void adc_disable(const adc_dev *dev) {
+    *bb_perip(&dev->regs->CR2, 0) = 0;
+}
+
+
+
+
+static inline void adc_disable_all(void) {
+    adc_foreach(adc_disable);
+}
+
+
+}
+# 40 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h" 2
+# 51 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_types.h"
+typedef struct stm32_pin_info {
+    gpio_dev *gpio_device;
+    timer_dev *timer_device;
+    const adc_dev *adc_device;
+    uint8 gpio_bit;
+    uint8 timer_channel;
+    uint8 adc_channel;
+} stm32_pin_info;
+
+
+
+
+
+
+typedef uint8 boolean;
+typedef uint8 byte;
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\variants\\maple_mini/board/board.h" 1
+# 77 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\variants\\maple_mini/board/board.h"
+enum {
+    PB11, PB10, PB2, PB0, PA7, PA6, PA5, PA4, PA3, PA2, PA1, PA0, PC15, PC14,
+    PC13, PB7, PB6, PB5, PB4, PB3, PA15, PA14, PA13, PA12, PA11, PA10, PA9,
+    PA8, PB15, PB14, PB13, PB12, PB8, PB1
+};
+# 40 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h" 2
+
+
+
+
+
+enum {
+    D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16,
+    D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31,
+    D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46,
+    D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D61,
+    D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76,
+    D77, D78, D79, D80, D81, D82, D83, D84, D85, D86, D87, D88, D89, D90, D91,
+    D92, D93, D94, D95, D96, D97, D98, D99, D100, D101, D102, D103, D104, D105,
+    D106, D107, D108, D109, D110, D111, };
+
+
+
+
+
+extern const stm32_pin_info PIN_MAP[];
+
+
+
+
+
+
+extern const uint8 boardPWMPins[];
+
+
+
+
+
+
+extern const uint8 boardADCPins[];
+
+
+
+
+
+
+
+extern const uint8 boardUsedPins[];
+# 92 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h"
+void init(void);
+# 103 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h"
+extern void boardInit(void);
+
+
+
+
+
+
+
+bool boardUsesPin(uint8 pin);
+# 53 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h" 1
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+typedef enum WiringPinMode {
+    OUTPUT,
+
+
+
+    OUTPUT_OPEN_DRAIN,
+# 63 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+    INPUT,
+
+
+
+
+
+
+
+    INPUT_ANALOG,
+
+
+
+
+    INPUT_PULLUP,
+
+
+
+
+
+
+
+    INPUT_PULLDOWN,
+
+
+
+
+
+
+
+    INPUT_FLOATING,
+
+    PWM,
+
+
+    PWM_OPEN_DRAIN,
+
+
+
+} WiringPinMode;
+# 110 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+void pinMode(uint8 pin, WiringPinMode mode);
+# 123 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+void digitalWrite(uint8 pin, uint8 value);
+# 133 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+uint32 digitalRead(uint8 pin);
+# 145 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+uint16 analogRead(uint8 pin);
+# 157 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+void togglePin(uint8 pin);
+# 170 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+static inline void toggleLED() {
+    togglePin(33);
+}
+# 184 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+uint8 isButtonPressed(uint8 pin=32,
+                      uint32 pressedLevel=0x1);
+# 204 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+uint8 waitForButtonPress(uint32 timeout_millis=0);
+# 220 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/io.h"
+void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 value);
+# 54 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/bit_constants.h" 1
+# 55 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/pwm.h" 1
+# 53 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/pwm.h"
+void pwmWrite(uint8 pin, uint16 duty_cycle);
+# 56 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h" 1
+# 42 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h"
+typedef enum ExtIntTriggerMode {
+    RISING,
+
+    FALLING,
+
+    CHANGE
+
+
+} ExtIntTriggerMode;
+# 69 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h"
+void attachInterrupt(uint8 pin, voidFuncPtr handler, ExtIntTriggerMode mode);
+# 90 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h"
+void attachInterrupt(uint8 pin, voidArgumentFuncPtr handler, void *arg,
+                     ExtIntTriggerMode mode);
+
+
+
+
+
+
+
+void detachInterrupt(uint8 pin);
+# 109 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h"
+static __attribute__((__always_inline__)) void interrupts() {
+    nvic_globalirq_enable();
+}
+# 123 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/ext_interrupts.h"
+static __attribute__((__always_inline__)) void noInterrupts() {
+    nvic_globalirq_disable();
+}
+# 57 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_debug.h" 1
+# 45 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_debug.h"
+void disableDebugPorts(void);
+# 55 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_debug.h"
+void enableDebugPorts(void);
+# 58 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h" 1
+# 35 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 1 3
+
+
+
+
+
+# 1 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\machine\\ieeefp.h" 1 3
+# 7 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 2 3
+
+
+extern "C" {
+
+
+
+
+union __dmath
+{
+  double d;
+  __ULong i[2];
+};
+
+union __fmath
+{
+  float f;
+  __ULong i[1];
+};
+
+
+union __ldmath
+{
+  long double ld;
+  __ULong i[4];
+};
+# 108 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+extern double atan (double);
+extern double cos (double);
+extern double sin (double);
+extern double tan (double);
+extern double tanh (double);
+extern double frexp (double, int *);
+extern double modf (double, double *);
+extern double ceil (double);
+extern double fabs (double);
+extern double floor (double);
+
+
+
+
+
+
+extern double acos (double);
+extern double asin (double);
+extern double atan2 (double, double);
+extern double cosh (double);
+extern double sinh (double);
+extern double exp (double);
+extern double ldexp (double, int);
+extern double log (double);
+extern double log10 (double);
+extern double pow (double, double);
+extern double sqrt (double);
+extern double fmod (double, double);
+# 154 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+    typedef float float_t;
+    typedef double double_t;
+# 198 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+extern int __isinff (float x);
+extern int __isinfd (double x);
+extern int __isnanf (float x);
+extern int __isnand (double x);
+extern int __fpclassifyf (float x);
+extern int __fpclassifyd (double x);
+extern int __signbitf (float x);
+extern int __signbitd (double x);
+# 258 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+extern double infinity (void);
+extern double nan (const char *);
+extern int finite (double);
+extern double copysign (double, double);
+extern double logb (double);
+extern int ilogb (double);
+
+extern double asinh (double);
+extern double cbrt (double);
+extern double nextafter (double, double);
+extern double rint (double);
+extern double scalbn (double, int);
+
+extern double exp2 (double);
+extern double scalbln (double, long int);
+extern double tgamma (double);
+extern double nearbyint (double);
+extern long int lrint (double);
+extern long long int llrint (double);
+extern double round (double);
+extern long int lround (double);
+extern long long int llround (double);
+extern double trunc (double);
+extern double remquo (double, double, int *);
+extern double fdim (double, double);
+extern double fmax (double, double);
+extern double fmin (double, double);
+extern double fma (double, double, double);
+
+
+extern double log1p (double);
+extern double expm1 (double);
+
+
+
+extern double acosh (double);
+extern double atanh (double);
+extern double remainder (double, double);
+extern double gamma (double);
+extern double lgamma (double);
+extern double erf (double);
+extern double erfc (double);
+extern double log2 (double);
+
+
+
+
+
+extern double hypot (double, double);
+
+
+
+
+
+
+extern float atanf (float);
+extern float cosf (float);
+extern float sinf (float);
+extern float tanf (float);
+extern float tanhf (float);
+extern float frexpf (float, int *);
+extern float modff (float, float *);
+extern float ceilf (float);
+extern float fabsf (float);
+extern float floorf (float);
+
+
+extern float acosf (float);
+extern float asinf (float);
+extern float atan2f (float, float);
+extern float coshf (float);
+extern float sinhf (float);
+extern float expf (float);
+extern float ldexpf (float, int);
+extern float logf (float);
+extern float log10f (float);
+extern float powf (float, float);
+extern float sqrtf (float);
+extern float fmodf (float, float);
+
+
+
+
+extern float exp2f (float);
+extern float scalblnf (float, long int);
+extern float tgammaf (float);
+extern float nearbyintf (float);
+extern long int lrintf (float);
+extern long long llrintf (float);
+extern float roundf (float);
+extern long int lroundf (float);
+extern long long int llroundf (float);
+extern float truncf (float);
+extern float remquof (float, float, int *);
+extern float fdimf (float, float);
+extern float fmaxf (float, float);
+extern float fminf (float, float);
+extern float fmaf (float, float, float);
+
+extern float infinityf (void);
+extern float nanf (const char *);
+extern int finitef (float);
+extern float copysignf (float, float);
+extern float logbf (float);
+extern int ilogbf (float);
+
+extern float asinhf (float);
+extern float cbrtf (float);
+extern float nextafterf (float, float);
+extern float rintf (float);
+extern float scalbnf (float, int);
+extern float log1pf (float);
+extern float expm1f (float);
+
+
+extern float acoshf (float);
+extern float atanhf (float);
+extern float remainderf (float, float);
+extern float gammaf (float);
+extern float lgammaf (float);
+extern float erff (float);
+extern float erfcf (float);
+extern float log2f (float);
+extern float hypotf (float, float);
+
+
+
+
+
+
+extern long double atanl (long double);
+extern long double cosl (long double);
+extern long double sinl (long double);
+extern long double tanl (long double);
+extern long double tanhl (long double);
+extern long double frexpl (long double value, int *);
+extern long double modfl (long double, long double *);
+extern long double ceill (long double);
+extern long double fabsl (long double);
+extern long double floorl (long double);
+extern long double log1pl (long double);
+extern long double expm1l (long double);
+
+
+
+
+extern long double acosl (long double);
+extern long double asinl (long double);
+extern long double atan2l (long double, long double);
+extern long double coshl (long double);
+extern long double sinhl (long double);
+extern long double expl (long double);
+extern long double ldexpl (long double, int);
+extern long double logl (long double);
+extern long double log10l (long double);
+extern long double powl (long double, long double);
+extern long double sqrtl (long double);
+extern long double fmodl (long double, long double);
+extern long double hypotl (long double, long double);
+
+
+extern long double copysignl (long double, long double);
+extern long double nanl (const char *);
+extern int ilogbl (long double);
+extern long double asinhl (long double);
+extern long double cbrtl (long double);
+extern long double nextafterl (long double, long double);
+extern long double rintl (long double);
+extern long double scalbnl (long double, int);
+extern long double exp2l (long double);
+extern long double scalblnl (long double, long);
+extern long double tgammal (long double);
+extern long double nearbyintl (long double);
+extern long int lrintl (long double);
+extern long long int llrintl (long double);
+extern long double roundl (long double);
+extern long lroundl (long double);
+extern long long int llroundl (long double);
+extern long double truncl (long double);
+extern long double remquol (long double, long double, int *);
+extern long double fdiml (long double, long double);
+extern long double fmaxl (long double, long double);
+extern long double fminl (long double, long double);
+extern long double fmal (long double, long double, long double);
+
+extern long double acoshl (long double);
+extern long double atanhl (long double);
+extern long double remainderl (long double, long double);
+extern long double lgammal (long double);
+extern long double erfl (long double);
+extern long double erfcl (long double);
+# 463 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+extern double drem (double, double);
+extern void sincos (double, double *, double *);
+extern double gamma_r (double, int *);
+extern double lgamma_r (double, int *);
+
+extern double y0 (double);
+extern double y1 (double);
+extern double yn (int, double);
+extern double j0 (double);
+extern double j1 (double);
+extern double jn (int, double);
+
+extern float dremf (float, float);
+extern void sincosf (float, float *, float *);
+extern float gammaf_r (float, int *);
+extern float lgammaf_r (float, int *);
+
+extern float y0f (float);
+extern float y1f (float);
+extern float ynf (int, float);
+extern float j0f (float);
+extern float j1f (float);
+extern float jnf (int, float);
+
+
+
+extern double exp10 (double);
+
+
+extern double pow10 (double);
+
+
+extern float exp10f (float);
+
+
+extern float pow10f (float);
+# 508 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+extern int *__signgam (void);
+# 517 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+struct __exception
+
+
+
+{
+  int type;
+  char *name;
+  double arg1;
+  double arg2;
+  double retval;
+  int err;
+};
+
+
+extern int matherr (struct __exception *e);
+# 574 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+enum __fdlibm_version
+{
+  __fdlibm_ieee = -1,
+  __fdlibm_svid,
+  __fdlibm_xopen,
+  __fdlibm_posix
+};
+
+
+
+
+extern enum __fdlibm_version __fdlib_version;
+# 594 "c:\\program files (x86)\\arduino\\hardware\\tools\\gcc-arm-none-eabi-4.8.3-2014q1\\arm-none-eabi\\include\\math.h" 3
+}
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h" 2
+
+
+
+
+
+void randomSeed(unsigned int seed);
+
+
+
+
+
+
+
+long random(long max);
+# 58 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+long random(long min, long max);
+# 81 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+static inline long map(long value, long fromStart, long fromEnd,
+                long toStart, long toEnd) {
+    return (value - fromStart) * (toEnd - toStart) / (fromEnd - fromStart) +
+        toStart;
+}
+# 105 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+enum BitOrder {
+ LSBFIRST = 0,
+ MSBFIRST = 1
+};
+# 134 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+double cos(double x);
+
+
+
+
+
+
+double sin(double x);
+
+
+
+
+
+
+
+double tan(double x);
+
+
+
+
+
+
+
+double sqrt(double x);
+# 166 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_math.h"
+double pow(double x, double y);
+# 59 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/systick.h" 1
+# 36 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/systick.h"
+extern "C"{
+
+
+
+
+
+
+typedef struct systick_reg_map {
+    volatile uint32 CSR;
+    volatile uint32 RVR;
+    volatile uint32 CNT;
+    volatile uint32 CVR;
+} systick_reg_map;
+# 77 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/systick.h"
+extern volatile uint32 systick_uptime_millis;
+
+
+
+
+static inline uint32 systick_uptime(void) {
+    return systick_uptime_millis;
+}
+
+
+void systick_init(uint32 reload_val);
+void systick_disable();
+void systick_enable();
+
+
+
+
+static inline uint32 systick_get_count(void) {
+    return ((struct systick_reg_map*)0xE000E010)->CNT;
+}
+# 107 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/systick.h"
+static inline uint32 systick_check_underflow(void) {
+    return ((struct systick_reg_map*)0xE000E010)->CSR & (1UL << (16));
+}
+
+
+}
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h" 2
+# 45 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h"
+static inline uint32 millis(void) {
+    return systick_uptime();
+}
+
+
+
+
+
+
+static inline uint32 micros(void) {
+    uint32 ms;
+    uint32 cycle_cnt;
+
+    do {
+        ms = millis();
+        cycle_cnt = systick_get_count();
+        asm volatile("nop");
+        asm volatile("nop");
+    } while (ms != millis());
+
+
+
+
+    return ((ms * 1000) +
+            (71999 + 1 - cycle_cnt) / 72);
+
+}
+# 83 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h"
+void delay(unsigned long ms);
+# 95 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish_time.h"
+void delayMicroseconds(uint32 us);
+# 60 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h" 1
+# 37 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h" 1
+# 41 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+extern "C" {
+
+
+
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/stm32f1/include/series/spi.h" 1
+# 48 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h" 2
+
+
+
+
+
+
+typedef struct spi_reg_map {
+    volatile uint32 CR1;
+    volatile uint32 CR2;
+    volatile uint32 SR;
+    volatile uint32 DR;
+    volatile uint32 CRCPR;
+    volatile uint32 RXCRCR;
+    volatile uint32 TXCRCR;
+    volatile uint32 I2SCFGR;
+    volatile uint32 I2SPR;
+} spi_reg_map;
+# 203 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+typedef struct spi_dev {
+    spi_reg_map *regs;
+    rcc_clk_id clk_id;
+    nvic_irq_num irq_num;
+} spi_dev;
+
+
+
+
+
+void spi_init(spi_dev *dev);
+
+struct gpio_dev;
+# 228 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+extern void spi_config_gpios(spi_dev *dev,
+                             uint8 as_master,
+                             struct gpio_dev *nss_dev,
+                             uint8 nss_bit,
+                             struct gpio_dev *comm_dev,
+                             uint8 sck_bit,
+                             uint8 miso_bit,
+                             uint8 mosi_bit);
+# 244 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+typedef enum spi_mode {
+
+    SPI_MODE_LOW_RISING = 0,
+
+    SPI_MODE_LOW_FALLING = 1,
+
+    SPI_MODE_HIGH_FALLING = 2,
+
+    SPI_MODE_HIGH_RISING = 3,
+
+    SPI_MODE_0 = SPI_MODE_LOW_RISING,
+    SPI_MODE_1 = SPI_MODE_LOW_FALLING,
+    SPI_MODE_2 = SPI_MODE_HIGH_FALLING,
+    SPI_MODE_3 = SPI_MODE_HIGH_RISING,
+} spi_mode;
+
+
+
+
+
+typedef enum spi_baud_rate {
+    SPI_BAUD_PCLK_DIV_2 = (0x0 << 3),
+    SPI_BAUD_PCLK_DIV_4 = (0x1 << 3),
+    SPI_BAUD_PCLK_DIV_8 = (0x2 << 3),
+    SPI_BAUD_PCLK_DIV_16 = (0x3 << 3),
+    SPI_BAUD_PCLK_DIV_32 = (0x4 << 3),
+    SPI_BAUD_PCLK_DIV_64 = (0x5 << 3),
+    SPI_BAUD_PCLK_DIV_128 = (0x6 << 3),
+    SPI_BAUD_PCLK_DIV_256 = (0x7 << 3),
+} spi_baud_rate;
+
+
+
+
+
+
+typedef enum spi_cfg_flag {
+    SPI_BIDIMODE = (1U << 15),
+    SPI_BIDIOE = (1U << 14),
+
+    SPI_CRCEN = (1U << 13),
+
+    SPI_DFF_8_BIT = (0x0 << 11),
+
+    SPI_DFF_16_BIT = (0x1 << 11),
+    SPI_RX_ONLY = (1U << 10),
+    SPI_SW_SLAVE = (1U << 9),
+    SPI_SOFT_SS = (1U << 8),
+
+
+
+    SPI_FRAME_LSB = (1U << 7),
+
+    SPI_FRAME_MSB = 0,
+
+} spi_cfg_flag;
+
+void spi_master_enable(spi_dev *dev,
+                       spi_baud_rate baud,
+                       spi_mode mode,
+                       uint32 flags);
+
+void spi_slave_enable(spi_dev *dev,
+                      spi_mode mode,
+                      uint32 flags);
+
+uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len);
+
+
+
+
+
+extern void spi_foreach(void (*fn)(spi_dev*));
+
+void spi_peripheral_enable(spi_dev *dev);
+void spi_peripheral_disable(spi_dev *dev);
+
+void spi_tx_dma_enable(spi_dev *dev);
+void spi_tx_dma_disable(spi_dev *dev);
+
+void spi_rx_dma_enable(spi_dev *dev);
+void spi_rx_dma_disable(spi_dev *dev);
+
+
+
+
+
+
+static inline uint8 spi_is_enabled(spi_dev *dev) {
+    return dev->regs->CR1 & 6;
+}
+
+
+
+
+static inline void spi_peripheral_disable_all(void) {
+    spi_foreach(spi_peripheral_disable);
+}
+
+
+typedef enum spi_interrupt {
+    SPI_TXE_INTERRUPT = (1U << 7),
+    SPI_RXNE_INTERRUPT = (1U << 6),
+    SPI_ERR_INTERRUPT = (1U << 5)
+
+
+
+
+} spi_interrupt;
+# 368 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+static inline void spi_irq_enable(spi_dev *dev, uint32 interrupt_flags) {
+    dev->regs->CR2 |= interrupt_flags;
+    nvic_irq_enable(dev->irq_num);
+}
+
+
+
+
+
+
+
+static inline void spi_irq_disable(spi_dev *dev, uint32 interrupt_flags) {
+    dev->regs->CR2 &= ~interrupt_flags;
+}
+# 390 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+static inline spi_cfg_flag spi_dff(spi_dev *dev) {
+    return ((dev->regs->CR1 & (1U << 11)) == (0x0 << 11) ?
+            SPI_DFF_8_BIT :
+            SPI_DFF_16_BIT);
+}
+
+
+
+
+
+
+
+static inline uint8 spi_is_rx_nonempty(spi_dev *dev) {
+    return dev->regs->SR & (1U << 0);
+}
+# 417 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+static inline uint16 spi_rx_reg(spi_dev *dev) {
+    return (uint16)dev->regs->DR;
+}
+
+
+
+
+
+
+
+static inline uint8 spi_is_tx_empty(spi_dev *dev) {
+    return dev->regs->SR & (1U << 1);
+}
+# 448 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\system/libmaple/include/libmaple/spi.h"
+static inline void spi_tx_reg(spi_dev *dev, uint16 val) {
+    dev->regs->DR = val;
+}
+
+
+
+
+
+
+
+static inline uint8 spi_is_busy(spi_dev *dev) {
+    return dev->regs->SR & (1U << 7);
+}
+
+
+
+
+
+
+}
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h" 2
+# 47 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+typedef enum SPIFrequency {
+    SPI_18MHZ = 0,
+    SPI_9MHZ = 1,
+    SPI_4_5MHZ = 2,
+    SPI_2_25MHZ = 3,
+    SPI_1_125MHZ = 4,
+    SPI_562_500KHZ = 5,
+    SPI_281_250KHZ = 6,
+    SPI_140_625KHZ = 7,
+} SPIFrequency;
+# 66 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+class HardwareSPI {
+public:
+
+
+
+    HardwareSPI(uint32 spiPortNumber);
+# 87 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    void begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode);
+
+
+
+
+    void begin(void);
+# 102 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    void beginSlave(uint32 bitOrder, uint32 mode);
+
+
+
+
+    void beginSlave(void);
+
+
+
+
+    void end(void);
+# 124 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 read(void);
+# 133 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    void read(uint8 *buffer, uint32 length);
+
+
+
+
+
+    void write(uint8 data);
+
+
+
+
+
+
+    void write(const uint8 *buffer, uint32 length);
+# 156 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 transfer(uint8 data);
+# 165 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 misoPin(void);
+
+
+
+
+    uint8 mosiPin(void);
+
+
+
+
+    uint8 sckPin(void);
+
+
+
+
+    uint8 nssPin(void);
+
+
+
+
+
+
+
+    spi_dev* c_dev(void) { return this->spi_d; }
+# 199 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 send(uint8 data);
+# 211 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 send(uint8 *data, uint32 length);
+# 220 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSPI.h"
+    uint8 recv(void);
+private:
+    spi_dev *spi_d;
+};
+# 62 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+
+
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h" 1
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Print.h" 1
+# 27 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Print.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/WString.h" 1
+# 28 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Print.h" 2
+
+enum {
+    BYTE = 0,
+    BIN = 2,
+    OCT = 8,
+    DEC = 10,
+    HEX = 16
+};
+
+class Print {
+public:
+    virtual size_t write(uint8 ch) = 0;
+    virtual size_t write(const char *str);
+    virtual size_t write(const void *buf, uint32 len);
+
+ size_t print(const String &);
+    size_t print(char);
+    size_t print(const char[]);
+    size_t print(uint8, int=DEC);
+    size_t print(int, int=DEC);
+    size_t print(unsigned int, int=DEC);
+    size_t print(long, int=DEC);
+    size_t print(unsigned long, int=DEC);
+    size_t print(long long, int=DEC);
+    size_t print(unsigned long long, int=DEC);
+    size_t print(double, int=2);
+    size_t println(void);
+ size_t println(const String &s);
+ size_t println(char);
+ size_t println(const char[]);
+    size_t println(uint8, int=DEC);
+    size_t println(int, int=DEC);
+    size_t println(unsigned int, int=DEC);
+    size_t println(long, int=DEC);
+    size_t println(unsigned long, int=DEC);
+    size_t println(long long, int=DEC);
+    size_t println(unsigned long long, int=DEC);
+    size_t println(double, int=2);
+
+
+
+
+    Print() : write_error(0) {}
+
+    int getWriteError() { return write_error; }
+    void clearWriteError() { setWriteError(0); }
+
+  protected:
+    void setWriteError(int err = 1) { write_error = err; }
+
+private:
+ int write_error;
+    size_t printNumber(unsigned long long, uint8);
+    size_t printFloat(double, uint8);
+};
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/boards.h" 1
+# 40 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/stream.h" 1
+# 38 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/stream.h"
+class Stream : public Print
+{
+  protected:
+    unsigned long _timeout;
+    unsigned long _startMillis;
+    int timedRead();
+    int timedPeek();
+    int peekNextDigit();
+
+  public:
+    virtual int available() = 0;
+    virtual int read() = 0;
+    virtual int peek() = 0;
+    virtual void flush() = 0;
+
+    Stream() {_timeout=1000;}
+
+
+
+  void setTimeout(unsigned long timeout);
+
+  bool find(char *target);
+  bool find(uint8_t *target) { return find ((char *)target); }
+
+
+  bool find(char *target, size_t length);
+  bool find(uint8_t *target, size_t length) { return find ((char *)target, length); }
+
+
+  bool findUntil(char *target, char *terminator);
+  bool findUntil(uint8_t *target, char *terminator) { return findUntil((char *)target, terminator); }
+
+  bool findUntil(char *target, size_t targetLen, char *terminate, size_t termLen);
+  bool findUntil(uint8_t *target, size_t targetLen, char *terminate, size_t termLen) {return findUntil((char *)target, targetLen, terminate, termLen); }
+
+
+  long parseInt();
+
+
+
+  float parseFloat();
+
+  size_t readBytes( char *buffer, size_t length);
+  size_t readBytes( uint8_t *buffer, size_t length) { return readBytes((char *)buffer, length); }
+
+
+
+  size_t readBytesUntil( char terminator, char *buffer, size_t length);
+  size_t readBytesUntil( char terminator, uint8_t *buffer, size_t length) { return readBytesUntil(terminator, (char *)buffer, length); }
+
+
+
+
+  String readString();
+  String readStringUntil(char terminator);
+
+  protected:
+  long parseInt(char skipChar);
+
+
+
+  float parseFloat(char skipChar);
+};
+# 41 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h" 2
+# 51 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h"
+struct usart_dev;
+
+class HardwareSerial : public Print {
+public:
+    HardwareSerial(struct usart_dev *usart_device,
+                   uint8 tx_pin,
+                   uint8 rx_pin);
+
+
+    void begin(uint32 baud);
+    void end(void);
+
+
+    uint32 available(void);
+    uint8 read(void);
+    void flush(void);
+    virtual size_t write(unsigned char);
+    using Print::write;
+
+
+    int txPin(void) { return this->tx_pin; }
+    int rxPin(void) { return this->rx_pin; }
+
+ operator bool() { return true; }
+
+
+
+    struct usart_dev* c_dev(void) { return this->usart_device; }
+private:
+    struct usart_dev *usart_device;
+    uint8 tx_pin;
+    uint8 rx_pin;
+};
+# 106 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareSerial.h"
+ extern HardwareSerial Serial;
+
+
+ extern HardwareSerial Serial1;
+
+
+ extern HardwareSerial Serial2;
+# 65 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h" 1
+# 39 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+typedef timer_mode TimerMode;
+
+
+
+
+class HardwareTimer {
+private:
+    timer_dev *dev;
+
+public:
+
+
+
+
+    HardwareTimer(uint8 timerNum);
+
+
+
+
+
+
+    void pause(void);
+# 75 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void resume(void);
+
+
+
+
+
+
+    uint32 getPrescaleFactor();
+# 94 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void setPrescaleFactor(uint32 factor);
+
+
+
+
+
+    uint16 getOverflow();
+# 112 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void setOverflow(uint16 val);
+
+
+
+
+
+
+    uint16 getCount(void);
+# 128 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void setCount(uint16 val);
+# 141 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    uint16 setPeriod(uint32 microseconds);
+
+
+
+
+
+
+    void setMode(int channel, timer_mode mode);
+
+
+
+
+
+    uint16 getCompare(int channel);
+# 168 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void setCompare(int channel, uint16 compare);
+# 180 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void attachInterrupt(int channel, voidFuncPtr handler);
+# 191 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void detachInterrupt(int channel);
+# 206 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+    void refresh(void);
+
+
+
+
+
+
+
+    timer_dev* c_dev(void) { return this->dev; }
+
+
+
+
+    void setChannelMode(int channel, timer_mode mode) {
+        setMode(channel, mode);
+    }
+
+
+    void setChannel1Mode(timer_mode mode) { setMode(TIMER_CH1, mode); }
+
+
+    void setChannel2Mode(timer_mode mode) { setMode(TIMER_CH2, mode); }
+
+
+    void setChannel3Mode(timer_mode mode) { setMode(TIMER_CH3, mode); }
+
+
+    void setChannel4Mode(timer_mode mode) { setMode(TIMER_CH4, mode); }
+
+
+    uint16 getCompare1() { return getCompare(TIMER_CH1); }
+
+
+    uint16 getCompare2() { return getCompare(TIMER_CH2); }
+
+
+    uint16 getCompare3() { return getCompare(TIMER_CH3); }
+
+
+    uint16 getCompare4() { return getCompare(TIMER_CH4); }
+
+
+    void setCompare1(uint16 compare) { setCompare(TIMER_CH1, compare); }
+
+
+    void setCompare2(uint16 compare) { setCompare(TIMER_CH2, compare); }
+
+
+    void setCompare3(uint16 compare) { setCompare(TIMER_CH3, compare); }
+
+
+    void setCompare4(uint16 compare) { setCompare(TIMER_CH4, compare); }
+
+
+    void attachCompare1Interrupt(voidFuncPtr handler) {
+        attachInterrupt(TIMER_CH1, handler);
+    }
+
+
+    void attachCompare2Interrupt(voidFuncPtr handler) {
+        attachInterrupt(TIMER_CH2, handler);
+    }
+
+
+    void attachCompare3Interrupt(voidFuncPtr handler) {
+        attachInterrupt(TIMER_CH3, handler);
+    }
+
+
+    void attachCompare4Interrupt(voidFuncPtr handler) {
+        attachInterrupt(TIMER_CH4, handler);
+    }
+
+
+    void detachCompare1Interrupt(void) { detachInterrupt(TIMER_CH1); }
+
+
+    void detachCompare2Interrupt(void) { detachInterrupt(TIMER_CH2); }
+
+
+    void detachCompare3Interrupt(void) { detachInterrupt(TIMER_CH3); }
+
+
+    void detachCompare4Interrupt(void) { detachInterrupt(TIMER_CH4); }
+
+
+    void generateUpdate(void) { refresh(); }
+};
+# 303 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/HardwareTimer.h"
+extern HardwareTimer Timer1;
+
+
+
+
+
+extern HardwareTimer Timer2;
+
+
+
+
+
+extern HardwareTimer Timer3;
+
+
+
+
+
+extern HardwareTimer Timer4;
+# 66 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/usb_serial.h" 1
+# 34 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/usb_serial.h"
+# 1 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Print.h" 1
+# 35 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/usb_serial.h" 2
+
+
+
+
+
+class USBSerial : public Print {
+public:
+    USBSerial(void);
+
+    void begin(void);
+    void end(void);
+
+    uint32 available(void);
+
+    uint32 read(void *buf, uint32 len);
+    uint8 read(void);
+
+    size_t write(uint8);
+    size_t write(const char *str);
+    size_t write(const void*, uint32);
+
+    uint8 getRTS();
+    uint8 getDTR();
+    uint8 isConnected();
+    uint8 pending();
+};
+
+
+extern USBSerial SerialUSB;
+# 67 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/wirish.h" 2
+# 31 "C:\\Users\\rclark\\Documents\\Arduino\\hardware\\Arduino_STM32\\STM32F1XX\\cores\\maple/Arduino.h" 2
+
+void setup();
+void loop();
+# 4 "sketch_nov16a.ino" 2
+void setup();
+void loop();
+# 3 "sketch_nov16a.ino"
+SPIClass mySPI;
+
+void setup() {
+
+}
+void loop() {}

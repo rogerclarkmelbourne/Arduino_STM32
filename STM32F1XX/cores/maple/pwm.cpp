@@ -30,12 +30,12 @@
  * @brief Wiring-style pwmWrite().
  */
 
-#include <wirish/pwm.h>
+#include "pwm.h"
 
 #include <libmaple/libmaple_types.h>
 #include <libmaple/timer.h>
 
-#include <wirish/boards.h>
+#include "boards.h"
 
 void pwmWrite(uint8 pin, uint16 duty_cycle) {
     if (pin >= BOARD_NR_GPIO_PINS) {

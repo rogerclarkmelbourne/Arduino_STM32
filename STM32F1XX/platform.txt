@@ -41,7 +41,12 @@ compiler.elf2hex.extra_flags=
 
 
 ##compiler.libsam.c.flags="-I{build.system.path}/libsam" "-I{build.system.path}/CMSIS/CMSIS/Include/" "-I{build.system.path}/CMSIS/Device/ATMEL/"
-compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include" "-I{build.system.path}/libmaple/stm32f1/include/series" "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+
+##compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include" "-I{build.system.path}/libmaple/stm32f1/include/series" "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+
+
+
 
 # USB Flags
 # ---------

@@ -28,7 +28,7 @@
  *  @brief Delay implementation.
  */
 
-#include <wirish/wirish_time.h>
+#include "wirish_time.h"
 
 #include <libmaple/libmaple_types.h>
 #include <libmaple/delay.h>

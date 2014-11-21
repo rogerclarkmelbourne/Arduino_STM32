@@ -28,17 +28,17 @@
  * @brief USB virtual serial terminal
  */
 
-#include <wirish/usb_serial.h>
+#include "usb_serial.h"
 
-#include <string.h>
-#include <stdint.h>
+#include "string.h"
+#include "stdint.h"
 
 #include <libmaple/nvic.h>
 #include <libmaple/usb_cdcacm.h>
 #include <libmaple/usb.h>
 #include <libmaple/iwdg.h>
 
-#include <wirish/wirish.h>
+#include "wirish.h"
 
 /*
  * Hooks used for bootloader reset signalling
@@ -69,6 +69,14 @@ void USBSerial::begin(void) {
 #endif
 }
 
+//Roger Clark. Two new begin functions has been added so that normal Arduino Sketches that use Serial.begin(xxx) will compile.
+void USBSerial::begin(unsigned long ignoreBaud) 
+{
+}
+void USBSerial::begin(unsigned long ignoreBaud, uint8_t ignore)
+{
+}
+
 void USBSerial::end(void) {
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_disable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
@@ -76,17 +84,22 @@ void USBSerial::end(void) {
 #endif
 }
 
-void USBSerial::write(uint8 ch) {
+size_t USBSerial::write(uint8 ch) {
+size_t n = 0;
     this->write(&ch, 1);
+		return n;
 }
 
-void USBSerial::write(const char *str) {
+size_t USBSerial::write(const char *str) {
+size_t n = 0;
     this->write(str, strlen(str));
+	return n;
 }
 
-void USBSerial::write(const void *buf, uint32 len) {
+size_t USBSerial::write(const void *buf, uint32 len) {
+size_t n = 0;
     if (!this->isConnected() || !buf) {
-        return;
+        return 0;
     }
 
     uint32 txed = 0;
@@ -111,6 +124,7 @@ void USBSerial::write(const void *buf, uint32 len) {
         /* flush out to avoid having the pc wait for more data */
         usb_cdcacm_tx(NULL, 0);
     }
+		return n;
 }
 
 uint32 USBSerial::available(void) {
