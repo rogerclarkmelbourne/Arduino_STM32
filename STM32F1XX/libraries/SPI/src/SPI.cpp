@@ -114,7 +114,7 @@ void SPIClass::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
     enable_device(this->spi_d, true, frequency, end, m);
 
 
-//	digitalWrite(BOARD_SPI_DEFAULT_SS,LOW);// Roger Clark. added
+	//digitalWrite(BOARD_SPI_DEFAULT_SS,LOW);// Roger Clark. added
 	
 }
 
@@ -161,7 +161,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
 	_SSPin=pin;
 	pinMode(_SSPin,OUTPUT);
-	digitalWrite(_SSPin,LOW);
+//	digitalWrite(_SSPin,LOW);
 #if 0
 // code from SAM core	
 	uint8_t mode = interruptMode;
@@ -187,7 +187,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 
 void SPIClass::endTransaction(void)
 {
-	digitalWrite(_SSPin,HIGH);
+//	digitalWrite(_SSPin,HIGH);
 #if false
 // code from SAM core
 	uint8_t mode = interruptMode;

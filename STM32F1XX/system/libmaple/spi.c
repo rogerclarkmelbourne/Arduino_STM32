@@ -110,7 +110,8 @@ uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len) {
  */
 void spi_peripheral_enable(spi_dev *dev) {
     bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 1);
-	// Roger clark. attempt to use hardware slave select . didnt work bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_SSOE_BIT, 1);
+	// Roger clark. attempt to use hardware slave select . didnt work 
+	//bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_SSOE_BIT, 1);
 }
 
 /**
@@ -119,7 +120,8 @@ void spi_peripheral_enable(spi_dev *dev) {
  */
 void spi_peripheral_disable(spi_dev *dev) {
     bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 0);
-	// Roger clark. attempt to use hardware slave select . didnt work bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_SSOE_BIT, 0);
+	// Roger clark. attempt to use hardware slave select . didnt work 
+	//bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_SSOE_BIT, 0);
 }
 
 /**
