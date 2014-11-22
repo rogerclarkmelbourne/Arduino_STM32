@@ -96,7 +96,7 @@ typedef enum SPIFrequency {
 #define STM32_MSBFIRST 1
 #endif
 
-#define BOARD_SPI_DEFAULT_SS PC14
+#define BOARD_SPI_DEFAULT_SS PC13
 
 class SPISettings {
 public:
@@ -351,6 +351,7 @@ public:
     uint8 recv(void);
 private:
     spi_dev *spi_d;
+	uint8_t _SSPin;
 };
 
 extern SPIClass SPI;//(1);// dummy params

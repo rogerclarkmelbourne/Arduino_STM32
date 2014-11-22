@@ -151,7 +151,11 @@ void SPIClass::end(void) {
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
-/*
+	_SSPin=pin;
+	pinMode(_SSPin,OUTPUT);
+	digitalWrite(_SSPin,LOW);
+#if 0
+// code from SAM core	
 	uint8_t mode = interruptMode;
 	if (mode > 0) {
 		if (mode < 16) {
@@ -170,12 +174,14 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	//setBitOrder(pin, settings.border);
 	//setDataMode(pin, settings.datamode);
 	//setClockDivider(pin, settings.clockdiv);
-	*/
+#endif
 }
 
 void SPIClass::endTransaction(void)
 {
-/*
+	digitalWrite(_SSPin,HIGH);
+#if false
+// code from SAM core
 	uint8_t mode = interruptMode;
 	if (mode > 0) {
 		if (mode < 16) {
@@ -187,7 +193,7 @@ void SPIClass::endTransaction(void)
 			if (interruptSave) interrupts();
 		}
 	}
-	*/
+#endif
 }
 
 
