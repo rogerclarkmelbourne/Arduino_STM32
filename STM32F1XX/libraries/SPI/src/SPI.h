@@ -96,7 +96,8 @@ typedef enum SPIFrequency {
 #define STM32_MSBFIRST 1
 #endif
 
-#define BOARD_SPI_DEFAULT_SS PC13
+// PC13 or PA4
+#define BOARD_SPI_DEFAULT_SS PA4
 
 class SPISettings {
 public:

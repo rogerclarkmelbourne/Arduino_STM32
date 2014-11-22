@@ -96,6 +96,7 @@ SPIClass::SPIClass(uint32 spi_num) {
     default:
         ASSERT(0);
     }
+	//pinMode(BOARD_SPI_DEFAULT_SS,OUTPUT);
 }
 
 /*
@@ -107,9 +108,14 @@ void SPIClass::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
         ASSERT(0);
         return;
     }
+
     spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
     spi_mode m = (spi_mode)mode;
     enable_device(this->spi_d, true, frequency, end, m);
+
+
+//	digitalWrite(BOARD_SPI_DEFAULT_SS,LOW);// Roger Clark. added
+	
 }
 
 void SPIClass::begin(void) {
@@ -146,6 +152,8 @@ void SPIClass::end(void) {
     while (spi_is_busy(this->spi_d))
         ;
     spi_peripheral_disable(this->spi_d);
+
+	//digitalWrite(BOARD_SPI_DEFAULT_SS,HIGH);// Roger Clark added.
 }
 
 
