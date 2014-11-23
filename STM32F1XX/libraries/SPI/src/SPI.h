@@ -243,6 +243,8 @@ public:
 	void beginTransaction(uint8_t pin, SPISettings settings);
 	void endTransaction(void);
 
+	static void setClockDivider(uint8_t);	/* Roger Clark. Added stub function so it will compile on 1.5.7 */
+	
     /*
      * I/O
      */

@@ -283,6 +283,11 @@ uint8 SPIClass::recv(void) {
     return this->read();
 }
 
+/* Roger Clark. Added stub function so it will compile on 1.5.7 */
+void SPIClass::setClockDivider(uint8_t rate)
+{
+}
+
 /*
  * Auxiliary functions
  */

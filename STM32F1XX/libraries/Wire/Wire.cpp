@@ -133,7 +133,7 @@ uint8 TwoWire::process() {
     i2c_shift_out(sla_addr);
     if (!i2c_get_ack()) 
 	{
-		set_scl(HIGH);// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
+		i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
         return ENACKADDR;
     }
     // Recieving
@@ -156,7 +156,7 @@ uint8 TwoWire::process() {
             i2c_shift_out(itc_msg.data[i]);
             if (!i2c_get_ack()) 
 			{
-				set_scl(HIGH);// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
+				i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
                 return ENACKTRNS;
             }
             itc_msg.xferred++;
