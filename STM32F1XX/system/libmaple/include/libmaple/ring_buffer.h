@@ -126,6 +126,26 @@ static inline uint8 rb_remove(ring_buffer *rb) {
     return ch;
 }
 
+/*
+ * Roger Clark. 20141125, 
+ * added peek function.
+ * @brief Return the first item from a ring buffer, without removing it
+ * @param rb Buffer to remove from, must contain at least one element.
+ */
+
+static inline int rb_peek(ring_buffer *rb) 
+{  
+	if (rb->head == rb->tail)
+	{
+		return -1;
+	}
+	else
+	{
+		return rb->buf[rb->head];
+	}
+}
+
+
 /**
  * @brief Attempt to remove the first item from a ring buffer.
  *

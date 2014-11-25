@@ -137,15 +137,32 @@ void HardwareSerial::end(void) {
  * I/O
  */
 
-uint8 HardwareSerial::read(void) {
+int HardwareSerial::read(void) {
     // Block until a byte becomes available, to save user confusion.
     while (!this->available())
         ;
     return usart_getc(this->usart_device);
 }
 
-uint32 HardwareSerial::available(void) {
+int HardwareSerial::available(void) {
     return usart_data_available(this->usart_device);
+}
+
+/* Roger Clark. Added function missing from LibMaple code */
+
+int HardwareSerial::peek(void)
+{
+    return usart_getc(this->usart_device);
+}
+
+int HardwareSerial::availableForWrite(void)
+{
+/* Roger Clark. 
+ * Currently there isn't an output ring buffer, chars are sent straight to the hardware. 
+ * so just return 1, meaning that 1 char can be written
+ * This will be slower than a ring buffer implementation, but it should at least work !
+ */
+  return 1;
 }
 
 size_t HardwareSerial::write(unsigned char ch) {

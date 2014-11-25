@@ -48,9 +48,40 @@
  * the documentation accordingly.
  */
 
+ 
+ 
+// Define constants and variables for buffering incoming serial data.  We're
+// using a ring buffer (I think), in which head is the index of the location
+// to which to write the next incoming character and tail is the index of the
+// location from which to read.
+#if !(defined(SERIAL_TX_BUFFER_SIZE) && defined(SERIAL_RX_BUFFER_SIZE))
+#if (RAMEND < 1000)
+#define SERIAL_TX_BUFFER_SIZE 16
+#define SERIAL_RX_BUFFER_SIZE 16
+#else
+#define SERIAL_TX_BUFFER_SIZE 64
+#define SERIAL_RX_BUFFER_SIZE 64
+#endif
+#endif
+#if (SERIAL_TX_BUFFER_SIZE>256)
+typedef uint16_t tx_buffer_index_t;
+#else
+typedef uint8_t tx_buffer_index_t;
+#endif
+#if  (SERIAL_RX_BUFFER_SIZE>256)
+typedef uint16_t rx_buffer_index_t;
+#else
+typedef uint8_t rx_buffer_index_t;
+#endif
+ 
 struct usart_dev;
 
-class HardwareSerial : public Print {
+/* Roger clark. Changed class inheritance from Print to Stream.
+ * Also added new functions for peek() and availableForWrite()
+ * Note. AvailableForWrite is only a stub function in the cpp
+ */
+class HardwareSerial : public Stream {
+
 public:
     HardwareSerial(struct usart_dev *usart_device,
                    uint8 tx_pin,
@@ -58,13 +89,17 @@ public:
 
     /* Set up/tear down */
     void begin(uint32 baud);
-    void end(void);
-
-    /* I/O */
-    uint32 available(void);
-    uint8 read(void);
-    void flush(void);
-    virtual size_t  write(unsigned char);
+       void end();
+    virtual int available(void);
+    virtual int peek(void);
+    virtual int read(void);
+    int availableForWrite(void);
+    virtual void flush(void);
+    virtual size_t write(uint8_t);
+    inline size_t write(unsigned long n) { return write((uint8_t)n); }
+    inline size_t write(long n) { return write((uint8_t)n); }
+    inline size_t write(unsigned int n) { return write((uint8_t)n); }
+    inline size_t write(int n) { return write((uint8_t)n); }
     using Print::write;
 
     /* Pin accessors */
@@ -80,6 +115,27 @@ private:
     struct usart_dev *usart_device;
     uint8 tx_pin;
     uint8 rx_pin;
+  protected:
+#if 0  
+    volatile uint8_t * const _ubrrh;
+    volatile uint8_t * const _ubrrl;
+    volatile uint8_t * const _ucsra;
+    volatile uint8_t * const _ucsrb;
+    volatile uint8_t * const _ucsrc;
+    volatile uint8_t * const _udr;
+    // Has any byte been written to the UART since begin()
+    bool _written;
+
+    volatile rx_buffer_index_t _rx_buffer_head;
+    volatile rx_buffer_index_t _rx_buffer_tail;
+    volatile tx_buffer_index_t _tx_buffer_head;
+    volatile tx_buffer_index_t _tx_buffer_tail;	
+    // Don't put any members after these buffers, since only the first
+    // 32 bytes of this struct can be accessed quickly using the ldd
+    // instruction.
+    unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
+    unsigned char _tx_buffer[SERIAL_TX_BUFFER_SIZE];	
+#endif
 };
 
 #ifdef BOOTLOADER_maple 
