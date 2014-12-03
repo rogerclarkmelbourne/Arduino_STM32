@@ -89,7 +89,7 @@ public:
 
     /* Set up/tear down */
     void begin(uint32 baud);
-       void end();
+    void end();
     virtual int available(void);
     virtual int peek(void);
     virtual int read(void);

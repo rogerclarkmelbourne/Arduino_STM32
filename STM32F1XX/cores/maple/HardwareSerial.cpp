@@ -152,7 +152,7 @@ int HardwareSerial::available(void) {
 
 int HardwareSerial::peek(void)
 {
-    return usart_getc(this->usart_device);
+    return usart_peek(this->usart_device);
 }
 
 int HardwareSerial::availableForWrite(void)

@@ -127,8 +127,20 @@ size_t n = 0;
 		return n;
 }
 
-uint32 USBSerial::available(void) {
+int USBSerial::available(void) {
     return usb_cdcacm_data_available();
+}
+
+int USBSerial::peek(void)
+{
+#warning "TO DO!"
+    uint8 b;
+    return usb_cdcacm_peek(&b,1);
+}
+
+void USBSerial::flush(void)
+{
+#warning "TO DO!"
 }
 
 uint32 USBSerial::read(void *buf, uint32 len) {
@@ -145,7 +157,7 @@ uint32 USBSerial::read(void *buf, uint32 len) {
 }
 
 /* Blocks forever until 1 byte is received */
-uint8 USBSerial::read(void) {
+int USBSerial::read(void) {
     uint8 b;
     this->read(&b, 1);
     return b;
