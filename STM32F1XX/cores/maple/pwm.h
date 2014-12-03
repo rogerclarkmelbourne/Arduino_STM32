@@ -35,22 +35,25 @@
 #include <libmaple/libmaple_types.h>
 
 /**
- * As a convenience, analogWrite is an alias of pwmWrite to ease
- * porting Arduino code.  However, period and duty will have to be
- * recalibrated.
- */
-#define analogWrite pwmWrite
-
-/**
  * Set the PWM duty on the given pin.
  *
  * User code is expected to determine and honor the maximum value
  * (based on the configured period).
  *
  * @param pin PWM output pin
- * @param duty_cycle Duty cycle to set.
+ * @param duty_cycle Duty cycle to set. (Range is 0 to 65535)
  */
-void pwmWrite(uint8 pin, uint16 duty_cycle);
+void pwmWrite(uint8 pin, uint16 duty_cycle16);
 
+/**
+ * Roger Clark. 20140103
+ * Added function to replicate the Arduino PWM functionality or range 0 to 255 
+ * User code is expected to determine and honor the maximum value
+ * (based on the configured period).
+ *
+ * @param pin PWM output pin
+ * @param duty_cycle Duty cycle to set. (Range is 0 to 255)
+ */
+void analogWrite(uint8 pin, int duty_cycle8);
 #endif
 
