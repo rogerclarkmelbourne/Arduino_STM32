@@ -203,8 +203,10 @@ uint8 USBSerial::getRTS(void) {
 }
 
 #if BOARD_HAVE_SERIALUSB
-//USBSerial SerialUSB;
-USBSerial Serial;
+	#ifdef BOOTLOADER_maple 
+		//USBSerial SerialUSB;
+		USBSerial Serial;
+	#endif
 #endif
 
 /*

@@ -75,11 +75,12 @@ namespace wirish {
 
         __weak void board_setup_usb(void) {
 #if BOARD_HAVE_SERIALUSB
-//            SerialUSB.begin();
-			
-			Serial.begin();// Roger Clark. Attempted to Change SerialUSB to Serial for Arduino sketch compatibility
-#endif
-        }
+	#ifdef BOOTLOADER_maple 
+//          SerialUSB.begin();
+			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
+	#endif
+#endif        
+		}
 
         __weak void series_init(void) {
             // Initialize AFIO here, too, so peripheral remaps and external
