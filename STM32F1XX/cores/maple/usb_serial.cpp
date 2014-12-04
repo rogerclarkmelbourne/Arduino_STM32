@@ -176,7 +176,7 @@ int USBSerial::read(void) {
     return b;
 	*/
 	
-	if (!usb_cdcacm_rx(&b, 1))
+	if (usb_cdcacm_rx(&b, 1)==0)
 	{
 		return -1;
 	}
