@@ -171,8 +171,19 @@ uint32 USBSerial::read(void *buf, uint32 len) {
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
-    this->read(&b, 1);
+	/*
+	    this->read(&b, 1);
     return b;
+	*/
+	
+	if (!usb_cdcacm_rx(&b, 1))
+	{
+		return -1;
+	}
+	else
+	{
+		return b;
+	}
 }
 
 uint8 USBSerial::pending(void) {
