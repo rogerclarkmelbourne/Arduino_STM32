@@ -33,6 +33,7 @@
  * the result made cleaner.
  */
 
+
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
@@ -471,6 +472,18 @@ uint32 usb_cdcacm_peek(uint8* buf, uint32 len) {
     }
 
     return len;
+}
+
+/* Roger Clark. Added. for Arduino 1.0 API support of Serial.peek() */
+int usb_cdcacm_peek_char() 
+{
+
+    if (n_unread_bytes == 0) 
+	{
+		return -1;
+    }
+
+    return vcomBufferRx[rx_offset];
 }
 
 uint8 usb_cdcacm_get_dtr() {

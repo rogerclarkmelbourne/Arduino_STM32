@@ -133,14 +133,26 @@ int USBSerial::available(void) {
 
 int USBSerial::peek(void)
 {
-#warning "TO DO!"
     uint8 b;
-    return usb_cdcacm_peek(&b,1);
+	if (usb_cdcacm_peek(&b, 1)==1)
+	{
+		return b;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 void USBSerial::flush(void)
 {
-#warning "TO DO!"
+/*Roger Clark. Rather slow method. Need to improve this */
+    uint8 b;
+	while(usb_cdcacm_data_available())
+	{
+		this->read(&b, 1);
+	}
+    return;
 }
 
 uint32 USBSerial::read(void *buf, uint32 len) {
@@ -180,7 +192,8 @@ uint8 USBSerial::getRTS(void) {
 }
 
 #if BOARD_HAVE_SERIALUSB
-USBSerial SerialUSB;
+//USBSerial SerialUSB;
+USBSerial Serial;
 #endif
 
 /*

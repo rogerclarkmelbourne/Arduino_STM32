@@ -72,7 +72,8 @@ public:
 };
 
 #if BOARD_HAVE_SERIALUSB
-extern USBSerial SerialUSB;
+//extern USBSerial SerialUSB;
+extern USBSerial Serial;
 #endif
 
 #endif

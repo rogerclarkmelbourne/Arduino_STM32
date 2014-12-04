@@ -33,11 +33,20 @@
  * the result made cleaner.
  */
 
+/******************************************************************************************************
+* IMPORTANT
+* Roger Clark. This file is not used
+* contents are #if'ed out !
+*/ 
+
+#if false 
+ 
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
 #include <libmaple/nvic.h>
 #include <libmaple/delay.h>
+#include <libmaple/usb_cdcacm.h>
 
 /* Private headers */
 #include "usb_lib_globals.h"
@@ -473,6 +482,20 @@ uint32 usb_cdcacm_peek(uint8* buf, uint32 len) {
     return len;
 }
 
+/* Roger Clark. Added. for Arduino 1.0 API support of Serial.peek() */
+int usb_cdcacm_peek_char() 
+{
+	return 2;
+	/*
+    if (n_unread_bytes == 0) 
+	{
+		return -1;
+    }
+
+    return vcomBufferRx[rx_offset];
+	*/
+}
+
 uint8 usb_cdcacm_get_dtr() {
     return ((line_dtr_rts & USB_CDCACM_CONTROL_LINE_DTR) != 0);
 }
@@ -707,3 +730,4 @@ static void usbSetConfiguration(void) {
 static void usbSetDeviceAddress(void) {
     USBLIB->state = USB_ADDRESSED;
 }
+#endif
