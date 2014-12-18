@@ -1,5 +1,180 @@
 # Maple boards
 
+menu.cpu=Processor
+menu.gcc_version=GCC version
+menu.debug_menu=Debug mode
+menu.cpu_upload_menu=CPU & Upload mode
+menu.HS_IO=High speed I/O commands
+
+
+nano.name= Maple mini generic
+
+nano.upload.tool=upload_router
+#nano.upload.tool=maple_upload
+
+nano.build.core=maple
+nano.build.variant=maple_mini
+
+
+nano.upload.use_1200bps_touch=false
+nano.upload.file_type=bin
+nano.upload.usbID=1EAF:0003
+nano.upload.auto_reset=true
+
+nano.build.mcu=cortex-m3
+nano.build.f_cpu=72000000L
+nano.build.core=maple
+nano.build.common_flags=-mthumb -MD -DSTM32_MEDIUM_DENSITY -march=armv7-m -D__STM32F1XX__ 
+#nano.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+nano.build.variant=maple_mini
+nano.build.variant_system_lib=libmaple.a
+nano.build.density=STM32_MEDIUM_DENSITY
+nano.build.error_led_port=GPIOB
+nano.build.error_led_pin=1
+
+############################ MENU ############################
+## GCC VER
+## gcc ver 4.8.3
+## -------------------------
+nano.menu.gcc_version.gcc48304q1= gcc-4.8.3
+nano.menu.gcc_version.gcc48304q1.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+## gcc ver 4.9
+## -------------------------
+nano.menu.gcc_version.gcc4904q1= gcc-4.9
+nano.menu.gcc_version.gcc4904q1.build.gcc_ver=gcc-arm-none-eabi-4.9-2014q4
+
+############################ MENU ############################
+## GCC VER
+## gcc ver 4.8.3
+## -------------------------
+nano.menu.HS_IO.hs_off= HSIO OFF
+nano.menu.HS_IO.hs_off.build.hs_flag=
+## gcc ver 4.9
+## -------------------------
+nano.menu.HS_IO.hs_on= HSIO ON
+nano.menu.HS_IO.hs_on.build.hs_flag=-DHS_IO
+
+
+## ==DEBUG MODE==
+## Debug off
+## -------------------------
+nano.menu.debug_menu.debug_off=DebugOFF
+nano.menu.debug_menu.debug_off.build.debuggingMode=0
+
+## Debug on
+## -------------------------
+nano.menu.debug_menu.debug_on=DebugON
+nano.menu.debug_menu.debug_on.build.debuggingMode=1
+
+## ==UPLOAD MODE==
+## F103CB USB to Flash upload
+## -------------------------
+nano.menu.cpu_upload_menu.cbUsbFlash= F103CB(128k) USB->Flash
+nano.menu.cpu_upload_menu.cbUsbFlash.build.ldscript=ld/flash.ld
+nano.menu.cpu_upload_menu.cbUsbFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
+nano.menu.cpu_upload_menu.cbUsbFlash.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.cbUsbFlash.upload.maximum_size=108000
+nano.menu.cpu_upload_menu.cbUsbFlash.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.cbUsbFlash.upload.flash.maximum_size=108000
+nano.menu.cpu_upload_menu.cbUsbFlash.upload.altID=1
+nano.menu.cpu_upload_menu.cbUsbFlash.upload.protocol=maple_dfu
+
+## F103CB USB to RAM upload
+## -------------------------
+nano.menu.cpu_upload_menu.cbUsbRAM=F103CB(128k) USB->RAM
+nano.menu.cpu_upload_menu.cbUsbRAM.build.ldscript=ld/ram.ld
+nano.menu.cpu_upload_menu.cbUsbRAM.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
+nano.menu.cpu_upload_menu.cbUsbRAM.build.vect=VECT_TAB_RAM
+
+nano.menu.cpu_upload_menu.cbUsbRAM.upload.maximum_size=17000
+nano.menu.cpu_upload_menu.cbUsbRAM.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.cbUsbRAM.upload.flash.maximum_size=108000
+nano.menu.cpu_upload_menu.cbUsbRAM.upload.altID=0
+nano.menu.cpu_upload_menu.cbUsbRAM.upload.protocol=maple_dfu
+
+## UPLOAD MODE
+## F103CB Serial to Flash upload (keep bootloader)
+## -------------------------
+nano.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (keep bootloader)
+nano.menu.cpu_upload_menu.cbSerialFlash.build.ldscript=ld/flash.ld
+nano.menu.cpu_upload_menu.cbSerialFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple
+nano.menu.cpu_upload_menu.cbSerialFlash.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.cbSerialFlash.upload.maximum_size=108000
+nano.menu.cpu_upload_menu.cbSerialFlash.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.cbSerialFlash.upload.flash.maximum_size=108000
+nano.menu.cpu_upload_menu.cbSerialFlash.upload.altID=1
+nano.menu.cpu_upload_menu.cbSerialFlash.upload.protocol=maple_serial
+
+## UPLOAD MODE
+## F103CB Serial to Flash upload (lost bootloader)
+## -------------------------
+nano.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (lost bootloader!!!)
+nano.menu.cpu_upload_menu.cbSerialJTAG.build.ldscript=ld/jtag.ld
+nano.menu.cpu_upload_menu.cbSerialJTAG.build.cpu_flags=-DMCU_STM32F103CB  
+nano.menu.cpu_upload_menu.cbSerialJTAG.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.cbSerialJTAG.upload.maximum_size=128000
+nano.menu.cpu_upload_menu.cbSerialJTAG.upload.ram.maximum_size=20000
+nano.menu.cpu_upload_menu.cbSerialJTAG.upload.flash.maximum_size=128000
+nano.menu.cpu_upload_menu.cbSerialJTAG.upload.altID=1
+nano.menu.cpu_upload_menu.cbSerialJTAG.upload.protocol=maple_serial
+
+
+## ==UPLOAD MODE F103C8 ==
+## F103C8 USB to Flash upload
+## -------------------------
+nano.menu.cpu_upload_menu.c8UsbFlash=F103C8(64k) USB->Flash
+nano.menu.cpu_upload_menu.c8UsbFlash.build.ldscript=ld/flash_c8.ld
+nano.menu.cpu_upload_menu.c8UsbFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+nano.menu.cpu_upload_menu.c8UsbFlash.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.c8UsbFlash.upload.maximum_size=44000
+nano.menu.cpu_upload_menu.c8UsbFlash.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.c8UsbFlash.upload.flash.maximum_size=44000
+nano.menu.cpu_upload_menu.c8UsbFlash.upload.altID=1
+nano.menu.cpu_upload_menu.c8UsbFlash.upload.protocol=maple_dfu
+
+## F103C8 USB to RAM upload
+## -------------------------
+nano.menu.cpu_upload_menu.c8UsbRAM=F103C8(64k) USB->RAM
+nano.menu.cpu_upload_menu.c8UsbRAM.build.ldscript=ld/ram_c8.ld
+nano.menu.cpu_upload_menu.c8UsbRAM.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+nano.menu.cpu_upload_menu.c8UsbRAM.build.vect=VECT_TAB_RAM
+
+nano.menu.cpu_upload_menu.c8UsbRAM.upload.maximum_size=17000
+nano.menu.cpu_upload_menu.c8UsbRAM.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.c8UsbRAM.upload.flash.maximum_size=44000
+nano.menu.cpu_upload_menu.c8UsbRAM.upload.altID=0
+nano.menu.cpu_upload_menu.c8UsbRAM.upload.protocol=maple_dfu
+
+## F103C8 Serial to Flash upload (keep bootloader)
+## -------------------------
+nano.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (keep bootloader)
+nano.menu.cpu_upload_menu.c8SerialFlash.build.ldscript=ld/flash_c8.ld
+nano.menu.cpu_upload_menu.c8SerialFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+nano.menu.cpu_upload_menu.c8SerialFlash.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.c8SerialFlash.upload.maximum_size=44000
+nano.menu.cpu_upload_menu.c8SerialFlash.upload.ram.maximum_size=17000
+nano.menu.cpu_upload_menu.c8SerialFlash.upload.flash.maximum_size=44000
+nano.menu.cpu_upload_menu.c8SerialFlash.upload.altID=1
+nano.menu.cpu_upload_menu.c8SerialFlash.upload.protocol=maple_serial
+
+## F103C8 Serial to Flash upload (lost bootloader)
+## -------------------------
+nano.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (lost bootloader!!!)
+nano.menu.cpu_upload_menu.c8SerialJTAG.build.ldscript=ld/jtag_c8.ld
+nano.menu.cpu_upload_menu.c8SerialJTAG.build.cpu_flags=-DMCU_STM32F103C8
+nano.menu.cpu_upload_menu.c8SerialJTAG.build.vect=VECT_TAB_FLASH
+
+nano.menu.cpu_upload_menu.c8SerialJTAG.upload.maximum_size=64000
+nano.menu.cpu_upload_menu.c8SerialJTAG.upload.ram.maximum_size=20000
+nano.menu.cpu_upload_menu.c8SerialJTAG.upload.flash.maximum_size=64000
+nano.menu.cpu_upload_menu.c8SerialJTAG.upload.altID=1
+nano.menu.cpu_upload_menu.c8SerialJTAG.upload.protocol=maple_serial
+
 ##############################################################
 maple.name=LeafLabs Maple Rev 3+ to Flash
 
@@ -25,6 +200,7 @@ maple.build.vect=VECT_TAB_FLASH
 maple.build.density=STM32_MEDIUM_DENSITY
 maple.build.error_led_port=GPIOA
 maple.build.error_led_pin=5
+maple.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
 mapleRAM.name=LeafLabs Maple Rev 3+ to RAM
@@ -51,6 +227,7 @@ mapleRAM.build.vect=VECT_TAB_RAM
 mapleRAM.build.density=STM32_MEDIUM_DENSITY
 mapleRAM.build.error_led_port=GPIOA
 mapleRAM.build.error_led_pin=5
+mapleRAM.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
 maple_mini.name=LeafLabs Maple Mini Rev 2 to Flash
@@ -78,6 +255,7 @@ maple_mini.build.vect=VECT_TAB_FLASH
 maple_mini.build.density=STM32_MEDIUM_DENSITY
 maple_mini.build.error_led_port=GPIOB
 maple_mini.build.error_led_pin=1
+maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
 maple_miniRAM.name=LeafLabs Maple Mini Rev 2 to RAM
@@ -104,6 +282,7 @@ maple_miniRAM.build.vect=VECT_TAB_RAM
 maple_miniRAM.build.density=STM32_MEDIUM_DENSITY
 maple_miniRAM.build.error_led_port=GPIOB
 maple_miniRAM.build.error_led_pin=1
+maple_miniRAM.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
 maple_STM32.name=STM32 to Flash - No bootloader
@@ -115,7 +294,7 @@ maple_STM32.upload.use_1200bps_touch=false
 maple_STM32.upload.file_type=bin
 maple_STM32.upload.ram.maximum_size=17000
 maple_STM32.upload.flash.maximum_size=108000
-# FIXME ?
+
 maple_STM32.upload.usbID=1EAF:0003
 maple_STM32.upload.altID=1
 maple_STM32.upload.auto_reset=true
@@ -131,5 +310,6 @@ maple_STM32.build.vect=VECT_TAB_FLASH
 maple_STM32.build.density=STM32_MEDIUM_DENSITY
 maple_STM32.build.error_led_port=GPIOB
 maple_STM32.build.error_led_pin=1
+maple_STM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
