@@ -324,7 +324,7 @@ microduino32_flash.upload.file_type=bin
 microduino32_flash.upload.ram.maximum_size=17000
 microduino32_flash.upload.flash.maximum_size=108000
 microduino32_flash.upload.usbID=1EAF:0003
-microduino32_flash.upload.altID=0
+microduino32_flash.upload.altID=1
 microduino32_flash.upload.auto_reset=true
 
 
