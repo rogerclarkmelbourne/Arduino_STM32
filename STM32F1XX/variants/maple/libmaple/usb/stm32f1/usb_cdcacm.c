@@ -32,21 +32,12 @@
  * place else. Nonportable bits really need to be factored out, and
  * the result made cleaner.
  */
-
-/******************************************************************************************************
-* IMPORTANT
-* Roger Clark. This file is not used
-* contents are #if'ed out !
-*/ 
-
-#if false 
  
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
 #include <libmaple/nvic.h>
 #include <libmaple/delay.h>
-#include <libmaple/usb_cdcacm.h>
 
 /* Private headers */
 #include "usb_lib_globals.h"
@@ -730,4 +721,4 @@ static void usbSetConfiguration(void) {
 static void usbSetDeviceAddress(void) {
     USBLIB->state = USB_ADDRESSED;
 }
-#endif
+
