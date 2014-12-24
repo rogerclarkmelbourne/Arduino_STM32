@@ -38,6 +38,8 @@
 #include "wirish.h"
 #include "boards.h"
 
+//#include "HardwareSerial.h"
+
 #if CYCLES_PER_MICROSECOND != 72
 /* TODO [0.2.0?] something smarter than this */
 #warning "Unexpected clock speed; SPI frequency calculation will be incorrect"
@@ -96,6 +98,7 @@ SPIClass::SPIClass(uint32 spi_num) {
     default:
         ASSERT(0);
     }
+	
 	//pinMode(BOARD_SPI_DEFAULT_SS,OUTPUT);
 }
 
@@ -103,23 +106,23 @@ SPIClass::SPIClass(uint32 spi_num) {
  * Set up/tear down
  */
 
-void SPIClass::begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode) {
+void SPIClass::begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode) {
     if (mode >= 4) {
         ASSERT(0);
         return;
     }
-
+	//Serial.print(frequency);Serial.print(",");Serial.print(bitOrder);Serial.print(",");Serial.println(mode);// debugging
     spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
     spi_mode m = (spi_mode)mode;
-    enable_device(this->spi_d, true, frequency, end, m);
+    enable_device(this->spi_d, true, (SPIFrequency)frequency, end, m);
 
-
-	//digitalWrite(BOARD_SPI_DEFAULT_SS,LOW);// Roger Clark. added
-	
 }
 
+
 void SPIClass::begin(void) {
-    this->begin(SPI_1_125MHZ, MSBFIRST, 0);
+
+
+    this->begin(_clockDividerToFrequenyMap[_settings.clockDivider],_settings.bitOrder,_settings.dataMode);//originally SPI_1_125MHZ,MSBFIRST,0);
 }
 
 void SPIClass::beginSlave(uint32 bitOrder, uint32 mode) {
@@ -133,7 +136,7 @@ void SPIClass::beginSlave(uint32 bitOrder, uint32 mode) {
 }
 
 void SPIClass::beginSlave(void) {
-    this->beginSlave(MSBFIRST, 0);
+    this->beginSlave(_settings.bitOrder, _settings.dataMode);
 }
 
 void SPIClass::end(void) {
@@ -152,9 +155,25 @@ void SPIClass::end(void) {
     while (spi_is_busy(this->spi_d))
         ;
     spi_peripheral_disable(this->spi_d);
-
-	//digitalWrite(BOARD_SPI_DEFAULT_SS,HIGH);// Roger Clark added.
 }
+
+/* Roger Clark added  3 functions */
+void SPIClass::setClockDivider(uint32_t clockDivider)
+{
+//	Serial.print("Clock divider set to ");	Serial.println(clockDivider);// debugging
+	_settings.clockDivider = clockDivider;
+	this->begin();
+}
+void SPIClass::setBitOrder(uint8_t bitOrder)
+{
+	_settings.bitOrder = bitOrder;
+	this->begin();
+}
+void SPIClass::setdataMode(uint8_t dataMode)
+{
+	_settings.dataMode = dataMode;
+	this->begin();
+}	
 
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
@@ -283,10 +302,6 @@ uint8 SPIClass::recv(void) {
     return this->read();
 }
 
-/* Roger Clark. Added stub function so it will compile on 1.5.7 */
-void SPIClass::setClockDivider(uint8_t rate)
-{
-}
 
 /*
  * Auxiliary functions

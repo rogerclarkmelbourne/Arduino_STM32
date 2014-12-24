@@ -43,7 +43,8 @@
 
 #include <boards.h>
 #include <stdint.h>
-//#include <wirish_math.h>
+#include <wirish.h>
+
 
 /**
  * @brief Defines the possible SPI communication speeds.
@@ -61,14 +62,16 @@ typedef enum SPIFrequency {
 
 #define MAX_SPI_FREQS 8
 
-
+// defines from AVR SPI.h
+#define SPI_CLOCK_DIV2 0x04
 #define SPI_CLOCK_DIV4 0x00
 #define SPI_CLOCK_DIV16 0x01
-#define SPI_CLOCK_DIV64 0x02
-#define SPI_CLOCK_DIV128 0x03
-#define SPI_CLOCK_DIV2 0x04
 #define SPI_CLOCK_DIV8 0x05
 #define SPI_CLOCK_DIV32 0x06
+#define SPI_CLOCK_DIV64 0x02
+#define SPI_CLOCK_DIV128 0x03
+
+
 
 #define SPI_MODE0 0x00
 #define SPI_MODE1 0x04
@@ -109,77 +112,27 @@ public:
     }
   }
   SPISettings() {
-    init_AlwaysInline(4000000, STM32_MSBFIRST, SPI_MODE0);
+    init_AlwaysInline(SPI_CLOCK_DIV2, MSBFIRST, SPI_MODE0);
   }
+  
+ 
+ uint32_t clockDivider=SPI_CLOCK_DIV2;//belt and braces approach !
+ uint8_t  bitOrder=MSBFIRST;//belt and braces approach !
+ uint8_t dataMode=SPI_MODE0;  //belt and braces approach !
+  
 private:
-  void init_MightInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
+  void init_MightInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) 
+  {
     init_AlwaysInline(clock, bitOrder, dataMode);
   }
-  void init_AlwaysInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode)
-    __attribute__((__always_inline__)) {
-    // Clock settings are defined as follows. Note that this shows SPI2X
-    // inverted, so the bits form increasing numbers. Also note that
-    // fosc/64 appears twice
-    // SPR1 SPR0 ~SPI2X Freq
-    //   0    0     0   fosc/2
-    //   0    0     1   fosc/4
-    //   0    1     0   fosc/8
-    //   0    1     1   fosc/16
-    //   1    0     0   fosc/32
-    //   1    0     1   fosc/64
-    //   1    1     0   fosc/64
-    //   1    1     1   fosc/128
-
-    // We find the fastest clock that is less than or equal to the
-    // given clock rate. The clock divider that results in clock_setting
-    // is 2 ^^ (clock_div + 1). If nothing is slow enough, we'll use the
-    // slowest (128 == 2 ^^ 7, so clock_div = 6).
-    uint8_t clockDiv;
-
-    // When the clock is known at compiletime, use this if-then-else
-    // cascade, which the compiler knows how to completely optimize
-    // away. When clock is not known, use a loop instead, which generates
-    // shorter code.
-    if (__builtin_constant_p(clock)) {
-      if (clock >= F_CPU / 2) {
-        clockDiv = 0;
-      } else if (clock >= F_CPU / 4) {
-        clockDiv = 1;
-      } else if (clock >= F_CPU / 8) {
-        clockDiv = 2;
-      } else if (clock >= F_CPU / 16) {
-        clockDiv = 3;
-      } else if (clock >= F_CPU / 32) {
-        clockDiv = 4;
-      } else if (clock >= F_CPU / 64) {
-        clockDiv = 5;
-      } else {
-        clockDiv = 6;
-      }
-    } else {
-      uint32_t clockSetting = F_CPU / 2;
-      clockDiv = 0;
-      while (clockDiv < 6 && clock < clockSetting) {
-        clockSetting /= 2;
-        clockDiv++;
-      }
-    }
-
-    // Compensate for the duplicate fosc/64
-    if (clockDiv == 6)
-    clockDiv = 7;
-
-    // Invert the SPI2X bit
-    clockDiv ^= 0x1;
-
-    // Pack into the SPISettings class
-//    spcr = _BV(SPE) | _BV(MSTR) | ((bitOrder == LSBFIRST) ? _BV(DORD) : 0) |  (dataMode & SPI_MODE_MASK) | ((clockDiv >> 1) & SPI_CLOCK_MASK);
-//    spsr = clockDiv & SPI_2XCLOCK_MASK;
-  
-// Roger Clark. To Do. Need to reinstate what the two lines above from AVR do. Probably SPI config / setup  
+  void init_AlwaysInline(uint32_t clock, uint8_t order, uint8_t mode)
+    __attribute__((__always_inline__)) 
+  {
+    this->clockDivider=clock;
+	this->bitOrder = order;
+	this->dataMode = mode;
   }
-  uint8_t spcr;
-  uint8_t spsr;
+  
   friend class SPIClass;
 };
 
@@ -212,7 +165,7 @@ public:
      * @param mode SPI mode to use, one of SPI_MODE_0, SPI_MODE_1,
      *             SPI_MODE_2, and SPI_MODE_3.
      */
-    void begin(SPIFrequency frequency, uint32 bitOrder, uint32 mode);
+    void begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode);
 
     /**
      * @brief Equivalent to begin(SPI_1_125MHZ, MSBFIRST, 0).
@@ -243,7 +196,9 @@ public:
 	void beginTransaction(uint8_t pin, SPISettings settings);
 	void endTransaction(void);
 
-	static void setClockDivider(uint8_t);	/* Roger Clark. Added stub function so it will compile on 1.5.7 */
+	void setClockDivider(uint32_t clockDivider);
+	void setBitOrder(uint8_t bitOrder);	
+	void setdataMode(uint8_t dataMode);		
 	
     /*
      * I/O
@@ -353,9 +308,12 @@ public:
      */
     uint8 recv(void);
 private:
+	SPISettings _settings;
     spi_dev *spi_d;
 	uint8_t _SSPin;
+	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_1_125MHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_1_125MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
 };
+
 
 extern SPIClass SPI;//(1);// dummy params
 #endif
