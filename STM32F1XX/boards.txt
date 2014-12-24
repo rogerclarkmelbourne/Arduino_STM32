@@ -313,3 +313,32 @@ maple_STM32.build.error_led_pin=1
 maple_STM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
+
+microduino32_flash.name=Microduino Core STM32 to Flash
+
+microduino32_flash.upload.tool=maple_upload
+microduino32_flash.upload.protocol=maple_dfu
+microduino32_flash.upload.maximum_size=108000
+microduino32_flash.upload.use_1200bps_touch=false
+microduino32_flash.upload.file_type=bin
+microduino32_flash.upload.ram.maximum_size=17000
+microduino32_flash.upload.flash.maximum_size=108000
+microduino32_flash.upload.usbID=1EAF:0003
+microduino32_flash.upload.altID=1
+microduino32_flash.upload.auto_reset=true
+
+
+microduino32_flash.build.mcu=cortex-m3
+microduino32_flash.build.f_cpu=72000000L
+microduino32_flash.build.core=maple
+microduino32_flash.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+microduino32_flash.build.ldscript=ld/flash.ld
+microduino32_flash.build.variant=microduino
+microduino32_flash.build.variant_system_lib=libmaple.a
+microduino32_flash.build.vect=VECT_TAB_FLASH
+microduino32_flash.build.density=STM32_MEDIUM_DENSITY
+# FIXME!
+microduino32_flash.build.error_led_port=GPIOB
+microduino32_flash.build.error_led_pin=1
+microduino32_flash.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
