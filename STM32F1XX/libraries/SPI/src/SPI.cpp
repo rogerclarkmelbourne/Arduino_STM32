@@ -171,6 +171,33 @@ void SPIClass::setBitOrder(uint8_t bitOrder)
 }
 void SPIClass::setdataMode(uint8_t dataMode)
 {
+/* Notes.  As far as I can tell, the AVR numbers for dataMode appear to match the numbers required by the STM32
+
+From the AVR doc http://www.atmel.com/images/doc2585.pdf section 2.4
+
+SPI Mode 	CPOL 	CPHA 	Shift SCK-edge 	Capture SCK-edge
+0 			0 		0 		Falling 		Rising
+1 			0 		1 		Rising 			Falling
+2 			1 		0 		Rising 			Falling
+3 			1 		1 		Falling 		Rising
+ 
+ 
+On the STM32 it appears to be
+
+bit 1 - CPOL : Clock polarity
+
+    (This bit should not be changed when communication is ongoing)
+    0 : CLK to 0 when idle
+    1 : CLK to 1 when idle
+ 
+bit 0 - CPHA : Clock phase
+
+    (This bit should not be changed when communication is ongoing)
+    0 : The first clock transition is the first data capture edge
+    1 : The second clock transition is the first data capture edge
+ 
+If someone finds this is not the case or sees a logic error with this let me know ;-) 
+ */
 	_settings.dataMode = dataMode;
 	this->begin();
 }	
