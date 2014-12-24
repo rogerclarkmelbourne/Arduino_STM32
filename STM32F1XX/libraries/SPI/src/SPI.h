@@ -311,7 +311,7 @@ private:
 	SPISettings _settings;
     spi_dev *spi_d;
 	uint8_t _SSPin;
-	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_1_125MHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_1_125MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
+	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_1_125MHZ,		SPI_1_125MHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_1_125MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
 };
 
 
