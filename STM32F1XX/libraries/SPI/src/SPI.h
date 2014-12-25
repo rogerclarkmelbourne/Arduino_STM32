@@ -70,6 +70,7 @@ typedef enum SPIFrequency {
 #define SPI_CLOCK_DIV32 0x06
 #define SPI_CLOCK_DIV64 0x02
 #define SPI_CLOCK_DIV128 0x03
+#define SPI_CLOCK_DIV1 0x07
 
 
 
@@ -155,17 +156,7 @@ public:
      * Set up/tear down
      */
 
-    /**
-     * @brief Turn on a SPI port and set its GPIO pin modes for use as master.
-     *
-     * SPI port is enabled in full duplex mode, with software slave management.
-     *
-     * @param frequency Communication frequency
-     * @param bitOrder Either LSBFIRST (little-endian) or MSBFIRST (big-endian)
-     * @param mode SPI mode to use, one of SPI_MODE_0, SPI_MODE_1,
-     *             SPI_MODE_2, and SPI_MODE_3.
-     */
-    void begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode);
+
 
     /**
      * @brief Equivalent to begin(SPI_1_125MHZ, MSBFIRST, 0).
@@ -308,10 +299,23 @@ public:
      */
     uint8 recv(void);
 private:
+
+    /**
+     * @brief Turn on a SPI port and set its GPIO pin modes for use as master.
+     *
+     * SPI port is enabled in full duplex mode, with software slave management.
+     *
+     * @param frequency Communication frequency
+     * @param bitOrder Either LSBFIRST (little-endian) or MSBFIRST (big-endian)
+     * @param mode SPI mode to use, one of SPI_MODE_0, SPI_MODE_1,
+     *             SPI_MODE_2, and SPI_MODE_3.
+     */
+    void begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode);
+
 	SPISettings _settings;
     spi_dev *spi_d;
 	uint8_t _SSPin;
-	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_1_125MHZ,		SPI_1_125MHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_1_125MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
+	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_9MHZ,SPI_2_25MHZ,SPI_1_125MHZ,SPI_18MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
 };
 
 
