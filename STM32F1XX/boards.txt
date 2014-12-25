@@ -24,8 +24,8 @@ nano.upload.auto_reset=true
 nano.build.mcu=cortex-m3
 nano.build.f_cpu=72000000L
 nano.build.core=maple
-nano.build.common_flags=-mthumb -MD -DSTM32_MEDIUM_DENSITY -march=armv7-m -D__STM32F1XX__ 
-#nano.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+nano.build.common_flags=-mthumb -DSTM32_MEDIUM_DENSITY -march=armv7-m -D__STM32F1XX__ 
+#nano.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
 nano.build.variant=maple_mini
 nano.build.variant_system_lib=libmaple.a
 nano.build.density=STM32_MEDIUM_DENSITY
@@ -219,7 +219,7 @@ mapleRAM.upload.auto_reset=true
 mapleRAM.build.mcu=cortex-m3
 mapleRAM.build.f_cpu=72000000L
 mapleRAM.build.core=maple
-mapleRAM.build.extra_flags=-DMCU_STM32F103RB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+mapleRAM.build.extra_flags=-DMCU_STM32F103RB -mthumb -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
 mapleRAM.build.ldscript=ld/ram.ld
 mapleRAM.build.variant=maple
 mapleRAM.build.variant_system_lib=libmaple.a
@@ -247,7 +247,7 @@ maple_mini.upload.auto_reset=true
 maple_mini.build.mcu=cortex-m3
 maple_mini.build.f_cpu=72000000L
 maple_mini.build.core=maple
-maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
 maple_mini.build.ldscript=ld/flash.ld
 maple_mini.build.variant=maple_mini
 maple_mini.build.variant_system_lib=libmaple.a
@@ -274,7 +274,7 @@ maple_miniRAM.upload.auto_reset=true
 maple_miniRAM.build.mcu=cortex-m3
 maple_miniRAM.build.f_cpu=72000000L
 maple_miniRAM.build.core=maple
-maple_miniRAM.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+maple_miniRAM.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
 maple_miniRAM.build.ldscript=ld/ram.ld
 maple_miniRAM.build.variant=maple_mini
 maple_miniRAM.build.variant_system_lib=libmaple.a
@@ -302,7 +302,7 @@ maple_STM32.upload.auto_reset=true
 maple_STM32.build.mcu=cortex-m3
 maple_STM32.build.f_cpu=72000000L
 maple_STM32.build.core=maple
-maple_STM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY  -march=armv7-m  -D__STM32F1XX__ 
+maple_STM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY  -march=armv7-m  -D__STM32F1XX__ 
 maple_STM32.build.ldscript=ld/jtag.ld
 maple_STM32.build.variant=maple_mini
 maple_STM32.build.variant_system_lib=libmaple.a
@@ -331,7 +331,7 @@ microduino32_flash.upload.auto_reset=true
 microduino32_flash.build.mcu=cortex-m3
 microduino32_flash.build.f_cpu=72000000L
 microduino32_flash.build.core=maple
-microduino32_flash.build.extra_flags=-DMCU_STM32F103CB -mthumb -MD -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
+microduino32_flash.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY -DBOOTLOADER_maple -march=armv7-m -D__STM32F1XX__ 
 microduino32_flash.build.ldscript=ld/flash.ld
 microduino32_flash.build.variant=microduino
 microduino32_flash.build.variant_system_lib=libmaple.a

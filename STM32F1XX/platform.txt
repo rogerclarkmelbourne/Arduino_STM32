@@ -11,13 +11,13 @@ version=0.1.0
 build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 compiler.path={runtime.ide.path}/hardware/tools/{build.gcc_ver}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-c -g -Os -w -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.c.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
 compiler.c.elf.cmd=arm-none-eabi-g++
 compiler.c.elf.flags=-Os -Wl,--gc-sections
 compiler.S.cmd=arm-none-eabi-gcc
-compiler.S.flags=-c -g -x assembler-with-cpp
+compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-c -g -Os -w -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.cpp.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
