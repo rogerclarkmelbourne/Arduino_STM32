@@ -77,7 +77,7 @@
 #define MISO 3
 #define SCK 4
 
-
+typedef uint16 word;
 /* Wiring macros and bit defines */
 
 #define true 0x1
