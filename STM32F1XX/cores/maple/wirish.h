@@ -77,7 +77,9 @@
 #define MISO 3
 #define SCK 4
 
-typedef uint16 word;
+typedef unsigned int word;
+// typedef uint16 word;// definition from Arduino website, now appears to be incorrect for 32 bit devices
+
 /* Wiring macros and bit defines */
 
 #define true 0x1
