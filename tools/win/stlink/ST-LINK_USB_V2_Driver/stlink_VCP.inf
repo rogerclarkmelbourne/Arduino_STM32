@@ -1,0 +1,74 @@
+
+;
+; Installs the Virtual COM port interface of ST-Link based composite devices.
+;
+
+[Version]
+Signature = "$Windows NT$"
+Class     = Ports
+ClassGUID = {4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider  = %ManufacturerName%
+CatalogFile.NTx86  = STLinkVCP_x86.cat
+CatalogFile.NTAMD64 = STLinkVCP_x64.cat
+DriverVer=12/10/2013,1.0
+
+; ========== Manufacturer/Models sections ===========
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTx86,NTamd64
+
+; List of devices supporting the Virtual COM port (with the corresponding interface ID)
+[Standard.NTx86]
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374A&MI_02
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374B&MI_02
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374C&MI_01
+
+[Standard.NTamd64]
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374A&MI_02
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374B&MI_02
+%DeviceNameVCP% =USB_InstallVCP, USB\VID_0483&PID_374C&MI_01
+
+; ========== Class definition ===========
+
+[ClassInstall32]
+AddReg = ClassInstall_AddReg
+
+[ClassInstall_AddReg]
+HKR,,,,%ClassName%
+HKR,,NoInstallClass,,1
+HKR,,IconPath,%REG_MULTI_SZ%,"%systemroot%\system32\setupapi.dll,-20"
+HKR,,LowerLogoVersion,,5.2
+
+; =================== Installation ===================
+
+[USB_InstallVCP]
+Include   = mdmcpq.inf
+CopyFiles = FakeModemCopyFileSection
+AddReg    = USB_InstallVCP.AddReg
+
+[USB_InstallVCP.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[USB_InstallVCP.Services]
+AddService=usbser, 0x00000002, DriverService
+
+[DriverService]
+DisplayName=%DeviceNameVCP%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\usbser.sys
+
+; [DestinationDirs]
+; If your INF needs to copy files, you must not use the DefaultDestDir directive here.  
+; You must explicitly reference all file-list-section names in this section.
+
+; =================== Strings ===================
+
+[Strings]
+ManufacturerName="STMicroelectronics"
+ClassName="Universal Serial Bus devices"
+DeviceNameVCP="STMicroelectronics STLink Virtual COM Port"
+REG_MULTI_SZ = 0x00010000

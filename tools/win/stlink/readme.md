@@ -1,0 +1,66 @@
+STLink software is copyright STMicroelectronics 
+
+See docs/license.txt - also shown below...
+
+
+
+SOFTWARE LICENSE AGREEMENT
+
+
+By using this Licensed Software, You are agreeing to be bound by the terms and conditions of this License Agreement. Do not use the Licensed Software until You have read and agreed to the following terms and conditions. The use of the Licensed Software implies automatically the acceptance of the following terms and conditions. Please indicate your acceptance or NON-acceptance by selecting 'I ACCEPT' or 'I DO NOT ACCEPT' as indicated below in the media.
+
+DEFINITIONS.
+
+Licensed Software: means the enclosed SOFTWARE LIBRARY, EXAMPLES, PROJECT TEMPLATE and all the related documentation and design tools licensed in the form of object and/or source code as the case maybe.
+
+Product: means a product or a system that includes or incorporates solely and exclusively an executable version of the Licensed Software and provided further that such Licensed Software executes solely and exclusively on STM32 microcontrollers devices manufactured by or for ST.
+
+LICENSE.
+STMicroelectronics (ST) grants You a non-exclusive, worldwide, non-transferable (whether by assignment or otherwise) non sub-licensable, revocable, royalty-free limited license of the Licensed Software to: 
+(i) make copies, prepare derivatives works, of the source code version of the Licensed Software for the sole and exclusive purpose of developing executable versions (in object and source code) of such Licensed Software only for use with the Product;
+(ii) make copies, prepare derivatives works of the object code versions of the Licensed Software for the sole purpose of designing, developing and manufacturing the Products;
+(iii) make, use, sell, offer to sell, lease, hire out, import and export or otherwise distribute Products.
+
+
+OWNERSHIP AND COPYRIGHT. Title to the Licensed Software, related documentation and all copies thereof remain with ST and/or its licensors. You may not remove the copyrights notices from the Licensed Software and to any copies of the Licensed Software. You agree to prevent any unauthorized copying of the Licensed Software and related documentation.
+
+
+RESTRICTIONS. Unless otherwise explicitly stated in this Agreement, You may not sell, assign, sublicense, lease, rent or otherwise distribute the Licensed Software for commercial purposes, in whole or in part.
+
+You acknowledge and agree that any use, adaptation translation or transcription of the Licensed Software or any portion or derivative thereof, for use with processors manufactured by or for an entity other than ST is a material breach of this Agreement and requires a separate license from ST. 
+
+No source code and/or object code relating to and/or based upon Licensed Software is to be made available by You unless expressly permitted under the section 'License'.
+
+You acknowledge and agree that the protection of the source code of the Licensed Software warrants the imposition of reasonable security precautions 
+In the event ST demonstrates to You a reasonable belief that the source code of the Licensed Software has been used or distributed in violation of this Agreement, ST may by written notification request certification as to whether such unauthorized use or distribution has occurred. You shall cooperate and assist ST in its determination of whether there has been unauthorized use or distribution of the source code of the Licensed Software and will take appropriate steps to remedy any unauthorized use or distribution.
+
+NO WARRANTY. The Licensed Software is provided 'as is' and 'with all faults' without warranty of any kind expressed or implied. ST and its licensors expressly disclaim all warranties, expressed, implied or otherwise, including without limitation, warranties of merchantability, fitness for a particular purpose and non-infringement of intellectual property rights. ST does not warrant that the use in whole or in part of the Licensed Software will be interrupted or error free, will meet your requirements, or will operate with the combination of hardware and software selected by You.
+
+You are responsible for determining whether the Licensed Software will be suitable for your intended use or application or will achieve your intended results. 
+
+ST has not authorized anyone to make any representation or warranty for the Licensed Software, and any technical, applications or design information or advice, quality characterization, reliability data or other services provided by ST shall not constitute any representation or warranty by ST or alter this disclaimer or warranty, and in no additional obligations or liabilities shall arise from ST’s providing such information or services. ST does not assume or authorize any other person to assume for it any other liability in connection with its Licensed Software.
+
+Nothing contained in this Agreement will be construed as 
+(i)	a warranty or representation by ST to maintain production of any ST device or other hardware or software with which the Licensed Software may be used or to otherwise maintain or support the Licensed Software in any manner; and
+(ii)    a commitment from ST and/or its licensors to bring or prosecute actions or suits against third parties for infringement of any of the rights licensed hereby, or conferring any rights to bring or prosecute actions or suits against third parties for infringement. However, ST has the right to terminate this Agreement immediately upon receiving notice of any claim, suit or proceeding that alleges that the Licensed Software or your use or distribution of the Licensed Software infringes any third party intellectual property rights.
+ 
+All other warranties, conditions or other terms implied by law are excluded to the fullest extent permitted by law.
+
+LIMITATION OF LIABILITIES. In no event ST or its licensors shall be liable to You or any third party for any indirect, special, consequential, incidental, punitive damages or other damages (including but not limited to, the cost of labour, re-qualification, delay, loss of profits, loss of revenues, loss of data, costs of procurement of substitute goods or services or the like) whether based on contract, tort, or any other legal theory, relating to or in connection with the Licensed Software, the documentation or this Agreement, even if ST has been advised of the possibility of such damages.
+
+In no event shall ST’s liability to You or any third party under this Agreement, including any claim with respect of any third party intellectual property rights, for any cause of action exceed 100 US$. This section does not apply to the extent prohibited by law. For the purposes of this section, any liability of ST shall be treated in the aggregate.
+
+TERMINATION. ST may terminate this License Agreement license at any time if You are in material breach of any of its terms and conditions. Upon termination, You will immediately destroy or return all copies of the Licensed Software and documentation to ST.
+
+
+APPLICABLE LAW AND JURISDICTION. In case of dispute and in the absence of an amicable settlement, the only competent jurisdiction shall be the Courts of Geneva, Switzerland. The applicable law shall be the law of Switzerland. 
+
+
+SEVERABILITY. If any provision of this agreement is or becomes, at any time or for any reason, unenforceable or invalid, no other provision of this agreement shall be affected thereby, and the remaining provisions of this agreement shall continue with the same force and effect as if such unenforceable or invalid provisions had not been inserted in this Agreement.
+
+
+WAIVER. The waiver by either party of any breach of any provisions of this Agreement shall not operate or be construed as a waiver of any other or a subsequent breach of the same or a different provision.
+
+RELATIONSHIP OF THE PARTIES. Nothing in this Agreement shall create, or be deemed to create, a partnership or the relationship of principal and agent or employer and employee between the Parties. Neither Party has the authority or power to bind, to contract in the name of or to create a liability for the other in any way or for any purpose.
+
+
