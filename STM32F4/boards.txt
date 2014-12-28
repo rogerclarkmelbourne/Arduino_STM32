@@ -1,0 +1,33 @@
+# 
+
+##############################################################
+discovery_f407.name=STM32 Discovery F407
+
+discovery_f407.upload.tool=stlink
+discovery_f407.upload.protocol=stlink
+
+#discovery_f407.upload.use_1200bps_touch=false
+discovery_f407.upload.file_type=bin
+discovery_f407.upload.ram.maximum_size=17000
+discovery_f407.upload.flash.maximum_size=108000
+discovery_f407.upload.maximum_size=108000
+
+#discovery_f407.upload.usbID=1EAF:0003
+#discovery_f407.upload.altID=1
+#discovery_f407.upload.auto_reset=true
+
+discovery_f407.build.mcu=cortex-m3
+discovery_f407.build.f_cpu=168000000L
+discovery_f407.build.core=maple
+discovery_f407.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -march=armv7-m  -DSTM32F2 -DBOARD_discovery_f4
+discovery_f407.build.ldscript=ld/jtag.ld
+discovery_f407.build.variant=discovery_f407
+discovery_f407.build.variant_system_lib=lib_f407.a
+discovery_f407.build.vect=VECT_TAB_BASE
+discovery_f407.build.density=STM32_HIGH_DENSITY
+discovery_f407.build.error_led_port=GPIOD
+discovery_f407.build.error_led_pin=14
+#discovery_f407.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
+##############################################################
+
