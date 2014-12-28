@@ -33,7 +33,7 @@
 
 #include "Print.h"
 #include "boards.h"
-#include "stream.h"
+#include "Stream.h"
 
 /**
  * @brief Virtual serial terminal.
