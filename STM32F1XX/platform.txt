@@ -100,10 +100,10 @@ recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 # Upload using Maple bootloader over DFU
 tools.maple_upload.cmd=maple_upload
 tools.maple_upload.cmd.windows=maple_upload.bat
-#tools.maple_upload.cmd.linux=maple_upload                ### Added by @Chillitronix
+#tools.maple_upload.cmd.linux=maple_upload                
 tools.maple_upload.path={runtime.hardware.path}/tools/win
 tools.maple_upload.path.macosx={runtime.hardware.path}/tools/macosx
-tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux    ### Added by @Chillitronix
+tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux    
 
 tools.maple_upload.upload.params.verbose=-d
 tools.maple_upload.upload.params.quiet=
