@@ -31,6 +31,12 @@
 
 void setup();
 void loop();
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
 void yield(void);
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif
