@@ -191,6 +191,11 @@ public:
 	void setBitOrder(uint8_t bitOrder);	
 	void setdataMode(uint8_t dataMode);		
 	
+	// SPI Configuration methods
+	void attachInterrupt(void);
+	void detachInterrupt(void);
+	
+	
     /*
      * I/O
      */

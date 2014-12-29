@@ -286,6 +286,14 @@ uint8 SPIClass::transfer(uint8 byte) {
     return this->read();
 }
 
+void SPIClass::attachInterrupt(void) {
+	// Should be enableInterrupt()
+}
+
+void SPIClass::detachInterrupt(void) {
+	// Should be disableInterrupt()
+}
+
 /*
  * Pin accessors
  */

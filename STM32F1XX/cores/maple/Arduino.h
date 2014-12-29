@@ -31,5 +31,6 @@
 
 void setup();
 void loop();
+void yield(void);
 
 #endif
