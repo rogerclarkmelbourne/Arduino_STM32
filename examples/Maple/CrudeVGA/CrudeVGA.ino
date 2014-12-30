@@ -9,7 +9,7 @@
  surely isn't the best way to do VGA video with a Maple, but it demonstrates
  the Timer functionality and is a cool hack so here it is.
 
- SerialUSB is disabled to get rid of most interrupts (which mess with timing);
+ Serial is disabled to get rid of most interrupts (which mess with timing);
  the SysTick is probably the source of the remaining flickers. This means that
  you have to use perpetual bootloader or the reset button to flash new 
  programs.
@@ -88,7 +88,7 @@ uint8 logo[18][16] = {
     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}, };
 
 void setup() {
-    
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Setup our pins
     pinMode(LED_PIN, OUTPUT);
     pinMode(VGA_R, OUTPUT);
@@ -104,7 +104,7 @@ void setup() {
 
     // This gets rid of the majority of the interrupt artifacts;
     // a SysTick.end() is required as well
-    SerialUSB.end();
+    Serial.end();
     
 
     // Configure

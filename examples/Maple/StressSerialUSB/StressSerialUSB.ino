@@ -1,8 +1,8 @@
 /*
- SerialUSB Stress Test
+ Serial Stress Test
 
  Connect via Serial2 (header pins D0 and D1 on the Maple) for the back channel;
- otherwise just connect with SerialUSB and press BUT to cycle through (hold
+ otherwise just connect with Serial and press BUT to cycle through (hold
  it for at least a second).
 
  The output will be pretty cryptic; see inline comments for more info.
@@ -28,6 +28,7 @@ uint32 state = 0;
 
 void setup()
 {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Set up the LED to blink 
     pinMode(LED_PIN, OUTPUT);
 
@@ -58,82 +59,82 @@ void loop() {
         // this pattern makes it easy to see dropped bytes.
         case QUICKPRINT:
             for(int i = 0; i<40; i++) {
-                SerialUSB.print('.');
-                SerialUSB.print('|');
+                Serial.print('.');
+                Serial.print('|');
             }
-            Serial2.println(SerialUSB.pending(),DEC);
-            SerialUSB.println();
+            Serial2.println(Serial.pending(),DEC);
+            Serial.println();
             break;
 
         // Send large/log stuff
         case BIGSTUFF:
-            SerialUSB.println("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-            SerialUSB.println((uint32)123456789,DEC);
-            SerialUSB.println(3.1415926535);
-            Serial2.println(SerialUSB.pending(),DEC);
+            Serial.println("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+            Serial.println((uint32)123456789,DEC);
+            Serial.println(3.1415926535);
+            Serial2.println(Serial.pending(),DEC);
             break;
 
         // Try a bunch of different types and formats
         case NUMBERS:
-            SerialUSB.println("Numbers! -----------------------------");
+            Serial.println("Numbers! -----------------------------");
             Serial2.println("Numbers! -----------------------------");
-            SerialUSB.println('1');
+            Serial.println('1');
             Serial2.println('1');
-            SerialUSB.println(1,DEC);
+            Serial.println(1,DEC);
             Serial2.println(1,DEC);
-            SerialUSB.println(-1,DEC);
+            Serial.println(-1,DEC);
             Serial2.println(-1,DEC);
-            SerialUSB.println(3.14159265);
+            Serial.println(3.14159265);
             Serial2.println(3.14159265);
-            SerialUSB.println(3.14159265,9);
+            Serial.println(3.14159265,9);
             Serial2.println(3.14159265,9);
-            SerialUSB.println(123456789,DEC);
+            Serial.println(123456789,DEC);
             Serial2.println(123456789,DEC);
-            SerialUSB.println(-123456789,DEC);
+            Serial.println(-123456789,DEC);
             Serial2.println(-123456789,DEC);
-            SerialUSB.println(65535,HEX);
+            Serial.println(65535,HEX);
             Serial2.println(65535,HEX);
-            SerialUSB.println(65535,OCT);
+            Serial.println(65535,OCT);
             Serial2.println(65535,OCT);
-            SerialUSB.println(65535,BIN);
+            Serial.println(65535,BIN);
             Serial2.println(65535,BIN);
             break;
 
         // Very basic prints
         case SIMPLE:
             Serial2.println("Trying write('a')");
-            SerialUSB.write('a');
+            Serial.write('a');
             Serial2.println("Trying write(\"b\")");
-            SerialUSB.write("b");
+            Serial.write("b");
             Serial2.println("Trying print('c')");
-            SerialUSB.print('c');
+            Serial.print('c');
             Serial2.println("Trying print(\"d\")");
-            SerialUSB.print("d");
+            Serial.print("d");
             Serial2.println("Trying print(\"efg\")");
-            SerialUSB.print("efg");
+            Serial.print("efg");
             Serial2.println("Trying println(\"hij\\n\\r\")");
-            SerialUSB.print("hij\n\r");
-            SerialUSB.write(' ');
-            SerialUSB.println();
+            Serial.print("hij\n\r");
+            Serial.write(' ');
+            Serial.println();
             Serial2.println("Trying println(123456789,DEC)");
-            SerialUSB.println(123456789,DEC);
+            Serial.println(123456789,DEC);
             Serial2.println("Trying println(3.141592)");
-            SerialUSB.println(3.141592);
+            Serial.println(3.141592);
             Serial2.println("Trying println(\"DONE\")");
-            SerialUSB.println("DONE");
+            Serial.println("DONE");
             break;
 
         // Disables the USB peripheral, then brings it back up a 
         // few seconds later
         case ONOFF:
             Serial2.println("Shutting down...");
-            SerialUSB.println("Shutting down...");
-            SerialUSB.end();
+            Serial.println("Shutting down...");
+            Serial.end();
             Serial2.println("Waiting 4seconds...");
             delay(4000);
             Serial2.println("Starting up...");
-            SerialUSB.begin();
-            SerialUSB.println("Hello World!");
+            Serial.begin();
+            Serial.println("Hello World!");
             Serial2.println("Waiting 4seconds...");
             delay(4000);
             state++;

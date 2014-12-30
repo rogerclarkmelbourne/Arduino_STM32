@@ -25,17 +25,18 @@ const int greenPin = 16;   // sensor to control green color
 const int bluePin = 17;    // sensor to control blue color
 
 void setup() {
-  pinMode(redPin, INPUT_ANALOG);
-  pinMode(greenPin, INPUT_ANALOG);
-  pinMode(bluePin, INPUT_ANALOG);
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
+	pinMode(redPin, INPUT_ANALOG);
+	pinMode(greenPin, INPUT_ANALOG);
+	pinMode(bluePin, INPUT_ANALOG);
 }
 
 void loop() {
-  SerialUSB.print(analogRead(redPin));
-  SerialUSB.print(",");
-  SerialUSB.print(analogRead(greenPin));
-  SerialUSB.print(",");
-  SerialUSB.println(analogRead(bluePin));
+  Serial.print(analogRead(redPin));
+  Serial.print(",");
+  Serial.print(analogRead(greenPin));
+  Serial.print(",");
+  Serial.println(analogRead(bluePin));
 }
 
 /* Processing code for this example

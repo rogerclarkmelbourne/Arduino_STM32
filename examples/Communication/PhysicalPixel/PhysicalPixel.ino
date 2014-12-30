@@ -26,15 +26,16 @@
 int incomingByte;      // a variable to read incoming serial data into
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Initialize the built-in LED pin as an output:
     pinMode(BOARD_LED_PIN, OUTPUT);
 }
 
 void loop() {
     // See if there's incoming serial data:
-    if (SerialUSB.available() > 0) {
+    if (Serial.available() > 0) {
         // Read the oldest byte in the serial buffer:
-        incomingByte = SerialUSB.read();
+        incomingByte = Serial.read();
         // If it's a capital H (ASCII 72), turn on the LED:
         if (incomingByte == 'H') {
             digitalWrite(BOARD_LED_PIN, HIGH);

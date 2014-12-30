@@ -22,6 +22,7 @@ const int analogInputPin = 15;
 void setup() {
   // Declare analogInputPin as INPUT_ANALOG:
   pinMode(analogInputPin, INPUT_ANALOG);
+  	Serial.begin(115200); // Ignored by Maple. But needed by boards using Hardware serial via a USB to Serial Adaptor
 }
 
 void loop() {
@@ -29,5 +30,5 @@ void loop() {
   int analogValue = analogRead(analogInputPin);
 
   // print the result:
-  SerialUSB.println(analogValue);
+  Serial.println(analogValue);
 }

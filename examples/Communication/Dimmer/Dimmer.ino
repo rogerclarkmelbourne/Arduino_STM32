@@ -24,6 +24,7 @@
 int ledPin = 9;
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Declare ledPin as an OUTPUT:
     pinMode(ledPin, OUTPUT);
 }
@@ -32,11 +33,11 @@ void loop() {
     int brightness;
 
     // Check if data has been sent from the computer:
-    if (SerialUSB.available()) {
+    if (Serial.available()) {
         // Read the most recent byte (which will be from 0 to 255), then
         // convert it to be between 0 and 65,535, which are the minimum
         // and maximum values usable for PWM:
-        brightness = map(SerialUSB.read(), 0, 255, 0, 65535);
+        brightness = map(Serial.read(), 0, 255, 0, 65535);
         // Set the brightness of the LED:
         pwmWrite(ledPin, brightness);
     }

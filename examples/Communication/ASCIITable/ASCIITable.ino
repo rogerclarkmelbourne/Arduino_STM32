@@ -1,7 +1,7 @@
 /*
   ASCII table
 
-  Connect to the Maple SerialUSB using the Serial Monitor, then press
+  Connect to the Maple Serial using the Serial Monitor, then press
   any key and hit enter.
 
   Prints out byte values in all possible formats:
@@ -25,13 +25,16 @@
   by Bryan Newbold
 */
 
-void setup() {
+void setup() 
+{
+
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Wait for the user to press a key
-    while (!SerialUSB.available())
+    while (!Serial.available())
         continue;
 
     // Prints title with ending line break
-    SerialUSB.println("ASCII Table ~ Character Map");
+    Serial.println("ASCII Table ~ Character Map");
 }
 
 // First visible ASCII character: '!' is number 33:
@@ -44,29 +47,29 @@ void loop() {
     // Prints value unaltered, i.e. the raw binary version of the
     // byte. The serial monitor interprets all bytes as
     // ASCII, so 33, the first number,  will show up as '!'
-    SerialUSB.print(thisByte, BYTE);
+    Serial.print(thisByte, BYTE);
 
-    SerialUSB.print(", dec: ");
+    Serial.print(", dec: ");
     // Prints value as string as an ASCII-encoded decimal (base 10).
-    // Decimal is the default format for SerialUSB.print() and
-    // SerialUSB.println(), so no modifier is needed:
-    SerialUSB.print(thisByte);
+    // Decimal is the default format for Serial.print() and
+    // Serial.println(), so no modifier is needed:
+    Serial.print(thisByte);
     // But you can declare the modifier for decimal if you want to.
     // This also works if you uncomment it:
-    // SerialUSB.print(thisByte, DEC);
+    // Serial.print(thisByte, DEC);
 
-    SerialUSB.print(", hex: ");
+    Serial.print(", hex: ");
     // Prints value as string in hexadecimal (base 16):
-    SerialUSB.print(thisByte, HEX);
+    Serial.print(thisByte, HEX);
 
-    SerialUSB.print(", oct: ");
+    Serial.print(", oct: ");
     // Prints value as string in octal (base 8);
-    SerialUSB.print(thisByte, OCT);
+    Serial.print(thisByte, OCT);
 
-    SerialUSB.print(", bin: ");
+    Serial.print(", bin: ");
     // Prints value as string in binary (base 2); also prints ending
     // line break:
-    SerialUSB.println(thisByte, BIN);
+    Serial.println(thisByte, BIN);
 
     // If printed last visible character '~' or 126, stop:
     if (thisByte == 126) {     // You could also use if (thisByte == '~') {

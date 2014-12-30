@@ -30,6 +30,7 @@ int thirdSensor = 0;    // digital sensor
 int inByte = 0;         // incoming serial byte
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     pinMode(0, INPUT_ANALOG); // First (analog) sensor is on pin 0
     pinMode(1, INPUT_ANALOG); // Second (analog) sensor is on pin 1
     pinMode(2, INPUT);   // digital sensor is on digital pin 2
@@ -38,9 +39,9 @@ void setup() {
 
 void loop() {
     // if we get a valid byte, read analog ins:
-    if (SerialUSB.available() > 0) {
+    if (Serial.available() > 0) {
         // get incoming byte:
-        inByte = SerialUSB.read();
+        inByte = Serial.read();
         // read first analog input, map it into the range 0-255:
         firstSensor = map(analogRead(0), 0, 4095, 0, 255);
         // delay 10 ms to let the ADC value change:
@@ -50,17 +51,17 @@ void loop() {
         // read switch, map it to 0 or 255
         thirdSensor = map(digitalRead(2), 0, 1, 0, 255);
         // send sensor values:
-        SerialUSB.print(firstSensor, DEC);
-        SerialUSB.print(",");
-        SerialUSB.print(secondSensor, DEC);
-        SerialUSB.print(",");
-        SerialUSB.println(thirdSensor, DEC);
+        Serial.print(firstSensor, DEC);
+        Serial.print(",");
+        Serial.print(secondSensor, DEC);
+        Serial.print(",");
+        Serial.println(thirdSensor, DEC);
     }
 }
 
 void establishContact() {
-    while (SerialUSB.available() <= 0) {
-        SerialUSB.println("0,0,0");   // send an initial string
+    while (Serial.available() <= 0) {
+        Serial.println("0,0,0");   // send an initial string
         delay(300);
     }
 }

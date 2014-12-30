@@ -22,6 +22,7 @@
 */
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Initialize the LED pins:
     for (int thisPin = 2; thisPin <= 6; thisPin++) {
         pinMode(thisPin, OUTPUT);
@@ -30,8 +31,8 @@ void setup() {
 
 void loop() {
     // Read the sensor:
-    if (SerialUSB.available() > 0) {
-        int inByte = SerialUSB.read();
+    if (Serial.available() > 0) {
+        int inByte = Serial.read();
         // Do something different depending on the character received.
         // The switch statement expects single number values for each
         // case; in this example, though, you're using single quotes

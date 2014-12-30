@@ -30,6 +30,7 @@ const int threshold = 100;  // threshold value to decide when the detected sound
 int sensorReading = 0;      // variable to store the value read from the sensor pin
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Declare the knockSensor as an analog input:
     pinMode(knockSensor, INPUT_ANALOG);
     // declare the built-in LED pin as an output:
@@ -45,7 +46,7 @@ void loop() {
         // toggle the built-in LED
         toggleLED();
         // send the string "Knock!" back to the computer, followed by newline
-        SerialUSB.println("Knock!");
+        Serial.println("Knock!");
     }
     delay(100);  // delay to avoid printing too often
 }

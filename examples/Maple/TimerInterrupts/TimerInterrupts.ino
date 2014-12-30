@@ -24,6 +24,7 @@ int count2 = 0;
 
 void setup()
 {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Set up the LED to blink 
     pinMode(LED_PIN, OUTPUT);
 
@@ -57,10 +58,10 @@ void setup()
 void loop() {
 
     // Display the running counts
-    SerialUSB.print("Count 1: "); 
-    SerialUSB.print(count1);
-    SerialUSB.print("\t\tCount 2: "); 
-    SerialUSB.println(count2);
+    Serial.print("Count 1: "); 
+    Serial.print(count1);
+    Serial.print("\t\tCount 2: "); 
+    Serial.println(count2);
 
     // Run... while BUT is held, pause Count2
     for(int i = 0; i<1000; i++) {

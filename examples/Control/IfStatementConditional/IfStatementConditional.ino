@@ -28,6 +28,7 @@ const int threshold = 400;    // A random threshold level that's in
                               // the range of the analog input
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Initialize the built-in LED pin as an output:
     pinMode(BOARD_LED_PIN, OUTPUT);
 
@@ -48,5 +49,5 @@ void loop() {
     }
 
     // Print the analog value:
-    SerialUSB.println(analogValue, DEC);
+    Serial.println(analogValue, DEC);
 }

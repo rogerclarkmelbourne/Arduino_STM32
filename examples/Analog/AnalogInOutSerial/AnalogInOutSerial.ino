@@ -38,6 +38,7 @@ void setup() {
     pinMode(analogInPin, INPUT_ANALOG);
     // Configure LED pin
     pinMode(pwmOutPin, PWM);
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using Hardware serial via a USB to Serial Adaptor
 }
 
 void loop() {
@@ -49,8 +50,8 @@ void loop() {
     pwmWrite(pwmOutPin, outputValue);
 
     // print the results to the serial monitor:
-    SerialUSB.print("sensor = " );
-    SerialUSB.print(sensorValue);
-    SerialUSB.print("\t output = ");
-    SerialUSB.println(outputValue);
+    Serial.print("sensor = " );
+    Serial.print(sensorValue);
+    Serial.print("\t output = ");
+    Serial.println(outputValue);
 }

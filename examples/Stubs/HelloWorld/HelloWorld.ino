@@ -1,7 +1,8 @@
 void setup() {
-
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
 }
 
 void loop() {
-    SerialUSB.println("Hello World!");
+    Serial.println("Hello World!");
+	delay(1000);
 }

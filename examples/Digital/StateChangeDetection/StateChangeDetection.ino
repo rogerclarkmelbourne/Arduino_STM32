@@ -26,6 +26,7 @@ int buttonState = 0;         // current state of the button
 int lastButtonState = 0;     // previous state of the button
 
 void setup() {
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // initialize the button pin as a input:
     pinMode(BOARD_BUTTON_PIN, INPUT);
     // initialize the LED as an output:
@@ -43,14 +44,14 @@ void loop() {
             // if the current state is HIGH, then the button went from
             // off to on:
             buttonPushCounter++;
-            SerialUSB.println("on");
-            SerialUSB.print("number of button pushes:  ");
-            SerialUSB.println(buttonPushCounter, DEC);
+            Serial.println("on");
+            Serial.print("number of button pushes:  ");
+            Serial.println(buttonPushCounter, DEC);
         }
         else {
             // if the current state is LOW, then the button went from
             // on to off:
-            SerialUSB.println("off");
+            Serial.println("off");
         }
 
         // save the current state as the last state, for next time

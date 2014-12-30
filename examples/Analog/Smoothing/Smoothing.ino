@@ -24,7 +24,7 @@
 const int numReadings = 10;
 
 int readings[numReadings];      // the readings from the analog input
-int index = 0;                  // the index of the current reading
+int index1 = 0;                  // the index1 of the current reading
 int total = 0;                  // the running total
 int average = 0;                // the average
 
@@ -33,7 +33,8 @@ int inputPin = 15;              // analog input pin
 void setup() {
     // Declare the input pin as INPUT_ANALOG:
     pinMode(inputPin, INPUT_ANALOG);
-
+	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
+	
     // Initialize all the readings to 0:
     for (int thisReading = 0; thisReading < numReadings; thisReading++) {
         readings[thisReading] = 0;
@@ -42,22 +43,22 @@ void setup() {
 
 void loop() {
     // Subtract the last reading:
-    total = total - readings[index];
+    total = total - readings[index1];
     // Read from the sensor:
-    readings[index] = analogRead(inputPin);
+    readings[index1] = analogRead(inputPin);
     // Add the reading to the total:
-    total = total + readings[index];
+    total = total + readings[index1];
     // Advance to the next position in the array:
-    index = index + 1;
+    index1 = index1 + 1;
 
     // If we're at the end of the array...
-    if (index >= numReadings) {
+    if (index1 >= numReadings) {
         // ...wrap around to the beginning:
-        index = 0;
+        index1 = 0;
     }
 
     // Calculate the average:
     average = total / numReadings;
     // Send it to the computer (as ASCII digits)
-    SerialUSB.println(average, DEC);
+    Serial.println(average, DEC);
 }
