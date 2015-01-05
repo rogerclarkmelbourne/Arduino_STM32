@@ -32,7 +32,7 @@
  * place else. Nonportable bits really need to be factored out, and
  * the result made cleaner.
  */
- 
+
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
@@ -421,6 +421,8 @@ uint32 usb_cdcacm_tx(const uint8* buf, uint32 len) {
     return len;
 }
 
+
+
 uint32 usb_cdcacm_data_available(void) {
     return n_unread_bytes;
 }
@@ -721,4 +723,3 @@ static void usbSetConfiguration(void) {
 static void usbSetDeviceAddress(void) {
     USBLIB->state = USB_ADDRESSED;
 }
-

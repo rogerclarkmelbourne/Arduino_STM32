@@ -133,8 +133,9 @@ SECTIONS
      */
     .data :
       {
-        . = ALIGN(8);
         __data_start__ = .;
+      	LONG(0)
+        . = ALIGN(8);
 
         *(.got.plt) *(.got)
         *(.data .data.* .gnu.linkonce.d.*)
