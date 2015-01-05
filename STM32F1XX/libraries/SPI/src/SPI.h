@@ -75,10 +75,14 @@ typedef enum SPIFrequency {
 
 
 #define SPI_MODE0 0x00
-#define SPI_MODE1 0x04
-#define SPI_MODE2 0x08
-#define SPI_MODE3 0x0C
+#define SPI_MODE1 0x02
+#define SPI_MODE2 0x02
+#define SPI_MODE3 0x03
 
+/*
+ * Roger Clark. 20150106
+ * Commented out redundant AVR defined
+ * 
 #define SPI_MODE_MASK 0x0C  // CPOL = bit 3, CPHA = bit 2 on SPCR
 #define SPI_CLOCK_MASK 0x03  // SPR1 = bit 1, SPR0 = bit 0 on SPCR
 #define SPI_2XCLOCK_MASK 0x01  // SPI2X = bit 0 on SPSR
@@ -91,7 +95,7 @@ typedef enum SPIFrequency {
 #elif defined(GIMSK)
   #define SPI_AVR_EIMSK  GIMSK
 #endif
-
+*/
 
 #ifndef STM32_LSBFIRST
 #define STM32_LSBFIRST 0
@@ -189,7 +193,7 @@ public:
 
 	void setClockDivider(uint32_t clockDivider);
 	void setBitOrder(uint8_t bitOrder);	
-	void setdataMode(uint8_t dataMode);		
+	void setDataMode(uint8_t dataMode);		
 	
 	// SPI Configuration methods
 	void attachInterrupt(void);

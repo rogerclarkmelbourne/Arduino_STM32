@@ -169,7 +169,7 @@ void SPIClass::setBitOrder(uint8_t bitOrder)
 	_settings.bitOrder = bitOrder;
 	this->begin();
 }
-void SPIClass::setdataMode(uint8_t dataMode)
+void SPIClass::setDataMode(uint8_t dataMode)
 {
 /* Notes.  As far as I can tell, the AVR numbers for dataMode appear to match the numbers required by the STM32
 
