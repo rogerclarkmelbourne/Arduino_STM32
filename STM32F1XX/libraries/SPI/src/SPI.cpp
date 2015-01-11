@@ -60,16 +60,24 @@ static void enable_device(spi_dev *dev,
                           spi_cfg_flag endianness,
                           spi_mode mode);
 
+#if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
+#error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
+#endif
+
 static const spi_pins board_spi_pins[] __FLASH__ = {
+#if BOARD_NR_SPI >= 1
     {BOARD_SPI1_NSS_PIN,
      BOARD_SPI1_SCK_PIN,
      BOARD_SPI1_MISO_PIN,
      BOARD_SPI1_MOSI_PIN},
+#endif
+#if BOARD_NR_SPI >= 2
     {BOARD_SPI2_NSS_PIN,
      BOARD_SPI2_SCK_PIN,
      BOARD_SPI2_MISO_PIN,
      BOARD_SPI2_MOSI_PIN},
-#ifdef STM32_HIGH_DENSITY
+#endif
+#if BOARD_NR_SPI >= 3
     {BOARD_SPI3_NSS_PIN,
      BOARD_SPI3_SCK_PIN,
      BOARD_SPI3_MISO_PIN,
@@ -84,13 +92,17 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 
 SPIClass::SPIClass(uint32 spi_num) {
     switch (spi_num) {
+#if BOARD_NR_SPI >= 1
     case 1:
         this->spi_d = SPI1;
         break;
+#endif
+#if BOARD_NR_SPI >= 2
     case 2:
         this->spi_d = SPI2;
         break;
-#ifdef STM32_HIGH_DENSITY
+#endif
+#if BOARD_NR_SPI >= 3
     case 3:
         this->spi_d = SPI3;
         break;
@@ -347,9 +359,13 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq);
 
 static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
     switch (dev->clk_id) {
+#if BOARD_NR_SPI >= 1
     case RCC_SPI1: return board_spi_pins;
+#endif
+#if BOARD_NR_SPI >= 2
     case RCC_SPI2: return board_spi_pins + 1;
-#ifdef STM32_HIGH_DENSITY
+#endif
+#if BOARD_NR_SPI >= 3
     case RCC_SPI3: return board_spi_pins + 2;
 #endif
     default:       return NULL;
