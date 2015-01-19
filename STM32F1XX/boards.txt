@@ -342,3 +342,32 @@ microduino32_flash.build.error_led_port=GPIOB
 microduino32_flash.build.error_led_pin=1
 microduino32_flash.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
+##############################################################
+nucleo_STM32F103RB.name=STM Nucleo STM32F103RB (STLINK)
+
+nucleo_STM32F103RB.upload.tool=stlink_upload
+nucleo_STM32F103RB.upload.protocol=maple_dfu
+nucleo_STM32F103RB.upload.maximum_size=108000
+nucleo_STM32F103RB.upload.use_1200bps_touch=false
+nucleo_STM32F103RB.upload.file_type=bin
+nucleo_STM32F103RB.upload.ram.maximum_size=17000
+nucleo_STM32F103RB.upload.flash.maximum_size=108000
+nucleo_STM32F103RB.upload.params.quiet=no
+
+nucleo_STM32F103RB.upload.usbID=1EAF:0003
+nucleo_STM32F103RB.upload.altID=1
+nucleo_STM32F103RB.upload.auto_reset=true
+
+nucleo_STM32F103RB.build.mcu=cortex-m3
+nucleo_STM32F103RB.build.f_cpu=72000000L
+nucleo_STM32F103RB.build.core=maple
+nucleo_STM32F103RB.build.extra_flags=-DMCU_STM32F103RB -mthumb -DSTM32_MEDIUM_DENSITY   -march=armv7-m  -D__STM32F1XX__ 
+nucleo_STM32F103RB.build.ldscript=ld/jtag.ld
+nucleo_STM32F103RB.build.variant=maple_mini
+nucleo_STM32F103RB.build.variant_system_lib=libmaple.a
+nucleo_STM32F103RB.build.vect=VECT_TAB_FLASH
+nucleo_STM32F103RB.build.density=STM32_MEDIUM_DENSITY
+nucleo_STM32F103RB.build.error_led_port=GPIOB
+nucleo_STM32F103RB.build.error_led_pin=1
+nucleo_STM32F103RB.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
