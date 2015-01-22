@@ -136,8 +136,9 @@ tools.upload_router.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.alt
 # stlink upload
 tools.stlink_upload.cmd=stlink_upload
 tools.stlink_upload.cmd.windows=stlink_upload.bat
-#tools.stlink_upload.cmd.linux=
-tools.stlink_upload.path={runtime.hardware.path}/tools/win
+tools.stlink_upload.path.win={runtime.hardware.path}/tools/win
+tools.stlink_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.stlink_upload.path.linux={runtime.hardware.path}/tools/linux
 
 tools.stlink_upload.upload.params.verbose=-d
 tools.stlink_upload.upload.params.quiet=
