@@ -1,0 +1,3 @@
+[submodule "tools/macosx/stlink/texan_stlink_src"]
+	path = tools/macosx/stlink/texan_stlink_src
+	url = https://github.com/texane/stlink.git
