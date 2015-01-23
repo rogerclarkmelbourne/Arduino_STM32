@@ -1,0 +1,315 @@
+diff -r -u -N libwdi-1.2.4 (original)/examples/wdi-simple.c libwdi-1.2.4 (modified)/examples/wdi-simple.c
+--- libwdi-1.2.4 (original)/examples/wdi-simple.c	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/examples/wdi-simple.c	2015-01-19 11:22:49.026064300 +0100
+@@ -57,7 +57,7 @@
+ 	printf("-p, --pid <id>             set the product ID (PID, use 0x prefix for hex)\n");
+ 	printf("-i, --iid <id>             set the interface ID (MI)\n");
+ 	printf("-t, --type <driver_type>   set the driver to install\n");
+-	printf("                           (0=WinUSB, 1=libusb-win32, 2=libusbK, 3=custom)\n");
++	printf("                           (0=WinUSB, 1=libusb-win32, 2=libusbK, 3=usbser, 4=custom)\n");
+ 	printf("-w, --wcid                 use a WCID driver instead of a device-specific\n");
+ 	printf("                           one (WinUSB, libusb-win32 or libusbK only)\n");
+ 	printf("    --filter               use the libusb-win32 filter driver (requires -t1)\n");
+@@ -223,7 +223,7 @@
+ 	if (wdi_create_list(&ldev, &ocl) == WDI_SUCCESS) {
+ 		r = WDI_SUCCESS;
+ 		for (; (ldev != NULL) && (r == WDI_SUCCESS); ldev = ldev->next) {
+-			if ( (ldev->vid == dev.vid) && (ldev->pid == dev.pid) && (ldev->mi == dev.mi) ) {
++			if ( (ldev->vid == dev.vid) && (ldev->pid == dev.pid) && (ldev->mi == dev.mi) && (ldev->is_composite == dev.is_composite)) {
+ 				dev.hardware_id = ldev->hardware_id;
+ 				dev.device_id = ldev->device_id;
+ 				matching_device_found = TRUE;
+diff -r -u -N libwdi-1.2.4 (original)/examples/zadig.c libwdi-1.2.4 (modified)/examples/zadig.c
+--- libwdi-1.2.4 (original)/examples/zadig.c	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/examples/zadig.c	2015-01-18 14:52:42.578606600 +0100
+@@ -80,8 +80,8 @@
+ WORD application_version[4];
+ char app_dir[MAX_PATH], driver_text[64];
+ char extraction_path[MAX_PATH];
+-const char* driver_display_name[WDI_NB_DRIVERS] = { "WinUSB", "libusb-win32", "libusbK", "Custom (extract only)" };
+-const char* driver_name[WDI_NB_DRIVERS-1] = { "WinUSB", "libusb0", "libusbK" };
++const char* driver_display_name[WDI_NB_DRIVERS] = { "WinUSB", "libusb-win32", "libusbK", "USB Serial", "Custom (extract only)" };
++const char* driver_name[WDI_NB_DRIVERS-1] = { "WinUSB", "libusb0", "libusbK", "usbser" };
+ struct wdi_options_create_list cl_options = { 0 };
+ struct wdi_options_prepare_driver pd_options = { 0 };
+ struct wdi_options_install_cert ic_options = { 0 };
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/.msvc/libwdi_static.vcxproj libwdi-1.2.4 (modified)/libwdi/.msvc/libwdi_static.vcxproj
+--- libwdi-1.2.4 (original)/libwdi/.msvc/libwdi_static.vcxproj	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/.msvc/libwdi_static.vcxproj	2015-01-18 14:40:04.634370100 +0100
+@@ -186,6 +186,8 @@
+     <None Include="..\libusb0.cat.in" />
+     <None Include="..\libusb0.inf.in" />
+     <None Include="..\libusbk.cat.in" />
++    <None Include="..\usbser.cat.in" />
++    <None Include="..\usbser.inf.in" />
+     <None Include="..\winusb.cat.in" />
+     <None Include="..\winusb.inf.in" />
+     <None Include="..\libusbk.inf.in" />
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/.msvc/libwdi_static.vcxproj.filters libwdi-1.2.4 (modified)/libwdi/.msvc/libwdi_static.vcxproj.filters
+--- libwdi-1.2.4 (original)/libwdi/.msvc/libwdi_static.vcxproj.filters	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/.msvc/libwdi_static.vcxproj.filters	2015-01-18 14:40:04.618745100 +0100
+@@ -81,5 +81,11 @@
+     <None Include="..\libusbk.cat.in">
+       <Filter>Resource Files</Filter>
+     </None>
++    <None Include="..\usbser.cat.in">
++      <Filter>Resource Files</Filter>
++    </None>
++    <None Include="..\usbser.inf.in">
++      <Filter>Resource Files</Filter>
++    </None>
+   </ItemGroup>
+ </Project>
+\ No newline at end of file
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/embedder.c libwdi-1.2.4 (modified)/libwdi/embedder.c
+--- libwdi-1.2.4 (original)/libwdi/embedder.c	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/embedder.c	2015-01-18 14:22:00.536945400 +0100
+@@ -295,7 +295,7 @@
+ 	}
+ 	// Copy the fixed part of our table into our new array
+ 	for (i=0; i<nb_embeddables_fixed; i++) {
+-		embeddable[i].reuse_last = 0;
++		embeddable[i].reuse_last = embeddable_fixed[i].reuse_last;
+ 		embeddable[i].file_name = embeddable_fixed[i].file_name;
+ 		embeddable[i].extraction_subdir = embeddable_fixed[i].extraction_subdir;
+ 	}
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/embedder_files.h libwdi-1.2.4 (modified)/libwdi/embedder_files.h
+--- libwdi-1.2.4 (original)/libwdi/embedder_files.h	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/embedder_files.h	2015-01-18 15:02:29.980055000 +0100
+@@ -90,7 +90,7 @@
+ 
+ #	if	defined(OPT_M32)
+ #		if !defined(DDK_DIR)
+-			{ 0, LIBUSBK_DIR "\\sys\\x86\\WdfCoInstaller" STR(WDF_VER) ".dll", "x86" },
++			{ 0, LIBUSBK_DIR "\\sys\\x86\\WdfCoInstaller0" STR(WDF_VER) ".dll", "x86" },
+ #		endif	// DDK_DIR
+ 		{ 0, LIBUSBK_DIR "\\sys\\x86\\libusbK.sys", "x86" },
+ 		{ 0, LIBUSBK_DIR "\\dll\\x86\\libusbK.dll", "x86" },
+@@ -107,7 +107,7 @@
+ 
+ #	if defined(OPT_M64)
+ #		if !defined(DDK_DIR)
+-			{ 0, LIBUSBK_DIR "\\sys\\amd64\\WdfCoInstaller" STR(WDF_VER) ".dll", "amd64" },
++			{ 0, LIBUSBK_DIR "\\sys\\amd64\\WdfCoInstaller0" STR(WDF_VER) ".dll", "amd64" },
+ #		endif	// DDK_DIR
+ 		{ 0, LIBUSBK_DIR "\\sys\\amd64\\libusbK.sys", "amd64" },
+ 		{ 0, LIBUSBK_DIR "\\dll\\amd64\\libusbK.dll", "amd64" },
+@@ -127,7 +127,7 @@
+ 
+ #	if defined(OPT_IA64)
+ #		if !defined(DDK_DIR)
+-			{ 0, LIBUSBK_DIR "\\sys\\ia64\\WdfCoInstaller" STR(WDF_VER) ".dll", "ia64" },
++			{ 0, LIBUSBK_DIR "\\sys\\ia64\\WdfCoInstaller0" STR(WDF_VER) ".dll", "ia64" },
+ #		endif	// DDK_DIR
+ 		{ 0, LIBUSBK_DIR "\\sys\\ia64\\libusbK.sys", "ia64" },
+ 		{ 0, LIBUSBK_DIR "\\dll\\ia64\\libusbK.dll", "ia64" },
+@@ -147,8 +147,10 @@
+ 	{ 0, "winusb.inf.in", "" },
+ 	{ 0, "libusb0.inf.in", "" },
+ 	{ 0, "libusbk.inf.in", "" },
++	{ 0, "usbser.inf.in", "" },
+ // cat file lists for self signing
+ 	{ 0, "winusb.cat.in", "" },
+ 	{ 0, "libusb0.cat.in", "" },
+ 	{ 0, "libusbk.cat.in", "" },
++	{ 0, "usbser.cat.in", "" },
+ };
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/libwdi.c libwdi-1.2.4 (modified)/libwdi/libwdi.c
+--- libwdi-1.2.4 (original)/libwdi/libwdi.c	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/libwdi.c	2015-01-19 11:47:51.098272300 +0100
+@@ -54,11 +54,11 @@
+ static BOOL filter_driver = FALSE;
+ static DWORD timeout = DEFAULT_TIMEOUT;
+ static HANDLE pipe_handle = INVALID_HANDLE_VALUE;
+-static VS_FIXEDFILEINFO driver_version[WDI_NB_DRIVERS-1] = { {0}, {0}, {0} };
+-static const char* driver_name[WDI_NB_DRIVERS-1] = {"winusbcoinstaller2.dll", "libusb0.sys", "libusbK.sys"};
+-static const char* inf_template[WDI_NB_DRIVERS-1] = {"winusb.inf.in", "libusb0.inf.in", "libusbk.inf.in"};
+-static const char* cat_template[WDI_NB_DRIVERS-1] = {"winusb.cat.in", "libusb0.cat.in", "libusbk.cat.in"};
+-static const char* ms_compat_id[WDI_NB_DRIVERS-1] = {"MS_COMP_WINUSB", "MS_COMP_LIBUSB0", "MS_COMP_LIBUSBK"};
++static VS_FIXEDFILEINFO driver_version[WDI_NB_DRIVERS-1] = { {0}, {0}, {0}, {0} };
++static const char* driver_name[WDI_NB_DRIVERS-1] = {"winusbcoinstaller2.dll", "libusb0.sys", "libusbK.sys", "usbser.sys"};
++static const char* inf_template[WDI_NB_DRIVERS-1] = {"winusb.inf.in", "libusb0.inf.in", "libusbk.inf.in", "usbser.inf.in"};
++static const char* cat_template[WDI_NB_DRIVERS-1] = {"winusb.cat.in", "libusb0.cat.in", "libusbk.cat.in", "usbser.cat.in"};
++static const char* ms_compat_id[WDI_NB_DRIVERS-1] = {"MS_COMP_WINUSB", "MS_COMP_LIBUSB0", "MS_COMP_LIBUSBK", "MS_COMP_USBSER"};
+ // for 64 bit platforms detection
+ static BOOL (__stdcall *pIsWow64Process)(HANDLE, PBOOL) = NULL;
+ static int windows_version = WINDOWS_UNDEFINED;
+@@ -397,6 +397,32 @@
+ 		return WDI_ERROR_RESOURCE;
+ 	}
+ 
++	if (driver_type == WDI_USBSER) {
++		SYSTEMTIME LocalTime;
++		FILETIME FileTime;
++		file_info = &driver_version[driver_type];
++		ZeroMemory(file_info, sizeof(VS_FIXEDFILEINFO));
++		file_info->dwSignature        = 0xFEEF04BD;
++		file_info->dwStrucVersion     = 0x10000; // not used
++		file_info->dwFileVersionMS    = (1 << 16) | (0 << 0);
++		file_info->dwFileVersionLS    = (0 << 16) | (0 << 0);
++		file_info->dwProductVersionMS = 0x60003; // not used
++		file_info->dwProductVersionLS = 0x25804000; // not used
++		file_info->dwFileFlagsMask    = 0x3F; // not used
++		file_info->dwFileFlags        = 0; // not used
++		file_info->dwFileOS           = 0x40004; // not used
++		file_info->dwFileType         = 2; // not used
++		file_info->dwFileSubtype      = 0; // not used
++		GetLocalTime(&LocalTime);
++		if (SystemTimeToFileTime(&LocalTime, &FileTime))
++		{
++			file_info->dwFileDateMS = FileTime.dwHighDateTime;
++			file_info->dwFileDateLS = FileTime.dwLowDateTime;
++		}
++		memcpy(driver_info, file_info, sizeof(VS_FIXEDFILEINFO));
++		return WDI_SUCCESS;
++	}
++
+ 	for (res=0; res<nb_resources; res++) {
+ 		// Identify the WinUSB and libusb0 files we'll pick the date & version of
+ 		if (safe_strcmp(resource[res].name, driver_name[driver_type]) == 0) {
+@@ -489,6 +515,12 @@
+ #else
+ 		return FALSE;
+ #endif
++	case WDI_USBSER:
++#if defined(USBSER_DIR)
++		return TRUE;
++#else
++		return FALSE;
++#endif
+ 	case WDI_USER:
+ #if defined(USER_DIR)
+ 		return TRUE;
+@@ -978,7 +1010,7 @@
+ {
+ 	const wchar_t bom = 0xFEFF;
+ #if defined(ENABLE_DEBUG_LOGGING) || defined(INCLUDE_DEBUG_LOGGING)
+-	const char* driver_display_name[WDI_NB_DRIVERS] = { "WinUSB", "libusb0.sys", "libusbK.sys", "user driver" };
++	const char* driver_display_name[WDI_NB_DRIVERS] = { "WinUSB", "libusb0.sys", "libusbK.sys", "usbser.sys", "user driver" };
+ #endif
+ 	const char* inf_ext = ".inf";
+ 	const char* vendor_name = NULL;
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/libwdi.h libwdi-1.2.4 (modified)/libwdi/libwdi.h
+--- libwdi-1.2.4 (original)/libwdi/libwdi.h	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/libwdi.h	2015-01-18 14:40:04.603120300 +0100
+@@ -49,6 +49,7 @@
+ 	WDI_WINUSB,
+ 	WDI_LIBUSB0,
+ 	WDI_LIBUSBK,
++	WDI_USBSER,
+ 	WDI_USER,
+ 	WDI_NB_DRIVERS	// Total number of drivers in the enum
+ };
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/usbser.cat.in libwdi-1.2.4 (modified)/libwdi/usbser.cat.in
+--- libwdi-1.2.4 (original)/libwdi/usbser.cat.in	1970-01-01 01:00:00.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/usbser.cat.in	2015-01-18 17:51:34.298706900 +0100
+@@ -0,0 +1,2 @@
++# List of the binaries referenced by the USBSER inf
++# These are used to generate and self-sign a .cat file
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/usbser.inf.in libwdi-1.2.4 (modified)/libwdi/usbser.inf.in
+--- libwdi-1.2.4 (original)/libwdi/usbser.inf.in	1970-01-01 01:00:00.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/usbser.inf.in	2015-01-18 15:41:06.984656000 +0100
+@@ -0,0 +1,54 @@
++; #INF_FILENAME#
++
++[Strings]
++DeviceName = "#DEVICE_DESCRIPTION#"
++VendorName = "#DEVICE_MANUFACTURER#"
++SourceName = "#DEVICE_DESCRIPTION# Install Disk"
++DeviceID   = "#DEVICE_HARDWARE_ID#"
++DeviceGUID = "#DEVICE_INTERFACE_GUID#"
++
++[Version]
++Signature   = "$Windows NT$"
++Class       = Ports
++ClassGuid   = {4D36E978-E325-11CE-BFC1-08002BE10318}
++Provider    = %VendorName%
++CatalogFile = #CAT_FILENAME#
++DriverVer   = #DRIVER_DATE#, #DRIVER_VERSION#
++
++[Manufacturer]
++%VendorName%=DeviceList, NTamd64, NTia64
++
++[DestinationDirs]
++FakeModemCopyFileSection=12
++DefaultDestDir=12
++
++[DeviceList]
++%DeviceName% = DriverInstall, USB\%DeviceID%
++
++[DeviceList.NTamd64]
++%DeviceName% = DriverInstall, USB\%DeviceID%
++
++[DeviceList.NTia64]
++%DeviceName% = DriverInstall, USB\%DeviceID%
++
++[DriverInstall]
++include=mdmcpq.inf,usb.inf
++CopyFiles = FakeModemCopyFileSection
++AddReg=DriverAddReg
++
++[DriverAddReg]
++HKR,,DevLoader,,*ntkern 
++HKR,,NTMPDriver,,usbser.sys 
++HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
++
++[DriverInstall.Services]
++include=mdmcpq.inf
++AddService=usbser, 0x00000002, DriverService
++
++[DriverService]
++DisplayName=%ServiceName%
++ServiceType=1
++StartType=3
++ErrorControl=1
++ServiceBinary=%12%\usbser.sys
++LoadOrderGroup=Base
+diff -r -u -N libwdi-1.2.4 (original)/libwdi/vid_data.c libwdi-1.2.4 (modified)/libwdi/vid_data.c
+--- libwdi-1.2.4 (original)/libwdi/vid_data.c	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/libwdi/vid_data.c	2015-01-18 17:24:32.080058800 +0100
+@@ -2914,6 +2914,7 @@
+ 	{ 0xeb2a, "KWorld" },
+ 	{ 0xf003, "Hewlett Packard" },
+ 	{ 0xf4ec, "Atten Electronics / Siglent Technologies" },
++	{ 0x1eaf, "LeafLabs, LLC" },
+ };
+ 
+ const char* LIBWDI_API wdi_get_vendor_name(unsigned short vid)
+diff -r -u -N libwdi-1.2.4 (original)/msvc/config.h libwdi-1.2.4 (modified)/msvc/config.h
+--- libwdi-1.2.4 (original)/msvc/config.h	2014-12-01 00:01:08.000000000 +0100
++++ libwdi-1.2.4 (modified)/msvc/config.h	2015-01-18 15:32:43.809858300 +0100
+@@ -21,7 +21,7 @@
+  * match your WinUSB redist directrories
+  */
+ #ifndef DDK_DIR
+-#define DDK_DIR "C:/Program Files (x86)/Windows Kits/8.1"
++ #define DDK_DIR "C:/temp/libwdi/ddk"
+ #endif
+ 
+ /* DDK WDF coinstaller version */
+@@ -35,17 +35,22 @@
+ 
+ /* embed libusb0 driver files from the following location */
+ #ifndef LIBUSB0_DIR
+-#define LIBUSB0_DIR "D:/libusb-win32"
++ #define LIBUSB0_DIR "C:/temp/libwdi/libusb0"
+ #endif
+ 
+ /* embed libusbK driver files from the following location */
+ #ifndef LIBUSBK_DIR
+-#define LIBUSBK_DIR "D:/libusbK/bin"
++ #define LIBUSBK_DIR "C:/temp/libwdi/libusbk"
++#endif
++
++/* embed usbser driver files from the following location */
++#ifndef USBSER_DIR
++ #define USBSER_DIR "C:/temp/libwdi/usbser"
+ #endif
+ 
+ /* embed user defined driver files from the following location */
+ #ifndef USER_DIR
+-// #define USER_DIR "C:/signed-driver"
++// #define USER_DIR "C:/temp/libwdi/user"
+ #endif
+ 
+ /* 32 bit support */
