@@ -260,6 +260,11 @@ static void ifaceSetupHook(unsigned hook, void *requestvp) {
         reset_state = DTR_NEGEDGE;
     }
 #endif
+
+	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
+		iwdg_init(IWDG_PRE_4, 10);
+		while (1);
+	}
 }
 
 #define RESET_DELAY 100000
@@ -295,7 +300,7 @@ static void rxHook(unsigned hook, void *ignored) {
 
             // Peek at the waiting bytes, looking for reset sequence,
             // bailing on mismatch.
-            usb_cdcacm_peek(chkBuf, 4);
+            usb_cdcacm_peek_ex(chkBuf, usb_cdcacm_data_available() - 4, 4);
             for (unsigned i = 0; i < sizeof(magic); i++) {
                 if (chkBuf[i] != magic[i]) {
                     return;

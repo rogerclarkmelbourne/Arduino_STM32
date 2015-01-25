@@ -124,6 +124,7 @@ void   usb_cdcacm_putc(char ch);
 uint32 usb_cdcacm_tx(const uint8* buf, uint32 len);
 uint32 usb_cdcacm_rx(uint8* buf, uint32 len);
 uint32 usb_cdcacm_peek(uint8* buf, uint32 len);
+uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len);
 
 uint32 usb_cdcacm_data_available(void); /* in RX buffer */
 uint16 usb_cdcacm_get_pending(void);
