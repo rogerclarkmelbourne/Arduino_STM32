@@ -1,7 +1,7 @@
 .DS_store
-other/maple_bootloader/.dep
-other/maple_bootloader/TAGS
-other/maple_bootloader/tags
-other/maple_bootloader/cscope.out
-other/maple_bootloader/build
-other/maple_bootloader/*~
+other/maple-bootloader/.dep
+other/maple-bootloader/TAGS
+other/maple-bootloader/tags
+other/maple-bootloader/cscope.out
+other/maple-bootloader/build
+other/maple-bootloader/*~
