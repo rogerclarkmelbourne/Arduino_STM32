@@ -353,6 +353,8 @@ typedef enum afio_remap_peripheral {
     AFIO_REMAP_TIM2_PARTIAL_2 = AFIO_MAPR_TIM2_REMAP_PA0_PA1_PB10_PB11,
     /** Timer 2 full remapping */
     AFIO_REMAP_TIM2_FULL      = AFIO_MAPR_TIM2_REMAP_FULL,
+     /** USART 3 part remapping */
+    AFIO_REMAP_USART3_PARTIAL = AFIO_MAPR_USART3_REMAP_PARTIAL,    
     /** USART 2 remapping */
     AFIO_REMAP_USART2         = AFIO_MAPR_USART2_REMAP,
     /** USART 1 remapping */
