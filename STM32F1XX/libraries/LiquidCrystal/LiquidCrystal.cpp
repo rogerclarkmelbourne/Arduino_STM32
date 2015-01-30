@@ -69,17 +69,7 @@ void LiquidCrystal::init(uint8 fourbitmode, uint8 rs, uint8 rw, uint8 enable,
   _data_pins[5] = d5;
   _data_pins[6] = d6;
   _data_pins[7] = d7;
-
-  for (int i = 0; i < 8 - fourbitmode * 4; i++) {
-      pinMode(_data_pins[i], OUTPUT);
-  }
-
-  pinMode(_rs_pin, OUTPUT);
-  // we can save 1 pin by not using RW. Indicate by passing 255 instead of pin#
-  if (_rw_pin != 255) {
-    pinMode(_rw_pin, OUTPUT);
-  }
-  pinMode(_enable_pin, OUTPUT);
+    displaymode=fourbitmode;
 
   if (fourbitmode)
     _displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
@@ -87,10 +77,22 @@ void LiquidCrystal::init(uint8 fourbitmode, uint8 rs, uint8 rw, uint8 enable,
     _displayfunction = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS;
 
   // TODO: bnewbold, re-enable this?
-  begin(16, 1);
+//  begin(16, 1);
 }
 
 void LiquidCrystal::begin(uint8 cols, uint8 lines, uint8 dotsize) {
+    
+    for (int i = 0; i < 8 - displaymode * 4; i++) {
+    //for (int i = 0; i <4; i++) {
+        pinMode(_data_pins[i], OUTPUT);
+    }
+    
+    pinMode(_rs_pin, OUTPUT);
+    // we can save 1 pin by not using RW. Indicate by passing 255 instead of pin#
+    if (_rw_pin != 255) {
+        pinMode(_rw_pin, OUTPUT);
+    }
+    pinMode(_enable_pin, OUTPUT);
   if (lines > 1) {
     _displayfunction |= LCD_2LINE;
   }
@@ -275,8 +277,9 @@ inline void LiquidCrystal::command(uint8 value) {
   send(value, LOW);
 }
 
-inline void LiquidCrystal::write(uint8 value) {
+inline size_t LiquidCrystal::write(uint8 value) {
   send(value, HIGH);
+    return 1;
 }
 
 /************ low level data pushing commands **********/
