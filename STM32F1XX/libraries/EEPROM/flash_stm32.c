@@ -1,5 +1,5 @@
 //#include "libmaple.h"
-//#include "util.h"
+#include "libmaple/util.h"
 #include "libmaple/flash.h"
 #include "flash_stm32.h"
 

@@ -17,7 +17,9 @@ void setup()
 {
 	// initialize the digital pin as an output:
 	pinMode(ledPin, OUTPUT);
+        Serial.begin(115200);
 	Serial.print(HELP_MSG);
+
 }
 
 void loop()
