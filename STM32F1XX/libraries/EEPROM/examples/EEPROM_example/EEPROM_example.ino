@@ -17,7 +17,7 @@ void setup()
 {
 	// initialize the digital pin as an output:
 	pinMode(ledPin, OUTPUT);
-	SerialUSB.print(HELP_MSG);
+	Serial.print(HELP_MSG);
 }
 
 void loop()
@@ -25,10 +25,10 @@ void loop()
 	uint16 Status;
 	uint16 Data;
 
-	while (SerialUSB.available())
+	while (Serial.available())
 	{
-		char cmd = (char)SerialUSB.read();
-		SerialUSB.println(cmd);
+		char cmd = (char)Serial.read();
+		Serial.println(cmd);
 		if (cmd == '0')
 		{
 			DisplayConfig();
@@ -50,20 +50,20 @@ void loop()
 		else if (cmd == '3')
 		{
 			Status = EEPROM.write(AddressWrite, DataWrite);
-			SerialUSB.print("EEPROM.write(0x");
-			SerialUSB.print(AddressWrite, HEX);
-			SerialUSB.print(", 0x");
-			SerialUSB.print(DataWrite, HEX);
-			SerialUSB.print(") : Status : ");
-			SerialUSB.println(Status, HEX);
+			Serial.print("EEPROM.write(0x");
+			Serial.print(AddressWrite, HEX);
+			Serial.print(", 0x");
+			Serial.print(DataWrite, HEX);
+			Serial.print(") : Status : ");
+			Serial.println(Status, HEX);
 
 			Status = EEPROM.read(AddressWrite, &Data);
-			SerialUSB.print("EEPROM.read(0x");
-			SerialUSB.print(AddressWrite, HEX);
-			SerialUSB.print(", &..) = 0x");
-			SerialUSB.print(Data, HEX);
-			SerialUSB.print(" : Status : ");
-			SerialUSB.println(Status, HEX);
+			Serial.print("EEPROM.read(0x");
+			Serial.print(AddressWrite, HEX);
+			Serial.print(", &..) = 0x");
+			Serial.print(Data, HEX);
+			Serial.print(" : Status : ");
+			Serial.println(Status, HEX);
 
 			++DataWrite;
 		}
@@ -79,18 +79,18 @@ void loop()
 		else if (cmd == '6')
 		{
 			Status = EEPROM.init();
-			SerialUSB.print("EEPROM.init() : ");
-			SerialUSB.println(Status, HEX);
-			SerialUSB.println();
+			Serial.print("EEPROM.init() : ");
+			Serial.println(Status, HEX);
+			Serial.println();
 		}
 		else if (cmd == '7')
 		{
 			Status = EEPROM.format();
-			SerialUSB.print("EEPROM.format() : ");
-			SerialUSB.println(Status, HEX);
+			Serial.print("EEPROM.format() : ");
+			Serial.println(Status, HEX);
 		}
 		else
-			SerialUSB.print(HELP_MSG);
+			Serial.print(HELP_MSG);
 	}
 	digitalWrite(ledPin, HIGH);
 	delay(500);
@@ -100,66 +100,66 @@ void loop()
 
 void DisplayConfig(void)
 {
-	SerialUSB.print  ("EEPROM.PageBase0 : 0x");
-	SerialUSB.println(EEPROM.PageBase0, HEX);
-	SerialUSB.print  ("EEPROM.PageBase1 : 0x");
-	SerialUSB.println(EEPROM.PageBase1, HEX);
-	SerialUSB.print  ("EEPROM.PageSize  : 0x");
-	SerialUSB.print  (EEPROM.PageSize, HEX);
-	SerialUSB.print  (" (");
-	SerialUSB.print  (EEPROM.PageSize, DEC);
-	SerialUSB.println(")");
+	Serial.print  ("EEPROM.PageBase0 : 0x");
+	Serial.println(EEPROM.PageBase0, HEX);
+	Serial.print  ("EEPROM.PageBase1 : 0x");
+	Serial.println(EEPROM.PageBase1, HEX);
+	Serial.print  ("EEPROM.PageSize  : 0x");
+	Serial.print  (EEPROM.PageSize, HEX);
+	Serial.print  (" (");
+	Serial.print  (EEPROM.PageSize, DEC);
+	Serial.println(")");
 }
 
 void DisplayHex(uint16 value)
 {
 	if (value <= 0xF)
-		SerialUSB.print("000");
+		Serial.print("000");
 	else if (value <= 0xFF)
-		SerialUSB.print("00");
+		Serial.print("00");
 	else if (value <= 0xFFF)
-		SerialUSB.print("0");
-	SerialUSB.print(value, HEX);
+		Serial.print("0");
+	Serial.print(value, HEX);
 }
 
 void DisplayPages(uint32 endIndex)
 {
-	SerialUSB.println("Page 0     Top         Page 1");
+	Serial.println("Page 0     Top         Page 1");
 
 	for (uint32 idx = 0; idx < endIndex; idx += 4)
 	{
-		SerialUSB.print  (EEPROM.PageBase0 + idx, HEX);
-		SerialUSB.print  (" : ");
+		Serial.print  (EEPROM.PageBase0 + idx, HEX);
+		Serial.print  (" : ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase0 + idx));
-		SerialUSB.print  (" ");
+		Serial.print  (" ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase0 + idx + 2));
-		SerialUSB.print  ("    ");
-		SerialUSB.print  (EEPROM.PageBase1 + idx, HEX);
-		SerialUSB.print  (" : ");
+		Serial.print  ("    ");
+		Serial.print  (EEPROM.PageBase1 + idx, HEX);
+		Serial.print  (" : ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase1 + idx));
-		SerialUSB.print  (" ");
+		Serial.print  (" ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase1 + idx + 2));
-		SerialUSB.println();
+		Serial.println();
 	}
 }
 
 void DisplayPagesEnd(uint32 endIndex)
 {
-	SerialUSB.println("Page 0     Bottom      Page 1");
+	Serial.println("Page 0     Bottom      Page 1");
 
 	for (uint32 idx = EEPROM.PageSize - endIndex; idx < EEPROM.PageSize; idx += 4)
 	{
-		SerialUSB.print  (EEPROM.PageBase0 + idx, HEX);
-		SerialUSB.print  (" : ");
+		Serial.print  (EEPROM.PageBase0 + idx, HEX);
+		Serial.print  (" : ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase0 + idx));
-		SerialUSB.print  (" ");
+		Serial.print  (" ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase0 + idx + 2));
-		SerialUSB.print  ("    ");
-		SerialUSB.print  (EEPROM.PageBase1 + idx, HEX);
-		SerialUSB.print  (" : ");
+		Serial.print  ("    ");
+		Serial.print  (EEPROM.PageBase1 + idx, HEX);
+		Serial.print  (" : ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase1 + idx));
-		SerialUSB.print  (" ");
+		Serial.print  (" ");
 		DisplayHex(*(uint16*)(EEPROM.PageBase1 + idx + 2));
-		SerialUSB.println();
+		Serial.println();
 	}
 }
