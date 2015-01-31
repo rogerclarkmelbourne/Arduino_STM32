@@ -102,10 +102,6 @@ static inline long map(long value, long fromStart, long fromEnd,
 #define EULER 2.718281828459045235360287471352
 #define SERIAL  0x0
 #define DISPLAY 0x1 
-enum BitOrder {
-	LSBFIRST = 0,
-	MSBFIRST = 1
-};
 
 #define min(a,b)                ((a)<(b)?(a):(b))
 #define max(a,b)                ((a)>(b)?(a):(b))

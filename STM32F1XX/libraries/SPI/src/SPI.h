@@ -45,39 +45,21 @@
 #include <stdint.h>
 #include <wirish.h>
 
+// SPI_HAS_TRANSACTION means SPI has
+//   - beginTransaction()
+//   - endTransaction()
+//   - usingInterrupt()
+//   - SPISetting(clock, bitOrder, dataMode)
+//#define SPI_HAS_TRANSACTION
 
-/**
- * @brief Defines the possible SPI communication speeds.
- */
-typedef enum SPIFrequency {
-    SPI_18MHZ       = 0, /**< 18 MHz */
-    SPI_9MHZ        = 1, /**< 9 MHz */
-    SPI_4_5MHZ      = 2, /**< 4.5 MHz */
-    SPI_2_25MHZ     = 3, /**< 2.25 MHz */
-    SPI_1_125MHZ    = 4, /**< 1.125 MHz */
-    SPI_562_500KHZ  = 5, /**< 562.500 KHz */
-    SPI_281_250KHZ  = 6, /**< 281.250 KHz */
-    SPI_140_625KHZ  = 7, /**< 140.625 KHz */
-} SPIFrequency;
-
-#define MAX_SPI_FREQS 8
-
-// defines from AVR SPI.h
-#define SPI_CLOCK_DIV2 0x04
-#define SPI_CLOCK_DIV4 0x00
-#define SPI_CLOCK_DIV16 0x01
-#define SPI_CLOCK_DIV8 0x05
-#define SPI_CLOCK_DIV32 0x06
-#define SPI_CLOCK_DIV64 0x02
-#define SPI_CLOCK_DIV128 0x03
-#define SPI_CLOCK_DIV1 0x07
-
-
-
-#define SPI_MODE0 0x00
-#define SPI_MODE1 0x02
-#define SPI_MODE2 0x02
-#define SPI_MODE3 0x03
+#define SPI_CLOCK_DIV2   SPI_BAUD_PCLK_DIV_2
+#define SPI_CLOCK_DIV4   SPI_BAUD_PCLK_DIV_4
+#define SPI_CLOCK_DIV8   SPI_BAUD_PCLK_DIV_8
+#define SPI_CLOCK_DIV16  SPI_BAUD_PCLK_DIV_16
+#define SPI_CLOCK_DIV32  SPI_BAUD_PCLK_DIV_32
+#define SPI_CLOCK_DIV64  SPI_BAUD_PCLK_DIV_64
+#define SPI_CLOCK_DIV128 SPI_BAUD_PCLK_DIV_128
+#define SPI_CLOCK_DIV256 SPI_BAUD_PCLK_DIV_256
 
 /*
  * Roger Clark. 20150106
@@ -105,40 +87,37 @@ typedef enum SPIFrequency {
 #endif
 
 // PC13 or PA4
-#define BOARD_SPI_DEFAULT_SS PA4
+//#define BOARD_SPI_DEFAULT_SS PA4
+#define BOARD_SPI_DEFAULT_SS PC13
+
+#define SPI_MODE0 SPI_MODE_0
+#define SPI_MODE1 SPI_MODE_1
+#define SPI_MODE2 SPI_MODE_2
+#define SPI_MODE3 SPI_MODE_3
 
 class SPISettings {
 public:
-  SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
-    if (__builtin_constant_p(clock)) {
-      init_AlwaysInline(clock, bitOrder, dataMode);
-    } else {
-      init_MightInline(clock, bitOrder, dataMode);
-    }
-  }
-  SPISettings() {
-    init_AlwaysInline(SPI_CLOCK_DIV2, MSBFIRST, SPI_MODE0);
-  }
-  
- 
- uint32_t clockDivider=SPI_CLOCK_DIV2;//belt and braces approach !
- uint8_t  bitOrder=MSBFIRST;//belt and braces approach !
- uint8_t dataMode=SPI_MODE0;  //belt and braces approach !
-  
+	SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
+		if (__builtin_constant_p(clock)) {
+			init_AlwaysInline(clock, bitOrder, dataMode);
+		} else {
+			init_MightInline(clock, bitOrder, dataMode);
+		}
+	}
+	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0); }
 private:
-  void init_MightInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) 
-  {
-    init_AlwaysInline(clock, bitOrder, dataMode);
-  }
-  void init_AlwaysInline(uint32_t clock, uint8_t order, uint8_t mode)
-    __attribute__((__always_inline__)) 
-  {
-    this->clockDivider=clock;
-	this->bitOrder = order;
-	this->dataMode = mode;
-  }
-  
-  friend class SPIClass;
+	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
+		init_AlwaysInline(clock, bitOrder, dataMode);
+	}
+	void init_AlwaysInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) __attribute__((__always_inline__)) {
+		this->clock = clock;
+		this->bitOrder = bitOrder;
+		this->dataMode = dataMode;
+	}
+	uint32_t clock;
+	BitOrder bitOrder;
+	uint8_t dataMode;
+	friend class SPIClass;
 };
 
 
@@ -192,7 +171,7 @@ public:
 	void endTransaction(void);
 
 	void setClockDivider(uint32_t clockDivider);
-	void setBitOrder(uint8_t bitOrder);	
+	void setBitOrder(BitOrder bitOrder);	
 	void setDataMode(uint8_t dataMode);		
 	
 	// SPI Configuration methods
@@ -308,23 +287,11 @@ public:
      */
     uint8 recv(void);
 private:
-
-    /**
-     * @brief Turn on a SPI port and set its GPIO pin modes for use as master.
-     *
-     * SPI port is enabled in full duplex mode, with software slave management.
-     *
-     * @param frequency Communication frequency
-     * @param bitOrder Either LSBFIRST (little-endian) or MSBFIRST (big-endian)
-     * @param mode SPI mode to use, one of SPI_MODE_0, SPI_MODE_1,
-     *             SPI_MODE_2, and SPI_MODE_3.
-     */
-    void begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode);
-
-	SPISettings _settings;
-    spi_dev *spi_d;
+	spi_dev *spi_d;
 	uint8_t _SSPin;
-	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_9MHZ,SPI_2_25MHZ,SPI_1_125MHZ,SPI_18MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
+	uint32_t clockDivider;
+	uint8_t dataMode;
+	BitOrder bitOrder;
 };
 
 
