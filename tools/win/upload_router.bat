@@ -17,7 +17,9 @@ set str1=%7
 set str1=%str1:/=\%
 set gcc=%str1: =%
 
-if %6 == 1 (goto debug) else (if %5 == maple_serial (goto Serial) else (goto maple_loader))
+
+if %6 == 1 (goto debug) else (if %5 == maple_serial (goto Serial) else (if  %5 == maple_dfu (goto maple_loader) else (goto STLink)))
+exit
 
 :debug
 debugging.bat %gcc% %elf%
@@ -47,3 +49,8 @@ rem: "%ProgramFiles(x86)%\STMicroelectronics\Software\Flash Loader Demonstrator\
 
 rem:  -- 32 bit version
 rem: "%ProgramFiles%\STMicroelectronics\Software\Flash Loader Demonstrator\STMFlashLoader.exe"  -c --pn %commportnum% --br 230400  -i STM32_Med-density_64K -e --all -d --fn %str% --a 0x8000000 -r --a 0x8000000 
+exit
+
+:STLink
+stlink\ST-LINK_CLI.exe -c SWD -P %str% 0x8000000 -Rst -Run
+exit
