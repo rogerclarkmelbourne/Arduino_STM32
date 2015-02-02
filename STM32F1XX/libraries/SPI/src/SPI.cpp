@@ -31,8 +31,6 @@
 
 #include "SPI.h"
 
-//#define SPI_DEBUG
-
 #include <libmaple/timer.h>
 #include <libmaple/util.h>
 #include <libmaple/rcc.h>
@@ -56,9 +54,11 @@ struct spi_pins {
 
 static const spi_pins* dev_to_spi_pins(spi_dev *dev);
 
-static void configure_gpios(spi_dev *dev, bool as_master);
-
-static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq);
+static void enable_device(spi_dev *dev,
+                          bool as_master,
+                          SPIFrequency frequency,
+                          spi_cfg_flag endianness,
+                          spi_mode mode);
 
 #if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
 #error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
@@ -118,32 +118,37 @@ SPIClass::SPIClass(uint32 spi_num) {
  * Set up/tear down
  */
 
-void SPIClass::begin(void) {
-    if (dataMode >= 4) {
+void SPIClass::begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode) {
+    if (mode >= 4) {
         ASSERT(0);
         return;
     }
-    uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
-    spi_init(spi_d);
-    configure_gpios(spi_d, 1);
-	#ifdef SPI_DEBUG
-	Serial.print("spi_master_enable("); Serial.print(clockDivider); Serial.print(","); Serial.print(dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
-	#endif
-    spi_master_enable(spi_d, (spi_baud_rate)clockDivider, (spi_mode)dataMode, flags);
+	//Serial.print(frequency);Serial.print(",");Serial.print(bitOrder);Serial.print(",");Serial.println(mode);// debugging
+    spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
+    spi_mode m = (spi_mode)mode;
+    enable_device(this->spi_d, true, (SPIFrequency)frequency, end, m);
+
+}
+
+
+void SPIClass::begin(void) {
+
+
+    this->begin(_clockDividerToFrequenyMap[_settings.clockDivider],_settings.bitOrder,_settings.dataMode);//originally SPI_1_125MHZ,MSBFIRST,0);
+}
+
+void SPIClass::beginSlave(uint32 bitOrder, uint32 mode) {
+    if (mode >= 4) {
+        ASSERT(0);
+        return;
+    }
+    spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
+    spi_mode m = (spi_mode)mode;
+    enable_device(this->spi_d, false, (SPIFrequency)0, end, m);
 }
 
 void SPIClass::beginSlave(void) {
-    if (dataMode >= 4) {
-        ASSERT(0);
-        return;
-    }
-    uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE);
-    spi_init(spi_d);
-    configure_gpios(spi_d, 0);
-	#ifdef SPI_DEBUG
-	Serial.print("spi_slave_enable("); Serial.print(dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
-	#endif
-    spi_slave_enable(spi_d, (spi_mode)dataMode, flags);
+    this->beginSlave(_settings.bitOrder, _settings.dataMode);
 }
 
 void SPIClass::end(void) {
@@ -167,22 +172,15 @@ void SPIClass::end(void) {
 /* Roger Clark added  3 functions */
 void SPIClass::setClockDivider(uint32_t clockDivider)
 {
-	#ifdef SPI_DEBUG
-	Serial.print("Clock divider set to "); Serial.println(clockDivider);
-	#endif
-	this->clockDivider = clockDivider;
+//	Serial.print("Clock divider set to ");	Serial.println(clockDivider);// debugging
+	_settings.clockDivider = clockDivider;
 	this->begin();
 }
-
-void SPIClass::setBitOrder(BitOrder bitOrder)
+void SPIClass::setBitOrder(uint8_t bitOrder)
 {
-	#ifdef SPI_DEBUG
-	Serial.print("Bit order set to "); Serial.println(bitOrder);
-	#endif
-	this->bitOrder = bitOrder;
+	_settings.bitOrder = bitOrder;
 	this->begin();
 }
-
 void SPIClass::setDataMode(uint8_t dataMode)
 {
 /* Notes.  As far as I can tell, the AVR numbers for dataMode appear to match the numbers required by the STM32
@@ -212,26 +210,16 @@ bit 0 - CPHA : Clock phase
  
 If someone finds this is not the case or sees a logic error with this let me know ;-) 
  */
-	#ifdef SPI_DEBUG
-	Serial.print("Data mode set to "); Serial.println(dataMode);
-	#endif
-	this->dataMode = dataMode;
+	_settings.dataMode = dataMode;
 	this->begin();
 }	
 
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
-	#ifdef SPI_DEBUG
-	Serial.println("SPIClass::beginTransaction");
-	#endif
-	//_SSPin=pin;
-	//pinMode(_SSPin,OUTPUT);
-	//digitalWrite(_SSPin,LOW);
-	setBitOrder(settings.bitOrder);
-	setDataMode(settings.dataMode);
-	setClockDivider(determine_baud_rate(spi_d, settings.clock));
-	begin();
+	_SSPin=pin;
+	pinMode(_SSPin,OUTPUT);
+//	digitalWrite(_SSPin,LOW);
 #if 0
 // code from SAM core	
 	uint8_t mode = interruptMode;
@@ -257,10 +245,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 
 void SPIClass::endTransaction(void)
 {
-	#ifdef SPI_DEBUG
-	Serial.println("SPIClass::endTransaction");
-	#endif
-	//digitalWrite(_SSPin,HIGH);
+//	digitalWrite(_SSPin,HIGH);
 #if false
 // code from SAM core
 	uint8_t mode = interruptMode;
@@ -306,18 +291,11 @@ void SPIClass::write(const uint8 *data, uint32 length) {
     while (txed < length) {
         txed += spi_tx(this->spi_d, data + txed, length - txed);
     }
-	while (spi_is_tx_empty(this->spi_d) == 0); // "4. After writing the last data item into the SPI_DR register, wait until TXE=1 ..."
-	while (spi_is_busy(this->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
 }
 
 uint8 SPIClass::transfer(uint8 byte) {
-	uint8 b;
-	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
-  	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."
-  	b = spi_rx_reg(this->spi_d); // "... and read the last received data."
-  	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
-  	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
-    return b;
+    this->write(byte);
+    return this->read();
 }
 
 void SPIClass::attachInterrupt(void) {
@@ -376,6 +354,9 @@ uint8 SPIClass::recv(void) {
  * Auxiliary functions
  */
 
+static void configure_gpios(spi_dev *dev, bool as_master);
+static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq);
+
 static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
     switch (dev->clk_id) {
 #if BOARD_NR_SPI >= 1
@@ -388,6 +369,27 @@ static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
     case RCC_SPI3: return board_spi_pins + 2;
 #endif
     default:       return NULL;
+    }
+}
+
+/* Enables the device in master or slave full duplex mode.  If you
+ * change this code, you must ensure that appropriate changes are made
+ * to SPIClass::end(). */
+static void enable_device(spi_dev *dev,
+                          bool as_master,
+                          SPIFrequency freq,
+                          spi_cfg_flag endianness,
+                          spi_mode mode) {
+    spi_baud_rate baud = determine_baud_rate(dev, freq);
+    uint32 cfg_flags = (endianness | SPI_DFF_8_BIT | SPI_SW_SLAVE |
+                        (as_master ? SPI_SOFT_SS : 0));
+
+    spi_init(dev);
+    configure_gpios(dev, as_master);
+    if (as_master) {
+        spi_master_enable(dev, baud, mode, cfg_flags);
+    } else {
+        spi_slave_enable(dev, mode, cfg_flags);
     }
 }
 
@@ -419,7 +421,7 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
                      mosii->gpio_bit);
 }
 
-static const spi_baud_rate baud_rates[8] __FLASH__ = {
+static const spi_baud_rate baud_rates[MAX_SPI_FREQS] __FLASH__ = {
     SPI_BAUD_PCLK_DIV_2,
     SPI_BAUD_PCLK_DIV_4,
     SPI_BAUD_PCLK_DIV_8,
@@ -434,23 +436,15 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
  * Note: This assumes you're on a LeafLabs-style board
  * (CYCLES_PER_MICROSECOND == 72, APB2 at 72MHz, APB1 at 36MHz).
  */
-static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
-	uint32_t clock = 0, i;
-	#ifdef SPI_DEBUG
-	Serial.print("determine_baud_rate("); Serial.print(freq); Serial.println(")");
-	#endif
-    switch (rcc_dev_clk(dev->clk_id))
-    {
-    	case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
-    	case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
+static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq) {
+    if (rcc_dev_clk(dev->clk_id) == RCC_APB2 && freq == SPI_140_625KHZ) {
+        /* APB2 peripherals are too fast for 140.625 KHz */
+        ASSERT(0);
+        return (spi_baud_rate)~0;
     }
-    clock /= 2;
-    i = 0;
-    while (i < 7 && freq < clock) {
-      clock /= 2;
-      i++;
-    }
-	return baud_rates[i];
+    return (rcc_dev_clk(dev->clk_id) == RCC_APB2 ?
+            baud_rates[freq + 1] :
+            baud_rates[freq]);
 }
 
 SPIClass SPI(1);

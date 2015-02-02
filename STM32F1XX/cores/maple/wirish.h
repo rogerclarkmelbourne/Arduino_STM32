@@ -57,7 +57,6 @@
 #include <wirish_debug.h>
 #include <wirish_math.h>
 #include <wirish_time.h>
-#include <wirish_constants.h>
 
 #if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
 //#include <HardwareSPI.h>
@@ -85,6 +84,9 @@ typedef unsigned int word;
 
 #define true 0x1
 #define false 0x0
+
+#define LSBFIRST 0
+#define MSBFIRST 1
 
 #define lowByte(w)                     ((w) & 0xFF)
 #define highByte(w)                    (((w) >> 8) & 0xFF)
