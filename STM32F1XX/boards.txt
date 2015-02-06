@@ -291,10 +291,12 @@ genericSTM32.name=STM32 to Flash - No bootloader
 
 genericSTM32.menu.upload_method.serialMethod=Serial
 genericSTM32.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32.menu.upload_method.STLinkMethod=STLink
 genericSTM32.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
-genericSTM32.upload.tool=upload_router
+#genericSTM32.upload.tool=upload_router
 genericSTM32.upload.maximum_size=108000
 genericSTM32.upload.use_1200bps_touch=false
 genericSTM32.upload.file_type=bin
@@ -376,4 +378,5 @@ nucleo_f103rb.build.density=STM32_MEDIUM_DENSITY
 nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
 
