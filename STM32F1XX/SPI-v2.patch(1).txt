@@ -1,0 +1,536 @@
+Index: cores/maple/Arduino.h
+===================================================================
+--- cores/maple/Arduino.h	(revision 107)
++++ cores/maple/Arduino.h	(working copy)
+@@ -39,4 +39,6 @@
+ }
+ #endif // __cplusplus
+ 
++#include "variant.h"
++
+ #endif
+Index: cores/maple/wirish.h
+===================================================================
+--- cores/maple/wirish.h	(revision 107)
++++ cores/maple/wirish.h	(working copy)
+@@ -57,6 +57,7 @@
+ #include <wirish_debug.h>
+ #include <wirish_math.h>
+ #include <wirish_time.h>
++#include <wirish_constants.h>
+ 
+ #if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
+ //#include <HardwareSPI.h>
+@@ -85,9 +86,6 @@
+ #define true 0x1
+ #define false 0x0
+ 
+-#define LSBFIRST 0
+-#define MSBFIRST 1
+-
+ #define lowByte(w)                     ((w) & 0xFF)
+ #define highByte(w)                    (((w) >> 8) & 0xFF)
+ #define bitRead(value, bit)            (((value) >> (bit)) & 0x01)
+Index: cores/maple/wirish_math.h
+===================================================================
+--- cores/maple/wirish_math.h	(revision 107)
++++ cores/maple/wirish_math.h	(working copy)
+@@ -102,10 +102,6 @@
+ #define EULER 2.718281828459045235360287471352
+ #define SERIAL  0x0
+ #define DISPLAY 0x1 
+-enum BitOrder {
+-	LSBFIRST = 0,
+-	MSBFIRST = 1
+-};
+ 
+ #define min(a,b)                ((a)<(b)?(a):(b))
+ #define max(a,b)                ((a)>(b)?(a):(b))
+Index: libraries/SPI/src/SPI.cpp
+===================================================================
+--- libraries/SPI/src/SPI.cpp	(revision 107)
++++ libraries/SPI/src/SPI.cpp	(working copy)
+@@ -31,6 +31,8 @@
+ 
+ #include "SPI.h"
+ 
++//#define SPI_DEBUG
++
+ #include <libmaple/timer.h>
+ #include <libmaple/util.h>
+ #include <libmaple/rcc.h>
+@@ -54,12 +56,10 @@
+ 
+ static const spi_pins* dev_to_spi_pins(spi_dev *dev);
+ 
+-static void enable_device(spi_dev *dev,
+-                          bool as_master,
+-                          SPIFrequency frequency,
+-                          spi_cfg_flag endianness,
+-                          spi_mode mode);
++static void configure_gpios(spi_dev *dev, bool as_master);
+ 
++static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq);
++
+ #if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
+ #error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
+ #endif
+@@ -118,39 +118,34 @@
+  * Set up/tear down
+  */
+ 
+-void SPIClass::begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode) {
+-    if (mode >= 4) {
++void SPIClass::begin(void) {
++    if (dataMode >= 4) {
+         ASSERT(0);
+         return;
+     }
+-	//Serial.print(frequency);Serial.print(",");Serial.print(bitOrder);Serial.print(",");Serial.println(mode);// debugging
+-    spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
+-    spi_mode m = (spi_mode)mode;
+-    enable_device(this->spi_d, true, (SPIFrequency)frequency, end, m);
+-
++    uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
++    spi_init(spi_d);
++    configure_gpios(spi_d, 1);
++	#ifdef SPI_DEBUG
++	Serial.print("spi_master_enable("); Serial.print(clockDivider); Serial.print(","); Serial.print(dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
++	#endif
++    spi_master_enable(spi_d, (spi_baud_rate)clockDivider, (spi_mode)dataMode, flags);
+ }
+ 
+-
+-void SPIClass::begin(void) {
+-
+-
+-    this->begin(_clockDividerToFrequenyMap[_settings.clockDivider],_settings.bitOrder,_settings.dataMode);//originally SPI_1_125MHZ,MSBFIRST,0);
+-}
+-
+-void SPIClass::beginSlave(uint32 bitOrder, uint32 mode) {
+-    if (mode >= 4) {
++void SPIClass::beginSlave(void) {
++    if (dataMode >= 4) {
+         ASSERT(0);
+         return;
+     }
+-    spi_cfg_flag end = bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB;
+-    spi_mode m = (spi_mode)mode;
+-    enable_device(this->spi_d, false, (SPIFrequency)0, end, m);
++    uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE);
++    spi_init(spi_d);
++    configure_gpios(spi_d, 0);
++	#ifdef SPI_DEBUG
++	Serial.print("spi_slave_enable("); Serial.print(dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
++	#endif
++    spi_slave_enable(spi_d, (spi_mode)dataMode, flags);
+ }
+ 
+-void SPIClass::beginSlave(void) {
+-    this->beginSlave(_settings.bitOrder, _settings.dataMode);
+-}
+-
+ void SPIClass::end(void) {
+     if (!spi_is_enabled(this->spi_d)) {
+         return;
+@@ -172,15 +167,22 @@
+ /* Roger Clark added  3 functions */
+ void SPIClass::setClockDivider(uint32_t clockDivider)
+ {
+-//	Serial.print("Clock divider set to ");	Serial.println(clockDivider);// debugging
+-	_settings.clockDivider = clockDivider;
++	#ifdef SPI_DEBUG
++	Serial.print("Clock divider set to "); Serial.println(clockDivider);
++	#endif
++	this->clockDivider = clockDivider;
+ 	this->begin();
+ }
+-void SPIClass::setBitOrder(uint8_t bitOrder)
++
++void SPIClass::setBitOrder(BitOrder bitOrder)
+ {
+-	_settings.bitOrder = bitOrder;
++	#ifdef SPI_DEBUG
++	Serial.print("Bit order set to "); Serial.println(bitOrder);
++	#endif
++	this->bitOrder = bitOrder;
+ 	this->begin();
+ }
++
+ void SPIClass::setDataMode(uint8_t dataMode)
+ {
+ /* Notes.  As far as I can tell, the AVR numbers for dataMode appear to match the numbers required by the STM32
+@@ -210,7 +212,10 @@
+  
+ If someone finds this is not the case or sees a logic error with this let me know ;-) 
+  */
+-	_settings.dataMode = dataMode;
++	#ifdef SPI_DEBUG
++	Serial.print("Data mode set to "); Serial.println(dataMode);
++	#endif
++	this->dataMode = dataMode;
+ 	this->begin();
+ }	
+ 
+@@ -217,9 +222,16 @@
+ 
+ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
+ {
+-	_SSPin=pin;
+-	pinMode(_SSPin,OUTPUT);
+-//	digitalWrite(_SSPin,LOW);
++	#ifdef SPI_DEBUG
++	Serial.println("SPIClass::beginTransaction");
++	#endif
++	//_SSPin=pin;
++	//pinMode(_SSPin,OUTPUT);
++	//digitalWrite(_SSPin,LOW);
++	setBitOrder(settings.bitOrder);
++	setDataMode(settings.dataMode);
++	setClockDivider(determine_baud_rate(spi_d, settings.clock));
++	begin();
+ #if 0
+ // code from SAM core	
+ 	uint8_t mode = interruptMode;
+@@ -245,7 +257,10 @@
+ 
+ void SPIClass::endTransaction(void)
+ {
+-//	digitalWrite(_SSPin,HIGH);
++	#ifdef SPI_DEBUG
++	Serial.println("SPIClass::endTransaction");
++	#endif
++	//digitalWrite(_SSPin,HIGH);
+ #if false
+ // code from SAM core
+ 	uint8_t mode = interruptMode;
+@@ -291,11 +306,18 @@
+     while (txed < length) {
+         txed += spi_tx(this->spi_d, data + txed, length - txed);
+     }
++	while (spi_is_tx_empty(this->spi_d) == 0); // "4. After writing the last data item into the SPI_DR register, wait until TXE=1 ..."
++	while (spi_is_busy(this->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
+ }
+ 
+ uint8 SPIClass::transfer(uint8 byte) {
+-    this->write(byte);
+-    return this->read();
++	uint8 b;
++	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
++  	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."
++  	b = spi_rx_reg(this->spi_d); // "... and read the last received data."
++  	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
++  	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
++    return b;
+ }
+ 
+ void SPIClass::attachInterrupt(void) {
+@@ -354,9 +376,6 @@
+  * Auxiliary functions
+  */
+ 
+-static void configure_gpios(spi_dev *dev, bool as_master);
+-static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq);
+-
+ static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
+     switch (dev->clk_id) {
+ #if BOARD_NR_SPI >= 1
+@@ -372,27 +391,6 @@
+     }
+ }
+ 
+-/* Enables the device in master or slave full duplex mode.  If you
+- * change this code, you must ensure that appropriate changes are made
+- * to SPIClass::end(). */
+-static void enable_device(spi_dev *dev,
+-                          bool as_master,
+-                          SPIFrequency freq,
+-                          spi_cfg_flag endianness,
+-                          spi_mode mode) {
+-    spi_baud_rate baud = determine_baud_rate(dev, freq);
+-    uint32 cfg_flags = (endianness | SPI_DFF_8_BIT | SPI_SW_SLAVE |
+-                        (as_master ? SPI_SOFT_SS : 0));
+-
+-    spi_init(dev);
+-    configure_gpios(dev, as_master);
+-    if (as_master) {
+-        spi_master_enable(dev, baud, mode, cfg_flags);
+-    } else {
+-        spi_slave_enable(dev, mode, cfg_flags);
+-    }
+-}
+-
+ static void disable_pwm(const stm32_pin_info *i) {
+     if (i->timer_device) {
+         timer_set_mode(i->timer_device, i->timer_channel, TIMER_DISABLED);
+@@ -421,7 +419,7 @@
+                      mosii->gpio_bit);
+ }
+ 
+-static const spi_baud_rate baud_rates[MAX_SPI_FREQS] __FLASH__ = {
++static const spi_baud_rate baud_rates[8] __FLASH__ = {
+     SPI_BAUD_PCLK_DIV_2,
+     SPI_BAUD_PCLK_DIV_4,
+     SPI_BAUD_PCLK_DIV_8,
+@@ -436,15 +434,23 @@
+  * Note: This assumes you're on a LeafLabs-style board
+  * (CYCLES_PER_MICROSECOND == 72, APB2 at 72MHz, APB1 at 36MHz).
+  */
+-static spi_baud_rate determine_baud_rate(spi_dev *dev, SPIFrequency freq) {
+-    if (rcc_dev_clk(dev->clk_id) == RCC_APB2 && freq == SPI_140_625KHZ) {
+-        /* APB2 peripherals are too fast for 140.625 KHz */
+-        ASSERT(0);
+-        return (spi_baud_rate)~0;
++static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
++	uint32_t clock = 0, i;
++	#ifdef SPI_DEBUG
++	Serial.print("determine_baud_rate("); Serial.print(freq); Serial.println(")");
++	#endif
++    switch (rcc_dev_clk(dev->clk_id))
++    {
++    	case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
++    	case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
+     }
+-    return (rcc_dev_clk(dev->clk_id) == RCC_APB2 ?
+-            baud_rates[freq + 1] :
+-            baud_rates[freq]);
++    clock /= 2;
++    i = 0;
++    while (i < 7 && freq < clock) {
++      clock /= 2;
++      i++;
++    }
++	return baud_rates[i];
+ }
+ 
+ SPIClass SPI(1);
+Index: libraries/SPI/src/SPI.h
+===================================================================
+--- libraries/SPI/src/SPI.h	(revision 107)
++++ libraries/SPI/src/SPI.h	(working copy)
+@@ -45,40 +45,22 @@
+ #include <stdint.h>
+ #include <wirish.h>
+ 
++// SPI_HAS_TRANSACTION means SPI has
++//   - beginTransaction()
++//   - endTransaction()
++//   - usingInterrupt()
++//   - SPISetting(clock, bitOrder, dataMode)
++//#define SPI_HAS_TRANSACTION
+ 
+-/**
+- * @brief Defines the possible SPI communication speeds.
+- */
+-typedef enum SPIFrequency {
+-    SPI_18MHZ       = 0, /**< 18 MHz */
+-    SPI_9MHZ        = 1, /**< 9 MHz */
+-    SPI_4_5MHZ      = 2, /**< 4.5 MHz */
+-    SPI_2_25MHZ     = 3, /**< 2.25 MHz */
+-    SPI_1_125MHZ    = 4, /**< 1.125 MHz */
+-    SPI_562_500KHZ  = 5, /**< 562.500 KHz */
+-    SPI_281_250KHZ  = 6, /**< 281.250 KHz */
+-    SPI_140_625KHZ  = 7, /**< 140.625 KHz */
+-} SPIFrequency;
++#define SPI_CLOCK_DIV2   SPI_BAUD_PCLK_DIV_2
++#define SPI_CLOCK_DIV4   SPI_BAUD_PCLK_DIV_4
++#define SPI_CLOCK_DIV8   SPI_BAUD_PCLK_DIV_8
++#define SPI_CLOCK_DIV16  SPI_BAUD_PCLK_DIV_16
++#define SPI_CLOCK_DIV32  SPI_BAUD_PCLK_DIV_32
++#define SPI_CLOCK_DIV64  SPI_BAUD_PCLK_DIV_64
++#define SPI_CLOCK_DIV128 SPI_BAUD_PCLK_DIV_128
++#define SPI_CLOCK_DIV256 SPI_BAUD_PCLK_DIV_256
+ 
+-#define MAX_SPI_FREQS 8
+-
+-// defines from AVR SPI.h
+-#define SPI_CLOCK_DIV2 0x04
+-#define SPI_CLOCK_DIV4 0x00
+-#define SPI_CLOCK_DIV16 0x01
+-#define SPI_CLOCK_DIV8 0x05
+-#define SPI_CLOCK_DIV32 0x06
+-#define SPI_CLOCK_DIV64 0x02
+-#define SPI_CLOCK_DIV128 0x03
+-#define SPI_CLOCK_DIV1 0x07
+-
+-
+-
+-#define SPI_MODE0 0x00
+-#define SPI_MODE1 0x02
+-#define SPI_MODE2 0x02
+-#define SPI_MODE3 0x03
+-
+ /*
+  * Roger Clark. 20150106
+  * Commented out redundant AVR defined
+@@ -105,40 +87,37 @@
+ #endif
+ 
+ // PC13 or PA4
+-#define BOARD_SPI_DEFAULT_SS PA4
++//#define BOARD_SPI_DEFAULT_SS PA4
++#define BOARD_SPI_DEFAULT_SS PC13
+ 
++#define SPI_MODE0 SPI_MODE_0
++#define SPI_MODE1 SPI_MODE_1
++#define SPI_MODE2 SPI_MODE_2
++#define SPI_MODE3 SPI_MODE_3
++
+ class SPISettings {
+ public:
+-  SPISettings(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) {
+-    if (__builtin_constant_p(clock)) {
+-      init_AlwaysInline(clock, bitOrder, dataMode);
+-    } else {
+-      init_MightInline(clock, bitOrder, dataMode);
+-    }
+-  }
+-  SPISettings() {
+-    init_AlwaysInline(SPI_CLOCK_DIV2, MSBFIRST, SPI_MODE0);
+-  }
+-  
+- 
+- uint32_t clockDivider=SPI_CLOCK_DIV2;//belt and braces approach !
+- uint8_t  bitOrder=MSBFIRST;//belt and braces approach !
+- uint8_t dataMode=SPI_MODE0;  //belt and braces approach !
+-  
++	SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
++		if (__builtin_constant_p(clock)) {
++			init_AlwaysInline(clock, bitOrder, dataMode);
++		} else {
++			init_MightInline(clock, bitOrder, dataMode);
++		}
++	}
++	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0); }
+ private:
+-  void init_MightInline(uint32_t clock, uint8_t bitOrder, uint8_t dataMode) 
+-  {
+-    init_AlwaysInline(clock, bitOrder, dataMode);
+-  }
+-  void init_AlwaysInline(uint32_t clock, uint8_t order, uint8_t mode)
+-    __attribute__((__always_inline__)) 
+-  {
+-    this->clockDivider=clock;
+-	this->bitOrder = order;
+-	this->dataMode = mode;
+-  }
+-  
+-  friend class SPIClass;
++	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
++		init_AlwaysInline(clock, bitOrder, dataMode);
++	}
++	void init_AlwaysInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) __attribute__((__always_inline__)) {
++		this->clock = clock;
++		this->bitOrder = bitOrder;
++		this->dataMode = dataMode;
++	}
++	uint32_t clock;
++	BitOrder bitOrder;
++	uint8_t dataMode;
++	friend class SPIClass;
+ };
+ 
+ 
+@@ -192,7 +171,7 @@
+ 	void endTransaction(void);
+ 
+ 	void setClockDivider(uint32_t clockDivider);
+-	void setBitOrder(uint8_t bitOrder);	
++	void setBitOrder(BitOrder bitOrder);	
+ 	void setDataMode(uint8_t dataMode);		
+ 	
+ 	// SPI Configuration methods
+@@ -308,23 +287,11 @@
+      */
+     uint8 recv(void);
+ private:
+-
+-    /**
+-     * @brief Turn on a SPI port and set its GPIO pin modes for use as master.
+-     *
+-     * SPI port is enabled in full duplex mode, with software slave management.
+-     *
+-     * @param frequency Communication frequency
+-     * @param bitOrder Either LSBFIRST (little-endian) or MSBFIRST (big-endian)
+-     * @param mode SPI mode to use, one of SPI_MODE_0, SPI_MODE_1,
+-     *             SPI_MODE_2, and SPI_MODE_3.
+-     */
+-    void begin(uint32_t frequency, uint8_t bitOrder, uint8_t mode);
+-
+-	SPISettings _settings;
+-    spi_dev *spi_d;
++	spi_dev *spi_d;
+ 	uint8_t _SSPin;
+-	const uint8_t _clockDividerToFrequenyMap[8]={SPI_4_5MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_1_125MHZ,SPI_9MHZ,SPI_2_25MHZ,SPI_1_125MHZ,SPI_18MHZ };// should really be //{SPI_4_5MHZ,		SPI_1_125MHZ,	SPI_281_250KHZ,		SPI_140_625KHZ,		SPI_9MHZ,		SPI_2_25MHZ,	SPI_562_500KHZ }; but the processor won't support the lower speeds so they have been set to 1.25 mhz
++	uint32_t clockDivider;
++	uint8_t dataMode;
++	BitOrder bitOrder;
+ };
+ 
+ 
+Index: system/libmaple/include/libmaple/libmaple_types.h
+===================================================================
+--- system/libmaple/include/libmaple/libmaple_types.h	(revision 107)
++++ system/libmaple/include/libmaple/libmaple_types.h	(working copy)
+@@ -33,6 +33,8 @@
+ #ifndef _LIBMAPLE_LIBMAPLE_TYPES_H_
+ #define _LIBMAPLE_LIBMAPLE_TYPES_H_
+ 
++#include <stdint.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+@@ -39,7 +41,7 @@
+ 
+ typedef unsigned char uint8;
+ typedef unsigned short uint16;
+-typedef unsigned int uint32;
++typedef uint32_t uint32;
+ typedef unsigned long long uint64;
+ 
+ typedef signed char int8;
+Index: variants/maple_mini/variant.h
+===================================================================
+--- variants/maple_mini/variant.h	(revision 107)
++++ variants/maple_mini/variant.h	(working copy)
+@@ -1,12 +1,9 @@
+ #ifndef _VARIANT_ARDUINO_STM32_
+ #define _VARIANT_ARDUINO_STM32_
+ 
+-// From SAM implementation #define digitalPinToBitMask(P)     ( g_APinDescription[P].ulPin )
++#define digitalPinToPort(P)        ( PIN_MAP[P].gpio_device )
++#define digitalPinToBitMask(P)     ( BIT(PIN_MAP[P].gpio_bit) )
++#define portOutputRegister(port)   ( &(port->regs->ODR) )
++#define portInputRegister(port)    ( &(port->regs->IDR) )
+ 
+-
+-#warning "TO DO. IMPLEMENT digitalPinToBitMask in variant.h"
+-// Its likely that this function has no meaning with reference to the STM32 GPIO
+-// But its required by some libraries. 
+-#define digitalPinToBitMask(P)     ( 1 )
+-
+ #endif /* _VARIANT_ARDUINO_STM32_ */
+\ No newline at end of file
+Index: cores/maple/wirish_constants.h
+===================================================================
+--- cores/maple/wirish_constants.h	(revision 0)
++++ cores/maple/wirish_constants.h	(working copy)
+@@ -0,0 +1,17 @@
++#ifndef _WIRING_CONSTANTS_
++#define _WIRING_CONSTANTS_
++
++#ifdef __cplusplus
++extern "C"{
++#endif
++
++enum BitOrder {
++	LSBFIRST = 0,
++	MSBFIRST = 1
++};
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
