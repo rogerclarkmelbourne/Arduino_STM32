@@ -80,14 +80,14 @@ public:
 
   void createChar(uint8, uint8[]);
   void setCursor(uint8, uint8);
-  virtual void write(uint8);
+  virtual size_t write(uint8);
   void command(uint8);
 private:
   void send(uint8, uint8);
   void write4bits(uint8);
   void write8bits(uint8);
   void pulseEnable();
-
+    uint8 displaymode;
   uint8 _rs_pin; // LOW: command.  HIGH: character.
   uint8 _rw_pin; // LOW: write to LCD.  HIGH: read from LCD.
   uint8 _enable_pin; // activated by a HIGH pulse.

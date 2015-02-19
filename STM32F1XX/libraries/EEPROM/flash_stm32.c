@@ -1,6 +1,6 @@
 //#include "libmaple.h"
-//#include "util.h"
-#include "flash.h"
+#include "libmaple/util.h"
+#include "libmaple/flash.h"
 #include "flash_stm32.h"
 
 #define FLASH_KEY1			((uint32)0x45670123)

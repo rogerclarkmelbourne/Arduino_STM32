@@ -6,6 +6,8 @@ menu.debug_menu=Debug mode
 menu.cpu_upload_menu=CPU & Upload mode
 menu.HS_IO=High speed I/O commands
 
+menu.upload_method=Upload method
+
 
 nano.name= Maple mini generic
 
@@ -285,32 +287,38 @@ maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 #maple_miniRAM.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
-maple_STM32.name=STM32 to Flash - No bootloader
+genericSTM32.name=STM32 to Flash - No bootloader
 
-maple_STM32.upload.tool=serial_upload
-maple_STM32.upload.protocol=stm_serial
-maple_STM32.upload.maximum_size=108000
-maple_STM32.upload.use_1200bps_touch=false
-maple_STM32.upload.file_type=bin
-maple_STM32.upload.ram.maximum_size=17000
-maple_STM32.upload.flash.maximum_size=108000
+genericSTM32.menu.upload_method.serialMethod=Serial
+genericSTM32.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32.menu.upload_method.serialMethod.upload.tool=serial_upload
+genericSTM32.menu.upload_method.STLinkMethod=STLink
+genericSTM32.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
-maple_STM32.upload.usbID=1EAF:0003
-maple_STM32.upload.altID=1
-maple_STM32.upload.auto_reset=true
+#genericSTM32.upload.tool=upload_router
+genericSTM32.upload.maximum_size=108000
+genericSTM32.upload.use_1200bps_touch=false
+genericSTM32.upload.file_type=bin
+genericSTM32.upload.ram.maximum_size=17000
+genericSTM32.upload.flash.maximum_size=108000
 
-maple_STM32.build.mcu=cortex-m3
-maple_STM32.build.f_cpu=72000000L
-maple_STM32.build.core=maple
-maple_STM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY  -march=armv7-m  -D__STM32F1XX__ 
-maple_STM32.build.ldscript=ld/jtag.ld
-maple_STM32.build.variant=maple_mini
-maple_STM32.build.variant_system_lib=libmaple.a
-maple_STM32.build.vect=VECT_TAB_FLASH
-maple_STM32.build.density=STM32_MEDIUM_DENSITY
-maple_STM32.build.error_led_port=GPIOB
-maple_STM32.build.error_led_pin=1
-maple_STM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+genericSTM32.upload.usbID=1EAF:0003
+genericSTM32.upload.altID=1
+genericSTM32.upload.auto_reset=true
+
+genericSTM32.build.mcu=cortex-m3
+genericSTM32.build.f_cpu=72000000L
+genericSTM32.build.core=maple
+genericSTM32.build.extra_flags=-DMCU_STM32F103CB -mthumb -DSTM32_MEDIUM_DENSITY  -march=armv7-m  -D__STM32F1XX__ 
+genericSTM32.build.ldscript=ld/jtag.ld
+genericSTM32.build.variant=maple_mini
+genericSTM32.build.variant_system_lib=libmaple.a
+genericSTM32.build.vect=VECT_TAB_FLASH
+genericSTM32.build.density=STM32_MEDIUM_DENSITY
+genericSTM32.build.error_led_port=GPIOB
+genericSTM32.build.error_led_pin=1
+genericSTM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
 
@@ -370,4 +378,5 @@ nucleo_f103rb.build.density=STM32_MEDIUM_DENSITY
 nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
 

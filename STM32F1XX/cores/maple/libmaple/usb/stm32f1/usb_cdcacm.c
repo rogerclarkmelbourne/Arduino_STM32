@@ -261,8 +261,10 @@ static ONE_DESCRIPTOR String_Descriptor[N_STRING_DESCRIPTORS] = {
 
 /* I/O state */
 
+#define CDC_SERIAL_BUFFER_SIZE	512
+
 /* Received data */
-static volatile uint8 vcomBufferRx[USB_CDCACM_RX_EPSIZE];
+static volatile uint8 vcomBufferRx[CDC_SERIAL_BUFFER_SIZE];
 /* Read index into vcomBufferRx */
 static volatile uint32 rx_offset = 0;
 /* Number of bytes left to transmit */
@@ -445,14 +447,13 @@ uint32 usb_cdcacm_rx(uint8* buf, uint32 len) {
 
     /* Mark bytes as read. */
     n_unread_bytes -= n_copied;
-    rx_offset += n_copied;
+    rx_offset = (rx_offset + n_copied) % CDC_SERIAL_BUFFER_SIZE;
 
     /* If all bytes have been read, re-enable the RX endpoint, which
      * was set to NAK when the current batch of bytes was received. */
-    if (n_unread_bytes == 0) {
+    if (n_unread_bytes <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
-        rx_offset = 0;
     }
 
     return n_copied;
@@ -463,13 +464,31 @@ uint32 usb_cdcacm_rx(uint8* buf, uint32 len) {
  * Looks at unread bytes without marking them as read. */
 uint32 usb_cdcacm_peek(uint8* buf, uint32 len) {
     int i;
+    uint32 head = rx_offset;
 
     if (len > n_unread_bytes) {
         len = n_unread_bytes;
     }
 
     for (i = 0; i < len; i++) {
-        buf[i] = vcomBufferRx[i + rx_offset];
+        buf[i] = vcomBufferRx[head];
+        head = (head + 1) % CDC_SERIAL_BUFFER_SIZE;
+    }
+
+    return len;
+}
+
+uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len) {
+    int i;
+    uint32 head = (rx_offset + offset) % CDC_SERIAL_BUFFER_SIZE;
+
+    if (len + offset > n_unread_bytes) {
+        len = n_unread_bytes - offset;
+    }
+
+    for (i = 0; i < len; i++) {
+        buf[i] = vcomBufferRx[head];
+        head = (head + 1) % CDC_SERIAL_BUFFER_SIZE;
     }
 
     return len;
@@ -478,15 +497,12 @@ uint32 usb_cdcacm_peek(uint8* buf, uint32 len) {
 /* Roger Clark. Added. for Arduino 1.0 API support of Serial.peek() */
 int usb_cdcacm_peek_char() 
 {
-	return 2;
-	/*
     if (n_unread_bytes == 0) 
 	{
 		return -1;
     }
 
     return vcomBufferRx[rx_offset];
-	*/
 }
 
 uint8 usb_cdcacm_get_dtr() {
@@ -531,19 +547,29 @@ static void vcomDataTxCb(void) {
 }
 
 static void vcomDataRxCb(void) {
+	uint32 ep_rx_size;
+	uint32 tail = (rx_offset + n_unread_bytes) % CDC_SERIAL_BUFFER_SIZE;
+	uint8 ep_rx_data[USB_CDCACM_RX_EPSIZE];
+	uint32 i;
+
     usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_NAK);
-    n_unread_bytes = usb_get_ep_rx_count(USB_CDCACM_RX_ENDP);
+    ep_rx_size = usb_get_ep_rx_count(USB_CDCACM_RX_ENDP);
     /* This copy won't overwrite unread bytes, since we've set the RX
      * endpoint to NAK, and will only set it to VALID when all bytes
      * have been read. */
-    usb_copy_from_pma((uint8*)vcomBufferRx, n_unread_bytes,
+    usb_copy_from_pma((uint8*)ep_rx_data, ep_rx_size,
                       USB_CDCACM_RX_ADDR);
 
+	for (i = 0; i < ep_rx_size; i++) {
+		vcomBufferRx[tail] = ep_rx_data[i];
+		tail = (tail + 1) % CDC_SERIAL_BUFFER_SIZE;
+	}
 
-    if (n_unread_bytes == 0) {
+	n_unread_bytes += ep_rx_size;
+
+    if (n_unread_bytes <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
-        rx_offset = 0;
     }
 
     if (rx_hook) {

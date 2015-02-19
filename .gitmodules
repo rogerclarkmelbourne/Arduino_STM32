@@ -1,3 +1,6 @@
 [submodule "tools/macosx/stlink/texan_stlink_src"]
 	path = tools/macosx/stlink/texan_stlink_src
 	url = https://github.com/texane/stlink.git
+[submodule "drivers/win/src/pbatard_libwdi"]
+	path = drivers/win/src/pbatard_libwdi
+	url = https://github.com/pbatard/libwdi.git
