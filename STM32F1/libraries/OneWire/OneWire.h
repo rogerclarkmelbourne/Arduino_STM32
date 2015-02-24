@@ -104,7 +104,7 @@
 #define DIRECT_WRITE_LOW(base, mask)    ((*(base+8+1)) = (mask))          //LATXCLR  + 0x24
 #define DIRECT_WRITE_HIGH(base, mask)   ((*(base+8+2)) = (mask))          //LATXSET + 0x28
 
-#elif defined(__STM32F1XX__)
+#elif defined(__STM32F1__)
 #define PIN_TO_BASEREG(pin)             ( portConfigRegister(pin) )
 #define PIN_TO_BITMASK(pin)             ( pin )
 #define IO_REG_TYPE uint32
@@ -115,7 +115,7 @@
 #define DIRECT_MODE_INPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_INPUT_FLOATING))
 #define DIRECT_MODE_OUTPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_OUTPUT_PP))
 
-#else
+
 #error "Please define I/O register types here"
 #endif
 
