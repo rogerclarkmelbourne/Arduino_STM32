@@ -61,7 +61,7 @@
 #define DIRECT_WRITE_LOW(base, mask)    ((*((base)+2)) &= ~(mask))
 #define DIRECT_WRITE_HIGH(base, mask)   ((*((base)+2)) |= (mask))
 
-#elif defined(__MK20DX128__)
+#elif defined(__MK20DX128__) || defined(__MK20DX256__)
 #define PIN_TO_BASEREG(pin)             (portOutputRegister(pin))
 #define PIN_TO_BITMASK(pin)             (1)
 #define IO_REG_TYPE uint8_t
@@ -104,19 +104,33 @@
 #define DIRECT_WRITE_LOW(base, mask)    ((*(base+8+1)) = (mask))          //LATXCLR  + 0x24
 #define DIRECT_WRITE_HIGH(base, mask)   ((*(base+8+2)) = (mask))          //LATXSET + 0x28
 
-#elif defined(__STM32F1__)
-#define PIN_TO_BASEREG(pin)             ( portConfigRegister(pin) )
-#define PIN_TO_BITMASK(pin)             ( pin )
-#define IO_REG_TYPE uint32
-#define IO_REG_ASM
-#define DIRECT_READ(base, pin)       (( gpio_read_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit) ) ?   HIGH : LOW)
-#define DIRECT_WRITE_LOW(base, pin)   ( gpio_write_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit,LOW) )
-#define DIRECT_WRITE_HIGH(base, pin) ( gpio_write_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit,HIGH) )
-#define DIRECT_MODE_INPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_INPUT_FLOATING))
-#define DIRECT_MODE_OUTPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_OUTPUT_PP))
+#else
 
+/*
+ Fallback to Arduino GPIO API calls for all other architectures.
 
-#error "Please define I/O register types here"
+ Operation can't be guaranteed using API calls, as the bus timings may be incorrect on some slower architectures.
+
+ Notes. 
+ BASEREG is not used, and hence the result of the macro is 0 (zero)
+
+ IO_REG_TYPE has been set to a generic data type of unsigned int , which should be available on most architectures 
+
+ IO_REG_ASM    is not used
+
+ PIN_TO_BITMASK returns the pin number, hence the bitmask private variable will be used to store the pin number rather than the bit mask,
+ This is a minor hack as the variable will not contain the item advertised by its name.
+*/
+#define PIN_TO_BASEREG(pin)            (0) 
+#define PIN_TO_BITMASK(pin)            ( pin ) 
+#define IO_REG_TYPE unsigned int
+#define IO_REG_ASM             
+#define DIRECT_READ(base, pin)       digitalRead(pin)
+#define DIRECT_WRITE_LOW(base, pin)  digitalWrite(pin, LOW)
+#define DIRECT_WRITE_HIGH(base, pin) digitalWrite(pin, HIGH)
+#define DIRECT_MODE_INPUT(base, pin) pinMode(pin,INPUT)
+#define DIRECT_MODE_OUTPUT(base, pin) pinMode(pin,OUTPUT)
+#warning "OneWire. Fallback mode. Using API calls for pinMode,digitalRead and digitalWrite. Operation of this library is not guaranteed on this architecture."
 #endif
 
 
