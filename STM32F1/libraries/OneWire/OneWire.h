@@ -107,7 +107,7 @@
 #elif defined(__STM32F1__)
 #define PIN_TO_BASEREG(pin)             ( portConfigRegister(pin) )
 #define PIN_TO_BITMASK(pin)             ( pin )
-#define IO_REG_TYPE uint32
+#define IO_REG_TYPE uint32_t
 #define IO_REG_ASM
 #define DIRECT_READ(base, pin)       (( gpio_read_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit) ) ?   HIGH : LOW)
 #define DIRECT_WRITE_LOW(base, pin)   ( gpio_write_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit,LOW) )
@@ -115,7 +115,7 @@
 #define DIRECT_MODE_INPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_INPUT_FLOATING))
 #define DIRECT_MODE_OUTPUT(base, pin)   (gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, GPIO_OUTPUT_PP))
 
-
+#else
 #error "Please define I/O register types here"
 #endif
 
