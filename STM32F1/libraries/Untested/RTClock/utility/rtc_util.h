@@ -34,13 +34,13 @@
 #ifndef _RTC_UTIL_H
 #define _RTC_UTIL_H
 
-#include <libmaple\libmaple.h>
-#include <libmaple\rcc.h>
-#include <libmaple\nvic.h>
-#include <libmaple\bitband.h>
-#include <libmaple\pwr.h>
-#include <libmaple\bkp.h>
-#include <libmaple\exti.h>
+#include <libmaple/libmaple.h>
+#include <libmaple/rcc.h>
+#include <libmaple/nvic.h>
+#include <libmaple/bitband.h>
+#include <libmaple/pwr.h>
+#include <libmaple/bkp.h>
+#include <libmaple/exti.h>
 
 #define EXTI_RTC_ALARM_BIT		17						// the extra exti interrupts (16,17,18,19) should be defined in exti.h (BUG)
 
