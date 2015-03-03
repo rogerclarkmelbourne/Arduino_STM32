@@ -152,6 +152,9 @@ void dac_write_channel(const dac_dev *dev, uint8 channel, uint16 val);
 void dac_enable_channel(const dac_dev *dev, uint8 channel);
 void dac_disable_channel(const dac_dev *dev, uint8 channel);
 
+#define dac_write_channel1(val) ( DAC->regs->DHR12R1 = DAC_DHR12R1_DACC1DHR & val )
+#define dac_write_channel2(val) ( DAC->regs->DHR12R2 = DAC_DHR12R2_DACC2DHR & val )
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
