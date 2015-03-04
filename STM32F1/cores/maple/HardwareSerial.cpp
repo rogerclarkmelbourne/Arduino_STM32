@@ -135,7 +135,7 @@ void HardwareSerial::begin(uint32 baud, uint8_t config)
     usart_config_gpios_async(this->usart_device,
                              rxi->gpio_device, rxi->gpio_bit,
                              txi->gpio_device, txi->gpio_bit,
-                             0);
+                             config);
     usart_init(this->usart_device);
     usart_set_baud_rate(this->usart_device, USART_USE_PCLK, baud);
     usart_enable(this->usart_device);

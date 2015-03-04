@@ -82,30 +82,24 @@ struct usart_dev;
  * Note. The values will need to be changed to match STM32 USART config register values, these are just place holders.
  */
 // Define config for Serial.begin(baud, config);
-#define SERIAL_5N1 0x00
-#define SERIAL_6N1 0x02
-#define SERIAL_7N1 0x04
-#define SERIAL_8N1 0x06
-#define SERIAL_5N2 0x08
-#define SERIAL_6N2 0x0A
-#define SERIAL_7N2 0x0C
-#define SERIAL_8N2 0x0E
-#define SERIAL_5E1 0x20
-#define SERIAL_6E1 0x22
-#define SERIAL_7E1 0x24
-#define SERIAL_8E1 0x26
-#define SERIAL_5E2 0x28
-#define SERIAL_6E2 0x2A
-#define SERIAL_7E2 0x2C
-#define SERIAL_8E2 0x2E
-#define SERIAL_5O1 0x30
-#define SERIAL_6O1 0x32
-#define SERIAL_7O1 0x34
-#define SERIAL_8O1 0x36
-#define SERIAL_5O2 0x38
-#define SERIAL_6O2 0x3A
-#define SERIAL_7O2 0x3C
-#define SERIAL_8O2 0x3E
+// Note. STM32 doesn't support as many different Serial modes as AVR or SAM cores.
+
+#define SERIAL_8N1	0B00000000
+#define SERIAL_8N2	0B00100000
+#define SERIAL_9N1	0B00001000
+#define SERIAL_9N2	0B00101000	
+
+#define SERIAL_8E1	0B00000010
+#define SERIAL_8E2	0B00100010
+#define SERIAL_9E1	0B00001010
+#define SERIAL_9E2	0B00101010
+
+#define SERIAL_8O1	0B00000011
+#define SERIAL_8O2	0B00100011
+#define SERIAL_9O1	0B00001011
+#define SERIAL_9O2	0B00101011
+
+
 
 /* Roger clark. Changed class inheritance from Print to Stream.
  * Also added new functions for peek() and availableForWrite()
