@@ -298,7 +298,17 @@ void SPIClass::read(uint8 *buf, uint32 len) {
 }
 
 void SPIClass::write(uint8 byte) {
-    this->write(&byte, 1);
+  //  this->write(&byte, 1);
+
+	/* Roger Clark 
+	 * Improved speed by just directly writing the single byte to the SPI data reg and wait for completion,	 * by taking the Tx code from transfer(byte)
+	 * The original method, of calling write(*data, length) .
+	 * This almost doubles the speed of this function.
+	 */
+  
+	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
+	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 }
 
 void SPIClass::write(const uint8 *data, uint32 length) {
