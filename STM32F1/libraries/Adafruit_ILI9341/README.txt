@@ -1,3 +1,20 @@
+This library is based on the Adafruit ILI9341 (see original Adafuit text description below)
+
+
+It has minor modifications to support STM32 and also one small change to use spi.write(byte) instead of spi.transfer(byte) as this gave
+a useful speed improvement.
+
+It has been tested with standard ILI9341 from various suppliers e.g on eBay
+
+This library requires the Adafruit GFC library, https://github.com/adafruit/Adafruit-GFX-Library
+
+An addition example stm32_graphicstest has been added to show how to configure for stm32 - which uses hardware SPI and hence its not possible to 
+set the SCK MISO and MOSI pins.
+
+_________________________  Original text from Adafruit ____________________________________________
+
+
+
 This is a library for the Adafruit ILI9341 display products
 
 This library works with the Adafruit 2.8" Touch Shield V2 (SPI)
