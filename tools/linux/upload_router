@@ -1,0 +1,69 @@
+
+#!/bin/bash
+# Translates the windows Arduino IDE upload call - something like..
+#
+# upload_router ttyUSB0 1 1EAF:0003 /tmp/build9114565021046468906.tmp/STM32_Blink.cpp maple_dfu 0
+#
+# to the linux dfu-util equivalent of the form...
+#
+# dfu-util -D ./STM32_Blink.cpp.bin -d 1eaf:0003 --intf 0 --alt 1
+#
+#
+DEVICE="$3"
+# Lowercase the 1eaf device name, since in Windows land everybody shouts.
+DEVICE=${DEVICE,,}
+
+BINFILE="$4.bin"
+INTERFACE="$6"
+ALT_INTERFACE="$2"
+
+USBRESET=$(which usb-reset) || USBRESET="./usb-reset"
+echo -e "\n\rPlease unplug and replug the USB cable to the STB device..."
+sleep 2
+while [[  $(lsusb |grep -i "1eaf") ]]
+do
+    echo -n "."
+    sleep 1
+done
+
+until dfu-util -v -D "$BINFILE" -d "$DEVICE" --intf "$INTERFACE" --alt "$ALT_INTERFACE"
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rUnplug and replug the USB cable to the STM board again please...."
+while [[  $(lsusb |grep -i "1eaf\:0003") ]]
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rReconnecting"
+while [ -z "$(lsusb |grep -i "1eaf\:0003")" ]
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rWaiting for bootloader to exit."
+for i in {1..6}
+do
+    echo -n "."
+    sleep 1
+done
+
+
+"$USBRESET" "/dev/bus/usb/$(lsusb |grep "1eaf" |awk '{print $2,$4}'|sed 's/\://g'|sed 's/ /\//g')" >/dev/null 2>&1
+for i in {1..4}
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rSerial port re-created... $(ls "/dev/ttyACM"*)\n\r"
+for i in {1..4}
+do
+    echo -n "."
+    sleep 1
+done
