@@ -205,7 +205,7 @@ maple.build.error_led_pin=5
 maple.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
-genericSTM32F103Rxx.name=Generic STM32REx
+genericSTM32F103Rxx.name=Generic STM32F103RE
 genericSTM32F103Rxx.upload.maximum_size=492000
 genericSTM32F103Rxx.upload.ram.maximum_size=61000
 genericSTM32F103Rxx.upload.flash.maximum_size=492000
