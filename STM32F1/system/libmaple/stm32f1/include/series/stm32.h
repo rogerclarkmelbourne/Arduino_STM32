@@ -68,19 +68,26 @@ extern "C" {
  * STM32F103 microcontrollers set below won't take effect.
  */
 
-#if defined(MCU_STM32F103RB)
-#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
-#   define STM32_NR_GPIO_PORTS          4
+#if defined(MCU_STM32F103T8)
+#   define STM32_NR_GPIO_PORTS          2
 #   define STM32_SRAM_END               ((void*)0x20005000)
-#ifndef STM32_MEDIUM_DENSITY
-#   define STM32_MEDIUM_DENSITY
-#endif
-
-#elif defined(MCU_STM32F103ZE)
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
-#   define STM32_NR_GPIO_PORTS          7
-#   define STM32_SRAM_END               ((void*)0x20010000)
-#   define STM32_HIGH_DENSITY
+#   define STM32_MEDIUM_DENSITY
+
+#elif defined(MCU_STM32F103TB)
+#   define STM32_NR_GPIO_PORTS          2
+#   define STM32_SRAM_END               ((void*)0x20005000)
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_MEDIUM_DENSITY
+
+#elif defined(MCU_STM32F103C8)
+#   define STM32_NR_GPIO_PORTS          3
+#   define STM32_SRAM_END               ((void*)0x20005000)
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_MEDIUM_DENSITY
 
 #elif defined(MCU_STM32F103CB)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
@@ -89,17 +96,67 @@ extern "C" {
      * so we'll live with this for now. */
 #   define STM32_NR_GPIO_PORTS          3
 #   define STM32_SRAM_END               ((void*)0x20005000)
-#ifndef STM32_MEDIUM_DENSITY
 #   define STM32_MEDIUM_DENSITY
-#endif
 
-#elif defined(MCU_STM32F103RE)
+#elif defined(MCU_STM32F103R8)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          4
+#   define STM32_SRAM_END               ((void*)0x20005000)
+#   define STM32_MEDIUM_DENSITY
+
+#elif defined(MCU_STM32F103RB)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          4
+#   define STM32_SRAM_END               ((void*)0x20005000)
+#   define STM32_MEDIUM_DENSITY
+
+#elif defined(MCU_STM32F103RC)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          4
+#   define STM32_SRAM_END               ((void*)0x2000C000)
+#   define STM32_HIGH_DENSITY
+
+#elif defined(MCU_STM32F103RD) || defined(MCU_STM32F103RE)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_NR_GPIO_PORTS          4
 #   define STM32_SRAM_END               ((void*)0x20010000)
-#ifndef STM32_MEDIUM_DENSITY
+#   define STM32_HIGH_DENSITY
+
+#elif defined(MCU_STM32F103V8)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          5
+#   define STM32_SRAM_END               ((void*)0x20005000)
 #   define STM32_MEDIUM_DENSITY
-#endif
+
+#elif defined(MCU_STM32F103VB)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          5
+#   define STM32_SRAM_END               ((void*)0x20005000)
+#   define STM32_MEDIUM_DENSITY
+
+#elif defined(MCU_STM32F103VC)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          5
+#   define STM32_SRAM_END               ((void*)0x2000C000)
+#   define STM32_HIGH_DENSITY
+
+#elif defined(MCU_STM32F103VD) || defined(MCU_STM32F103VE)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          5
+#   define STM32_SRAM_END               ((void*)0x20010000)
+#   define STM32_HIGH_DENSITY
+
+#elif defined(MCU_STM32F103ZC)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          7
+#   define STM32_SRAM_END               ((void*)0x2000C000)
+#   define STM32_HIGH_DENSITY
+
+#elif defined(MCU_STM32F103ZD) || defined(MCU_STM32F103ZE)
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_NR_GPIO_PORTS          7
+#   define STM32_SRAM_END               ((void*)0x20010000)
+#   define STM32_HIGH_DENSITY
 
 #elif defined(MCU_STM32F100RB)
 #   define STM32_F1_LINE                STM32_F1_LINE_VALUE
@@ -107,15 +164,6 @@ extern "C" {
 #   define STM32_TIMER_MASK             0x380DE /* Timers: 1-4, 6, 7, 15-17. */
 #   define STM32_SRAM_END               ((void*)0x20002000)
 #   define STM32_MEDIUM_DENSITY
-
-#elif defined(MCU_STM32F103C8)
-#   define STM32_NR_GPIO_PORTS          4
-#   define STM32_SRAM_END               ((void*)0x20005000)
-#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
-#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
-#ifndef STM32_MEDIUM_DENSITY
-#   define STM32_MEDIUM_DENSITY
-#endif
 
 #else
 #warning "Unsupported or unspecified STM32F1 MCU."

@@ -205,6 +205,30 @@ maple.build.error_led_pin=5
 maple.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
+genericSTM32F103Rxx.name=Generic STM32F103RE
+genericSTM32F103Rxx.upload.maximum_size=492000
+genericSTM32F103Rxx.upload.ram.maximum_size=61000
+genericSTM32F103Rxx.upload.flash.maximum_size=492000
+genericSTM32F103Rxx.build.error_led_port=GPIOA
+genericSTM32F103Rxx.build.error_led_pin=5
+genericSTM32F103Rxx.build.variant=generic_stm32f103rxx
+genericSTM32F103Rxx.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  
+genericSTM32F103Rxx.build.ldscript=ld/jtag.ld
+
+genericSTM32F103Rxx.upload.tool=serial_upload
+genericSTM32F103Rxx.upload.protocol=maple_dfu
+genericSTM32F103Rxx.upload.use_1200bps_touch=false
+genericSTM32F103Rxx.upload.file_type=bin
+#genericSTM32F103Rxx.upload.usbID=1EAF:0003
+#genericSTM32F103Rxx.upload.altID=1
+#genericSTM32F103Rxx.upload.auto_reset=true
+genericSTM32F103Rxx.build.mcu=cortex-m3
+genericSTM32F103Rxx.build.f_cpu=72000000L
+genericSTM32F103Rxx.build.core=maple
+genericSTM32F103Rxx.build.vect=VECT_TAB_FLASH
+
+
+##############################################################
 #mapleRAM.name=LeafLabs Maple Rev 3+ to RAM
 
 #mapleRAM.upload.tool=maple_upload
