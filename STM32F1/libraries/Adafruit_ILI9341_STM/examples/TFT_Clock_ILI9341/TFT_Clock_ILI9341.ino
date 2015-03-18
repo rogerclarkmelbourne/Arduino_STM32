@@ -17,8 +17,8 @@
 #define dc   10
 #define rst  9  // you can also connect this to the Arduino reset
 
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ILI9341.h> // Hardware-specific library
+#include <Adafruit_GFX_AS.h>    // Core graphics library, with extra fonts.
+#include <Adafruit_ILI9341_STM.h> // STM32 DMA Hardware-specific library
 #include <SPI.h>
 
 #define ILI9341_GREY 0x5AEB

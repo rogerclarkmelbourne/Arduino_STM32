@@ -2,7 +2,7 @@
 See rights and use declaration in License.h
 This library has been modified for the Maple Mini
 */
-#include "Adafruit_ILI9341.h"
+#include <Adafruit_ILI9341_STM.h>
 #include <avr/pgmspace.h>
 #include <limits.h>
 #include <libmaple/dma.h>
@@ -10,7 +10,10 @@ This library has been modified for the Maple Mini
 #include "wiring_private.h"
 #include <SPI.h> // Using library SPI in folder: D:\Documents\Arduino\hardware\STM32\STM32F1XX\libraries\SPI
 
+//Used for DMA transfers in STM32F1XX
+#if defined (__STM32F1__)
 volatile bool dma1_ch3_Active = false;
+#endif
 
 // Constructor when using software SPI.  All output pins are configurable.
 Adafruit_ILI9341::Adafruit_ILI9341(int8_t cs, int8_t dc, int8_t mosi,

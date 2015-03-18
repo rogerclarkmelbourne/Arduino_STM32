@@ -15,13 +15,15 @@
 
 
 #include "SPI.h"
-#include "Adafruit_GFX.h"
-#include "Adafruit_ILI9341.h"
+
+#include <Adafruit_GFX_AS.h>    // Core graphics library, with extra fonts.
+#include <Adafruit_ILI9341_STM.h> // STM32 DMA Hardware-specific library
 
 // For the Adafruit shield, these are the default.
-#define TFT_CS         PB4                  
-#define TFT_DC         PA15                
-#define TFT_RST        PB3  
+#define TFT_CS         8                  
+#define TFT_DC         10                
+#define TFT_RST        9 
+ 
 
 // Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
 //Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);

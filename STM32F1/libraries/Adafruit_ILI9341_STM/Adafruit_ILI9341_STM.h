@@ -8,7 +8,7 @@ This library has been modified for the Maple Mini
 
 #include "Arduino.h"
 #include "Print.h"
-#include "Adafruit_GFX.h"
+#include <Adafruit_GFX_AS.h>
 #include <avr/pgmspace.h>
 
 #define ILI9341_TFTWIDTH  240
@@ -132,7 +132,7 @@ class Adafruit_ILI9341 : public Adafruit_GFX {
  private:
   uint8_t  tabcolor;
 
-volatile byte lineBuffer[640];
+
 
 
   boolean  hwSPI;
@@ -145,6 +145,7 @@ volatile byte lineBuffer[640];
     volatile uint32 *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
     uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
+	volatile byte lineBuffer[640];
 #elif defined (__arm__)
     volatile RwReg *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
