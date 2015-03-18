@@ -1,7 +1,7 @@
 /*
  Sow all the fonts.
  
- Only font sizes 2, 4, 6 and 7 are implemented in the Adafruit_GFX library.
+ Only font sizes 2, 4, 6 and 7 are implemented in the Adafruit_GFX_AS library.
  
  This examples uses the hardware SPI only. Non-hardware SPI
  is just too slow (~8 times slower!)
@@ -26,17 +26,17 @@
  
  */
 
-//#define sclk 6  // Don't change
-//#define mosi 4  // Don't change
+#define sclk 6  // Don't change
+#define mosi 4  // Don't change
 #define cs   8
 #define dc   10
 #define rst  9  // you can also connect this to the Arduino reset
 
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ILI9341.h> // Hardware-specific library
+#include <Adafruit_GFX_AS.h>    // Core graphics library
+#include <Adafruit_ILI9341_AS.h> // Hardware-specific library
 #include <SPI.h>
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(cs, dc, rst);       // Invoke custom library
+Adafruit_ILI9341_AS tft = Adafruit_ILI9341_AS(cs, dc, rst);       // Invoke custom library
 
 unsigned long targetTime = 0;
 byte red = 31;

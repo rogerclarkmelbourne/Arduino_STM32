@@ -11,19 +11,19 @@
  Updated by Alan Senior 18/1/2015
  */
 
-//#define sclk 6  // Don't change
-//#define mosi 4  // Don't change
+#define sclk 6  // Don't change
+#define mosi 4  // Don't change
 #define cs   8
 #define dc   10
 #define rst  9  // you can also connect this to the Arduino reset
 
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ILI9341.h> // Hardware-specific library
+#include <Adafruit_GFX_AS.h>    // Core graphics library
+#include <Adafruit_ILI9341_AS.h> // Hardware-specific library
 #include <SPI.h>
 
 #define ILI9341_GREY 0x5AEB
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(cs, dc, rst);       // Invoke custom library
+Adafruit_ILI9341_AS tft = Adafruit_ILI9341_AS(cs, dc, rst);       // Invoke custom library
 
 float sx = 0, sy = 1, mx = 1, my = 0, hx = -1, hy = 0;    // Saved H, M, S x & y multipliers
 float sdeg=0, mdeg=0, hdeg=0;
