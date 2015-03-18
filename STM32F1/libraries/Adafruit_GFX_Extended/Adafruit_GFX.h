@@ -1,5 +1,5 @@
-#ifndef _ADAFRUIT_GFX_AS_H
-#define _ADAFRUIT_GFX_AS_H
+#ifndef _ADAFRUIT_GFX_H
+#define _ADAFRUIT_GFX_H
 
 #include "Load_fonts.h"
 
@@ -12,11 +12,11 @@
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
-class Adafruit_GFX_AS : public Print {
+class Adafruit_GFX : public Print {
 
  public:
 
-  Adafruit_GFX_AS(int16_t w, int16_t h); // Constructor
+  Adafruit_GFX(int16_t w, int16_t h); // Constructor
 
   // This MUST be defined by the subclass:
   virtual void drawPixel(int16_t x, int16_t y, uint16_t color) = 0;
@@ -32,7 +32,7 @@ class Adafruit_GFX_AS : public Print {
     fillScreen(uint16_t color),
     invertDisplay(boolean i);
 
-  // These exist only with Adafruit_GFX_AS (no subclass overrides)
+  // These exist only with Adafruit_GFX (no subclass overrides)
   void
     drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color),
     drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,
@@ -94,4 +94,4 @@ class Adafruit_GFX_AS : public Print {
     wrap; // If set, 'wrap' text at right edge of display
 };
 
-#endif // _ADAFRUIT_GFX_AS_H
+#endif // _ADAFRUIT_GFX_H
