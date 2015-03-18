@@ -286,6 +286,9 @@ public:
      * @see HardwareSPI::read()
      */
     uint8 recv(void);
+	
+	spi_dev *dev(){ return spi_d;}
+	
 private:
 	spi_dev *spi_d;
 	uint8_t _SSPin;
