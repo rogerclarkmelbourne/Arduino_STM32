@@ -1,19 +1,5 @@
-This library is based on the Adafruit ILI9341 (see original Adafuit text description below)
-
-
-It has minor modifications to support STM32 and also one small change to use spi.write(byte) instead of spi.transfer(byte) as this gave
-a useful speed improvement.
-
-It has been tested with standard ILI9341 from various suppliers e.g on eBay
-
-This library requires the Adafruit GFC library, https://github.com/adafruit/Adafruit-GFX-Library
-
-An addition example stm32_graphicstest has been added to show how to configure for stm32 - which uses hardware SPI and hence its not possible to 
-set the SCK MISO and MOSI pins.
-
-_________________________  Original text from Adafruit ____________________________________________
-
-
+It has minor modifications to support STM32. It has been tested with the Maple Mini.
+Further modifications to support DMA transfers in the STM32F1xx by Victor Perez 3/17/2015
 
 This is a library for the Adafruit ILI9341 display products
 
