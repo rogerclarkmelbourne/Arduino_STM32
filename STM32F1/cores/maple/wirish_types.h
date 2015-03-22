@@ -63,7 +63,7 @@ typedef struct stm32_pin_info {
  * variable in Flash instead of RAM. */
 #define __FLASH__ __attr_flash
 
-typedef uint8 boolean;
+typedef bool boolean;
 typedef uint8 byte;
 
 #endif
