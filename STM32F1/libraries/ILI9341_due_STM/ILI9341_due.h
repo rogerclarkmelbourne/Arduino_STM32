@@ -248,6 +248,7 @@ class ILI9341_due
     void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
     void setRotation(iliRotation r);
+	void setRotation(uint8_t r);
     void invertDisplay(boolean i);
     void display(boolean d);
     void normalModeOn();

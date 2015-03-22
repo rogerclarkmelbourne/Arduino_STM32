@@ -395,6 +395,11 @@ void ILI9341_due::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t 
 #define MADCTL_BGR 0x08
 #define MADCTL_MH  0x04
 
+void ILI9341_due::setRotation(uint8_t r)
+{
+ILI9341_due::setRotation((iliRotation) r);
+}
+
 void ILI9341_due::setRotation(iliRotation r)
 {
 	writecommand_cont(ILI9341_MADCTL);
