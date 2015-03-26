@@ -6,33 +6,20 @@
 #include <Adafruit_GFX.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_ILI9341_STM.h>
-#include <TouchScreen.h>
-
-//Touchscreen X+ X- Y+ Y- pins
-#define YP A3  // must be an analog pin, use "An" notation!
-#define XM A2  // must be an analog pin, use "An" notation!
-#define YM 5   // can be a digital pin
-#define XP 4   // can be a digital pin
+#include <Adafruit_ILI9341.h>
+#include <Adafruit_STMPE610.h>
 
 // This is calibration data for the raw touch data to the screen coordinates
 #define TS_MINX 150
-#define TS_MINY 120
-#define TS_MAXX 920
-#define TS_MAXY 940
+#define TS_MINY 130
+#define TS_MAXX 3800
+#define TS_MAXY 4000
 
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
-
-// For better pressure precision, we need to know the resistance
-// between X+ and X- Use any multimeter to read it
-// For the one we're using, its 300 ohms across the X plate
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
-
-
+#define STMPE_CS 8
+Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 #define TFT_CS 10
 #define TFT_DC 9
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 boolean RecordOn = false;
 
@@ -84,6 +71,12 @@ void setup(void)
 {
   Serial.begin(9600);
   tft.begin();
+  if (!ts.begin()) { 
+    Serial.println("Unable to start touchscreen.");
+  } 
+  else { 
+    Serial.println("Touchscreen started."); 
+  }
 
   tft.fillScreen(ILI9341_BLUE);
   // origin = left,top landscape (USB left upper)
@@ -93,12 +86,11 @@ void setup(void)
 
 void loop()
 {
-   // Retrieve a point  
-  TSPoint p = ts.getPoint();
-
   // See if there's any  touch data for us
-  if (p.z > MINPRESSURE && p.z < MAXPRESSURE)
+  if (!ts.bufferEmpty())
   {   
+    // Retrieve a point  
+    TS_Point p = ts.getPoint(); 
     // Scale using the calibration #'s
     // and rotate coordinate system
     p.x = map(p.x, TS_MINY, TS_MAXY, 0, tft.height());

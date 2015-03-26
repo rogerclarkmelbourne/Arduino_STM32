@@ -6,7 +6,7 @@
 #include <Adafruit_GFX.h>
 #include <SPI.h>
 #include <Wire.h>
-#include <Adafruit_ILI9341.h>
+#include <Adafruit_ILI9341_STM.h>
 #include <Adafruit_STMPE610.h>
 
 // This is calibration data for the raw touch data to the screen coordinates
@@ -19,7 +19,7 @@
 Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 #define TFT_CS 10
 #define TFT_DC 9
-Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
 
 boolean RecordOn = false;
 

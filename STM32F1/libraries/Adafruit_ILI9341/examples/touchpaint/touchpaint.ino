@@ -1,6 +1,6 @@
 /***************************************************
-  This is our touchscreen painting example for the Adafruit ILI9341 Breakout
-  ----> http://www.adafruit.com/products/1770
+  This is our touchscreen painting example for the Adafruit ILI9341 Shield
+  ----> http://www.adafruit.com/products/1651
 
   Check out the links above for our tutorials and wiring diagrams
   These displays use SPI to communicate, 4 or 5 pins are required to
@@ -13,37 +13,27 @@
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
-/** NOT FOR USE WITH THE TOUCH SHIELD, ONLY FOR THE BREAKOUT! **/
 
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <SPI.h>
-#include <Adafruit_ILI9341_STM.h>
-#include "TouchScreen.h"
-
-// These are the four touchscreen analog pins
-#define YP A2  // must be an analog pin, use "An" notation!
-#define XM A3  // must be an analog pin, use "An" notation!
-#define YM 5   // can be a digital pin
-#define XP 4   // can be a digital pin
+#include <Wire.h>      // this is needed even tho we aren't using it
+#include <Adafruit_ILI9341.h>
+#include <Adafruit_STMPE610.h>
 
 // This is calibration data for the raw touch data to the screen coordinates
 #define TS_MINX 150
-#define TS_MINY 120
-#define TS_MAXX 920
-#define TS_MAXY 940
+#define TS_MINY 130
+#define TS_MAXX 3800
+#define TS_MAXY 4000
 
-#define MINPRESSURE 10
-#define MAXPRESSURE 1000
+// The STMPE610 uses hardware SPI on the shield, and #8
+#define STMPE_CS 8
+Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
-// The display uses hardware SPI, plus #9 & #10
+// The display also uses hardware SPI, plus #9 & #10
 #define TFT_CS 10
 #define TFT_DC 9
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
-
-// For better pressure precision, we need to know the resistance
-// between X+ and X- Use any multimeter to read it
-// For the one we're using, its 300 ohms across the X plate
-TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 // Size of the color selection boxes and the paintbrush size
 #define BOXSIZE 40
@@ -57,6 +47,13 @@ void setup(void) {
   Serial.println(F("Touch Paint!"));
   
   tft.begin();
+
+  if (!ts.begin()) {
+    Serial.println("Couldn't start touchscreen controller");
+    while (1);
+  }
+  Serial.println("Touchscreen started");
+  
   tft.fillScreen(ILI9341_BLACK);
   
   // make the color selection boxes
@@ -75,22 +72,27 @@ void setup(void) {
 
 void loop()
 {
+  // See if there's any  touch data for us
+  if (ts.bufferEmpty()) {
+    return;
+  }
+  /*
+  // You can also wait for a touch
+  if (! ts.touched()) {
+    return;
+  }
+  */
+
   // Retrieve a point  
-  TSPoint p = ts.getPoint();
+  TS_Point p = ts.getPoint();
   
  /*
   Serial.print("X = "); Serial.print(p.x);
   Serial.print("\tY = "); Serial.print(p.y);
   Serial.print("\tPressure = "); Serial.println(p.z);  
  */
-  
-  // we have some minimum pressure we consider 'valid'
-  // pressure of 0 means no pressing!
-  if (p.z < MINPRESSURE || p.z > MAXPRESSURE) {
-     return;
-  }
-  
-  // Scale from ~0->1000 to tft.width using the calibration #'s
+ 
+  // Scale from ~0->4000 to tft.width using the calibration #'s
   p.x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());
   p.y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());
 
@@ -100,7 +102,6 @@ void loop()
   Serial.println(")");
   */
 
-    
   if (p.y < BOXSIZE) {
      oldcolor = currentcolor;
 

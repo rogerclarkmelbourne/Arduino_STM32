@@ -365,6 +365,7 @@ uint8_t ILI_SdSpi::receive(uint8_t* buf, size_t n) {
   ILI_spiDmaRX(buf, n);
   ILI_spiDmaTX(0, n);
 
+
   uint32_t m = millis();
   while (SPI_DMA_RX_Active) {
     if ((millis() - m) > ILI_STM32F1_DMA_TIMEOUT)  {
