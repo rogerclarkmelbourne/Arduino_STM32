@@ -457,19 +457,21 @@ void Adafruit_ILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,  uin
 	if (true)
 	{
 		// Use DMA
-		byte lineBuffer[h*2];// Buffer to be sent via DMA
+		byte txBuf[h*2];// Buffer to be sent via DMA
+		byte rxBuf[h*2];// Buffer to be sent via DMA
 	  
 	    // need to build a buffer of the required height  (h) 
 		// Note I suspect there is a faster way to do this
 		for(int i=0;i<h*2;i++)
 		{
-			lineBuffer[i++] = hi&0xff;
-			lineBuffer[i]   = lo&0xff;
+			txBuf[i++] = hi&0xff;
+			txBuf[i]   = lo&0xff;
 		}
 		// Tansfer each line by DMA
 		for(int i=0;i<w;i++)
 		{
-			SPI.DMATransfer(lineBuffer,h*2);
+			//memcpy(rxBuf,txBuf,h*2);
+			SPI.DMATransfer(txBuf,rxBuf,h*2);
 		}
 	}
 	else
