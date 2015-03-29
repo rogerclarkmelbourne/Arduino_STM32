@@ -330,6 +330,29 @@ uint8 SPIClass::transfer(uint8 byte) {
     return b;
 }
 
+uint8 SPIClass::DMATransfer(uint8 *data, uint32 length) {
+	uint8 b;
+	
+
+	
+	dma1_ch3_Active=true;
+	
+    spi_tx_dma_enable(SPI1);
+    dma_init(DMA1);
+	
+
+    dma_attach_interrupt(DMA1, DMA_CH3, &SPIClass::DMA1_CH3_Event);
+    dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_8BITS,
+                       data, DMA_SIZE_8BITS, (DMA_MINC_MODE |  DMA_FROM_MEM | DMA_TRNS_CMPLT));
+	
+	  dma_set_num_transfers(DMA1, DMA_CH3, length); // 2 bytes per pixel
+	  dma_enable(DMA1, DMA_CH3);
+	  while (dma1_ch3_Active);
+	
+    return b;
+}
+
+
 void SPIClass::attachInterrupt(void) {
 	// Should be enableInterrupt()
 }

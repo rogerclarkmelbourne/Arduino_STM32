@@ -327,9 +327,11 @@ void Adafruit_ILI9341::begin(void) {
 void Adafruit_ILI9341::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1,
  uint16_t y1) {
 
+  byte buf[4];
   writecommand(ILI9341_CASET); // Column addr set
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
+		
   SPI.write(x0 >> 8);
   SPI.write(x0 & 0xFF);     // XSTART 
   SPI.write(x1 >> 8);
@@ -338,10 +340,12 @@ void Adafruit_ILI9341::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1,
   writecommand(ILI9341_PASET); // Row addr set
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
+  
   SPI.write(y0>>8);
   SPI.write(y0);     // YSTART
   SPI.write(y1>>8);
   SPI.write(y1);     // YEND
+
 
   writecommand(ILI9341_RAMWR); // write to RAM
 }
@@ -433,33 +437,56 @@ void Adafruit_ILI9341::fillScreen(uint16_t color) {
 }
 
 // fill a rectangle
-void Adafruit_ILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
-  uint16_t color) {
+void Adafruit_ILI9341::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,  uint16_t color) {
 	int numPixels;
-  // rudimentary clipping (drawChar w/big text requires this)
-  if((x >= _width) || (y >= _height)) return;
-  if((x + w - 1) >= _width)  w = _width  - x;
-  if((y + h - 1) >= _height) h = _height - y;
 
-  if (hwSPI) spi_begin();
-  setAddrWindow(x, y, x+w-1, y+h-1);
+	unsigned char *buff;
 
-  uint8_t hi = color >> 8, lo = color;
+	// rudimentary clipping (drawChar w/big text requires this)
+	if((x >= _width) || (y >= _height)) return;
+	if((x + w - 1) >= _width)  w = _width  - x;
+	if((y + h - 1) >= _height) h = _height - y;
 
-  *dcport |=  dcpinmask;
-  *csport &= ~cspinmask;
+	if (hwSPI) spi_begin();
+	setAddrWindow(x, y, x+w-1, y+h-1);
+
+	uint8_t hi = color >> 8, lo = color;
   
-  for(y=h; y>0; y--) 
-  {
-    for(x=w; x>0; x--)
+	*dcport |=  dcpinmask;
+	*csport &= ~cspinmask;
+	if (true)
 	{
-      SPI.write(hi);
-      SPI.write(lo);
-    }
-  }
-  
-  if (hwSPI) spi_end();
-  *csport |= cspinmask;
+		// Use DMA
+		byte lineBuffer[h*2];// Buffer to be sent via DMA
+	  
+	    // need to build a buffer of the required height  (h) 
+		// Note I suspect there is a faster way to do this
+		for(int i=0;i<h*2;i++)
+		{
+			lineBuffer[i++] = hi&0xff;
+			lineBuffer[i]   = lo&0xff;
+		}
+		// Tansfer each line by DMA
+		for(int i=0;i<w;i++)
+		{
+			SPI.DMATransfer(lineBuffer,h*2);
+		}
+	}
+	else
+	{
+		// Non DMA method (currently not used)
+		for(y=h; y>0; y--) 
+		{
+			for(x=w; x>0; x--)
+			{
+				SPI.write(hi);
+				SPI.write(lo);
+			}
+		}	
+	}
+	
+	if (hwSPI) spi_end();
+	*csport |= cspinmask;
 }
 
 
