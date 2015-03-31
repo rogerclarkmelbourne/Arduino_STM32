@@ -7,7 +7,7 @@ The Arduino IDE team made a major change, to the compilor and other files, they 
 
 Please use Arduino IDE V 1.6.1 until this whole mess with the IDE is resolved
 
-Hardware files to support STM32 based boards on Arduino version 1.5.x to version 1.6.1 , including LeafLabs Maple, and Maple mini, and other generic STM32F103 boards
+This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.5.x to version 1.6.1 , including LeafLabs Maple, and Maple mini, and other generic STM32F103 boards
 
 Please read the wiki  https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki for full details
 
