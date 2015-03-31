@@ -1,7 +1,13 @@
 Arduino STM32
 =============
 
-Hardware files to support STM32 based boards on Arduino 1.6.x, including LeafLabs Maple, and Maple mini, and other generic STM32F103 boards
+###Important. This repo is not compatible with Adrduino IDE 1.6.2 or newer
+
+The Arduino IDE team made a major change, to the compilor and other files, they also don't install the ARM compilor by default. (see https://github.com/rogerclarkmelbourne/Arduino_STM32/issues/39)
+
+Please use Arduino IDE V 1.6.1 until this whole mess with the IDE is resolved
+
+Hardware files to support STM32 based boards on Arduino version 1.5.x to version 1.6.1 , including LeafLabs Maple, and Maple mini, and other generic STM32F103 boards
 
 Please read the wiki  https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki for full details
 
