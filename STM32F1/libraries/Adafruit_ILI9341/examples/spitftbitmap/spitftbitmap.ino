@@ -15,7 +15,7 @@
 
 
 #include <Adafruit_GFX.h>    // Core graphics library
-#include "Adafruit_ILI9341_STM.h" // Hardware-specific library
+#include "Adafruit_ILI9341.h" // Hardware-specific library
 #include <SPI.h>
 #include <SD.h>
 
@@ -26,7 +26,7 @@
 
 #define TFT_DC 9
 #define TFT_CS 10
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 #define SD_CS 4
 

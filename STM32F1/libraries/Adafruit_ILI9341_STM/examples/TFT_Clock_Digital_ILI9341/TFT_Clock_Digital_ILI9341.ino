@@ -43,7 +43,7 @@ code	color
 
 #define ILI9341_GREY 0x5AEB
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(cs, dc, rst);       // Invoke custom library
+Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(cs, dc, rst);       // Invoke custom library
 
 uint32_t targetTime = 0;                    // for next 1 second timeout
 uint8_t hh=conv2d(__TIME__), mm=conv2d(__TIME__+3), ss=conv2d(__TIME__+6);  // Get H, M, S from compile time

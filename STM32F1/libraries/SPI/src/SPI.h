@@ -40,6 +40,7 @@
 
 #include <libmaple/libmaple_types.h>
 #include <libmaple/spi.h>
+#include <libmaple/dma.h>
 
 #include <boards.h>
 #include <stdint.h>
@@ -121,6 +122,7 @@ private:
 };
 
 
+volatile static bool dma1_ch3_Active;
 
 /**
  * @brief Wirish SPI interface.
@@ -130,6 +132,9 @@ private:
  */
 class SPIClass {
 public:
+
+
+
     /**
      * @param spiPortNumber Number of the SPI port to manage.
      */
@@ -223,6 +228,8 @@ public:
      */
     uint8 transfer(uint8 data);
 
+	uint8 DMATransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint32 length);
+
     /*
      * Pin accessors
      */
@@ -289,7 +296,17 @@ public:
 	
 	spi_dev *dev(){ return spi_d;}
 	
+	
+	
 private:
+
+	static inline void DMA1_CH3_Event() {
+		dma1_ch3_Active = 0;
+		dma_disable(DMA1, DMA_CH3);
+		dma_disable(DMA1, DMA_CH2);
+		
+		// To Do. Need to wait for 
+	}
 	spi_dev *spi_d;
 	uint8_t _SSPin;
 	uint32_t clockDivider;

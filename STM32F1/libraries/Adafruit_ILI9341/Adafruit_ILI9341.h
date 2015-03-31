@@ -1,15 +1,30 @@
-/*
-See rights and use declaration in License.h
-This library has been modified for the Maple Mini
-*/
+/***************************************************
+  This is our library for the Adafruit  ILI9341 Breakout and Shield
+  ----> http://www.adafruit.com/products/1651
+
+  Check out the links above for our tutorials and wiring diagrams
+  These displays use SPI to communicate, 4 or 5 pins are required to
+  interface (RST is optional)
+  Adafruit invests time and resources providing this open source code,
+  please support Adafruit and open-source hardware by purchasing
+  products from Adafruit!
+
+  Written by Limor Fried/Ladyada for Adafruit Industries.
+  MIT license, all text above must be included in any redistribution
+ ****************************************************/
 
 #ifndef _ADAFRUIT_ILI9341H_
 #define _ADAFRUIT_ILI9341H_
 
-#include "Arduino.h"
-#include "Print.h"
-#include <Adafruit_GFX_AS.h>
+#if ARDUINO >= 100
+ #include "Arduino.h"
+ #include "Print.h"
+#else
+ #include "WProgram.h"
+#endif
+#include <Adafruit_GFX.h>
 #include <avr/pgmspace.h>
+
 
 #define ILI9341_TFTWIDTH  240
 #define ILI9341_TFTHEIGHT 320
@@ -92,14 +107,14 @@ This library has been modified for the Maple Mini
 #define ILI9341_GREENYELLOW 0xAFE5      /* 173, 255,  47 */
 #define ILI9341_PINK        0xF81F
 
-class Adafruit_ILI9341_STM : public Adafruit_GFX {
+class Adafruit_ILI9341 : public Adafruit_GFX {
 
  public:
 
-  Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _MOSI, int8_t _SCLK,
+  Adafruit_ILI9341(int8_t _CS, int8_t _DC, int8_t _MOSI, int8_t _SCLK,
 		   int8_t _RST, int8_t _MISO);
-  Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _RST = -1);
-  
+  Adafruit_ILI9341(int8_t _CS, int8_t _DC, int8_t _RST = -1);
+
   void     begin(void),
            setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
            pushColor(uint16_t color),
@@ -128,24 +143,22 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
     commandList(uint8_t *addr);
   uint8_t  spiread(void);
 
-
  private:
   uint8_t  tabcolor;
 
 
 
-
   boolean  hwSPI;
+#if defined (__STM32F1__)  
+#define RwReg uint32
+#endif
+  
+  
 #if defined (__AVR__) || defined(TEENSYDUINO)
   uint8_t mySPCR;
   volatile uint8_t *mosiport, *clkport, *dcport, *rsport, *csport;
   int8_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
   uint8_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-#elif defined (__STM32F1__)
-    volatile uint32 *mosiport, *clkport, *dcport, *rsport, *csport;
-    uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
-    uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-	volatile byte lineBuffer[640];
 #elif defined (__arm__)
     volatile RwReg *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;

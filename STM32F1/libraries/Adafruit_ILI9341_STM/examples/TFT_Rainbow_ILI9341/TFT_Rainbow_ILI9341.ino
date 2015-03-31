@@ -23,7 +23,7 @@
 #include <Adafruit_ILI9341_STM.h> // STM32 DMA Hardware-specific library
 #include <SPI.h>
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(cs, dc, rst);       // Invoke custom library
+Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(cs, dc, rst);       // Invoke custom library
 
 unsigned long targetTime = 0;
 byte red = 31;

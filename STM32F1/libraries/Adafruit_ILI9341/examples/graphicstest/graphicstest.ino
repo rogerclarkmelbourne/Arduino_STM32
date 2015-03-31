@@ -14,28 +14,21 @@
  ****************************************************/
 
 
-//#include <SPI.h>
-
-#include <SPI.h> 
-#include <ILI_SdSpi.h>
-#include <ILI_SdFatConfig.h>
-#include <ILI9341_due_gText.h>
-#include <ILI9341_due.h>
+#include "SPI.h"
+#include "Adafruit_GFX.h"
+#include "Adafruit_ILI9341.h"
 
 // For the Adafruit shield, these are the default.
-
-// For the Adafruit shield, these are the default.
-#define TFT_DC PA15
-#define TFT_CS PB4
-#define rst  PB3
+#define TFT_DC 9
+#define TFT_CS 10
 
 // Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-ILI9341_due tft = ILI9341_due(TFT_CS, TFT_DC, rst);
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+// If using the breakout, change pins as desired
+//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
 void setup() {
-  delay (5000);
-  Serial.begin(115200);
-  while (!Serial) ; // wait for Arduino Serial Monitor
+  Serial.begin(9600);
   Serial.println("ILI9341 Test!"); 
  
   tft.begin();
@@ -56,50 +49,50 @@ void setup() {
 
   Serial.print(F("Screen fill              "));
   Serial.println(testFillScreen());
-  delay(200);
+  delay(500);
 
   Serial.print(F("Text                     "));
   Serial.println(testText());
-  delay(600);
+  delay(3000);
 
   Serial.print(F("Lines                    "));
   Serial.println(testLines(ILI9341_CYAN));
-  delay(200);
+  delay(500);
 
   Serial.print(F("Horiz/Vert Lines         "));
   Serial.println(testFastLines(ILI9341_RED, ILI9341_BLUE));
-  delay(200);
+  delay(500);
 
   Serial.print(F("Rectangles (outline)     "));
   Serial.println(testRects(ILI9341_GREEN));
-  delay(200);
+  delay(500);
 
   Serial.print(F("Rectangles (filled)      "));
   Serial.println(testFilledRects(ILI9341_YELLOW, ILI9341_MAGENTA));
-  delay(200);
+  delay(500);
 
   Serial.print(F("Circles (filled)         "));
   Serial.println(testFilledCircles(10, ILI9341_MAGENTA));
 
   Serial.print(F("Circles (outline)        "));
   Serial.println(testCircles(10, ILI9341_WHITE));
-  delay(200);
+  delay(500);
 
   Serial.print(F("Triangles (outline)      "));
   Serial.println(testTriangles());
-  delay(200);
+  delay(500);
 
   Serial.print(F("Triangles (filled)       "));
   Serial.println(testFilledTriangles());
-  delay(200);
+  delay(500);
 
   Serial.print(F("Rounded rects (outline)  "));
   Serial.println(testRoundRects());
-  delay(200);
+  delay(500);
 
   Serial.print(F("Rounded rects (filled)   "));
   Serial.println(testFilledRoundRects());
-  delay(200);
+  delay(500);
 
   Serial.println(F("Done!"));
 
@@ -107,70 +100,16 @@ void setup() {
 
 
 void loop(void) {
-  runTests();
-  return;
   for(uint8_t rotation=0; rotation<4; rotation++) {
-    tft.setRotation((iliRotation)rotation);
+    tft.setRotation(rotation);
     testText();
     delay(1000);
   }
 }
 
-void runTests()
-{
-  Serial.print(F("Screen fill              "));
-  Serial.println(testFillScreen());
-//  delay(200);
-
-  Serial.print(F("Text                     "));
-  Serial.println(testText());
- // delay(600);
-
-  Serial.print(F("Lines                    "));
-  Serial.println(testLines(ILI9341_CYAN));
-//  delay(200);
-
-  Serial.print(F("Horiz/Vert Lines         "));
-  Serial.println(testFastLines(ILI9341_RED, ILI9341_BLUE));
-//  delay(200);
-
-  Serial.print(F("Rectangles (outline)     "));
-  Serial.println(testRects(ILI9341_GREEN));
-  delay(200);
-
-  Serial.print(F("Rectangles (filled)      "));
-  Serial.println(testFilledRects(ILI9341_YELLOW, ILI9341_MAGENTA));
-//  delay(200);
-
-  Serial.print(F("Circles (filled)         "));
-  Serial.println(testFilledCircles(10, ILI9341_MAGENTA));
-
-  Serial.print(F("Circles (outline)        "));
-  Serial.println(testCircles(10, ILI9341_WHITE));
-//  delay(200);
-
-  Serial.print(F("Triangles (outline)      "));
-  Serial.println(testTriangles());
-//  delay(200);
-
-  Serial.print(F("Triangles (filled)       "));
-  Serial.println(testFilledTriangles());
-//  delay(200);
-
-  Serial.print(F("Rounded rects (outline)  "));
-  Serial.println(testRoundRects());
-//  delay(200);
-
-  Serial.print(F("Rounded rects (filled)   "));
-  Serial.println(testFilledRoundRects());
-//  delay(200);
-  
-  
-}
-
 unsigned long testFillScreen() {
   unsigned long start = micros();
-//  tft.fillScreen(ILI9341_BLACK);
+  tft.fillScreen(ILI9341_BLACK);
   tft.fillScreen(ILI9341_RED);
   tft.fillScreen(ILI9341_GREEN);
   tft.fillScreen(ILI9341_BLUE);
