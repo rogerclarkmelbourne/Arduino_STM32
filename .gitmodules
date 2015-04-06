@@ -4,3 +4,6 @@
 [submodule "drivers/win/src/pbatard_libwdi"]
 	path = drivers/win/src/pbatard_libwdi
 	url = https://github.com/pbatard/libwdi.git
+[submodule "tools/src/texane-stlink"]
+	path = tools/src/texane-stlink
+	url = https://github.com/texane/stlink
