@@ -40,7 +40,7 @@ void setup(void)
 // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
   
@@ -73,7 +73,7 @@ void loop(void)
     sprintf(buf,"%04x %08x  %04x %08x" , vsense, t3-t2, alogpin, t2-t1);
     Serial.println(buf);
   }
-  toggleLED();
+  digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
   delay(1000);
 }
 

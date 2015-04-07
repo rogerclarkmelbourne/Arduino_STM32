@@ -31,7 +31,7 @@ void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 value) {
     for (int i = 0; i < 8; i++) {
         int bit = bitOrder == LSBFIRST ? i : (7 - i);
         digitalWrite(dataPin, (value >> bit) & 0x1);
-        togglePin(clockPin);
-        togglePin(clockPin);
+		gpio_toggle_bit(PIN_MAP[clockPin].gpio_device, PIN_MAP[clockPin].gpio_bit);// togglePin(clockPin);
+		gpio_toggle_bit(PIN_MAP[clockPin].gpio_device, PIN_MAP[clockPin].gpio_bit);// togglePin(clockPin);  
     }
 }

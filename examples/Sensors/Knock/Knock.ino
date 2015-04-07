@@ -44,7 +44,7 @@ void loop() {
     // if the sensor reading is greater than the threshold:
     if (sensorReading >= threshold) {
         // toggle the built-in LED
-        toggleLED();
+        digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
         // send the string "Knock!" back to the computer, followed by newline
         Serial.println("Knock!");
     }

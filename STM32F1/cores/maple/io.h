@@ -143,6 +143,8 @@ uint32 digitalRead(uint8 pin);
  * @see pinMode()
  */
 uint16 analogRead(uint8 pin);
+#if FALSE
+// Roger Clark. Deprecated these functions as they are not part of the standard Arduino API
 
 /**
  * Toggles the digital value at the given pin.
@@ -202,7 +204,7 @@ uint8 isButtonPressed(uint8 pin=BOARD_BUTTON_PIN,
  * @see pinMode()
  */
 uint8 waitForButtonPress(uint32 timeout_millis=0);
-
+#endif
 /**
  * Shift out a byte of data, one bit at a time.
  *

@@ -15,10 +15,22 @@ void setup() {
   pinMode(BOARD_BUTTON_PIN, INPUT);
 }
 
+#define BUTTON_DEBOUNCE_DELAY 1
+uint8 isButtonPressed(uint8 pin=BOARD_BUTTON_PIN,
+                      uint32 pressedLevel=BOARD_BUTTON_PRESSED_LEVEL) {
+    if (digitalRead(pin) == pressedLevel) {
+        delay(BUTTON_DEBOUNCE_DELAY);
+        while (digitalRead(pin) == pressedLevel)
+            ;
+        return true;
+    }
+    return false;
+}
+
 void loop() {
     // Check if the button is pressed.
     if (isButtonPressed()) {
         // If so, turn the LED from on to off, or from off to on:
-        toggleLED();
+        digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     }
 }

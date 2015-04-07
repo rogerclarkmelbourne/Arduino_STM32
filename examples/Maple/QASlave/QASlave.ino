@@ -38,9 +38,9 @@ void setup() {
 }
 
 void loop() {
-    toggleLED();
+    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     delay(100);
-    toggleLED();
+    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
 
     for (int i = 0; i < BOARD_NR_GPIO_PINS; i++) {
         if (boardUsesPin(i))

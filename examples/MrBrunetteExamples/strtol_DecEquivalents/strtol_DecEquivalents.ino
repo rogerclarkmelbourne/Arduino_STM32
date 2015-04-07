@@ -21,7 +21,7 @@ void setup() {
   // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
   li1 = strtol (szNumbers,&pEnd,10);  // BASE 10

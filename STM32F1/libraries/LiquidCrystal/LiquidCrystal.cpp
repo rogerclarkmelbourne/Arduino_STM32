@@ -311,9 +311,9 @@ void LiquidCrystal::pulseEnable(void) {
   // the following threads:
   // http://forums.leaflabs.com/topic.php?id=640
   // http://forums.leaflabs.com/topic.php?id=512
-  togglePin(_enable_pin);
+  gpio_toggle_bit(PIN_MAP[_enable_pin].gpio_device, PIN_MAP[_enable_pin].gpio_bit);// togglePin(_enable_pin);
   delayMicroseconds(1);
-  togglePin(_enable_pin);
+  gpio_toggle_bit(PIN_MAP[_enable_pin].gpio_device, PIN_MAP[_enable_pin].gpio_bit);// togglePin(_enable_pin);
 
   // Commands needs > 37us to settle.
   delayMicroseconds(42);

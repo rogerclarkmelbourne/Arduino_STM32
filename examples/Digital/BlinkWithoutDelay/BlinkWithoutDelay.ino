@@ -32,6 +32,6 @@ void loop() {
         previousMillis = millis();
 
         // If the LED is off, turn it on, and vice-versa:
-        toggleLED();
+        digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     }
 }

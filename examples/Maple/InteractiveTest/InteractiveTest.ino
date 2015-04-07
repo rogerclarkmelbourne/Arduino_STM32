@@ -48,7 +48,7 @@ void setup() {
 }
 
 void loop () {
-    toggleLED();
+    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
     delay(100);
 
     while (Serial.available()) {
@@ -490,7 +490,7 @@ void cmd_sequential_gpio_writes(void) {
 
         pinMode(i, OUTPUT);
         do {
-            togglePin(i);
+		    gpio_toggle_bit(PIN_MAP[i].gpio_device, PIN_MAP[i].gpio_bit);
         } while (!Serial.available());
 
         digitalWrite(i, LOW);
@@ -513,7 +513,7 @@ void cmd_gpio_toggling(void) {
         for (uint32 i = 0; i < BOARD_NR_GPIO_PINS; i++) {
             if (boardUsesPin(i))
                 continue;
-            togglePin(i);
+		    gpio_toggle_bit(PIN_MAP[i].gpio_device, PIN_MAP[i].gpio_bit);
         }
     }
 
