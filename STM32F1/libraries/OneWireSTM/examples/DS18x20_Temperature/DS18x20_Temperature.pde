@@ -1,4 +1,4 @@
-#include <OneWire.h>
+#include <OneWireSTM.h>
 
 // OneWire DS18S20, DS18B20, DS1822 Temperature Example
 //

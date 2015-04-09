@@ -6,7 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-OneWire	KEYWORD1
+OneWireSTM	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
