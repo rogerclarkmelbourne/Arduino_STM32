@@ -15,7 +15,7 @@ DS250x add-only programmable memory reader w/SKIP ROM.
  
  This example code is in the public domain and is provided AS-IS.
  
- Built with Arduino 0022 and PJRC OneWire 2.0 library http://www.pjrc.com/teensy/td_libs_OneWire.html
+ Based on the version by PJRC
  
  created by Guillermo Lovato <glovato@gmail.com>
  march/2011
