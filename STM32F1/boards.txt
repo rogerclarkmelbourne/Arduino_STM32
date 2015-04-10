@@ -1,16 +1,9 @@
-# Maple boards
+# STM32 Boards
 
 menu.cpu=Processor
-menu.gcc_version=GCC version
-menu.debug_menu=Debug mode
 menu.cpu_upload_menu=CPU & Upload mode
-menu.HS_IO=High speed I/O commands
 
 menu.upload_method=Upload method
-
-
-
-
 
 ##############################################################
 maple_mini.name=LeafLabs Maple Mini Rev 2 to Flash
@@ -22,7 +15,7 @@ maple_mini.upload.use_1200bps_touch=false
 maple_mini.upload.file_type=bin
 maple_mini.upload.ram.maximum_size=17000
 maple_mini.upload.flash.maximum_size=108000
-# FIXME ?
+
 maple_mini.upload.usbID=1EAF:0003
 maple_mini.upload.altID=1
 maple_mini.upload.auto_reset=true
@@ -110,7 +103,6 @@ genericSTM32.menu.upload_method.STLinkMethod=STLink
 genericSTM32.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
-#genericSTM32.upload.tool=upload_router
 genericSTM32.upload.maximum_size=108000
 genericSTM32.upload.use_1200bps_touch=false
 genericSTM32.upload.file_type=bin
@@ -271,46 +263,14 @@ MapleMiniGeneric.build.f_cpu=72000000L
 MapleMiniGeneric.build.board=MAPLE_MINI_GENERIC
 MapleMiniGeneric.build.core=maple
 MapleMiniGeneric.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
-#MapleMiniGeneric.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
 MapleMiniGeneric.build.variant=maple_mini
 MapleMiniGeneric.build.variant_system_lib=libmaple.a
 MapleMiniGeneric.build.density=STM32_MEDIUM_DENSITY
 MapleMiniGeneric.build.error_led_port=GPIOB
 MapleMiniGeneric.build.error_led_pin=1
-
-############################ MENU ############################
-## GCC VER
-## gcc ver 4.8.3
-## -------------------------
-MapleMiniGeneric.menu.gcc_version.gcc48304q1= gcc-4.8.3
-MapleMiniGeneric.menu.gcc_version.gcc48304q1.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-## gcc ver 4.9
-## -------------------------
-MapleMiniGeneric.menu.gcc_version.gcc4904q1= gcc-4.9
-MapleMiniGeneric.menu.gcc_version.gcc4904q1.build.gcc_ver=gcc-arm-none-eabi-4.9-2014q4
-
-############################ MENU ############################
-## GCC VER
-## gcc ver 4.8.3
-## -------------------------
-MapleMiniGeneric.menu.HS_IO.hs_off= HSIO OFF
-MapleMiniGeneric.menu.HS_IO.hs_off.build.hs_flag=
-## gcc ver 4.9
-## -------------------------
-MapleMiniGeneric.menu.HS_IO.hs_on= HSIO ON
-MapleMiniGeneric.menu.HS_IO.hs_on.build.hs_flag=-DHS_IO
+MapleMiniGeneric.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 
-## ==DEBUG MODE==
-## Debug off
-## -------------------------
-MapleMiniGeneric.menu.debug_menu.debug_off=DebugOFF
-MapleMiniGeneric.menu.debug_menu.debug_off.build.debuggingMode=0
-
-## Debug on
-## -------------------------
-MapleMiniGeneric.menu.debug_menu.debug_on=DebugON
-MapleMiniGeneric.menu.debug_menu.debug_on.build.debuggingMode=1
 
 ## ==UPLOAD MODE==
 ## F103CB USB to Flash upload
@@ -342,7 +302,7 @@ MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.protocol=maple_dfu
 ## UPLOAD MODE
 ## F103CB Serial to Flash upload (keep bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (keep bootloader)
+MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (overwrites bootloader)
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.ldscript=ld/flash.ld
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.vect=VECT_TAB_FLASH
@@ -354,9 +314,9 @@ MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.altID=1
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.protocol=maple_serial
 
 ## UPLOAD MODE
-## F103CB Serial to Flash upload (lost bootloader)
+## F103CB Serial to Flash upload (overwrites bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (lost bootloader!!!)
+MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (overwrites bootloader)
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.ldscript=ld/jtag.ld
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.cpu_flags=-DMCU_STM32F103CB  
 MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.vect=VECT_TAB_FLASH
@@ -397,7 +357,7 @@ MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.protocol=maple_dfu
 
 ## F103C8 Serial to Flash upload (keep bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (keep bootloader)
+MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (overwrites bootloader)
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.ldscript=ld/flash_c8.ld
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.vect=VECT_TAB_FLASH
@@ -408,9 +368,9 @@ MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.flash.maximum_size=44
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.altID=1
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.protocol=maple_serial
 
-## F103C8 Serial to Flash upload (lost bootloader)
+## F103C8 Serial to Flash upload (overwrites bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (lost bootloader!!!)
+MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (overwrites bootloader)
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.ldscript=ld/jtag_c8.ld
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.cpu_flags=-DMCU_STM32F103C8
 MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.vect=VECT_TAB_FLASH

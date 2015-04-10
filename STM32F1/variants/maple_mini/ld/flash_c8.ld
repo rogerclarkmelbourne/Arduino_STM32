@@ -19,7 +19,7 @@
 MEMORY
 {
   ram (rwx) : ORIGIN = 0x20000C00, LENGTH = 17K
-  rom (rx)  : ORIGIN = 0x08005000, LENGTH = 44K
+  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 44K
 }
 
 

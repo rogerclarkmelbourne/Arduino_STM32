@@ -19,13 +19,12 @@
  * use this file to use any of libmaple's memory-related hooks (like
  * where the heap should live).
  */
-/*INCLUDE mem-jtag.inc*/
+
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000C00, LENGTH = 20K
-  rom (rx)  : ORIGIN = 0x08005000, LENGTH = 64K
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 64K
 }
-
 
 /* Provide memory region aliases for common.inc */
 REGION_ALIAS("REGION_TEXT", rom);
