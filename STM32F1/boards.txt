@@ -253,7 +253,7 @@ GenericSTM32F103C.name= Generic STM32F103C
 GenericSTM32F103C.upload.tool=upload_router
 #GenericSTM32F103C.upload.tool=maple_upload
 GenericSTM32F103C.build.core=maple
-GenericSTM32F103C.build.variant=maple_mini
+GenericSTM32F103C.build.variant=generic_stm32f103c
 GenericSTM32F103C.upload.use_1200bps_touch=false
 GenericSTM32F103C.upload.file_type=bin
 GenericSTM32F103C.upload.usbID=1EAF:0003
@@ -261,16 +261,11 @@ GenericSTM32F103C.upload.auto_reset=true
 GenericSTM32F103C.build.mcu=cortex-m3
 GenericSTM32F103C.build.f_cpu=72000000L
 GenericSTM32F103C.build.board=MAPLE_MINI_GENERIC
-GenericSTM32F103C.build.core=maple
 GenericSTM32F103C.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
-GenericSTM32F103C.build.variant=maple_mini
 GenericSTM32F103C.build.variant_system_lib=libmaple.a
 GenericSTM32F103C.build.density=STM32_MEDIUM_DENSITY
 GenericSTM32F103C.build.error_led_port=GPIOB
 GenericSTM32F103C.build.error_led_pin=1
-GenericSTM32F103C.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
-
 
 ## ==UPLOAD MODE==
 ## F103CB USB to Flash upload
