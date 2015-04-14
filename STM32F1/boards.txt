@@ -249,134 +249,134 @@ nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 #####################################################################
 
-MapleMiniGeneric.name= Maple mini generic - experimental
-MapleMiniGeneric.upload.tool=upload_router
-#MapleMiniGeneric.upload.tool=maple_upload
-MapleMiniGeneric.build.core=maple
-MapleMiniGeneric.build.variant=maple_mini
-MapleMiniGeneric.upload.use_1200bps_touch=false
-MapleMiniGeneric.upload.file_type=bin
-MapleMiniGeneric.upload.usbID=1EAF:0003
-MapleMiniGeneric.upload.auto_reset=true
-MapleMiniGeneric.build.mcu=cortex-m3
-MapleMiniGeneric.build.f_cpu=72000000L
-MapleMiniGeneric.build.board=MAPLE_MINI_GENERIC
-MapleMiniGeneric.build.core=maple
-MapleMiniGeneric.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
-MapleMiniGeneric.build.variant=maple_mini
-MapleMiniGeneric.build.variant_system_lib=libmaple.a
-MapleMiniGeneric.build.density=STM32_MEDIUM_DENSITY
-MapleMiniGeneric.build.error_led_port=GPIOB
-MapleMiniGeneric.build.error_led_pin=1
-MapleMiniGeneric.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+GenericSTM32F103C.name= Generic STM32F103C
+GenericSTM32F103C.upload.tool=upload_router
+#GenericSTM32F103C.upload.tool=maple_upload
+GenericSTM32F103C.build.core=maple
+GenericSTM32F103C.build.variant=maple_mini
+GenericSTM32F103C.upload.use_1200bps_touch=false
+GenericSTM32F103C.upload.file_type=bin
+GenericSTM32F103C.upload.usbID=1EAF:0003
+GenericSTM32F103C.upload.auto_reset=true
+GenericSTM32F103C.build.mcu=cortex-m3
+GenericSTM32F103C.build.f_cpu=72000000L
+GenericSTM32F103C.build.board=MAPLE_MINI_GENERIC
+GenericSTM32F103C.build.core=maple
+GenericSTM32F103C.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
+GenericSTM32F103C.build.variant=maple_mini
+GenericSTM32F103C.build.variant_system_lib=libmaple.a
+GenericSTM32F103C.build.density=STM32_MEDIUM_DENSITY
+GenericSTM32F103C.build.error_led_port=GPIOB
+GenericSTM32F103C.build.error_led_pin=1
+GenericSTM32F103C.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 
 
 ## ==UPLOAD MODE==
 ## F103CB USB to Flash upload
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash= F103CB(128k) USB->Flash
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.ldscript=ld/flash.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash= F103CB(128k) USB->Flash
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.build.ldscript=ld/flash.ld
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.flash.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.protocol=maple_dfu
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.upload.maximum_size=108000
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.upload.ram.maximum_size=17000
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.upload.flash.maximum_size=108000
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.cbUsbFlash.upload.protocol=maple_dfu
 
 ## F103CB USB to RAM upload
 ## -------------------------
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM=F103CB(128k) USB->RAM
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.ldscript=ld/ram.ld
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.vect=VECT_TAB_RAM
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM=F103CB(128k) USB->RAM
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.build.ldscript=ld/ram.ld
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.build.vect=VECT_TAB_RAM
 #
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.ram.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.flash.maximum_size=108000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.altID=0
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.protocol=maple_dfu
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.upload.maximum_size=17000
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.upload.ram.maximum_size=17000
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.upload.flash.maximum_size=108000
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.upload.altID=0
+#GenericSTM32F103C.menu.cpu_upload_menu.cbUsbRAM.upload.protocol=maple_dfu
 
 ## UPLOAD MODE
 ## F103CB Serial to Flash upload (keep bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (overwrites bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.ldscript=ld/flash.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (keeps bootloader)
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.build.ldscript=ld/flash.ld
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.flash.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.protocol=maple_serial
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.upload.maximum_size=108000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.upload.ram.maximum_size=17000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.upload.flash.maximum_size=108000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialFlash.upload.protocol=maple_serial
 
 ## UPLOAD MODE
 ## F103CB Serial to Flash upload (overwrites bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (overwrites bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.ldscript=ld/jtag.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.cpu_flags=-DMCU_STM32F103CB  
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (overwrites bootloader)
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.build.ldscript=ld/jtag.ld
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.build.cpu_flags=-DMCU_STM32F103CB  
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.maximum_size=128000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.ram.maximum_size=20000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.flash.maximum_size=128000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.protocol=maple_serial
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.upload.maximum_size=128000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.upload.ram.maximum_size=20000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.upload.flash.maximum_size=128000
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.cbSerialJTAG.upload.protocol=maple_serial
 
 
 ## ==UPLOAD MODE F103C8 ==
 ## F103C8 USB to Flash upload
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash=F103C8(64k) USB->Flash
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.ldscript=ld/flash_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash=F103C8(64k) USB->Flash
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.build.ldscript=ld/flash_c8.ld
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.flash.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.protocol=maple_dfu
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.upload.maximum_size=44000
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.upload.ram.maximum_size=17000
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.upload.flash.maximum_size=44000
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.c8UsbFlash.upload.protocol=maple_dfu
 
 ## F103C8 USB to RAM upload
 ## -------------------------
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM=F103C8(64k) USB->RAM
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.ldscript=ld/ram_c8.ld
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.vect=VECT_TAB_RAM
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM=F103C8(64k) USB->RAM
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.build.ldscript=ld/ram_c8.ld
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.build.vect=VECT_TAB_RAM
 #
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.ram.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.flash.maximum_size=44000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.altID=0
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.protocol=maple_dfu
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.upload.maximum_size=17000
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.upload.ram.maximum_size=17000
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.upload.flash.maximum_size=44000
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.upload.altID=0
+#GenericSTM32F103C.menu.cpu_upload_menu.c8UsbRAM.upload.protocol=maple_dfu
 
 ## F103C8 Serial to Flash upload (keep bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (overwrites bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.ldscript=ld/flash_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (keeps bootloader)
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.build.ldscript=ld/flash_c8.ld
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.flash.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.protocol=maple_serial
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.upload.maximum_size=44000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.upload.ram.maximum_size=17000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.upload.flash.maximum_size=44000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialFlash.upload.protocol=maple_serial
 
 ## F103C8 Serial to Flash upload (overwrites bootloader)
 ## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (overwrites bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.ldscript=ld/jtag_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.cpu_flags=-DMCU_STM32F103C8
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.vect=VECT_TAB_FLASH
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (overwrites bootloader)
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.build.ldscript=ld/jtag_c8.ld
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.build.cpu_flags=-DMCU_STM32F103C8
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.build.vect=VECT_TAB_FLASH
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.maximum_size=64000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.ram.maximum_size=20000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.flash.maximum_size=64000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.protocol=maple_serial
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.maximum_size=64000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.ram.maximum_size=20000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.flash.maximum_size=64000
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.altID=1
+GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.protocol=maple_serial
