@@ -49,7 +49,7 @@
 #define BOARD_USART1_TX_PIN     PA9
 #define BOARD_USART1_RX_PIN     PA10
 #define BOARD_USART2_TX_PIN     PA2
-#define BOARD_USART2_RX_PIN     PA1
+#define BOARD_USART2_RX_PIN     PA3
 #define BOARD_USART3_TX_PIN     PB10
 #define BOARD_USART3_RX_PIN     PB11
 
@@ -102,7 +102,7 @@
  * write code using low-level GPIO functionality. */
 enum {
 PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PA8,PA9,PA10,PA11,PA12,PA13,PA14,PA15,
-PB0,PB1,PB3,PB4,PB5,PB6,PB7,PB8,PB9,PB10,PB11,PB12,PB13,PB14,PB15,
+PB0,PB1,PB2,PB3,PB4,PB5,PB6,PB7,PB8,PB9,PB10,PB11,PB12,PB13,PB14,PB15,
 PC0,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,PC11,PC12,PC13,PC14,PC15,
 PD0,PD1,PD2
 };/* Note PB2 is skipped as this is Boot1 and is not going to be much use as its likely to be pulled permanently low */

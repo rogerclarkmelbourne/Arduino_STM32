@@ -95,14 +95,14 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	
 	{GPIOB, TIMER3, ADC1,  0, 3,    8}, /* PB0 */
 	{GPIOB, TIMER3, ADC1,  1, 4,    9}, /* PB1 */
-	/* NOTE PB2 is not included as its Boot 1 */
+	{GPIOB,   NULL, NULL,  2, 0, ADCx}, /* PB2  */	
 	{GPIOB,   NULL, NULL,  3, 0, ADCx}, /* PB3  */
     {GPIOB,   NULL, NULL,  4, 0, ADCx}, /* PB4  */
     {GPIOB,   NULL, NULL,  5, 0, ADCx}, /* PB5 */
     {GPIOB, TIMER4, NULL,  6, 1, ADCx}, /* PB6 */
     {GPIOB, TIMER4, NULL,  7, 2, ADCx}, /* PB7 */
     {GPIOB, TIMER4, NULL,  8, 3, ADCx}, /* PB8 */
-	{GPIOB, TIMER4, NULL,  9, 4, ADCx}, /* PB9 */
+	{GPIOB,   NULL, NULL,  9, 0, ADCx}, /* PB9 */
     {GPIOB,   NULL, NULL, 10, 0, ADCx}, /* PB10 */
     {GPIOB,   NULL, NULL, 11, 0, ADCx}, /* PB11 */
     {GPIOB,   NULL, NULL, 12, 0, ADCx}, /* PB12 */
@@ -131,38 +131,6 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{GPIOD,   NULL, NULL,   0, 0, ADCx} , /* PD0 OSC_IN */
 	{GPIOD,   NULL, NULL,   1, 0, ADCx} , /* PD1  OSC_OUT */
 	{GPIOD,   NULL, NULL,   2, 0, ADCx} , /* PD2  TIM3_ETR/UART5_RX SDIO_CMD */
-#if 0	
-	{GPIOD,   NULL, NULL,   3, 0, ADCx} , /* PD3  FSMC_CLK */
-	{GPIOD,   NULL, NULL,   4, 0, ADCx} , /* PD4  FSMC_NOE */
-	{GPIOD,   NULL, NULL,   5, 0, ADCx} , /* PD5  FSMC_NWE */
-	{GPIOD,   NULL, NULL,   6, 0, ADCx} , /* PD6  FSMC_NWAIT */
-	{GPIOD,   NULL, NULL,   7, 0, ADCx} , /* PD7  FSMC_NE1/FSMC_NCE2 */
-	{GPIOD,   NULL, NULL,   8, 0, ADCx} , /* PD8  FSMC_D13 */
-	{GPIOD,   NULL, NULL,   9, 0, ADCx} , /* PD9  FSMC_D14 */
-	{GPIOD,   NULL, NULL,  10, 0, ADCx} , /* PD10  FSMC_D15 */
-	{GPIOD,   NULL, NULL,  11, 0, ADCx} , /* PD11  FSMC_A16 */
-	{GPIOD,   NULL, NULL,  12, 0, ADCx} , /* PD12  FSMC_A17 */
-	{GPIOD,   NULL, NULL,  13, 0, ADCx} , /* PD13  FSMC_A18 */	
-	{GPIOD,   NULL, NULL,  14, 0, ADCx} , /* PD14  FSMC_D0 */
-	{GPIOD,   NULL, NULL,  15, 0, ADCx} , /* PD15  FSMC_D1 */
-	
-	{GPIOE,   NULL, NULL,   0, 0, ADCx} , /* PD0   */
-	{GPIOE,   NULL, NULL,   1, 0, ADCx} , /* PE1   */
-	{GPIOE,   NULL, NULL,   2, 0, ADCx} , /* PE2   */
-	{GPIOE,   NULL, NULL,   3, 0, ADCx} , /* PE3   */
-	{GPIOE,   NULL, NULL,   4, 0, ADCx} , /* PE4   */
-	{GPIOE,   NULL, NULL,   5, 0, ADCx} , /* PE5   */
-	{GPIOE,   NULL, NULL,   6, 0, ADCx} , /* PE6   */
-	{GPIOE,   NULL, NULL,   7, 0, ADCx} , /* PE7   */
-	{GPIOE,   NULL, NULL,   8, 0, ADCx} , /* PE8   */
-	{GPIOE,   NULL, NULL,   9, 0, ADCx} , /* PE9   */
-	{GPIOE,   NULL, NULL,  10, 0, ADCx} , /* PE10  */
-	{GPIOE,   NULL, NULL,  11, 0, ADCx} , /* PE11  */
-	{GPIOE,   NULL, NULL,  12, 0, ADCx} , /* PE12  */
-	{GPIOE,   NULL, NULL,  13, 0, ADCx} , /* PE13  */	
-	{GPIOE,   NULL, NULL,  14, 0, ADCx} , /* PE14  */
-	{GPIOE,   NULL, NULL,  15, 0, ADCx}  /* PE15  */	
-#endif	
 };
 
 /*  Basically everything that is defined as having a timer us PWM */
