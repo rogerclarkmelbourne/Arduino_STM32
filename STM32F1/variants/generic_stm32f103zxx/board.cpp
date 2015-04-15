@@ -95,7 +95,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	
 	{GPIOB, TIMER3, ADC1,  0, 3,    8}, /* PB0 */
 	{GPIOB, TIMER3, ADC1,  1, 4,    9}, /* PB1 */
-	/* NOTE PB2 is not included as its Boot 1 */
+	{GPIOB, TIMER3, ADC1,  2, 4,    9}, /* PB2 */
 	{GPIOB,   NULL, NULL,  3, 0, ADCx}, /* PB3  */
     {GPIOB,   NULL, NULL,  4, 0, ADCx}, /* PB4  */
     {GPIOB,   NULL, NULL,  5, 0, ADCx}, /* PB5 */
@@ -161,7 +161,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{GPIOE,   NULL, NULL,  12, 0, ADCx} , /* PE12  */
 	{GPIOE,   NULL, NULL,  13, 0, ADCx} , /* PE13  */	
 	{GPIOE,   NULL, NULL,  14, 0, ADCx} , /* PE14  */
-	{GPIOE,   NULL, NULL,  15, 0, ADCx}  /* PE15  */	
+	{GPIOE,   NULL, NULL,  15, 0, ADCx} , /* PE15  */	
 
 	{GPIOF,   NULL, NULL,   0, 0, ADCx} , /* PF0   */
 	{GPIOF,   NULL, NULL,   1, 0, ADCx} , /* PF1   */
@@ -178,9 +178,9 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{GPIOF,   NULL, NULL,  12, 0, ADCx} , /* PF12  */
 	{GPIOF,   NULL, NULL,  13, 0, ADCx} , /* PF13  */	
 	{GPIOF,   NULL, NULL,  14, 0, ADCx} , /* PF14  */
-	{GPIOF,   NULL, NULL,  15, 0, ADCx}  /* PF15  */		
+	{GPIOF,   NULL, NULL,  15, 0, ADCx} , /* PF15  */		
 	
-	(GPIOG,   NULL, NULL,   0, 0, ADCx} , /* PG0   */
+	{GPIOG,   NULL, NULL,   0, 0, ADCx} , /* PG0   */
 	{GPIOG,   NULL, NULL,   1, 0, ADCx} , /* PG1   */
 	{GPIOG,   NULL, NULL,   2, 0, ADCx} , /* PG2   */
 	{GPIOG,   NULL, NULL,   3, 0, ADCx} , /* PG3   */
@@ -195,8 +195,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{GPIOG,   NULL, NULL,  12, 0, ADCx} , /* PG12  */
 	{GPIOG,   NULL, NULL,  13, 0, ADCx} , /* PG13  */	
 	{GPIOG,   NULL, NULL,  14, 0, ADCx} , /* PG14  */
-	{GPIOG,   NULL, NULL,  15, 0, ADCx}  /* PG15  */	
-	
+	{GPIOG,   NULL, NULL,  15, 0, ADCx}  /* PG15  */		
 };
 
 /*  Basically everything that is defined as having a timer us PWM */

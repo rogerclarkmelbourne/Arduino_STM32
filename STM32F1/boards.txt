@@ -260,10 +260,9 @@ GenericSTM32F103C.upload.usbID=1EAF:0003
 GenericSTM32F103C.upload.auto_reset=true
 GenericSTM32F103C.build.mcu=cortex-m3
 GenericSTM32F103C.build.f_cpu=72000000L
-GenericSTM32F103C.build.board=MAPLE_MINI_GENERIC
+GenericSTM32F103C.build.board=GENERIC_STM32F103C
 GenericSTM32F103C.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
 GenericSTM32F103C.build.variant_system_lib=libmaple.a
-GenericSTM32F103C.build.density=STM32_MEDIUM_DENSITY
 GenericSTM32F103C.build.error_led_port=GPIOB
 GenericSTM32F103C.build.error_led_pin=1
 
@@ -375,3 +374,27 @@ GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.ram.maximum_size=2000
 GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.flash.maximum_size=64000
 GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.altID=1
 GenericSTM32F103C.menu.cpu_upload_menu.c8SerialJTAG.upload.protocol=maple_serial
+
+##############################################################
+genericSTM32F103Z.name=Generic STM32F103Z
+genericSTM32F103Z.upload.maximum_size=492000
+genericSTM32F103Z.upload.ram.maximum_size=61000
+genericSTM32F103Z.upload.flash.maximum_size=492000
+genericSTM32F103Z.build.error_led_port=GPIOA
+genericSTM32F103Z.build.error_led_pin=5
+genericSTM32F103Z.build.variant=generic_stm32f103zxx
+genericSTM32F103Z.build.extra_flags=-DMCU_STM32F103ZE -mthumb -march=armv7-m  -D__STM32F1__  
+genericSTM32F103Z.build.ldscript=ld/jtag.ld
+
+genericSTM32F103Z.upload.tool=serial_upload
+genericSTM32F103Z.upload.protocol=maple_dfu
+genericSTM32F103Z.upload.use_1200bps_touch=false
+genericSTM32F103Z.upload.file_type=bin
+#genericSTM32F103Z.upload.usbID=1EAF:0003
+#genericSTM32F103Z.upload.altID=1
+#genericSTM32F103Z.upload.auto_reset=true
+genericSTM32F103Z.build.mcu=cortex-m3
+genericSTM32F103Z.build.f_cpu=72000000L
+genericSTM32F103Z.build.board=GENERIC_STM32F103Z
+genericSTM32F103Z.build.core=maple
+genericSTM32F103Z.build.vect=VECT_TAB_FLASH
