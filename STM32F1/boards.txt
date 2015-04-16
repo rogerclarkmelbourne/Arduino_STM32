@@ -404,19 +404,19 @@ genericSTM32F103Z.menu.device_variant.STM32F103ZC=STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.extra_flags=-DMCU_STM32F103ZC -mthumb -march=armv7-m  -D__STM32F1__  
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.maximum_size=262144
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.ram.maximum_size=492152
-genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.flash.maximum_size=492000
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.flash.maximum_size=262144
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.ldscript=ld/stm32f103zc.ld
 
 genericSTM32F103Z.menu.device_variant.STM32F103ZD=STM32F103ZD
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.extra_flags=-DMCU_STM32F103ZD -mthumb -march=armv7-m  -D__STM32F1__  
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.maximum_size=393216
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.ram.maximum_size=65536
-genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.flash.maximum_size=492000
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.flash.maximum_size=393216
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.ldscript=ld/stm32f103zd.ld
 
 genericSTM32F103Z.menu.device_variant.STM32F103ZE=STM32F103ZE
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.extra_flags=-DMCU_STM32F103ZE -mthumb -march=armv7-m  -D__STM32F1__  
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.maximum_size=524288
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.ram.maximum_size=65536
-genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.flash.maximum_size=492000
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.flash.maximum_size=524288
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.ldscript=ld/stm32f103ze.ld
