@@ -228,7 +228,8 @@ public:
      */
     uint8 transfer(uint8 data);
 
-	uint8 DMATransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint32 length);
+	uint8 dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length);
+	uint8 dmaSend(uint8 *transmitBuf, uint16 length);
 
     /*
      * Pin accessors
@@ -302,8 +303,8 @@ private:
 
 	static inline void DMA1_CH3_Event() {
 		dma1_ch3_Active = 0;
-		dma_disable(DMA1, DMA_CH3);
-		dma_disable(DMA1, DMA_CH2);
+//		dma_disable(DMA1, DMA_CH3);
+//		dma_disable(DMA1, DMA_CH2);
 		
 		// To Do. Need to wait for 
 	}

@@ -329,35 +329,86 @@ uint8 SPIClass::transfer(uint8 byte) {
   	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
     return b;
 }
-
-uint8 SPIClass::DMATransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint32 length) {
+/*  Roger Clark and Victor Perez, 2015
+*	Performs a DMA SPI transfer with at least a receive buffer.
+*	If a TX buffer is not provided, FF is sent over and over for the lenght of the transfer. 
+*	On exit TX buffer is not modified, and RX buffer cotains the received data.
+*	Still in progress.
+*/
+uint8 SPIClass::dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length) {
+	if (length == 0) return 0;
 	uint8 b;
-
+	if (spi_is_rx_nonempty(this->spi_d) == 1) b = spi_rx_reg(this->spi_d); //Clear the RX buffer in case a byte is waiting on it.
 	dma1_ch3_Active=true;
-
     dma_init(DMA1);
-
-    dma_attach_interrupt(DMA1, DMA_CH2, &SPIClass::DMA1_CH3_Event);
-
+	dma_attach_interrupt(DMA1, DMA_CH2, &SPIClass::DMA1_CH3_Event);
+	
 	// RX
 	spi_rx_dma_enable(SPI1);
 	dma_setup_transfer(DMA1, DMA_CH2, &SPI1->regs->DR, DMA_SIZE_8BITS,
-                     receiveBuf, DMA_SIZE_8BITS, (DMA_MINC_MODE | DMA_TRNS_CMPLT | DMA_TRNS_ERR));// receive buffer DMA
+                     receiveBuf, DMA_SIZE_8BITS, (DMA_MINC_MODE | DMA_TRNS_CMPLT));// receive buffer DMA
 	dma_set_num_transfers(DMA1, DMA_CH2, length);
-		
+	
 	// TX
-    spi_tx_dma_enable(SPI1);				 
+	spi_tx_dma_enable(SPI1);	
+	if (!transmitBuf) {
+	static uint8_t ff = 0XFF;
+	transmitBuf = &ff;
+	dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_8BITS,
+                       transmitBuf, DMA_SIZE_8BITS, (DMA_FROM_MEM | DMA_TRNS_CMPLT));// Transmit FF repeatedly
+	}
+	else {
     dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_8BITS,
-                       transmitBuf, DMA_SIZE_8BITS, (DMA_MINC_MODE |  DMA_FROM_MEM | DMA_TRNS_CMPLT));// Transmit buffer DMA
-    dma_set_num_transfers(DMA1, DMA_CH3, length); 
-	  
+                       transmitBuf, DMA_SIZE_8BITS, (DMA_MINC_MODE |  DMA_FROM_MEM | DMA_TRNS_CMPLT));// Transmit buffer DMA 
+	}
+	dma_set_num_transfers(DMA1, DMA_CH3, length);
+
 	dma_enable(DMA1, DMA_CH2);// enable receive
 	dma_enable(DMA1, DMA_CH3);// enable transmit
 	
-	while (dma1_ch3_Active);
+//	while (dma1_ch3_Active);
+//	if (receiveBuf) {
+    uint32_t m = millis();
+    while (dma1_ch3_Active) {
+      if ((millis() - m) > 100)  {
+        dma1_ch3_Active = 0;
+		b = 2;
+		break;
+      }
+    }
+
+//	}
 	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
-	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."   
+	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+    dma_disable(DMA1, DMA_CH2);
+    dma_disable(DMA1, DMA_CH3);
 	
+    return b;
+}
+
+/*  Roger Clark and Victor Perez, 2015
+*	Performs a DMA SPI send using a TX buffer.
+*	On exit TX buffer is not modified.
+*	Still in progress.
+*/
+uint8 SPIClass::dmaSend(uint8 *transmitBuf, uint16 length) {
+	if (length == 0) return 0;
+	uint8 b;
+	dma1_ch3_Active=true;
+    dma_init(DMA1);
+	dma_attach_interrupt(DMA1, DMA_CH3, &SPIClass::DMA1_CH3_Event);
+
+	// TX
+	spi_tx_dma_enable(SPI1);	
+    dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_8BITS,
+                       transmitBuf, DMA_SIZE_8BITS, (DMA_MINC_MODE |  DMA_FROM_MEM | DMA_TRNS_CMPLT));// Transmit buffer DMA 
+	dma_set_num_transfers(DMA1, DMA_CH3, length);
+	dma_enable(DMA1, DMA_CH3);// enable transmit
+	
+    while (dma1_ch3_Active);	
+	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+	dma_disable(DMA1, DMA_CH3);
     return b;
 }
 
