@@ -186,7 +186,6 @@ static port_err_t serial_w32_open(struct port_interface *port,
 	serial_t *h;
 
 	/* 1. check device name match */
-	/* Roger Clark. Added support for com10 and higher numbers */ 
 	if (!((strlen(ops->device) == 4 || strlen(ops->device) == 5)
 	      && !strncmp(ops->device, "COM", 3) && isdigit(ops->device[3]))
 	    && !(!strncmp(ops->device, "\\\\.\\COM", strlen("\\\\.\\COM"))

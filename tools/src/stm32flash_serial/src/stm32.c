@@ -784,7 +784,7 @@ stm32_err_t stm32_erase_memory(const stm32_t *stm, uint8_t spage, uint8_t pages)
 			return STM32_ERR_UNKNOWN;
 		}
 
-		s_err = stm32_get_ack_timeout(stm, STM32_SECTERASE_TIMEOUT);
+		s_err = stm32_get_ack_timeout(stm, pages * STM32_SECTERASE_TIMEOUT);
 		if (s_err != STM32_ERR_OK) {
 			fprintf(stderr, "Page-by-page erase failed. Check the maximum pages your device supports.\n");
 			if (port->flags & PORT_STRETCH_W

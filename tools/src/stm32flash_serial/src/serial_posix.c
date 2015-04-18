@@ -18,6 +18,7 @@
 */
 
 #include <fcntl.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -197,13 +198,27 @@ static port_err_t serial_setup(serial_t *h, const serial_baud_t baud,
 	return PORT_ERR_OK;
 }
 
+static int startswith(const char *haystack, const char *needle) {
+	return strncmp(haystack, needle, strlen(needle)) == 0;
+}
+
+static int is_tty(const char *path) {
+	char resolved[PATH_MAX];
+
+	if(!realpath(path, resolved)) return 0;
+
+	if(startswith(resolved, "/dev/tty")) return 1;
+
+	return 0;
+}
+
 static port_err_t serial_posix_open(struct port_interface *port,
 				    struct port_options *ops)
 {
 	serial_t *h;
 
 	/* 1. check device name match */
-	if (strncmp(ops->device, "/dev/tty", strlen("/dev/tty")))
+	if (!is_tty(ops->device))
 		return PORT_ERR_NODEV;
 
 	/* 2. check options */
