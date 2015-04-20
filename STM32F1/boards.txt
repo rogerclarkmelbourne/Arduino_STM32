@@ -159,28 +159,40 @@ genericSTM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 
 ##############################################################
-genericSTM32F103R.name=Generic STM32F103RE
-genericSTM32F103R.upload.maximum_size=492000
-genericSTM32F103R.upload.ram.maximum_size=61000
-genericSTM32F103R.upload.flash.maximum_size=492000
+genericSTM32F103R.name=Generic STM32F103R series
+
 genericSTM32F103R.build.error_led_port=GPIOA
 genericSTM32F103R.build.error_led_pin=5
 genericSTM32F103R.build.variant=generic_stm32f103rxx
-genericSTM32F103R.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  
-genericSTM32F103R.build.ldscript=ld/jtag.ld
 
-genericSTM32F103R.upload.tool=serial_upload
 genericSTM32F103R.upload.protocol=maple_dfu
 genericSTM32F103R.upload.use_1200bps_touch=false
 genericSTM32F103R.upload.file_type=bin
-#genericSTM32F103R.upload.usbID=1EAF:0003
-#genericSTM32F103R.upload.altID=1
-#genericSTM32F103R.upload.auto_reset=true
+genericSTM32F103R.upload.usbID=1EAF:0003
+genericSTM32F103R.upload.altID=1
+genericSTM32F103R.upload.auto_reset=true
 genericSTM32F103R.build.mcu=cortex-m3
 genericSTM32F103R.build.f_cpu=72000000L
 genericSTM32F103R.build.board=GENERIC_STM32F103R
 genericSTM32F103R.build.core=maple
 genericSTM32F103R.build.vect=VECT_TAB_FLASH
+
+genericSTM32F103R.menu.device_variant.STM32F103RE=STM32F103RE
+genericSTM32F103R.menu.device_variant.STM32F103RE.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.maximum_size=492000
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.ram.maximum_size=61000
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.flash.maximum_size=492000
+genericSTM32F103R.menu.device_variant.STM32F103RE.build.ldscript=ld/stm32f103re.ld
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.tool=serial_upload
+
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader=STM32F103RE + bootloader
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  -DBOOTLOADER_maple
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.upload.maximum_size=262144
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.upload.ram.maximum_size=492152
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.upload.flash.maximum_size=262144
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.build.ldscript=ld/stm32f103re-bootloader.ld
+genericSTM32F103R.menu.device_variant.STM32F103REbootloader.upload.tool=maple_upload
+
 
 ##############################################################
 
