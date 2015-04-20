@@ -59,7 +59,7 @@
 #define BOARD_USART4_RX_PIN     PC11
 
 #define BOARD_USART5_TX_PIN     PC12
-#define BOARD_USART6_RX_PIN     PD2
+#define BOARD_USART5_RX_PIN     PD2
 
 /* Note:
  *
