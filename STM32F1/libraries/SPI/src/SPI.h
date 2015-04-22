@@ -183,6 +183,12 @@ public:
 	void attachInterrupt(void);
 	void detachInterrupt(void);
 	
+	/*	Victor Perez. Added to test changing datasize from 8 to 16 bit modes on the fly.
+	*	Input parameter should be SPI_CR1_DFF set to 0 or 1 on a 32bit word.
+	*	Requires an added function spi_data_size on  STM32F1 / cores / maple / libmaple / spi.c 
+	*/
+    void setDataSize(uint32 ds);
+	
 	
     /*
      * I/O
@@ -212,6 +218,12 @@ public:
     void write(uint8 data);
 
     /**
+     * @brief Transmit a half word.
+     * @param data to transmit.
+     */
+    void write(uint16 data);	
+	
+    /**
      * @brief Transmit multiple bytes.
      * @param buffer Bytes to transmit.
      * @param length Number of bytes in buffer to transmit.
@@ -229,7 +241,27 @@ public:
     uint8 transfer(uint8 data);
 
 	uint8 dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length);
+
+	/**
+     * @brief Sets up a DMA transfer for bytes.
+     *
+     * This function transmits and does not care about the RX fifo.
+     *
+     * @param data buffer Bytes to transmit,
+     * @param length Number of bytes in buffer to transmit.
+     */
 	uint8 dmaSend(uint8 *transmitBuf, uint16 length);
+	
+	/**
+     * @brief Sets up a DMA transfer for half words.
+     *
+     * This function transmits and does not care about the RX fifo.
+     *
+     * @param data buffer half words to transmit,
+     * @param length Number of bytes in buffer to transmit.
+     * @param minc Set to use MINC mode, clear to use Circular mode.
+     */
+	uint8 dmaSend(uint16 *transmitBuf, uint16 length, bool min);
 
     /*
      * Pin accessors

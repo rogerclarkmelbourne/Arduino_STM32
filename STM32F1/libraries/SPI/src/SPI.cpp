@@ -183,6 +183,19 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 	this->begin();
 }
 
+/*	Victor Perez. Added to test changing datasize from 8 to 16 bit modes on the fly.
+*	Input parameter should be SPI_CR1_DFF set to 0 or 1 on a 32bit word.
+*	Requires an added function spi_data_size on  STM32F1 / cores / maple / libmaple / spi.c 
+*/
+void SPIClass::setDataSize(uint32 datasize) {
+//	spi_data_size(this->spi_d, ds);
+		uint32 cr1 = this->spi_d->regs->CR1; 
+		datasize &= SPI_CR1_DFF;
+		cr1 &= ~(SPI_CR1_DFF); 
+		cr1 |= datasize;  
+		this->spi_d->regs->CR1 = cr1; 
+}
+
 void SPIClass::setDataMode(uint8_t dataMode)
 {
 /* Notes.  As far as I can tell, the AVR numbers for dataMode appear to match the numbers required by the STM32
@@ -297,6 +310,20 @@ void SPIClass::read(uint8 *buf, uint32 len) {
     }
 }
 
+void SPIClass::write(uint16 data) {
+  //  this->write(&data, 1);
+
+	/* Added for 16bit data Victor Perez. Roger Clark 
+	 * Improved speed by just directly writing the single byte to the SPI data reg and wait for completion,	 * by taking the Tx code from transfer(byte)
+	 * The original method, of calling write(*data, length) .
+	 * This almost doubles the speed of this function.
+	 */
+  
+	spi_tx_reg(this->spi_d, data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
+	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+}
+
 void SPIClass::write(uint8 byte) {
   //  this->write(&byte, 1);
 
@@ -405,7 +432,33 @@ uint8 SPIClass::dmaSend(uint8 *transmitBuf, uint16 length) {
 	dma_set_num_transfers(DMA1, DMA_CH3, length);
 	dma_enable(DMA1, DMA_CH3);// enable transmit
 	
-    while (dma1_ch3_Active);	
+    while (dma1_ch3_Active);
+	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."
+  	b = spi_rx_reg(this->spi_d); // "... and read the last received data."
+	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+	dma_disable(DMA1, DMA_CH3);
+    return b;
+}
+
+uint8 SPIClass::dmaSend(uint16 *transmitBuf, uint16 length, bool minc) {
+	if (length == 0) return 0;
+	uint32 flags = ((DMA_MINC_MODE * minc) |  DMA_FROM_MEM | DMA_TRNS_CMPLT);
+	uint8 b;
+	dma1_ch3_Active=true;
+    dma_init(DMA1);
+	dma_attach_interrupt(DMA1, DMA_CH3, &SPIClass::DMA1_CH3_Event);
+
+	// TX
+	spi_tx_dma_enable(SPI1);	
+    dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_16BITS,
+                       transmitBuf, DMA_SIZE_16BITS, flags);// Transmit buffer DMA 
+	dma_set_num_transfers(DMA1, DMA_CH3, length);
+	dma_enable(DMA1, DMA_CH3);// enable transmit
+	
+    while (dma1_ch3_Active);
+	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."
+  	b = spi_rx_reg(this->spi_d); // "... and read the last received data."
 	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 	dma_disable(DMA1, DMA_CH3);
