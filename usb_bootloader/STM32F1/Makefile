@@ -17,7 +17,7 @@ ST_LIB = stm32_lib
 ST_USB = usb_lib
 
 # Optimization level [0,1,2,3,s]
-OPT ?= 0
+OPT ?= s
 DEBUG = 
 #DEBUG = dwarf-2
 
@@ -74,7 +74,7 @@ MSG_CLEANING = Cleaning project:
 # Combine all necessary flags and optional flags.
 # Add target processor to flags.
 GENDEPFLAGS = -MD -MP -MF .dep/$(@F).d
-ALL_CFLAGS  = -mcpu=$(MCU) $(THUMB_IW) -I. $(CFLAGS) $(GENDEPFLAGS)
+ALL_CFLAGS  = -mcpu=$(MCU) $(THUMB_IW) -I. $(CFLAGS) $(TARGETFLAGS) $(GENDEPFLAGS)
 ALL_ASFLAGS = -mcpu=$(MCU) $(THUMB_IW) -I. -x assembler-with-cpp $(ASFLAGS)
 
 # --------------------------------------------- #
@@ -113,7 +113,17 @@ ELFSIZE = $(SIZE) -A $(TARGET).elf
 
 # go!
 all: begin gccversion build sizeafter finished end
+maple-mini: begin gccversion build_maple-mini sizeafter finished end
+maple-rev3: begin gccversion build_maple-rev3 sizeafter finished end
+
 build: elf bin lss sym
+
+
+build_maple-mini: TARGETFLAGS= -DTARGET_MAPLE_MINI
+build_maple-mini: elf bin lss sym
+
+build_maple-rev3: TARGETFLAGS= -DTARGET_MAPLE_REV3
+build_maple-rev3: elf bin lss sym
 
 bin: $(TARGET).bin
 elf: $(TARGET).elf

@@ -3,6 +3,7 @@
 menu.cpu=Processor
 menu.cpu_upload_menu=CPU & Upload mode
 menu.device_variant=Variant
+menu.bootloader_version=Bootloader version
 
 menu.upload_method=Upload method
 
@@ -29,12 +30,18 @@ maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DSERIAL_USB -march=armv
 maple_mini.build.ldscript=ld/flash.ld
 maple_mini.build.variant=maple_mini
 maple_mini.build.variant_system_lib=libmaple.a
-maple_mini.build.vect=VECT_TAB_ADDR=0x8005000
 maple_mini.build.density=STM32_MEDIUM_DENSITY
 maple_mini.build.error_led_port=GPIOB
 maple_mini.build.error_led_pin=1
 maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
+maple_mini.menu.bootloader_version.original = Original
+maple_mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
+maple_mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
+
+maple_mini.menu.bootloader_version.bootloader20 = Bootloader 2.0
+maple_mini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
+maple_mini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
 
 ##############################################################
 maple.name=LeafLabs Maple Rev 3+ to Flash
