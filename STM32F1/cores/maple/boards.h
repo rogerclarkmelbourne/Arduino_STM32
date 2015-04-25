@@ -76,7 +76,7 @@ extern const uint8 boardADCPins[];
  * @brief Pins which are connected to external hardware.
  *
  * For example, on Maple boards, it always at least includes
- * BOARD_LED_PIN.  Its length is BOARD_NR_USED_PINS.
+ * PB1 for the LED.  Its length is BOARD_NR_USED_PINS.
  */
 extern const uint8 boardUsedPins[];
 

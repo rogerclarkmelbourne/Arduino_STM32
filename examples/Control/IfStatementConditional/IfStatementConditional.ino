@@ -30,7 +30,7 @@ const int threshold = 400;    // A random threshold level that's in
 void setup() {
 	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Initialize the built-in LED pin as an output:
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 
     // Initialize the potentiometer pin as an analog input:
     pinMode(analogPin, INPUT_ANALOG);
@@ -42,10 +42,10 @@ void loop() {
 
     // If the analog value is high enough, turn on the LED:
     if (analogValue > threshold) {
-        digitalWrite(BOARD_LED_PIN, HIGH);
+        digitalWrite(33, HIGH);
     }
     else {
-        digitalWrite(BOARD_LED_PIN, LOW);
+        digitalWrite(33, LOW);
     }
 
     // Print the analog value:

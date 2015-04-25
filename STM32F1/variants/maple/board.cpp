@@ -138,6 +138,6 @@ extern const uint8 boardADCPins[] __FLASH__ = {
 // the button and the LED, it's usually best to leave these pins alone
 // unless you know what you're doing.
 extern const uint8 boardUsedPins[] __FLASH__ = {
-    BOARD_LED_PIN, BOARD_BUTTON_PIN, BOARD_JTMS_SWDIO_PIN,
+    13, 33, BOARD_JTMS_SWDIO_PIN,
     BOARD_JTCK_SWCLK_PIN, BOARD_JTDI_PIN, BOARD_JTDO_PIN, BOARD_NJTRST_PIN
 };

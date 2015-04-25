@@ -30,7 +30,7 @@ void setup() {
     // initialize the button pin as a input:
     pinMode(BOARD_BUTTON_PIN, INPUT);
     // initialize the LED as an output:
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
@@ -63,8 +63,8 @@ void loop() {
     // modulo of the button push counter.  Modulo (percent sign, %)
     // gives you the remainder of the division of two numbers:
     if (buttonPushCounter % 4 == 0) {
-        digitalWrite(BOARD_LED_PIN, HIGH);
+        digitalWrite(33, HIGH);
     } else {
-        digitalWrite(BOARD_LED_PIN, LOW);
+        digitalWrite(33, LOW);
     }
 }

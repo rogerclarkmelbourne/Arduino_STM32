@@ -1,9 +1,9 @@
 
 void setup() {
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
     int switchValue = digitalRead(2);
-    digitalWrite(BOARD_LED_PIN, switchValue);
+    digitalWrite(33, switchValue);
 }

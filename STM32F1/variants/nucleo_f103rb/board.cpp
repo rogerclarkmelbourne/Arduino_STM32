@@ -152,5 +152,5 @@ extern const uint8 boardADCPins[] __FLASH__ = {
 // the button and the LED, it's usually best to leave these pins alone
 // unless you know what you're doing.
 extern const uint8 boardUsedPins[] __FLASH__ = {
-    BOARD_LED_PIN, BOARD_BUTTON_PIN
+    13, 27
 };

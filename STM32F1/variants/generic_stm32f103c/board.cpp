@@ -107,5 +107,5 @@ extern const uint8 boardADCPins[BOARD_NR_ADC_PINS] __FLASH__ = {
 
 // NOte. These definitions are not really used for generic boards, they only relate to boards modified to behave like Maple boards
 extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
-    BOARD_LED_PIN, BOARD_BUTTON_PIN, USB_DP, USB_DM
+     USB_DP, USB_DM
 };

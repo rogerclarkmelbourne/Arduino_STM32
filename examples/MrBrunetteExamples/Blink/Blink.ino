@@ -8,10 +8,10 @@
 
 void setup() {
     // Set up the built-in LED pin as an output:
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
-    digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(1000);          // Wait for 1 second (1000 milliseconds)
 }

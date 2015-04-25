@@ -19,7 +19,7 @@ int interval = 1000;            // interval at which to blink (in milliseconds)
 
 void setup() {
     // Set up the built-in LED pin as output:
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
@@ -32,6 +32,6 @@ void loop() {
         previousMillis = millis();
 
         // If the LED is off, turn it on, and vice-versa:
-        digitalWrite(BOARD_LED_PIN,!digitalRead(BOARD_LED_PIN));// Turn the LED from off to on, or on to off
+        digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     }
 }

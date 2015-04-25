@@ -39,11 +39,13 @@
  */
 #define CYCLES_PER_MICROSECOND  72
 #define SYSTICK_RELOAD_VAL     71999 /* takes a cycle to reload */
-/* Pin number for the built-in button. */
-#define BOARD_BUTTON_PIN        27
 
-/* Pin number for the built-in LED. */
-#define BOARD_LED_PIN           13
+/* Roger clark. Removed defines for LED pin and Button pin as they are not Arduino API defines */
+// Pin number for the built-in button
+//BOARD _ BUTTON _ PIN        27
+
+// Pin number for the built-in LED.
+//BOARD _ LED _ PIN           13
 
 /* Number of USARTs/UARTs whose pins are broken out to headers. */
 #define BOARD_NR_USARTS         3
@@ -81,7 +83,7 @@
 #define BOARD_NR_ADC_PINS       6
 
 /* Number of pins already connected to external hardware.  For Maple,
- * these are just BOARD_LED_PIN, BOARD_BUTTON_PIN, and the debug port
+ * these are just the debug port
  * pins (see below). */
 #define BOARD_NR_USED_PINS       2
 

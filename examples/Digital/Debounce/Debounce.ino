@@ -23,7 +23,7 @@ int debounceDelay = 50;     // the debounce time; increase if the output flicker
 
 void setup() {
     pinMode(BOARD_BUTTON_PIN, INPUT);
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
@@ -47,7 +47,7 @@ void loop() {
     }
 
     // set the LED using the state of the button:
-    digitalWrite(BOARD_LED_PIN, buttonState);
+    digitalWrite(33, buttonState);
 
     // save the reading.  Next time through the loop,
     // it'll be the lastButtonState:
