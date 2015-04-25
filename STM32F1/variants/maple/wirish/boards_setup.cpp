@@ -75,8 +75,7 @@ namespace wirish {
 
         __weak void board_setup_usb(void) {
 #if BOARD_HAVE_SERIALUSB
-	#ifdef BOOTLOADER_maple 
-//          SerialUSB.begin();
+	#ifdef SERIAL_USB 
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 	#endif
 #endif

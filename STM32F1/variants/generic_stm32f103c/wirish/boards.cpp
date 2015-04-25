@@ -157,6 +157,10 @@ static void setup_clocks(void) {
 extern char __text_start__;
 
 static void setup_nvic(void) {
+
+nvic_init((uint32)VECT_TAB_ADDR, 0);
+
+/* Roger Clark. We now control nvic vector table in boards.txt using the build.vect paramater
 #ifdef VECT_TAB_FLASH
     nvic_init(USER_ADDR_ROM, 0);
 #elif defined VECT_TAB_RAM
@@ -171,6 +175,8 @@ static void setup_nvic(void) {
     // should be the start of the vector table.
     nvic_init((uint32)&__text_start__, 0);
 #endif
+
+*/
 }
 
 static void adc_default_config(const adc_dev *dev) {

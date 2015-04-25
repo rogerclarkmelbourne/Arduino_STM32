@@ -74,8 +74,7 @@ public:
 };
 
 #if BOARD_HAVE_SERIALUSB
-	#ifdef BOOTLOADER_maple 
-	//extern USBSerial SerialUSB;
+	#ifdef SERIAL_USB 
 	extern USBSerial Serial;
 	#endif
 #endif

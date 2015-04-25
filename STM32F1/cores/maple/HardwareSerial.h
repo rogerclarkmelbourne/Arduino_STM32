@@ -164,7 +164,7 @@ private:
 #endif
 };
 
-#ifdef BOOTLOADER_maple 
+#ifdef SERIAL_USB 
 	#if BOARD_HAVE_USART1
 	extern HardwareSerial Serial1;
 	#endif
