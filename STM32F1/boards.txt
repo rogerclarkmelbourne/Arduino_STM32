@@ -12,11 +12,10 @@ maple_mini.name=LeafLabs Maple Mini Rev 2 to Flash
 
 maple_mini.upload.tool=maple_upload
 maple_mini.upload.protocol=maple_dfu
-maple_mini.upload.maximum_size=108000
+
 maple_mini.upload.use_1200bps_touch=false
 maple_mini.upload.file_type=bin
-maple_mini.upload.ram.maximum_size=17000
-maple_mini.upload.flash.maximum_size=108000
+
 
 maple_mini.upload.usbID=1EAF:0003
 maple_mini.upload.altID=1
@@ -38,10 +37,16 @@ maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 maple_mini.menu.bootloader_version.original = Original
 maple_mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
 maple_mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
+maple_mini.menu.bootloader_version.upload.ram.maximum_size=17408
+maple_mini.menu.bootloader_version.upload.flash.maximum_size=110592
+maple_mini.menu.bootloader_version.upload.maximum_size=110592
 
 maple_mini.menu.bootloader_version.bootloader20 = Bootloader 2.0
 maple_mini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
 maple_mini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
+maple_mini.menu.bootloader_version.upload.ram.maximum_size=20480
+maple_mini.menu.bootloader_version.upload.flash.maximum_size=122880
+maple_mini.menu.bootloader_version.upload.maximum_size=122880
 
 ##############################################################
 maple.name=LeafLabs Maple Rev 3+ to Flash
