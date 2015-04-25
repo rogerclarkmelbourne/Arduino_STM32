@@ -1,0 +1,12 @@
+This is at least a partial credits-file of people that have
+contributed to the Maple bootloader.  It is formatted the same way the
+Linux kernel CREDITS file is structured: sorted by name and formatted
+for easy processing.
+
+The fields are: name (N), email (E), web-address (W), description (D).
+
+----------
+
+N: Tormod Volden
+E: debian.tormod@gmail.com
+D: Fixes for DFU compliance
