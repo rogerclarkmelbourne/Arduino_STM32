@@ -80,11 +80,11 @@ ONE_DESCRIPTOR usbFunctionalDescriptor = {
     0x09
 };
 
-
-u8 u8_usbConfigDescriptorDFU[45] = {
+#define u8_usbConfigDescriptorDFU_LENGTH 45
+u8 u8_usbConfigDescriptorDFU[u8_usbConfigDescriptorDFU_LENGTH] = {
     0x09,   /* bLength: Configuation Descriptor size */
     0x02,   /* bDescriptorType: Configuration */
-    0x24,   /* wTotalLength: Bytes returned */
+    u8_usbConfigDescriptorDFU_LENGTH,   /* wTotalLength: Bytes returned */
     0x00,
     0x01,   /* bNumInterfaces: 1 interface */
     0x01,   /* bConfigurationValue: */
@@ -149,7 +149,7 @@ u8 u8_usbConfigDescriptorDFU[45] = {
 
 ONE_DESCRIPTOR usbConfigDescriptorDFU = {
     u8_usbConfigDescriptorDFU,
-    0x24
+    u8_usbConfigDescriptorDFU_LENGTH
 };
 
 u8 u8_usbStringLangId[0x04] = {
