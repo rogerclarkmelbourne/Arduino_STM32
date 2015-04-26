@@ -61,28 +61,31 @@ int main()
         }
     }
 
-	if (checkUserCode(USER_CODE_FLASH0X8002000)) 
+	if (userUploadType==DFU_UPLOAD_RAM)
 	{
-        jumpToUser(USER_CODE_FLASH0X8002000);
-    } 
-	else 
+		// if we have just uploaded to RAM, then run whats in RAM
+		jumpToUser(USER_CODE_RAM);
+	} 		
+	else
 	{
-		if (checkUserCode(USER_CODE_FLASH0X8005000))
+		// This may be an upload to flash or a cold boot
+		
+		if (checkUserCode(USER_CODE_FLASH0X8002000)) 
 		{
-			jumpToUser(USER_CODE_FLASH0X8005000);
+			jumpToUser(USER_CODE_FLASH0X8002000);
 		} 
-		else
+		else 
 		{
-			if (checkUserCode(USER_CODE_RAM) && userUploadType==DFU_UPLOAD_RAM)
+			if (checkUserCode(USER_CODE_FLASH0X8005000))
 			{
-				jumpToUser(USER_CODE_RAM);
-			} 		
+				jumpToUser(USER_CODE_FLASH0X8005000);
+			} 
 			else
 			{
 				// Nothing to execute in either Flash or RAM
-			    strobePin(LED_BANK, LED, 5, BLINK_FAST);
+				strobePin(LED_BANK, LED, 5, BLINK_FAST);
 				systemHardReset();
 			}
 		}
-    }
+	}
 }

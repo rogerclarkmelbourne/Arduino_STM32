@@ -61,7 +61,7 @@ void dfuInit(void) {
     thisBlockLen = 0;;
     userAppAddr = USER_CODE_RAM; /* default RAM user code location */
     userAppEnd = RAM_END;
-    userUploadType=DFU_UPLOAD_RAM;
+    userUploadType=DFU_UPLOAD_NONE;
     code_copy_lock = WAIT;
     dfuBusy = FALSE;
 }
