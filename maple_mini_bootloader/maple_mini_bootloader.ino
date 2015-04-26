@@ -20,22 +20,22 @@
  * This is the Maple Mini bootloader v 2.0
  */
  
-#include "maplemini_boot_x2000-2-0.h"
-#define bootloader maplemini_boot_x2000_2_0
+#include "maple_mini_boot20.h"
+#define bootloader maple_mini_boot20
 
 //#if !defined(__STM32F1__)
 //This should not be used on a different MCU
 //#endif 
 
-#define BOOTLOADER_FLASH   ((u32)0x08000000)
+#define BOOTLOADER_FLASH   ((uint32)0x08000000)
 #define PAGE_SIZE          1024
 
-#define SET_REG(addr,val) do { *(vu32*)(addr)=val; } while(0)
-#define GET_REG(addr)     (*(vu32*)(addr))
+#define SET_REG(addr,val) do { *(volatile uint32*)(addr)=val; } while(0)
+#define GET_REG(addr)     (*(volatile uint32*)(addr))
 
 
-#define RCC   ((u32)0x40021000)
-#define FLASH ((u32)0x40022000)
+#define RCC   ((uint32)0x40021000)
+#define FLASH ((uint32)0x40022000)
 
 #define RCC_CR      RCC
 #define RCC_CFGR    (RCC + 0x04)
@@ -62,22 +62,22 @@
 #define FLASH_CR_START 0x40
 
 typedef struct {
-    vu32 CR; 
-    vu32 CFGR;
-    vu32 CIR;
-    vu32 APB2RSTR;
-    vu32 APB1RSTR;
-    vu32 AHBENR;
-    vu32 APB2ENR;
-    vu32 APB1ENR;
-    vu32 BDCR;
-    vu32 CSR;
+    volatile uint32 CR; 
+    volatile uint32 CFGR;
+    volatile uint32 CIR;
+    volatile uint32 APB2RSTR;
+    volatile uint32 APB1RSTR;
+    volatile uint32 AHBENR;
+    volatile uint32 APB2ENR;
+    volatile uint32 APB1ENR;
+    volatile uint32 BDCR;
+    volatile uint32 CSR;
 } RCC_RegStruct;
 #define pRCC ((RCC_RegStruct *) RCC)
 
 
-bool flashErasePage(u32 pageAddr) {
-    u32 rwmVal = GET_REG(FLASH_CR);
+bool flashErasePage(uint32 pageAddr) {
+    uint32 rwmVal = GET_REG(FLASH_CR);
     rwmVal = FLASH_CR_PER;
     SET_REG(FLASH_CR, rwmVal);
 
@@ -93,7 +93,7 @@ bool flashErasePage(u32 pageAddr) {
 
     return true;
 }
-bool flashErasePages(u32 pageAddr, u16 n) {
+bool flashErasePages(uint32 pageAddr, uint16 n) {
     while (n-- > 0) {
         if (!flashErasePage(pageAddr + 0x400 * n)) {
             return false;
@@ -103,27 +103,27 @@ bool flashErasePages(u32 pageAddr, u16 n) {
     return true;
 }
 
-bool flashWriteWord(u32 addr, u32 word) {
-    vu16 *flashAddr = (vu16 *)addr;
-    vu32 lhWord = (vu32)word & 0x0000FFFF;
-    vu32 hhWord = ((vu32)word & 0xFFFF0000) >> 16;
+bool flashWriteWord(uint32 addr, uint32 word) {
+    volatile uint16 *flashAddr = (volatile uint16 *)addr;
+    volatile uint32 lhWord = (volatile uint32)word & 0x0000FFFF;
+    volatile uint32 hhWord = ((volatile uint32)word & 0xFFFF0000) >> 16;
 
-    u32 rwmVal = GET_REG(FLASH_CR);
+    uint32 rwmVal = GET_REG(FLASH_CR);
     SET_REG(FLASH_CR, FLASH_CR_PG);
 
     /* apparently we need not write to FLASH_AR and can
        simply do a native write of a half word */
     while (GET_REG(FLASH_SR) & FLASH_SR_BSY) {}
-    *(flashAddr + 0x01) = (vu16)hhWord;
+    *(flashAddr + 0x01) = (volatile uint16)hhWord;
     while (GET_REG(FLASH_SR) & FLASH_SR_BSY) {}
-    *(flashAddr) = (vu16)lhWord;
+    *(flashAddr) = (volatile uint16)lhWord;
     while (GET_REG(FLASH_SR) & FLASH_SR_BSY) {}
 
     rwmVal &= 0xFFFFFFFE;
     SET_REG(FLASH_CR, rwmVal);
 
     /* verify the write */
-    if (*(vu32 *)addr != word) {
+    if (*(volatile uint32 *)addr != word) {
         return false;
     }
 
@@ -148,7 +148,7 @@ void flashUnlock() {
 void setupFLASH() {
     /* configure the HSI oscillator */
     if ((pRCC->CR & 0x01) == 0x00) {
-        u32 rwmVal = pRCC->CR;
+        uint32 rwmVal = pRCC->CR;
         rwmVal |= 0x01;
         pRCC->CR = rwmVal;
     }   
@@ -157,12 +157,12 @@ void setupFLASH() {
     while ((pRCC->CR & 0x02) == 0x00) {}
 }
 
-bool writeChunk(u32 *ptr, int size, char *data)
+bool writeChunk(uint32 *ptr, int size, char *data)
 {
-     flashErasePage((u32)(ptr));
+     flashErasePage((uint32)(ptr));
      
      for (int i = 0; i<size; i = i + 4) {
-       if (!flashWriteWord((u32)(ptr++), *((u32 *)(data + i)))) {
+       if (!flashWriteWord((uint32)(ptr++), *((uint32 *)(data + i)))) {
         return false; 
        }
      }
@@ -178,11 +178,12 @@ void setup() {
 }
 
 void loop() {
-  Serial.println ("*** BETA version 4/23/2015. Bootloader compiled by Madias. Sketch starts at 0x08005000 ****");
+  Serial.println ("*** BETA version 4/26/2015. Bootloader compiled by Roger.                              ****");
+  Serial.println ("*** Sketches can starts at 0x08005000 or 0x8002000 by using a different upload ID      ****");
   Serial.println ("*** This sketch will update the bootloader in the Maple Mini.                          ****");
   Serial.println ("*** If you are running this on a different board, please do not continue               ****");
   Serial.println ();
-  Serial.println ("*** ATTENTION: When using this bootloader your sketchs must compile to address 80002000. Check the WIKI");
+  Serial.println ("*** When using this bootloader you can use up to 120KB of Flash and 20KB of RAM for a Sketch");
   Serial.print ("Bootloader Size: ");
   Serial.println (sizeof(bootloader), DEC);
     Serial.println ();
@@ -200,7 +201,7 @@ void loop() {
   int success = 1;
   for (int i=0; i<n; i+=PAGE_SIZE) {
      int size = 0;
-     u32* chunk = (u32 *)(BOOTLOADER_FLASH + i);
+     uint32* chunk = (uint32 *)(BOOTLOADER_FLASH + i);
      
      size = n-i;
      if (size > PAGE_SIZE) size = PAGE_SIZE;
@@ -212,6 +213,7 @@ void loop() {
       break;
      }
   }
+  
   if (success){
   flashLock();
   Serial.println ();
