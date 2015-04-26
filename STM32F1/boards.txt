@@ -18,7 +18,6 @@ maple_mini.upload.file_type=bin
 
 
 maple_mini.upload.usbID=1EAF:0003
-maple_mini.upload.altID=1
 maple_mini.upload.auto_reset=true
 
 maple_mini.build.mcu=cortex-m3
@@ -26,7 +25,6 @@ maple_mini.build.f_cpu=72000000L
 maple_mini.build.board=MAPLE_MINI
 maple_mini.build.core=maple
 maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DSERIAL_USB -march=armv7-m -D__STM32F1__ 
-maple_mini.build.ldscript=ld/flash.ld
 maple_mini.build.variant=maple_mini
 maple_mini.build.variant_system_lib=libmaple.a
 maple_mini.build.density=STM32_MEDIUM_DENSITY
@@ -37,16 +35,18 @@ maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 maple_mini.menu.bootloader_version.original = Original
 maple_mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
 maple_mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
-maple_mini.menu.bootloader_version.upload.ram.maximum_size=17408
-maple_mini.menu.bootloader_version.upload.flash.maximum_size=110592
-maple_mini.menu.bootloader_version.upload.maximum_size=110592
+maple_mini.menu.bootloader_version.originalupload.ram.maximum_size=17408
+maple_mini.menu.bootloader_version.original.upload.flash.maximum_size=110592
+maple_mini.menu.bootloader_version.original.upload.maximum_size=110592
+maple_mini.menu.bootloader_version.original.upload.altID=1
 
 maple_mini.menu.bootloader_version.bootloader20 = Bootloader 2.0
 maple_mini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
 maple_mini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
-maple_mini.menu.bootloader_version.upload.ram.maximum_size=20480
-maple_mini.menu.bootloader_version.upload.flash.maximum_size=122880
-maple_mini.menu.bootloader_version.upload.maximum_size=122880
+maple_mini.menu.bootloader_version.bootloader20.upload.ram.maximum_size=20480
+maple_mini.menu.bootloader_version.bootloader20.upload.flash.maximum_size=122880
+maple_mini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
+maple_mini.menu.bootloader_version.bootloader20.upload.altID=2
 
 ##############################################################
 maple.name=LeafLabs Maple Rev 3+ to Flash

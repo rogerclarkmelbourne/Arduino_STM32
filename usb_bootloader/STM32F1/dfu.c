@@ -38,7 +38,7 @@
 static volatile u32 userAppAddr = USER_CODE_RAM; /* default RAM user code location */
 static volatile u32 userAppEnd = RAM_END;
 static volatile DFUStatus dfuAppStatus;       /* includes state */
-static volatile bool userFlash = FALSE;
+volatile dfuUploadTypes_t userUploadType = DFU_UPLOAD_NONE;
 volatile bool dfuBusy = FALSE;
 
 static volatile u8 recvBuffer[wTransferSize] __attribute__((aligned(4)));
@@ -61,7 +61,7 @@ void dfuInit(void) {
     thisBlockLen = 0;;
     userAppAddr = USER_CODE_RAM; /* default RAM user code location */
     userAppEnd = RAM_END;
-    userFlash = FALSE;
+    userUploadType=DFU_UPLOAD_RAM;
     code_copy_lock = WAIT;
     dfuBusy = FALSE;
 }
@@ -83,19 +83,34 @@ bool dfuUpdateByRequest(void) {
             if (pInformation->USBwLengths.w > 0) {
                 userFirmwareLen = 0;
                 dfuAppStatus.bState  = dfuDNLOAD_SYNC;
-
-                if (pInformation->Current_AlternateSetting == 1) {
-                    userAppAddr = USER_CODE_FLASH;
-                    userFlash = TRUE;
-
-                    /* make sure the flash is setup properly, unlock it */
-                    setupFLASH();
-                    flashUnlock();
-
-                } else {
-                    userAppAddr = USER_CODE_RAM;
-                    userFlash = FALSE;
-                }
+				switch(pInformation->Current_AlternateSetting)
+				{
+					case 0:
+					    userAppAddr = USER_CODE_RAM;
+						userUploadType = DFU_UPLOAD_RAM;
+						break;
+					case 1:
+					    userAppAddr = USER_CODE_FLASH0X8005000;
+						userUploadType = DFU_UPLOAD_FLASH_0X8005000;
+						
+						/* make sure the flash is setup properly, unlock it */
+						setupFLASH();
+						flashUnlock();
+						// Clear lower memory so that we can check on cold boot, whether the last upload was to 0x8002000 or 0x8005000
+						flashErasePage((u32)USER_CODE_FLASH0X8002000);
+						break;
+					case 2:
+						userUploadType = DFU_UPLOAD_FLASH_0X8002000;
+						userAppAddr = USER_CODE_FLASH0X8002000;
+						/* make sure the flash is setup properly, unlock it */
+						setupFLASH();
+						flashUnlock();
+						break;
+					default:
+					    userAppAddr = USER_CODE_RAM;
+						userUploadType = DFU_UPLOAD_RAM;
+						break;
+				}
             } else {
                 dfuAppStatus.bState  = dfuERROR;
                 dfuAppStatus.bStatus = errNOTDONE;
@@ -108,13 +123,24 @@ bool dfuUpdateByRequest(void) {
             thisBlockLen = uploadBlockLen; /* for this first block as well */
             /* calculate where the data should be copied from */
             userFirmwareLen = uploadBlockLen * pInformation->USBwValue;
-            if (pInformation->Current_AlternateSetting == 1) {
-                userAppAddr = USER_CODE_FLASH;
-                userAppEnd = FLASH_END;
-            } else {
-                userAppAddr = USER_CODE_RAM;
-                userAppEnd = RAM_END;
-            }
+			switch(pInformation->Current_AlternateSetting)
+			{
+				case 0:
+					userAppAddr = USER_CODE_RAM;
+					userAppEnd = RAM_END;
+				case 1:
+				    userAppAddr = USER_CODE_FLASH0X8005000;
+					userAppEnd = FLASH_END;
+					break;
+				case 2: 
+				    userAppAddr = USER_CODE_FLASH0X8002000;
+					userAppEnd = FLASH_END;
+					break;
+				default:
+					userAppAddr = USER_CODE_RAM;
+					userAppEnd = RAM_END;
+					break;					
+			}
         } else if (pInformation->USBbRequest == DFU_ABORT) {
             dfuAppStatus.bState  = dfuIDLE;
             dfuAppStatus.bStatus = OK;  /* are we really ok? we were just aborted */
@@ -132,7 +158,7 @@ bool dfuUpdateByRequest(void) {
 
         if (pInformation->USBbRequest == DFU_GETSTATUS) {
             /* todo, add routine to wait for last block write to finish */
-            if (userFlash) {
+            if (userUploadType == DFU_UPLOAD_RAM) {
                 if (code_copy_lock == WAIT) {
                     code_copy_lock = BEGINNING;
                     dfuAppStatus.bwPollTimeout0 = 0x20; /* 32 ms */
@@ -358,15 +384,25 @@ void dfuCopyBufferToExec() {
     int i;
     u32 *userSpace;
 
-    if (!userFlash) {
+    if (userUploadType == DFU_UPLOAD_RAM) 
+	{
         userSpace = (u32 *)(USER_CODE_RAM + userFirmwareLen);
         /* we dont need to handle when thisBlock len is not divisible by 4,
            since the linker will align everything to 4B anyway */
         for (i = 0; i < thisBlockLen; i = i + 4) {
             *userSpace++ = *(u32 *)(recvBuffer + i);
         }
-    } else {
-        userSpace = (u32 *)(USER_CODE_FLASH + userFirmwareLen);
+    } 
+	else 
+	{
+		if (userUploadType == DFU_UPLOAD_FLASH_0X8005000)
+		{
+			userSpace = (u32 *)(USER_CODE_FLASH0X8005000 + userFirmwareLen);
+		}
+		else
+		{
+			userSpace = (u32 *)(USER_CODE_FLASH0X8002000 + userFirmwareLen);		
+		}
 
         flashErasePage((u32)(userSpace));
 
@@ -394,7 +430,7 @@ bool dfuUploadStarted() {
 
 void dfuFinishUpload() {
     while (1) {
-        if (userFlash) {
+        if (userUploadType==DFU_UPLOAD_RAM) {
             if (code_copy_lock == BEGINNING) {
                 code_copy_lock = MIDDLE;
                 strobePin(LED_BANK, LED, 2, 0x1000);

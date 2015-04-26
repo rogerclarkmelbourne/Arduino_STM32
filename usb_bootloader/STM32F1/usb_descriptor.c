@@ -81,7 +81,7 @@ ONE_DESCRIPTOR usbFunctionalDescriptor = {
 };
 
 
-u8 u8_usbConfigDescriptorDFU[36] = {
+u8 u8_usbConfigDescriptorDFU[45] = {
     0x09,   /* bLength: Configuation Descriptor size */
     0x02,   /* bDescriptorType: Configuration */
     0x24,   /* wTotalLength: Bytes returned */
@@ -118,6 +118,20 @@ u8 u8_usbConfigDescriptorDFU[36] = {
     0x02,   /* nInterfaceProtocol, switched to 0x02 while in dfu_mode */
 
     0x05,   /* iInterface: */
+	
+    /************ Descriptor of DFU interface 0 Alternate setting 2 *********/
+    0x09,   /* bLength: Interface Descriptor size */
+    0x04,   /* bDescriptorType: */
+    0x00,   /* bInterfaceNumber: Number of Interface */
+    0x02,   /* bAlternateSetting: Alternate setting */
+    0x00,   /* bNumEndpoints*/
+    0xFE,   /* bInterfaceClass: DFU */
+    0x01,   /* bInterfaceSubClass */
+
+    0x02,   /* nInterfaceProtocol, switched to 0x02 while in dfu_mode */
+
+    0x06,   /* iInterface: */	
+	
 
     /******************** DFU Functional Descriptor********************/
     0x09,   /*blength = 7 Bytes*/
@@ -176,6 +190,15 @@ u8 u8_usbStringAlt1[0x3A] = {
     0x03,
     'D', 0, 'F', 0, 'U', 0, ' ', 0, 'P', 0, 'r', 0, 'o', 0, 'g', 0, 'r', 0,
     'a', 0, 'm', 0, ' ', 0, 'F', 0, 'L', 0, 'A', 0, 'S', 0, 'H', 0, ' ', 0,
+    '0', 0, 'x', 0, '0', 0, '8', 0, '0', 0, '0', 0, '5', 0, '0', 0, '0', 0,
+    '0', 0
+};
+
+u8 u8_usbStringAlt2[0x3A] = {
+    0x3A,
+    0x03,
+    'D', 0, 'F', 0, 'U', 0, ' ', 0, 'P', 0, 'r', 0, 'o', 0, 'g', 0, 'r', 0,
+    'a', 0, 'm', 0, ' ', 0, 'F', 0, 'L', 0, 'A', 0, 'S', 0, 'H', 0, ' ', 0,
     '0', 0, 'x', 0, '0', 0, '8', 0, '0', 0, '0', 0, '2', 0, '0', 0, '0', 0,
     '0', 0
 };
@@ -188,6 +211,7 @@ ONE_DESCRIPTOR usbStringDescriptor[STR_DESC_LEN] = {
     { (u8 *)u8_usbStringProduct, 0x20 },
     { (u8 *)u8_usbStringSerial,  0x10 },
     { (u8 *)u8_usbStringAlt0,    0x36 },
-    { (u8 *)u8_usbStringAlt1,    0x3A }
+    { (u8 *)u8_usbStringAlt1,    0x3A },
+	{ (u8 *)u8_usbStringAlt2,    0x3A }
 };
 
