@@ -80,13 +80,14 @@ maple.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 ##############################################################
 mapleRET6.name=LeafLabs Maple RET6 to Flash
 
+
 mapleRET6.upload.tool=maple_upload
 mapleRET6.upload.protocol=maple_dfu
-mapleRET6.upload.maximum_size=492000
+mapleRET6.upload.maximum_size=262144
 mapleRET6.upload.use_1200bps_touch=false
 mapleRET6.upload.file_type=bin
-mapleRET6.upload.ram.maximum_size=61000
-mapleRET6.upload.flash.maximum_size=492000
+mapleRET6.upload.ram.maximum_size=492152
+mapleRET6.upload.flash.maximum_size=262144
 mapleRET6.upload.usbID=1EAF:0003
 mapleRET6.upload.altID=1
 mapleRET6.upload.auto_reset=true
@@ -95,13 +96,14 @@ mapleRET6.build.mcu=cortex-m3
 mapleRET6.build.f_cpu=72000000L
 mapleRET6.build.board=MAPLE_RET6
 mapleRET6.build.core=maple
-mapleRET6.build.extra_flags=-DMCU_STM32F103RE -mthumb -DSERIAL_USB -march=armv7-m -D__STM32F1__
+mapleRET6.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  -DSERIAL_USB
 
-mapleRET6.build.ldscript=ld/flashRET6.ld
-mapleRET6.build.variant=maple
-mapleRET6.build.variant_system_lib=libmapleRET6.a
+
+mapleRET6.build.ldscript=ld/stm32f103re-bootloader.ld
+mapleRET6.build.variant=maple_ret6
+
+
 mapleRET6.build.vect=VECT_TAB_ADDR=0x8005000
-mapleRET6.build.density=STM32_HIGH_DENSITY
 mapleRET6.build.error_led_port=GPIOA
 mapleRET6.build.error_led_pin=5
 mapleRET6.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
