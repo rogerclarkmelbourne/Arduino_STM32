@@ -113,7 +113,7 @@ ELFSIZE = $(SIZE) -A $(TARGET).elf
 
 # go!
 all: begin gccversion build sizeafter finished end
-maple-mini: begin gccversion build_maple-mini sizeafter finished end
+maple-mini: begin gccversion build_maple-mini sizeafter finished  copy_maple_mini end
 maple-rev3: begin gccversion build_maple-rev3 sizeafter finished end
 
 build: elf bin lss sym
@@ -121,6 +121,12 @@ build: elf bin lss sym
 
 build_maple-mini: TARGETFLAGS= -DTARGET_MAPLE_MINI
 build_maple-mini: elf bin lss sym
+copy_maple_mini: 
+	@echo
+	@echo "Copying to binaries folder"
+	@echo
+	cp $(TARGET).bin binaries/maple_mini_boot20.bin
+	@echo
 
 build_maple-rev3: TARGETFLAGS= -DTARGET_MAPLE_REV3
 build_maple-rev3: elf bin lss sym
