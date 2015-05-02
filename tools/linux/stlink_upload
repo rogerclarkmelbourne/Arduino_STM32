@@ -1,0 +1,2 @@
+#!/bin/bash
+$(dirname $0)/stlink/st-flash write "$4" 0x8000000 
