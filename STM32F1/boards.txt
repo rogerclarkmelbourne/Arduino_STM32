@@ -35,7 +35,7 @@ maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 maple_mini.menu.bootloader_version.original = Original
 maple_mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
 maple_mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
-maple_mini.menu.bootloader_version.originalupload.ram.maximum_size=17408
+maple_mini.menu.bootloader_version.original.upload.ram.maximum_size=17408
 maple_mini.menu.bootloader_version.original.upload.flash.maximum_size=110592
 maple_mini.menu.bootloader_version.original.upload.maximum_size=110592
 maple_mini.menu.bootloader_version.original.upload.altID=1
