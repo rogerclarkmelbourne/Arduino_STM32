@@ -1,3 +1,4 @@
+
 /**
  *
  * Maple Mini bootloader transition sketch. Loads 7KB bootloader provided by Madias.
@@ -14,18 +15,39 @@
  * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING 
  *
  */
-#include "types.h"
+//#include "types.h"
 
 /**
  * This is the Maple Mini bootloader v 2.0
  */
  
-#include "maple_mini_boot20.h"
-#define bootloader maple_mini_boot20
+#include "maple_mini_boot20_noRam.h"
+#include "maple_mini_original_small.h"
+#define bootloader_2 maple_mini_boot20_noRam
+#define bootloader_1 maple_mini_original_small
 
 //#if !defined(__STM32F1__)
 //This should not be used on a different MCU
 //#endif 
+
+typedef struct {
+    volatile uint32 CR; 
+    volatile uint32 CFGR;
+    volatile uint32 CIR;
+    volatile uint32 APB2RSTR;
+    volatile uint32 APB1RSTR;
+    volatile uint32 AHBENR;
+    volatile uint32 APB2ENR;
+    volatile uint32 APB1ENR;
+    volatile uint32 BDCR;
+    volatile uint32 CSR;
+} RCC_RegStruct;
+
+typedef enum { RESET = 0, SET   = !RESET } FlagStatus, ITStatus;
+
+typedef enum { DISABLE = 0, ENABLE  = !DISABLE} FunctionalState;
+
+typedef enum { ERROR = 0, SUCCESS  = !ERROR} ErrorStatus;
 
 #define BOOTLOADER_FLASH   ((uint32)0x08000000)
 #define PAGE_SIZE          1024
@@ -61,20 +83,9 @@
 #define FLASH_CR_PG    0x01
 #define FLASH_CR_START 0x40
 
-typedef struct {
-    volatile uint32 CR; 
-    volatile uint32 CFGR;
-    volatile uint32 CIR;
-    volatile uint32 APB2RSTR;
-    volatile uint32 APB1RSTR;
-    volatile uint32 AHBENR;
-    volatile uint32 APB2ENR;
-    volatile uint32 APB1ENR;
-    volatile uint32 BDCR;
-    volatile uint32 CSR;
-} RCC_RegStruct;
 #define pRCC ((RCC_RegStruct *) RCC)
 
+char * bootloader;
 
 bool flashErasePage(uint32 pageAddr) {
     uint32 rwmVal = GET_REG(FLASH_CR);
@@ -157,7 +168,7 @@ void setupFLASH() {
     while ((pRCC->CR & 0x02) == 0x00) {}
 }
 
-bool writeChunk(uint32 *ptr, int size, char *data)
+bool writeChunk(uint32 *ptr, int size, const char *data)
 {
      flashErasePage((uint32)(ptr));
      
@@ -174,20 +185,47 @@ void setup() {
   pinMode(BOARD_LED_PIN, OUTPUT);
   digitalWrite(BOARD_LED_PIN, LOW);
   Serial.begin(9600);
-  delay (5000);
+  Serial.println ("Starting...");
+  delay (7000);
 }
 
 void loop() {
-  Serial.println ("*** BETA version 4/26/2015. Bootloader compiled by Roger.                              ****");
-  Serial.println ("*** Sketches can starts at 0x08005000 or 0x8002000 by using a different upload ID      ****");
-  Serial.println ("*** This sketch will update the bootloader in the Maple Mini.                          ****");
-  Serial.println ("*** If you are running this on a different board, please do not continue               ****");
+  Serial.println ("*** BETA version 5/3/2015. Bootloader 2.0 compiled by Roger.                                  ****");
+  Serial.println ("*** This Sketch can install Bootloader 2.0, or install the old bootloader.                    ****");
+  Serial.println ("*** V 2.0: Sketches can start at 0x08005000 or 0x8002000 by using a different upload ID       ****");
+  Serial.println ("*** V 1.0: Sketches can start at 0x08005000, but supports upload to RAM                       ****");
+  Serial.println ("*** This sketch will update the bootloader in the Maple Mini.                                 ****");
+  Serial.println ("*** If you are running this on a different board, please do not continue.                     ****");
   Serial.println ();
-  Serial.println ("*** When using this bootloader you can use up to 120KB of Flash and 20KB of RAM for a Sketch");
-  Serial.print ("Bootloader Size: ");
-  Serial.println (sizeof(bootloader), DEC);
-    Serial.println ();
-  Serial.println ("-To proceed with the update, enter Y");
+  Serial.println ("*** When using bootloader version 2.0 you can use up to 120KB of Flash and 20KB of RAM for a Sketch");
+  Serial.print ("Bootloader v1.0 Size: ");
+  Serial.println (sizeof(bootloader_1), DEC);
+  Serial.println ();
+  Serial.print ("Bootloader v2.0 Size: ");
+  Serial.println (sizeof(bootloader_2), DEC);
+  Serial.println ();
+  Serial.println ("Select a bootloader to flash (1 or 2)");
+  char input = Serial.read();
+  while (input != '1' & input != '2')
+  {
+    while (Serial.available() == 0) {
+      delay (1);
+    }
+    input = Serial.read();
+    Serial.println (input);
+  }
+  int n = 0;
+  if (input == '1') {
+    n = sizeof(bootloader_1);
+    bootloader = const_cast<char *>(bootloader_1);
+  }
+  else {
+    n = sizeof(bootloader_2);
+    bootloader = const_cast<char *>(bootloader_2);
+  }
+
+  Serial.println (". Proceeding with update, do not remove power.");
+  Serial.println ("To confirm, enter Y");
   while (Serial.read() != 'Y')
   {
     delay(1);
@@ -197,7 +235,6 @@ void loop() {
   setupFLASH();
   flashUnlock();
   
-  int n = sizeof(bootloader);
   int success = 1;
   for (int i=0; i<n; i+=PAGE_SIZE) {
      int size = 0;
@@ -208,7 +245,8 @@ void loop() {
      
      if (!writeChunk(chunk, size, &bootloader[i])) {
       Serial.println ();
-      Serial.println ("WARNING, Update Failed!!");
+      Serial.println ("WARNING, Update Failed!! The sketch will restart in 3 seconds and you can try to flash again");
+      delay (3000);
       success = 0;
       break;
      }
