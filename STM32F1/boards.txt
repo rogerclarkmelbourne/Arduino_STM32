@@ -193,7 +193,7 @@ genericSTM32F103C.menu.device_variant.STM32F103CB.upload.flash.maximum_size=1280
 
 
 ## STM32F103C8 -------------------------
-genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 68k Flash)
+genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8  
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
 genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_size=64000
