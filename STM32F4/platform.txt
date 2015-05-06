@@ -122,16 +122,6 @@ tools.serial_upload.upload.params.verbose=-d
 tools.serial_upload.upload.params.quiet=
 tools.serial_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
 
-# 
-tools.upload_router.cmd=upload_router
-tools.upload_router.cmd.windows=upload_router.bat
-#tools.upload_router.cmd.linux=
-tools.upload_router.path={runtime.hardware.path}/tools/win
-
-tools.upload_router.upload.params.verbose=-d
-tools.upload_router.upload.params.quiet=
-tools.upload_router.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}" {upload.protocol} {build.debuggingMode} "{runtime.ide.path}/hardware/tools/{build.gcc_ver}/bin/"
-
 # STLINK/V2
 
 tools.stlink.cmd=stlink
