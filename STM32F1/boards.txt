@@ -64,7 +64,7 @@ mapleRET6.name=LeafLabs Maple RET6 to Flash
 
 mapleRET6.build.board=MAPLE_RET6
 mapleRET6.build.core=maple
-mapleRET6.build.extra_flags=-DMCU_STM32F103RE -DSERIAL_USB
+mapleRET6.build.cpu_flags=-DMCU_STM32F103RE -DSERIAL_USB
 
 mapleRET6.build.ldscript=ld/stm32f103re-bootloader.ld
 mapleRET6.build.variant=maple_ret6
