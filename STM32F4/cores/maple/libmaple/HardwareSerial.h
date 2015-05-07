@@ -74,12 +74,12 @@ private:
     uint8 rx_pin;
 };
 
+extern HardwareSerial Serial;
 extern HardwareSerial Serial1;
 extern HardwareSerial Serial2;
-extern HardwareSerial Serial3;
 #if defined(STM32_HIGH_DENSITY) && !defined(BOARD_maple_RET6)
+extern HardwareSerial Serial3;
 extern HardwareSerial Serial4;
-extern HardwareSerial Serial5;
 #endif
 extern HardwareSerial &SerialDebug;
 #endif
