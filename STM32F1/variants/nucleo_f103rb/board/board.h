@@ -27,12 +27,12 @@
 /**
  * @file   wirish/boards/maple/include/board/board.h
  * @author Marti Bolivar <mbolivar@leaflabs.com>
- * @brief  Maple board header.
- */
+ * @brief  Maple board header. */
+ // edited and rewritten for STM32DUINO by Matthias Diro 07.05.2015
 
 #ifndef _BOARD_MAPLE_H_
 #define _BOARD_MAPLE_H_
-
+#define _BOARD_NUCLEOF103RB_ 1 // hack for HardwareSerial.cpp for a new order of serials
 #define CYCLES_PER_MICROSECOND  72
 #define SYSTICK_RELOAD_VAL     71999 /* takes a cycle to reload */
 
@@ -43,9 +43,24 @@
 // Pin number for the built-in LED.
 //BOARD _ LED _ PIN           13
 
-/* Number of USARTs/UARTs whose pins are broken out to headers. */
-#define BOARD_NR_USARTS         3
+// Arduino compatible A0-A5 defines:
+#define A0 16
+#define A1 17
+#define A2 18
+#define A3 19
+#define A4 20
+#define A5 21
+// Wire.h Soft I2C standard pins for custom boards:
+ #define BOARD_I2CSOFT_SCL_PIN     PC0
+ #define BOARD_I2CSOFT_SDA_PIN     PC1
 
+#define BOARD_NR_USARTS         3
+//#define SERIAL_ORDER1     3 // HW Serial order for custom boards
+//#define SERIAL_ORDER2      2 // not implemented yet
+//#define SERIAL_ORDER3      1
+
+/* Number of USARTs/UARTs whose pins are broken out to headers. */
+// hope this would be obsolet soon
 #define BOARD_USART1_TX_PIN     PA9
 #define BOARD_USART1_RX_PIN     PA10
 
@@ -59,14 +74,14 @@
 #define BOARD_NR_SPI            2
 
 /* SPI pin numbers. */
-#define BOARD_SPI1_NSS_PIN      10
-#define BOARD_SPI1_MOSI_PIN     11
-#define BOARD_SPI1_MISO_PIN     12
-#define BOARD_SPI1_SCK_PIN      13
-#define BOARD_SPI2_NSS_PIN      31
-#define BOARD_SPI2_MOSI_PIN     34
-#define BOARD_SPI2_MISO_PIN     33
-#define BOARD_SPI2_SCK_PIN      32
+#define BOARD_SPI1_NSS_PIN      PA4
+#define BOARD_SPI1_MOSI_PIN     PA7
+#define BOARD_SPI1_MISO_PIN     PA6
+#define BOARD_SPI1_SCK_PIN      PA5
+#define BOARD_SPI2_NSS_PIN      PB12
+#define BOARD_SPI2_MOSI_PIN     PB15
+#define BOARD_SPI2_MISO_PIN     PB14
+#define BOARD_SPI2_SCK_PIN      PB13
 
 /* Total number of GPIO pins that are broken out to headers and
  * intended for use. This includes pins like the LED, button, and
