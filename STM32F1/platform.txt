@@ -99,7 +99,9 @@ recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
 #recipe.size.regex=\.text\s+([0-9]+).*
-recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
+#recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
+recipe.size.regex=^(?:\.text|\.data|\.rodata|\.text.align|\.ARM.exidx)\s+([0-9]+).*
+
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 
 # Uploader tools
