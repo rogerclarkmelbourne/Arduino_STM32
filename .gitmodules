@@ -7,3 +7,6 @@
 [submodule "tools/src/texane-stlink"]
 	path = tools/src/texane-stlink
 	url = https://github.com/texane/stlink
+[submodule "tools/src/dfu-util"]
+	path = tools/src/dfu-util
+	url = https://gitorious.org/dfu-util/dfu-util.git
