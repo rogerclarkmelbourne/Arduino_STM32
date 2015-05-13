@@ -74,7 +74,23 @@ namespace wirish {
         }
 
         __weak void board_setup_usb(void) {
-#ifdef SERIAL_USB 
+#ifdef SERIAL_USB
+			
+			
+			//Attempt to reset the USB interface - developed by Victor PV
+			
+			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_OUTPUT_PP);
+			gpio_write_bit(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit,0);
+
+			
+			for(volatile unsigned int i=0;i<5000000;i++)
+			{
+				asm("nop");
+			}
+			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
+			
+
+
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 #endif
         }
