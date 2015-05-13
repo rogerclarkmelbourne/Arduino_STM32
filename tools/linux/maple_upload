@@ -8,6 +8,7 @@ if [ $# -lt 4 ]; then
 fi
 dummy_port=$1; altID=$2; usbID=$3; binfile=$4
 
+#DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
 DFU_UTIL=/usr/bin/dfu-util
 if [ ! -x ${DFU_UTIL} ]; then
     echo "$0: error: cannot find ${DFU_UTIL}" >&2
