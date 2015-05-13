@@ -284,4 +284,4 @@ genericSTM32F103Z.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103Z.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1   -DSERIAL_USB

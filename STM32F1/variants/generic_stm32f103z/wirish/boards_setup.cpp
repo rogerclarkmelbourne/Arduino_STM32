@@ -74,11 +74,26 @@ namespace wirish {
         }
 
         __weak void board_setup_usb(void) {
-#if BOARD_HAVE_SERIALUSB
+      
+
+	
 	#ifdef SERIAL_USB 
+			
+			//gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_OUTPUT_PP);
+			gpio_write_bit(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit,0);
+
+			
+			for(volatile unsigned int i=0;i<5000000;i++)
+			{
+				asm("nop");
+			}
+			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
+			for(volatile unsigned int i=0;i<5000000;i++)
+			{
+				asm("nop");
+			}
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 	#endif
-#endif
         }
 
         __weak void series_init(void) {
