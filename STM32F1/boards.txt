@@ -346,4 +346,4 @@ genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103veDFU.ld
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
-genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.altID=1
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.altID=2
