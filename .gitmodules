@@ -4,3 +4,6 @@
 [submodule "drivers/win/src/pbatard_libwdi"]
 	path = drivers/win/src/pbatard_libwdi
 	url = https://github.com/pbatard/libwdi.git
+[submodule "TFT_ILI9163C"]
+	path = STM32F1/libraries/TFT_ILI9163C
+	url = https://github.com/victorpv/TFT_ILI9163C
