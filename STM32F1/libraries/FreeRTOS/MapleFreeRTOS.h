@@ -24,46 +24,17 @@
  * SOFTWARE.
  *****************************************************************************/
 
-/**
- * @file   wirish/include/wirish/wirish_types.h
- * @author Marti Bolivar <mbolivar@leaflabs.com>
- * @brief  Wirish library type definitions.
- */
+#ifndef __MAPLE_FREERTOS_H__
+#define __MAPLE_FREERTOS_H__
 
-#ifndef _WIRISH_WIRISH_TYPES_H_
-#define _WIRISH_WIRISH_TYPES_H_
+#include <wirish.h>
 
-#include <libmaple/libmaple_types.h>
-#include <libmaple/gpio.h>
-#include <libmaple/timer.h>
-#include <libmaple/adc.h>
-
-/**
- * Invalid stm32_pin_info adc_channel value.
- * @see stm32_pin_info
- */
-#define ADCx 0xFF
-
-/**
- * @brief Stores STM32-specific information related to a given Maple pin.
- * @see PIN_MAP
- */
-typedef struct stm32_pin_info {
-    gpio_dev *gpio_device;      /**< Maple pin's GPIO device */
-    timer_dev *timer_device;    /**< Pin's timer device, if any. */
-    const adc_dev *adc_device;  /**< ADC device, if any. */
-    uint8 gpio_bit;             /**< Pin's GPIO port bit. */
-    uint8 timer_channel;        /**< Timer channel, or 0 if none. */
-    uint8 adc_channel;          /**< Pin ADC channel, or ADCx if none. */
-//	uint8 pinMode; 				/**< mode specific by pinMode call (Roger Clark added to optimize compatibility with Arduino API*/
-} stm32_pin_info;
-
-/**
- * Variable attribute, instructs the linker to place the marked
- * variable in Flash instead of RAM. */
-#define __FLASH__ __attr_flash
-
-typedef bool boolean;
-typedef uint8 byte;
+extern "C" {
+#define GCC_ARMCM3
+#include "utility/FreeRTOS.h"
+#include "utility/task.h"
+#include "utility/queue.h"
+#include "utility/semphr.h"
+}
 
 #endif

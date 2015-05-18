@@ -1,6 +1,7 @@
 /*
 See rights and use declaration in License.h
-This library has been modified for the Maple Mini
+This library has been modified for the Maple Mini.
+Includes DMA transfers on DMA1 CH2 and CH3.
 */
 #include <Adafruit_ILI9341_STM.h>
 #include <avr/pgmspace.h>
@@ -11,9 +12,9 @@ This library has been modified for the Maple Mini
 #include <SPI.h> // Using library SPI in folder: D:\Documents\Arduino\hardware\STM32\STM32F1XX\libraries\SPI
 
 //Used for DMA transfers in STM32F1XX
-#if defined (__STM32F1__)
-volatile bool dma1_ch3_Active = false;
-#endif
+//#if defined (__STM32F1__)
+//volatile bool dma1_ch3_Active = false;
+//#endif
 
 // Constructor when using software SPI.  All output pins are configurable.
 Adafruit_ILI9341_STM::Adafruit_ILI9341_STM(int8_t cs, int8_t dc, int8_t mosi,
@@ -38,10 +39,10 @@ Adafruit_ILI9341_STM::Adafruit_ILI9341_STM(int8_t cs, int8_t dc, int8_t rst) : A
   _mosi  = _sclk = 0;
 }
 
-inline void DMA1_CH3_Event() {
-  dma1_ch3_Active = 0;
-  dma_disable(DMA1, DMA_CH3);
-}
+//inline void DMA1_CH3_Event() {
+//  dma1_ch3_Active = 0;
+//  dma_disable(DMA1, DMA_CH3);
+//}
 
 void Adafruit_ILI9341_STM::spiwrite(uint8_t c) {
 
@@ -58,7 +59,7 @@ void Adafruit_ILI9341_STM::spiwrite(uint8_t c) {
 #elif defined(TEENSYDUINO)
     SPI.transfer(c);
 #elif defined (__STM32F1__)
-    SPI.transfer(c);
+    SPI.write(c);
 #elif defined (__arm__)
     SPI.setClockDivider(11); // 8-ish MHz (full! speed!)
     SPI.setBitOrder(MSBFIRST);
@@ -195,13 +196,13 @@ void Adafruit_ILI9341_STM::begin(void) {
     SPI.setClockDivider(SPI_CLOCK_DIV2);
     SPI.setBitOrder(MSBFIRST);
     SPI.setDataMode(SPI_MODE0);
-    // DMA setup stuff. We use a line buffer and usa DMA for filling lines and blocks.
+/*    // DMA setup stuff. We use a line buffer and usa DMA for filling lines and blocks.
     spi_tx_dma_enable(SPI1);
     dma_init(DMA1);
     dma_attach_interrupt(DMA1, DMA_CH3, DMA1_CH3_Event);
     dma_setup_transfer(DMA1, DMA_CH3, &SPI1->regs->DR, DMA_SIZE_8BITS,
                        lineBuffer, DMA_SIZE_8BITS, (DMA_MINC_MODE |  DMA_FROM_MEM | DMA_TRNS_CMPLT));
-
+*/
 
 #elif defined (__arm__)
     SPI.begin();
@@ -439,11 +440,12 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
     lineBuffer[i] = hi;
     lineBuffer[i + 1] = lo;
   }
-  dma_set_num_transfers(DMA1, DMA_CH3, h * 2); // 2 bytes per pixel
+  SPI.dmaSend (lineBuffer, h * 2);
+/*  dma_set_num_transfers(DMA1, DMA_CH3, h * 2); // 2 bytes per pixel
   dma1_ch3_Active = true;
   dma_enable(DMA1, DMA_CH3);
   while (dma1_ch3_Active);
-
+*/
  #else
    while (h--) {
      spiwrite(hi);
@@ -478,11 +480,12 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
     lineBuffer[i] = hi;
     lineBuffer[i + 1] = lo;
   }
-  dma_set_num_transfers(DMA1, DMA_CH3, w * 2); // 2 bytes per pixel
+  SPI.dmaSend (lineBuffer, w * 2);
+/*dma_set_num_transfers(DMA1, DMA_CH3, w * 2); // 2 bytes per pixel
   dma1_ch3_Active = true;
   dma_enable(DMA1, DMA_CH3);
   while (dma1_ch3_Active) delayMicroseconds(1);
-  
+*/  
 #else
     while (w--) {
       spiwrite(hi);
@@ -530,11 +533,13 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
     //      spiwrite(hi);
     //      spiwrite(lo);
     //    }
-    dma_set_num_transfers(DMA1, DMA_CH3, w * 2); // 2 bytes per pixel
+    SPI.dmaSend (lineBuffer, w * 2);
+/*  dma_set_num_transfers(DMA1, DMA_CH3, w * 2); // 2 bytes per pixel
     dma1_ch3_Active = true;
     dma_enable(DMA1, DMA_CH3);
     while (dma1_ch3_Active) delayMicroseconds(1);
-  }
+*/
+	}
 #else
   for(y=h; y>0; y--) 
   {

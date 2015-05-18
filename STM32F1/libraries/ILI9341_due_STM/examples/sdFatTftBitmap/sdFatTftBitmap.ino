@@ -25,9 +25,9 @@ https://github.com/marekburiak/ILI9341_due/tree/master/tools
 
 // CS and DC for the LCD
 #define LCD_CS 10	// Chip Select for LCD
-#define LCD_DC 9	// Command/Data for LCD
+#define LCD_DC 8	// Command/Data for LCD
 
-#define SD_CS 7		// Chip Select for SD card
+#define SD_CS 9		// Chip Select for SD card
 
 #define BUFFPIXELCOUNT 320	// size of the buffer in pixels
 #define SD_SPI_SPEED SPI_HALF_SPEED	// SD card SPI speed, try SPI_FULL_SPEED
@@ -44,7 +44,7 @@ ILI9341_due tft(LCD_CS, LCD_DC);
 void setup()
 {
 	Serial.begin(9600);
-
+delay (5000);
 	tft.begin();
 	tft.setRotation(iliRotation270);	// landscape
 	progmemPrint(PSTR("Initializing SD card..."));

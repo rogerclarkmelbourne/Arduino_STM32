@@ -184,35 +184,35 @@ bool writeChunk(uint32 *ptr, int size, const char *data)
 void setup() {
   pinMode(BOARD_LED_PIN, OUTPUT);
   digitalWrite(BOARD_LED_PIN, LOW);
-  Serial.begin(9600);
-  Serial.println ("Starting...");
+  Serial1.begin(9600);
+  Serial1.println ("Starting...");
   delay (7000);
 }
 
 void loop() {
-  Serial.println ("*** BETA version 5/3/2015. Bootloader 2.0 compiled by Roger.                                  ****");
-  Serial.println ("*** This Sketch can install Bootloader 2.0, or install the old bootloader.                    ****");
-  Serial.println ("*** V 2.0: Sketches can start at 0x08005000 or 0x8002000 by using a different upload ID       ****");
-  Serial.println ("*** V 1.0: Sketches can start at 0x08005000, but supports upload to RAM                       ****");
-  Serial.println ("*** This sketch will update the bootloader in the Maple Mini.                                 ****");
-  Serial.println ("*** If you are running this on a different board, please do not continue.                     ****");
-  Serial.println ();
-  Serial.println ("*** When using bootloader version 2.0 you can use up to 120KB of Flash and 20KB of RAM for a Sketch");
-  Serial.print ("Bootloader v1.0 Size: ");
-  Serial.println (sizeof(bootloader_1), DEC);
-  Serial.println ();
-  Serial.print ("Bootloader v2.0 Size: ");
-  Serial.println (sizeof(bootloader_2), DEC);
-  Serial.println ();
-  Serial.println ("Select a bootloader to flash (1 or 2)");
-  char input = Serial.read();
+  Serial1.println ("*** BETA version 5/3/2015. Bootloader 2.0 compiled by Roger.                                  ****");
+  Serial1.println ("*** This Sketch can install Bootloader 2.0, or install the old bootloader.                    ****");
+  Serial1.println ("*** V 2.0: Sketches can start at 0x08005000 or 0x8002000 by using a different upload ID       ****");
+  Serial1.println ("*** V 1.0: Sketches can start at 0x08005000, but supports upload to RAM                       ****");
+  Serial1.println ("*** This sketch will update the bootloader in the Maple Mini.                                 ****");
+  Serial1.println ("*** If you are running this on a different board, please do not continue.                     ****");
+  Serial1.println ();
+  Serial1.println ("*** When using bootloader version 2.0 you can use up to 120KB of Flash and 20KB of RAM for a Sketch");
+  Serial1.print ("Bootloader v1.0 Size: ");
+  Serial1.println (sizeof(bootloader_1), DEC);
+  Serial1.println ();
+  Serial1.print ("Bootloader v2.0 Size: ");
+  Serial1.println (sizeof(bootloader_2), DEC);
+  Serial1.println ();
+  Serial1.println ("Select a bootloader to flash (1 or 2)");
+  char input = Serial1.read();
   while (input != '1' & input != '2')
   {
-    while (Serial.available() == 0) {
+    while (Serial1.available() == 0) {
       delay (1);
     }
-    input = Serial.read();
-    Serial.println (input);
+    input = Serial1.read();
+    Serial1.println (input);
   }
   int n = 0;
   if (input == '1') {
@@ -224,13 +224,13 @@ void loop() {
     bootloader = const_cast<char *>(bootloader_2);
   }
 
-  Serial.println (". Proceeding with update, do not remove power.");
-  Serial.println ("To confirm, enter Y");
-  while (Serial.read() != 'Y')
+  Serial1.println (". Proceeding with update, do not remove power.");
+  Serial1.println ("To confirm, enter Y");
+  while (Serial1.read() != 'Y')
   {
     delay(1);
   }
-  Serial.println ("Proceeding with update, do not remove power.");
+  Serial1.println ("Proceeding with update, do not remove power.");
   
   setupFLASH();
   flashUnlock();
@@ -244,8 +244,8 @@ void loop() {
      if (size > PAGE_SIZE) size = PAGE_SIZE;
      
      if (!writeChunk(chunk, size, &bootloader[i])) {
-      Serial.println ();
-      Serial.println ("WARNING, Update Failed!! The sketch will restart in 3 seconds and you can try to flash again");
+      Serial1.println ();
+      Serial1.println ("WARNING, Update Failed!! The sketch will restart in 3 seconds and you can try to flash again");
       delay (3000);
       success = 0;
       break;
@@ -254,8 +254,8 @@ void loop() {
   
   if (success){
   flashLock();
-  Serial.println ();
-  Serial.println ("Update completed successfully. Reboot now and replace this sketch");
+  Serial1.println ();
+  Serial1.println ("Update completed successfully. Reboot now and replace this sketch");
   while (1){
   digitalWrite(BOARD_LED_PIN, LOW);
   delay(500);

@@ -239,29 +239,40 @@ public:
      * @return Next unread byte.
      */
     uint8 transfer(uint8 data);
-
+	
+	/**
+     * @brief Sets up a DMA Transfer for "length" bytes.
+     *
+     * This function transmits and receives to buffers.
+     *
+     * @param transmitBuf buffer Bytes to transmit. If passed as 0, it sends FF repeatedly for "length" bytes
+     * @param receiveBuf buffer Bytes to save received data. 
+     * @param length Number of bytes in buffer to transmit.
+	 */
 	uint8 dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length);
 
 	/**
-     * @brief Sets up a DMA transfer for bytes.
+     * @brief Sets up a DMA Transmit for bytes.
      *
      * This function transmits and does not care about the RX fifo.
      *
-     * @param data buffer Bytes to transmit,
+     * @param transmitBuf buffer Bytes to transmit,
      * @param length Number of bytes in buffer to transmit.
+	 * @param minc Set to use Memory Increment mode, clear to use Circular mode.
      */
-	uint8 dmaSend(uint8 *transmitBuf, uint16 length);
+	uint8 dmaSend(uint8 *transmitBuf, uint16 length, bool minc);
 	
 	/**
-     * @brief Sets up a DMA transfer for half words.
+     * @brief Sets up a DMA Transmit for half words.
+	 * SPI PERFIPHERAL MUST BE SET TO 16 BIT MODE BEFORE
      *
      * This function transmits and does not care about the RX fifo.
      *
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
-     * @param minc Set to use MINC mode, clear to use Circular mode.
+     * @param minc Set to use Memory Increment mode (default if blank), clear to use Circular mode.
      */
-	uint8 dmaSend(uint16 *transmitBuf, uint16 length, bool min);
+	uint8 dmaSend(uint16 *transmitBuf, uint16 length, bool minc);
 
     /*
      * Pin accessors

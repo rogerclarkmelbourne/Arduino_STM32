@@ -236,7 +236,7 @@ void ILI_SdSpi::send(const uint8_t* buf , size_t n) {
 #define ILI_SPI_TX_IDX  1
 /** DMAC Channel HW Interface Number for SPI RX. */
 #define ILI_SPI_RX_IDX  2
-
+/*
 volatile bool SPI_DMA_TX_Active = false;
 volatile bool SPI_DMA_RX_Active = false;
 
@@ -249,6 +249,7 @@ inline void SPI_DMA_RX_Event() {
   SPI_DMA_RX_Active = false;
   dma_disable(DMA1, DMA_CH2);
 }
+*/
 //------------------------------------------------------------------------------
 /** Disable DMA Controller. */
 //static void ILI_dmac_disable() {
@@ -259,13 +260,13 @@ inline void SPI_DMA_RX_Event() {
 //  DMAC->DMAC_EN = DMAC_EN_ENABLE;
 //}
 /** Disable DMA Channel. */
-static void ILI_dmac_channel_disable(dma_channel ul_num) {
-  dma_disable(DMA1, ul_num);
-}
+//static void ILI_dmac_channel_disable(dma_channel ul_num) {
+//  dma_disable(DMA1, ul_num);
+//}
 /** Enable DMA Channel. */
-static void ILI_dmac_channel_enable(dma_channel ul_num) {
-  dma_enable(DMA1, ul_num);
-}
+//static void ILI_dmac_channel_enable(dma_channel ul_num) {
+//  dma_enable(DMA1, ul_num);
+//}
 /** Poll for transfer complete. */
 //static bool ILI_dmac_channel_transfer_done(dma_tube tube) {
 //    uint8 shift = (tube - 1) * 4;
@@ -284,18 +285,18 @@ void ILI_SdSpi::begin() {
 
 
 #if ILI_USE_STM32F1_DMAC
-  dma_init(DMA1);
+/*  dma_init(DMA1);
   dma_attach_interrupt(DMA1, DMA_CH3, SPI_DMA_TX_Event);
   dma_attach_interrupt(DMA1, DMA_CH2, SPI_DMA_RX_Event);
   spi_tx_dma_enable(SPI1);
   spi_rx_dma_enable(SPI1);
-
+*/
 
 #endif  // ILI_USE_STM32F1_DMAC
 }
 //------------------------------------------------------------------------------
 // start RX DMA
-
+/*
 static void ILI_spiDmaRX(uint8_t* dst, uint16_t count) {
 //  spi_rx_dma_enable(SPI1);
   if (count < 1) return;
@@ -307,8 +308,10 @@ static void ILI_spiDmaRX(uint8_t* dst, uint16_t count) {
 
 
 }
+*/
 //------------------------------------------------------------------------------
 // start TX DMA
+/*
 static void ILI_spiDmaTX(uint8_t* src, uint16_t count) {
   if (count < 1) return;
   static uint8_t ff = 0XFF;
@@ -331,15 +334,16 @@ static void ILI_spiDmaTX(uint8_t* src, uint16_t count) {
   dma_enable(DMA1, DMA_CH3);
 
 }
+*/
 //------------------------------------------------------------------------------
 //  initialize SPI controller STM32F1
 void ILI_SdSpi::init(uint8_t sckDivisor) {
   SPI.setClockDivider(sckDivisor);
   SPI.setBitOrder(MSBFIRST);
   SPI.setDataMode(SPI_MODE0);
-  spi_tx_dma_enable(SPI1);
+/*  spi_tx_dma_enable(SPI1);
   spi_rx_dma_enable(SPI1);
-
+*/
 }
 //------------------------------------------------------------------------------
 // STM32
@@ -362,19 +366,21 @@ uint8_t ILI_SdSpi::receive(uint8_t* buf, size_t n) {
 #if ILI_USE_STM32F1_DMAC
   // clear overrun error
   //  uint32_t s = pSpi->SPI_SR;
-  ILI_spiDmaRX(buf, n);
-  ILI_spiDmaTX(0, n);
-
+	SPI.DMAtransfer (0, buf, n);
+  /*  spiDmaRX(buf, n);
+  spiDmaTX(0, n);
 
   uint32_t m = millis();
   while (SPI_DMA_RX_Active) {
-    if ((millis() - m) > ILI_STM32F1_DMA_TIMEOUT)  {
-      ILI_dmac_channel_disable(ILI_SPI_DMAC_RX_CH);
-      ILI_dmac_channel_disable(ILI_SPI_DMAC_TX_CH);
+    if ((millis() - m) > STM32F1_DMA_TIMEOUT)  {
+      dmac_channel_disable(SPI_DMAC_RX_CH);
+      dmac_channel_disable(SPI_DMAC_TX_CH);
       rtn = 2;
       break;
     }
   }
+*/
+
   //  if (pSpi->SPI_SR & SPI_SR_OVRES) rtn |= 1;
 #else  // ILI_USE_STM32F1_DMAC
   for (size_t i = 0; i < n; i++) {
@@ -392,9 +398,11 @@ void ILI_SdSpi::send(uint8_t b) {
 void ILI_SdSpi::send(uint8_t* buf , size_t n) {
 
 #if ILI_USE_STM32F1_DMAC
-  ILI_spiDmaTX(buf, n);
+  SPI.DMAsend (buf, n);
+/*
+  spiDmaTX(buf, n);
   while (SPI_DMA_TX_Active) {}
-
+*/
   //  uint32_t m = millis();
   //  while (SPI_DMA_TX_Active) {
   //    if ((millis() - m) > ILI_STM32F1_DMA_TIMEOUT)  {
@@ -407,5 +415,8 @@ void ILI_SdSpi::send(uint8_t* buf , size_t n) {
 #endif  // #if ILI_USE_STM32F1_DMAC
   // leave RDR empty
   //  uint8_t b = pSpi->SPI_RDR;
+    uint8_t b = spi_rx_reg(SPI1);
 }
 #endif  // ILI_USE_NATIVE_STM32F1_SPI
+
+

@@ -5,3 +5,13 @@ other/maple-bootloader/tags
 other/maple-bootloader/cscope.out
 other/maple-bootloader/build
 other/maple-bootloader/*~
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/breakouttouchpaint/breakouttouchpaint.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/Adafruit_ILI9341_STM.cpp
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/graphicstest/graphicstest.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/onoffbutton_breakout/onoffbutton_breakout.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/stm32_graphicstest/stm32_graphicstest.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/Adafruit_ILI9341_STM.h
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/onoffbutton/onoffbutton.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/spitftbitmap/spitftbitmap.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/TFT_Clock_ILI9341/TFT_Clock_ILI9341.ino
+STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/TFT_Clock_Digital_ILI9341/TFT_Clock_Digital_ILI9341.ino
