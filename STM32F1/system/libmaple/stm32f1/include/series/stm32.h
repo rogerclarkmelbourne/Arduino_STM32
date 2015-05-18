@@ -137,12 +137,14 @@ extern "C" {
 #elif defined(MCU_STM32F103VC)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_NR_GPIO_PORTS          5
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
 #   define STM32_SRAM_END               ((void*)0x2000C000)
 #   define STM32_HIGH_DENSITY
 
 #elif defined(MCU_STM32F103VD) || defined(MCU_STM32F103VE)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_NR_GPIO_PORTS          5
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
 #   define STM32_SRAM_END               ((void*)0x20010000)
 #   define STM32_HIGH_DENSITY
 

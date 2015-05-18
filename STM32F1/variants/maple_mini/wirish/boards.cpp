@@ -153,7 +153,7 @@ static void setup_clocks(void) {
 		#define USER_ADDR_ROM 0x08000000
 	#endif
 #endif
-#define USER_ADDR_RAM 0x20000C00
+#define USER_ADDR_RAM 0x20000C00 //#define USER_ADDR_RAM 0x20000C00
 extern char __text_start__;
 
 static void setup_nvic(void) {

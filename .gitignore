@@ -15,3 +15,9 @@ STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/onoffbutton/onoffbutton.i
 STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/spitftbitmap/spitftbitmap.ino
 STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/TFT_Clock_ILI9341/TFT_Clock_ILI9341.ino
 STM32F1/libraries/Adafruit_ILI9341_STM - Copy/examples/TFT_Clock_Digital_ILI9341/TFT_Clock_Digital_ILI9341.ino
+STM32F1/boards.txt.older
+maple_mini_bootloader/boards.zip
+maple_mini_bootloader/allAA.bin
+maple_mini_bootloader/all00.bin
+maple_mini_bootloader/allFF.bin
+maple_mini_bootloader/all55.bin

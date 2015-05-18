@@ -10,14 +10,41 @@ menu.upload_method=Upload method
 
 
 
+##############################################################
+maple_mini2.name=LeafLabs Maple Mini to Flash 120K ID2
 
+maple_mini2.upload.tool=maple_upload
+maple_mini2.upload.protocol=maple_dfu
+maple_mini2.upload.maximum_size=122880
+maple_mini2.upload.use_1200bps_touch=false
+maple_mini2.upload.file_type=bin
+maple_mini2.upload.ram.maximum_size=20480
+maple_mini2.upload.flash.maximum_size=122880
+# FIXME ?
+maple_mini2.upload.usbID=1EAF:0003
+maple_mini2.upload.altID=2
+maple_mini2.upload.auto_reset=true
+
+maple_mini2.build.mcu=cortex-m3
+maple_mini2.build.f_cpu=72000000L
+maple_mini2.build.board=MAPLE_MINI
+maple_mini2.build.core=maple
+maple_mini2.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
+maple_mini2.build.ldscript=ld/flash2.ld
+maple_mini2.build.variant=maple_mini
+maple_mini2.build.variant_system_lib=libmaple.a
+maple_mini2.build.vect=VECT_TAB_ADDR=0x8002000
+maple_mini2.build.density=STM32_MEDIUM_DENSITY
+maple_mini2.build.error_led_port=GPIOB
+maple_mini2.build.error_led_pin=1
+maple_mini2.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
-maple_mini.name=LeafLabs Maple Mini Rev 2 to Flash
+maple_mini.name=LeafLabs Maple Mini to Flash 108K ID1
 
 maple_mini.upload.tool=maple_upload
 maple_mini.upload.protocol=maple_dfu
-maple_mini.upload.maximum_size=108000
+maple_mini.upload.maximum_size=110592
 maple_mini.upload.use_1200bps_touch=false
 maple_mini.upload.file_type=bin
 maple_mini.upload.ram.maximum_size=17000
@@ -35,7 +62,7 @@ maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -marc
 maple_mini.build.ldscript=ld/flash.ld
 maple_mini.build.variant=maple_mini
 maple_mini.build.variant_system_lib=libmaple.a
-maple_mini.build.vect=VECT_TAB_FLASH
+maple_mini.build.vect=VECT_TAB_ADDR=0x8005000
 maple_mini.build.density=STM32_MEDIUM_DENSITY
 maple_mini.build.error_led_port=GPIOB
 maple_mini.build.error_led_pin=1

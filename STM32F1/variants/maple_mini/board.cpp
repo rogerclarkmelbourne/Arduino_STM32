@@ -38,6 +38,7 @@
 #include <wirish_debug.h>
 #include <wirish_types.h>
 
+
 /* Since we want the Serial Wire/JTAG pins as GPIOs, disable both SW
  * and JTAG debug support, unless configured otherwise. */
 void boardInit(void) {
@@ -46,6 +47,11 @@ void boardInit(void) {
 #endif
 }
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//extern const __attribute__ ((section (".rodata"))) stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
@@ -88,6 +94,10 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     {GPIOB, TIMER4, NULL,  8, 3, ADCx}, /* D32/PB8 */
     {GPIOB, TIMER3, ADC1,  1, 4,    9}, /* D33/PB1 */
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
     3, 4, 5, 8, 9, 10, 11, 15, 16, 25, 26, 27
