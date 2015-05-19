@@ -36,11 +36,12 @@
 /* 72 MHz -> 72 cycles per microsecond. */
 #define CYCLES_PER_MICROSECOND  72
 
-/* Pin number for the built-in button. */
-#define BOARD_BUTTON_PIN        38
+/* Roger clark
 
-/* Pin number for the built-in LED. */
-#define BOARD_LED_PIN           13
+Removed led pin and button pin defines as these are not Arduino API defines
+On the Maple the led is on pin 13 and the button is on pin 38
+*/
+
 
 /* Number of USARTs/UARTs whose pins are broken out to headers. */
 #define BOARD_NR_USARTS         3
@@ -78,7 +79,7 @@
 #define BOARD_NR_ADC_PINS       15
 
 /* Number of pins already connected to external hardware.  For Maple,
- * these are just BOARD_LED_PIN, BOARD_BUTTON_PIN, and the debug port
+ * these are just led pin , button , and the debug port
  * pins (see below). */
 #define BOARD_NR_USED_PINS       7
 

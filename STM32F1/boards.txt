@@ -1,102 +1,40 @@
-# Maple boards
+# STM32 Boards
 
-menu.cpu=Processor
-menu.gcc_version=GCC version
-menu.debug_menu=Debug mode
-menu.cpu_upload_menu=CPU & Upload mode
-menu.HS_IO=High speed I/O commands
 
+menu.device_variant=Variant
+menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
-
-
 ##############################################################
-maple_mini2.name=LeafLabs Maple Mini to Flash 120K ID2
+maple_mini.name=LeafLabs Maple Mini Rev 2 to Flash
 
-maple_mini2.upload.tool=maple_upload
-maple_mini2.upload.protocol=maple_dfu
-maple_mini2.upload.maximum_size=122880
-maple_mini2.upload.use_1200bps_touch=false
-maple_mini2.upload.file_type=bin
-maple_mini2.upload.ram.maximum_size=20480
-maple_mini2.upload.flash.maximum_size=122880
-# FIXME ?
-maple_mini2.upload.usbID=1EAF:0003
-maple_mini2.upload.altID=2
-maple_mini2.upload.auto_reset=true
-
-maple_mini2.build.mcu=cortex-m3
-maple_mini2.build.f_cpu=72000000L
-maple_mini2.build.board=MAPLE_MINI
-maple_mini2.build.core=maple
-maple_mini2.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
-maple_mini2.build.ldscript=ld/flash2.ld
-maple_mini2.build.variant=maple_mini
-maple_mini2.build.variant_system_lib=libmaple.a
-maple_mini2.build.vect=VECT_TAB_ADDR=0x8002000
-maple_mini2.build.density=STM32_MEDIUM_DENSITY
-maple_mini2.build.error_led_port=GPIOB
-maple_mini2.build.error_led_pin=1
-maple_mini2.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
-##############################################################
-maple_mini.name=LeafLabs Maple Mini to Flash 108K ID1
+maple_mini.build.board=MAPLE_MINI
+maple_mini.build.core=maple
+maple_mini.build.cpu_flags=-DMCU_STM32F103CB -DSERIAL_USB
+maple_mini.build.variant=maple_mini
+maple_mini.upload.usbID=1EAF:0003
 
 maple_mini.upload.tool=maple_upload
 maple_mini.upload.protocol=maple_dfu
-maple_mini.upload.maximum_size=110592
 maple_mini.upload.use_1200bps_touch=false
 maple_mini.upload.file_type=bin
-maple_mini.upload.ram.maximum_size=17000
-maple_mini.upload.flash.maximum_size=108000
-# FIXME ?
-maple_mini.upload.usbID=1EAF:0003
-maple_mini.upload.altID=1
 maple_mini.upload.auto_reset=true
 
-maple_mini.build.mcu=cortex-m3
-maple_mini.build.f_cpu=72000000L
-maple_mini.build.board=MAPLE_MINI
-maple_mini.build.core=maple
-maple_mini.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
-maple_mini.build.ldscript=ld/flash.ld
-maple_mini.build.variant=maple_mini
-maple_mini.build.variant_system_lib=libmaple.a
-maple_mini.build.vect=VECT_TAB_ADDR=0x8005000
-maple_mini.build.density=STM32_MEDIUM_DENSITY
-maple_mini.build.error_led_port=GPIOB
-maple_mini.build.error_led_pin=1
-maple_mini.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+maple_mini.menu.bootloader_version.original = Original (17k RAM,108k Flash)
+maple_mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
+maple_mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
+maple_mini.menu.bootloader_version.original.upload.ram.maximum_size=17408
+maple_mini.menu.bootloader_version.original.upload.flash.maximum_size=110592
+maple_mini.menu.bootloader_version.original.upload.maximum_size=110592
+maple_mini.menu.bootloader_version.original.upload.altID=1
 
-##############################################################
-#maple_miniRAM.name=LeafLabs Maple Mini Rev 2 to RAM
-#
-#maple_miniRAM.upload.tool=maple_upload
-#maple_miniRAM.upload.protocol=maple_dfu
-#maple_miniRAM.upload.maximum_size=17000
-#maple_miniRAM.upload.use_1200bps_touch=false
-#maple_miniRAM.upload.file_type=bin
-#maple_miniRAM.upload.ram.maximum_size=17000
-#maple_miniRAM.upload.flash.maximum_size=108000
-#maple_miniRAM.upload.usbID=1EAF:0003
-#maple_miniRAM.upload.altID=0
-#maple_miniRAM.upload.auto_reset=true
-#
-#maple_miniRAM.build.mcu=cortex-m3
-#maple_miniRAM.build.f_cpu=72000000L
-#maple_miniRAM.build.board=MAPLE_MINI_RAM
-#maple_miniRAM.build.core=maple
-#maple_miniRAM.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
-#maple_miniRAM.build.ldscript=ld/ram.ld
-#maple_miniRAM.build.variant=maple_mini
-#maple_miniRAM.build.variant_system_lib=libmaple.a
-#maple_miniRAM.build.vect=VECT_TAB_RAM
-#maple_miniRAM.build.density=STM32_MEDIUM_DENSITY
-#maple_miniRAM.build.error_led_port=GPIOB
-#maple_miniRAM.build.error_led_pin=1
-#maple_miniRAM.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
-
+maple_mini.menu.bootloader_version.bootloader20 = Bootloader 2.0 (20k RAM,120k Flash)
+maple_mini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
+maple_mini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
+maple_mini.menu.bootloader_version.bootloader20.upload.ram.maximum_size=20480
+maple_mini.menu.bootloader_version.bootloader20.upload.flash.maximum_size=122880
+maple_mini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
+maple_mini.menu.bootloader_version.bootloader20.upload.altID=2
 
 ##############################################################
 maple.name=LeafLabs Maple Rev 3+ to Flash
@@ -112,80 +50,65 @@ maple.upload.usbID=1EAF:0003
 maple.upload.altID=1
 maple.upload.auto_reset=true
 
-maple.build.mcu=cortex-m3
-maple.build.f_cpu=72000000L
+
 maple.build.board=MAPLE_REV3
 maple.build.core=maple
-maple.build.extra_flags=-DMCU_STM32F103RB -mthumb  -DBOOTLOADER_maple -march=armv7-m  -D__STM32F1__  
+maple.build.cpu_flags=-DMCU_STM32F103RB -DSERIAL_USB 
 maple.build.ldscript=ld/flash.ld
 maple.build.variant=maple
-maple.build.variant_system_lib=libmaple.a
-maple.build.vect=VECT_TAB_FLASH
-maple.build.density=STM32_MEDIUM_DENSITY
-maple.build.error_led_port=GPIOA
-maple.build.error_led_pin=5
-maple.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+maple.build.vect=VECT_TAB_ADDR=0x8005000
 
 
 ##############################################################
-genericSTM32.name=STM32 to Flash - No bootloader
+mapleRET6.name=LeafLabs Maple RET6 to Flash
+
+mapleRET6.build.board=MAPLE_RET6
+mapleRET6.build.core=maple
+mapleRET6.build.cpu_flags=-DMCU_STM32F103RE -DSERIAL_USB
+
+mapleRET6.build.ldscript=ld/stm32f103re-bootloader.ld
+mapleRET6.build.variant=maple_ret6
+mapleRET6.build.vect=VECT_TAB_ADDR=0x8005000
+
+mapleRET6.upload.tool=maple_upload
+mapleRET6.upload.protocol=maple_dfu
+mapleRET6.upload.maximum_size=262144
+mapleRET6.upload.use_1200bps_touch=false
+mapleRET6.upload.file_type=bin
+mapleRET6.upload.ram.maximum_size=65536
+mapleRET6.upload.flash.maximum_size=262144
+mapleRET6.upload.usbID=1EAF:0003
+mapleRET6.upload.altID=1
+mapleRET6.upload.auto_reset=true
+
+
+##############################################################
+genericSTM32.name=STM32F103C8 (deprecated - use Generic STM32F103C)
 
 genericSTM32.menu.upload_method.serialMethod=Serial
 genericSTM32.menu.upload_method.serialMethod.upload.protocol=maple_serial
 genericSTM32.menu.upload_method.serialMethod.upload.tool=serial_upload
+genericSTM32.menu.upload_method.serialMethod.build.extra_flags=-DMCU_STM32F103CB -mthumb   -march=armv7-m  -D__STM32F1__ 
+
 genericSTM32.menu.upload_method.STLinkMethod=STLink
 genericSTM32.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32.menu.upload_method.STLinkMethod.build.extra_flags=-DMCU_STM32F103CB -mthumb   -march=armv7-m  -D__STM32F1__ -DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
 
-#genericSTM32.upload.tool=upload_router
+
 genericSTM32.upload.maximum_size=108000
 genericSTM32.upload.use_1200bps_touch=false
 genericSTM32.upload.file_type=bin
 genericSTM32.upload.ram.maximum_size=17000
 genericSTM32.upload.flash.maximum_size=108000
-
-genericSTM32.upload.usbID=1EAF:0003
-genericSTM32.upload.altID=1
 genericSTM32.upload.auto_reset=true
 
-genericSTM32.build.mcu=cortex-m3
-genericSTM32.build.f_cpu=72000000L
-genericSTM32.build.board=GENERIC_STM32
+genericSTM32.build.board=STM32F103C8
 genericSTM32.build.core=maple
-genericSTM32.build.extra_flags=-DMCU_STM32F103CB -mthumb   -march=armv7-m  -D__STM32F1__ 
+
 genericSTM32.build.ldscript=ld/jtag.ld
 genericSTM32.build.variant=maple_mini
-genericSTM32.build.variant_system_lib=libmaple.a
-genericSTM32.build.vect=VECT_TAB_FLASH
-genericSTM32.build.density=STM32_MEDIUM_DENSITY
-genericSTM32.build.error_led_port=GPIOB
-genericSTM32.build.error_led_pin=1
-genericSTM32.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
-
-##############################################################
-genericSTM32F103R.name=Generic STM32F103RE
-genericSTM32F103R.upload.maximum_size=492000
-genericSTM32F103R.upload.ram.maximum_size=61000
-genericSTM32F103R.upload.flash.maximum_size=492000
-genericSTM32F103R.build.error_led_port=GPIOA
-genericSTM32F103R.build.error_led_pin=5
-genericSTM32F103R.build.variant=generic_stm32f103rxx
-genericSTM32F103R.build.extra_flags=-DMCU_STM32F103RE -mthumb -march=armv7-m  -D__STM32F1__  
-genericSTM32F103R.build.ldscript=ld/jtag.ld
-
-genericSTM32F103R.upload.tool=serial_upload
-genericSTM32F103R.upload.protocol=maple_dfu
-genericSTM32F103R.upload.use_1200bps_touch=false
-genericSTM32F103R.upload.file_type=bin
-#genericSTM32F103R.upload.usbID=1EAF:0003
-#genericSTM32F103R.upload.altID=1
-#genericSTM32F103R.upload.auto_reset=true
-genericSTM32F103R.build.mcu=cortex-m3
-genericSTM32F103R.build.f_cpu=72000000L
-genericSTM32F103R.build.board=GENERIC_STM32F103R
-genericSTM32F103R.build.core=maple
-genericSTM32F103R.build.vect=VECT_TAB_FLASH
+genericSTM32.build.vect=VECT_TAB_ADDR=0x8000000
 
 ##############################################################
 
@@ -207,11 +130,11 @@ microduino32_flash.build.mcu=cortex-m3
 microduino32_flash.build.f_cpu=72000000L
 microduino32_flash.build.board=MICRODUINO_CORE_STM32
 microduino32_flash.build.core=maple
-microduino32_flash.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
+microduino32_flash.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DSERIAL_USB -march=armv7-m -D__STM32F1__ 
 microduino32_flash.build.ldscript=ld/flash.ld
 microduino32_flash.build.variant=microduino
 microduino32_flash.build.variant_system_lib=libmaple.a
-microduino32_flash.build.vect=VECT_TAB_FLASH
+microduino32_flash.build.vect=VECT_TAB_ADDR=0x8005000
 microduino32_flash.build.density=STM32_MEDIUM_DENSITY
 # FIXME!
 microduino32_flash.build.error_led_port=GPIOB
@@ -247,203 +170,226 @@ nucleo_f103rb.build.density=STM32_MEDIUM_DENSITY
 nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+nucleo_f103rb.build.vect=VECT_TAB_ADDR=0x8000000
+
+###################### Generic STM32F103C  ########################################
+
+genericSTM32F103C.name= Generic STM32F103C series
+genericSTM32F103C.build.variant=generic_stm32f103c
+genericSTM32F103C.build.vect=VECT_TAB_ADDR=0x8000000
+genericSTM32F103C.build.core=maple
+genericSTM32F103C.build.board=GENERIC_STM32F103C
+genericSTM32F103C.upload.use_1200bps_touch=false
+genericSTM32F103C.upload.file_type=bin
+genericSTM32F103C.upload.auto_reset=true
+
+## STM32F103CB -------------------------
+genericSTM32F103C.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Flash)
+genericSTM32F103C.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB  
+genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=128000
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20000
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.flash.maximum_size=128000
+
+
+## STM32F103C8 -------------------------
+genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
+genericSTM32F103C.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8  
+genericSTM32F103C.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_size=64000
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20000
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.flash.maximum_size=64000
+
+#---------------------------- UPLOAD METHODS ---------------------------
+genericSTM32F103C.menu.upload_method.serialMethod=Serial
+genericSTM32F103C.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32F103C.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+
+genericSTM32F103C.menu.upload_method.STLinkMethod=STLink
+genericSTM32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32F103C.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+
+
+########################### Generic STM32F103R  ###########################
+
+genericSTM32F103R.name= Generic STM32F103R series
+genericSTM32F103R.build.variant=generic_stm32f103r
+genericSTM32F103R.build.vect=VECT_TAB_ADDR=0x8000000
+genericSTM32F103R.build.core=maple
+genericSTM32F103R.build.board=GENERIC_STM32F103R
+genericSTM32F103R.upload.use_1200bps_touch=false
+genericSTM32F103R.upload.file_type=bin
+genericSTM32F103R.upload.auto_reset=true
+
+genericSTM32F103R.menu.device_variant.STM32F103RE=STM32F103RE
+genericSTM32F103R.menu.device_variant.STM32F103RE.build.cpu_flags=-DMCU_STM32F103RE -DSERIAL_USB
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.maximum_size=492000
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.ram.maximum_size=61000
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.flash.maximum_size=492000
+genericSTM32F103R.menu.device_variant.STM32F103RE.build.ldscript=ld/stm32f103re.ld
+
+
+#---------------------------- UPLOAD METHODS ---------------------------
+genericSTM32F103R.menu.upload_method.serialMethod=Serial
+genericSTM32F103R.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32F103R.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+genericSTM32F103R.menu.upload_method.STLinkMethod=STLink
+genericSTM32F103R.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32F103R.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32F103R.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+
+genericSTM32F103R.menu.upload_method.DFUUploadMethod=Maple DFU
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103reDFU.ld
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+genericSTM32F103R.menu.upload_method.DFU_RAM=Maple DFU to RAM
+genericSTM32F103R.menu.upload_method.DFU_RAM.upload.protocol=maple_dfu
+genericSTM32F103R.menu.upload_method.DFU_RAM.upload.tool=maple_upload
+genericSTM32F103R.menu.upload_method.DFU_RAM.build.upload_flags=-DSERIAL_USB
+genericSTM32F103R.menu.upload_method.DFU_RAM.build.vect=VECT_TAB_RAM
+genericSTM32F103R.menu.upload_method.DFU_RAM.build.ldscript=ld/ram.ld
+genericSTM32F103R.menu.upload_method.DFU_RAM.upload.usbID=1EAF:0003
+genericSTM32F103R.menu.upload_method.DFU_RAM.upload.altID=0
+
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM=Maple DFU to FLASH to RAM
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.upload.protocol=maple_dfu
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.upload.tool=maple_upload
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.upload.maximum_size=60000
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.build.upload_flags=-DSERIAL_USB
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.build.vect=VECT_TAB_RAM
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.build.ldscript=ld/ram.ld
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.upload.usbID=1EAF:0003
+genericSTM32F103R.menu.upload_method.DFU_FLASH_RAM.upload.altID=2
+
+########################### Generic STM32F103Z ###########################
+
+
+genericSTM32F103Z.name=Generic STM32F103Z series
+genericSTM32F103Z.build.variant=generic_stm32f103z
+genericSTM32F103Z.build.vect=VECT_TAB_ADDR=0x8000000
+genericSTM32F103Z.build.core=maple
+genericSTM32F103Z.build.board=GENERIC_STM32F103Z
+genericSTM32F103Z.upload.use_1200bps_touch=false
+genericSTM32F103Z.upload.file_type=bin
+genericSTM32F103Z.upload.auto_reset=true
+
+genericSTM32F103Z.menu.device_variant.STM32F103ZC=STM32F103ZC
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.cpu_flags=-DMCU_STM32F103ZC 
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.maximum_size=262144
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.ram.maximum_size=492152
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.flash.maximum_size=262144
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.ldscript=ld/stm32f103zc.ld
+
+genericSTM32F103Z.menu.device_variant.STM32F103ZD=STM32F103ZD
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.cpu_flags=-DMCU_STM32F103ZD  
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.maximum_size=393216
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.ram.maximum_size=65536
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.flash.maximum_size=393216
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.ldscript=ld/stm32f103zd.ld
+
+genericSTM32F103Z.menu.device_variant.STM32F103ZE=STM32F103ZE
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.cpu_flags=-DMCU_STM32F103ZE 
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.maximum_size=524288
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.ram.maximum_size=65536
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.flash.maximum_size=524288
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.ldscript=ld/stm32f103ze.ld
+
+#---------------------------- UPLOAD METHODS ---------------------------
+genericSTM32F103Z.menu.upload_method.serialMethod=Serial
+genericSTM32F103Z.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32F103Z.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+genericSTM32F103Z.menu.upload_method.STLinkMethod=STLink
+genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1   -DSERIAL_USB
 
 
 
 
+########################### Generic STM32F103V ###########################
 
 
-##############################################################
-#mapleRAM.name=LeafLabs Maple Rev 3+ to RAM
+genericSTM32F103V.name=Generic STM32F103V series
+genericSTM32F103V.build.variant=generic_stm32f103v
+genericSTM32F103V.build.vect=VECT_TAB_ADDR=0x8000000
+genericSTM32F103V.build.core=maple
+genericSTM32F103V.build.board=GENERIC_STM32F103V
+genericSTM32F103V.upload.use_1200bps_touch=false
+genericSTM32F103V.upload.file_type=bin
+genericSTM32F103V.upload.auto_reset=true
 
-#mapleRAM.upload.tool=maple_upload
-#mapleRAM.upload.protocol=maple_dfu
-#mapleRAM.upload.maximum_size=17000
-#mapleRAM.upload.use_1200bps_touch=false
-#mapleRAM.upload.file_type=bin
-#mapleRAM.upload.ram.maximum_size=17000
-#mapleRAM.upload.flash.maximum_size=108000
-#mapleRAM.upload.usbID=1EAF:0003
-#mapleRAM.upload.altID=0
-#mapleRAM.upload.auto_reset=true
-#
-#mapleRAM.build.mcu=cortex-m3
-#mapleRAM.build.f_cpu=72000000L
-#mapleRAM.build.board=MAPLE_REV3_TO_RAM
-#mapleRAM.build.core=maple
-#mapleRAM.build.extra_flags=-DMCU_STM32F103RB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
-#mapleRAM.build.ldscript=ld/ram.ld
-#mapleRAM.build.variant=maple
-#mapleRAM.build.variant_system_lib=libmaple.a
-#mapleRAM.build.vect=VECT_TAB_RAM
-#mapleRAM.build.density=STM32_MEDIUM_DENSITY
-#mapleRAM.build.error_led_port=GPIOA
-#mapleRAM.build.error_led_pin=5
-#mapleRAM.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+genericSTM32F103V.build.error_led_port=GPIOE
+genericSTM32F103V.build.error_led_pin=6
 
 
-#####################################################################
-
-MapleMiniGeneric.name= Maple mini generic - experimental
-MapleMiniGeneric.upload.tool=upload_router
-#MapleMiniGeneric.upload.tool=maple_upload
-MapleMiniGeneric.build.core=maple
-MapleMiniGeneric.build.variant=maple_mini
-MapleMiniGeneric.upload.use_1200bps_touch=false
-MapleMiniGeneric.upload.file_type=bin
-MapleMiniGeneric.upload.usbID=1EAF:0003
-MapleMiniGeneric.upload.auto_reset=true
-MapleMiniGeneric.build.mcu=cortex-m3
-MapleMiniGeneric.build.f_cpu=72000000L
-MapleMiniGeneric.build.board=MAPLE_MINI_GENERIC
-MapleMiniGeneric.build.core=maple
-MapleMiniGeneric.build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
-#MapleMiniGeneric.build.extra_flags=-DMCU_STM32F103CB -mthumb  -DBOOTLOADER_maple -march=armv7-m -D__STM32F1__ 
-MapleMiniGeneric.build.variant=maple_mini
-MapleMiniGeneric.build.variant_system_lib=libmaple.a
-MapleMiniGeneric.build.density=STM32_MEDIUM_DENSITY
-MapleMiniGeneric.build.error_led_port=GPIOB
-MapleMiniGeneric.build.error_led_pin=1
-
-############################ MENU ############################
-## GCC VER
-## gcc ver 4.8.3
-## -------------------------
-MapleMiniGeneric.menu.gcc_version.gcc48304q1= gcc-4.8.3
-MapleMiniGeneric.menu.gcc_version.gcc48304q1.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-## gcc ver 4.9
-## -------------------------
-MapleMiniGeneric.menu.gcc_version.gcc4904q1= gcc-4.9
-MapleMiniGeneric.menu.gcc_version.gcc4904q1.build.gcc_ver=gcc-arm-none-eabi-4.9-2014q4
-
-############################ MENU ############################
-## GCC VER
-## gcc ver 4.8.3
-## -------------------------
-MapleMiniGeneric.menu.HS_IO.hs_off= HSIO OFF
-MapleMiniGeneric.menu.HS_IO.hs_off.build.hs_flag=
-## gcc ver 4.9
-## -------------------------
-MapleMiniGeneric.menu.HS_IO.hs_on= HSIO ON
-MapleMiniGeneric.menu.HS_IO.hs_on.build.hs_flag=-DHS_IO
+genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
+genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC 
+genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_size=262144
+genericSTM32F103V.menu.device_variant.STM32F103VC.upload.ram.maximum_size=65536
+genericSTM32F103V.menu.device_variant.STM32F103VC.upload.flash.maximum_size=262144
+genericSTM32F103V.menu.device_variant.STM32F103VC.build.ldscript=ld/stm32f103vc.ld
 
 
-## ==DEBUG MODE==
-## Debug off
-## -------------------------
-MapleMiniGeneric.menu.debug_menu.debug_off=DebugOFF
-MapleMiniGeneric.menu.debug_menu.debug_off.build.debuggingMode=0
-
-## Debug on
-## -------------------------
-MapleMiniGeneric.menu.debug_menu.debug_on=DebugON
-MapleMiniGeneric.menu.debug_menu.debug_on.build.debuggingMode=1
-
-## ==UPLOAD MODE==
-## F103CB USB to Flash upload
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash= F103CB(128k) USB->Flash
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.ldscript=ld/flash.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.build.vect=VECT_TAB_FLASH
-
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.flash.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbUsbFlash.upload.protocol=maple_dfu
-
-## F103CB USB to RAM upload
-## -------------------------
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM=F103CB(128k) USB->RAM
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.ldscript=ld/ram.ld
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple 
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.build.vect=VECT_TAB_RAM
-#
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.ram.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.flash.maximum_size=108000
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.altID=0
-#MapleMiniGeneric.menu.cpu_upload_menu.cbUsbRAM.upload.protocol=maple_dfu
-
-## UPLOAD MODE
-## F103CB Serial to Flash upload (keep bootloader)
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash=F103CB(128k) Serial->Flash (keep bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.ldscript=ld/flash.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.cpu_flags=-DMCU_STM32F103CB -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.build.vect=VECT_TAB_FLASH
-
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.flash.maximum_size=108000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialFlash.upload.protocol=maple_serial
-
-## UPLOAD MODE
-## F103CB Serial to Flash upload (lost bootloader)
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG=F103CB(128k) Serial->Flash (lost bootloader!!!)
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.ldscript=ld/jtag.ld
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.cpu_flags=-DMCU_STM32F103CB  
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.build.vect=VECT_TAB_FLASH
-
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.maximum_size=128000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.ram.maximum_size=20000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.flash.maximum_size=128000
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.cbSerialJTAG.upload.protocol=maple_serial
+genericSTM32F103V.menu.device_variant.STM32F103VD=STM32F103VD
+genericSTM32F103V.menu.device_variant.STM32F103VD.build.cpu_flags=-DMCU_STM32F103VD  
+genericSTM32F103V.menu.device_variant.STM32F103VD.upload.maximum_size=393216
+genericSTM32F103V.menu.device_variant.STM32F103VD.upload.ram.maximum_size=65536
+genericSTM32F103V.menu.device_variant.STM32F103VD.upload.flash.maximum_size=393216
+genericSTM32F103V.menu.device_variant.STM32F103VD.build.ldscript=ld/stm32f103vd.ld
 
 
-## ==UPLOAD MODE F103C8 ==
-## F103C8 USB to Flash upload
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash=F103C8(64k) USB->Flash
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.ldscript=ld/flash_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.build.vect=VECT_TAB_FLASH
+genericSTM32F103V.menu.device_variant.STM32F103VE=STM32F103VE
+genericSTM32F103V.menu.device_variant.STM32F103VE.build.cpu_flags=-DMCU_STM32F103VE -DSERIAL_USB
+genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_size=524288
+genericSTM32F103V.menu.device_variant.STM32F103VE.upload.ram.maximum_size=65536
+genericSTM32F103V.menu.device_variant.STM32F103VE.upload.flash.maximum_size=524288
+genericSTM32F103V.menu.device_variant.STM32F103VE.build.ldscript=ld/stm32f103ve.ld
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.flash.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8UsbFlash.upload.protocol=maple_dfu
+#---------------------------- UPLOAD METHODS ---------------------------
+genericSTM32F103V.menu.upload_method.serialMethod=Serial
+genericSTM32F103V.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32F103V.menu.upload_method.serialMethod.upload.tool=serial_upload
 
-## F103C8 USB to RAM upload
-## -------------------------
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM=F103C8(64k) USB->RAM
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.ldscript=ld/ram_c8.ld
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.build.vect=VECT_TAB_RAM
-#
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.ram.maximum_size=17000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.flash.maximum_size=44000
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.altID=0
-#MapleMiniGeneric.menu.cpu_upload_menu.c8UsbRAM.upload.protocol=maple_dfu
 
-## F103C8 Serial to Flash upload (keep bootloader)
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash=F103C8(64k) Serial->Flash (keep bootloader)
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.ldscript=ld/flash_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.cpu_flags=-DMCU_STM32F103C8 -DBOOTLOADER_maple
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.build.vect=VECT_TAB_FLASH
+genericSTM32F103V.menu.upload_method.STLinkMethod=STLink
+genericSTM32F103V.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32F103V.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32F103V.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.ram.maximum_size=17000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.flash.maximum_size=44000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialFlash.upload.protocol=maple_serial
+genericSTM32F103V.menu.upload_method.DFUUploadMethod=Maple DFU to Flash
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103veDFU.ld
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.altID=2
 
-## F103C8 Serial to Flash upload (lost bootloader)
-## -------------------------
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG=F103C8(64k) Serial->Flash (lost bootloader!!!)
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.ldscript=ld/jtag_c8.ld
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.cpu_flags=-DMCU_STM32F103C8
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.build.vect=VECT_TAB_FLASH
+genericSTM32F103V.menu.upload_method.DFU_RAM=Maple DFU to RAM
+genericSTM32F103V.menu.upload_method.DFU_RAM.upload.protocol=maple_dfu
+genericSTM32F103V.menu.upload_method.DFU_RAM.upload.tool=maple_upload
+genericSTM32F103V.menu.upload_method.DFU_RAM.upload.maximum_size=62000
+genericSTM32F103V.menu.upload_method.DFU_RAM.build.upload_flags=-DSERIAL_USB
+genericSTM32F103V.menu.upload_method.DFU_RAM.build.vect=VECT_TAB_RAM
+genericSTM32F103V.menu.upload_method.DFU_RAM.build.ldscript=ld/ram.ld
+genericSTM32F103V.menu.upload_method.DFU_RAM.upload.usbID=1EAF:0003
+genericSTM32F103V.menu.upload_method.DFU_RAM.upload.altID=0
 
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.maximum_size=64000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.ram.maximum_size=20000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.flash.maximum_size=64000
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.altID=1
-MapleMiniGeneric.menu.cpu_upload_menu.c8SerialJTAG.upload.protocol=maple_serial
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM=Maple DFU to FLASH to RAM
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.upload.protocol=maple_dfu
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.upload.tool=maple_upload
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.upload.maximum_size=60000
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.build.upload_flags=-DSERIAL_USB
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.build.vect=VECT_TAB_RAM
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.build.ldscript=ld/ram.ld
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.upload.usbID=1EAF:0003
+genericSTM32F103V.menu.upload_method.DFU_FLASH_RAM.upload.altID=2

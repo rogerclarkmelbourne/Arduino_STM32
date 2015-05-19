@@ -59,6 +59,7 @@
 #include <wirish_math.h>
 #include <wirish_time.h>
 #include <wirish_constants.h>
+#include <wiring_pulse.h>
 
 #if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
 //#include <HardwareSPI.h>

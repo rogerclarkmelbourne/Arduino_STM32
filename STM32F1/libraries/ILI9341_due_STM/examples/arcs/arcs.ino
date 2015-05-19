@@ -5,7 +5,7 @@
 #include "ILI_SdFatConfig.h"
 #include "ILI9341_due_gText.h"
 #include "ILI9341_due.h"
-#include <fonts/Arial_bold_14.h>
+#include "Arial_bold_14.h"
 #include "roboto16.h"
 #include "roboto32.h"
 #include "roboto70.h"

@@ -145,7 +145,7 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
     volatile uint32 *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
     uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-	byte lineBuffer[640];
+	volatile byte lineBuffer[640];
 #elif defined (__arm__)
     volatile RwReg *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;

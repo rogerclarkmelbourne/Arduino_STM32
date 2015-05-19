@@ -11,7 +11,7 @@ void blink () {
 }
 
 void setup() {
-pinMode(BOARD_LED_PIN, OUTPUT);
+pinMode(PB1, OUTPUT);// Roger Clark. Updated for removal of LED pin as a global define (PB1 is Maple mini LED Pin)
 
 rt.attachSecondsInterrupt(blink);
 }

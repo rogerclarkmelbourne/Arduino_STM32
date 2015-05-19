@@ -1,0 +1,55 @@
+Notes for users with a Pollin.de interface board
+http://www.pollin.de/shop/dt/NDU4OTgxOTk-/Bausaetze_Module/Bausaetze/LCD_I2C_Modul.html
+
+The pollin interface board will not work with de default library.
+To get it working two control lines to the LCD need to be changed.
+
+Open file "LiquidCrystal_I2C.h" with a text editor like Notepad (not WordPad !)
+ 
+In that file look for:
+#define En B00010000  // Enable bit
+#define Rw B00100000  // Read/Write bit
+#define Rs B01000000  // Register select bit
+
+Replace these lines by:
+#define En B01000000  // Enable bit
+#define Rw B00100000  // Read/Write bit
+#define Rs B00010000  // Register select bit
+
+
+
+People at Pollin also have misunderstood the PCF8574 Datasheet and list the wrong addresses on their PCB
+For PCF8574A the addressing is:
+				
+Jp3	Jp2	Jp1		
+A2	A1	A0	Dec	Hex	
+L	L	L	56	0x38
+L	L	H	57	0x39
+L	H	L	64	0x40
+L	H	H	74	0x4A
+H	L	L	75	0x4B
+H	L	H	76	0x4C
+H	H	L	77	0x4D
+H	H	H	78	0x4E
+
+They also seem to ship boards with a PCF8574
+For PCF8574 the addressing is:
+
+Jp3	Jp2	Jp1		
+A2	A1	A0	Dec	Hex	
+L	L	L	32	0x20
+L	L	H	33	0x21
+L	H	L	34	0x22
+L	H	H	35	0x23
+H	L	L	36	0x24
+H	L	H	37	0x25
+H	H	L	38	0x26
+H	H	H	39	0x27
+
+
+They have also chosen two rather high pull-up resistors (10K) for the I2C lines. Usually two 4K7 resistors should do the job.
+Please note that on a I2C bus only one device should have the pull-up resistors installed!
+
+I hope this helps in getting your LCD working.
+
+Mario

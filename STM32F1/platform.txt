@@ -3,23 +3,20 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=Maple Boards
+name=STM32 Boards
 version=0.1.0
 
 # compiler variables
 # ----------------------
-build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-compiler.path={runtime.ide.path}/hardware/tools/{build.gcc_ver}/bin/
+compiler.path={runtime.ide.path}/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.c.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} -DDEBUG_LEVEL=DEBUG_NONE
 compiler.c.elf.cmd=arm-none-eabi-g++
 compiler.c.elf.flags=-Os -Wl,--gc-sections
-## --specs=nano.specs -lc -lnosys
-## --specs=nano.specs -lc -lnosys  -Dprintf=iprintf -u _printf_float
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.cpp.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} -DDEBUG_LEVEL=DEBUG_NONE
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
@@ -31,10 +28,19 @@ compiler.size.cmd=arm-none-eabi-size
 compiler.define=-DARDUINO=                            
 
 # this can be overriden in boards.txt
+build.f_cpu=72000000L
+build.mcu=cortex-m3
+build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
+build.variant_system_lib=libmaple.a
+## LED stuff is not really used but is still required in the code
+build.error_led_port=GPIOB
+build.error_led_pin=1
 build.cpu_flags=
 build.hs_flag=
-build.common_flags=
-build.extra_flags= {build.cpu_flags} {build.hs_flag} {build.common_flags}
+build.upload_flags=
+build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
+
+
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -93,11 +99,15 @@ recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
 #recipe.size.regex=\.text\s+([0-9]+).*
-recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
+#recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
+recipe.size.regex=^(?:\.text|\.data|\.rodata|\.text.align|\.ARM.exidx)\s+([0-9]+).*
+
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 
 # Uploader tools
 # -------------------
+
+
 
 # Upload using Maple bootloader over DFU
 tools.maple_upload.cmd=maple_upload
@@ -128,8 +138,9 @@ tools.serial_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.alt
 
 tools.upload_router.cmd=upload_router
 tools.upload_router.cmd.windows=upload_router.bat
-#tools.upload_router.cmd.linux=
 tools.upload_router.path={runtime.hardware.path}/tools/win
+tools.upload_router.path.macosx={runtime.hardware.path}/tools/macosx
+tools.upload_router.path.linux={runtime.hardware.path}/tools/linux
 
 tools.upload_router.upload.params.verbose=-d
 tools.upload_router.upload.params.quiet=

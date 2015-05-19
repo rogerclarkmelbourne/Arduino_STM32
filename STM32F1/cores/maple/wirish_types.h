@@ -55,7 +55,7 @@ typedef struct stm32_pin_info {
     uint8 gpio_bit;             /**< Pin's GPIO port bit. */
     uint8 timer_channel;        /**< Timer channel, or 0 if none. */
     uint8 adc_channel;          /**< Pin ADC channel, or ADCx if none. */
-//	uint8 pinMode; 				/**< mode specific by pinMode call (Roger Clark added to optimize compatibility with Arduino API*/
+	uint8 pinMode; 				/**< mode specific by pinMode call (Roger Clark added to optimize compatibility with Arduino API*/
 } stm32_pin_info;
 
 /**

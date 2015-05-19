@@ -162,13 +162,3 @@ static void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
     dev->regs->CR1 = cr1_config;
     spi_peripheral_enable(dev);
 }
-
-// Added by Victor G. Perez to test changing between 8bit and 16bit on the fly.
-
-void spi_data_size(spi_dev *dev, uint32 ds) { 
-		uint32 cr1 = dev->regs->CR1; 
-		ds &= SPI_CR1_DFF;
-		cr1 &= ~(SPI_CR1_DFF); 
-		cr1 |= ds;  
-		dev->regs->CR1 = cr1; 
-} 

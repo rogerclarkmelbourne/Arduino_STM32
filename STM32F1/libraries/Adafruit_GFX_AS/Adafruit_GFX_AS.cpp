@@ -258,7 +258,6 @@ void Adafruit_GFX::fillScreen(uint16_t color) {
 // Draw a rounded rectangle
 void Adafruit_GFX::drawRoundRect(int16_t x, int16_t y, int16_t w,
   int16_t h, int16_t r, uint16_t color) {
-  if ( h <= 2 * r || w <= 2 * r) return;
   // smarter version
   drawFastHLine(x+r  , y    , w-2*r, color); // Top
   drawFastHLine(x+r  , y+h-1, w-2*r, color); // Bottom

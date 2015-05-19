@@ -311,10 +311,6 @@ void spi_slave_enable(spi_dev *dev,
 
 uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len);
 
-// Added by Victor G. Perez to test changing between 8bit and 16bit on the fly.
-
-void spi_data_size(spi_dev *dev, uint32 ds);
-
 /**
  * @brief Call a function on each SPI port
  * @param fn Function to call.
