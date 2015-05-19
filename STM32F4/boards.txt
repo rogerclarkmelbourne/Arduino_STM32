@@ -16,7 +16,7 @@ discovery_f407.upload.maximum_size=108000
 #discovery_f407.upload.altID=1
 #discovery_f407.upload.auto_reset=true
 
-discovery_f407.build.mcu=cortex-m3
+discovery_f407.build.mcu=cortex-m4
 discovery_f407.build.f_cpu=168000000L
 discovery_f407.build.core=maple
 discovery_f407.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -march=armv7-m  -DSTM32F2 -DBOARD_discovery_f4

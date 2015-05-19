@@ -25,7 +25,7 @@
 void interToggleDelay(void);
 
 void setup() {
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
     pinMode(BOARD_BUTTON_PIN, INPUT);
 
     // All unused pins start out low.
@@ -38,9 +38,9 @@ void setup() {
 }
 
 void loop() {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
 
     for (int i = 0; i < BOARD_NR_GPIO_PINS; i++) {
         if (boardUsesPin(i))

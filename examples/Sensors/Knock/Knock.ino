@@ -34,7 +34,7 @@ void setup() {
     // Declare the knockSensor as an analog input:
     pinMode(knockSensor, INPUT_ANALOG);
     // declare the built-in LED pin as an output:
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 }
 
 void loop() {
@@ -44,7 +44,7 @@ void loop() {
     // if the sensor reading is greater than the threshold:
     if (sensorReading >= threshold) {
         // toggle the built-in LED
-        toggleLED();
+        digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
         // send the string "Knock!" back to the computer, followed by newline
         Serial.println("Knock!");
     }

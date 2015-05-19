@@ -11,22 +11,22 @@ int n = 0;
 
 void setup() {                
   // initialize the digital pin as an output.
-  pinMode(BOARD_LED_PIN, OUTPUT);
+  pinMode(33, OUTPUT);
   // Initialize virtual COM over USB on Maple Mini
   Serial.begin(9600);  // BAUD has no effect on USB serial: placeholder for physical UART
   // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
   Serial.println("Blink LED & count Demo");
 }
 
 void loop() {
-  digitalWrite(BOARD_LED_PIN, HIGH);   // set the LED on
+  digitalWrite(33, HIGH);   // set the LED on
   delay(500);              // wait for a second
-  digitalWrite(BOARD_LED_PIN, LOW);    // set the LED off
+  digitalWrite(33, LOW);    // set the LED off
   Serial.print("Loop #: ");
   n++;
   Serial.println(n);

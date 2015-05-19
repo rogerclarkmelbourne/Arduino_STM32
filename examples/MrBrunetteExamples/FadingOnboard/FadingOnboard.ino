@@ -14,7 +14,7 @@
 
 // int ledPin = 9; // Connect an LED to digital pin 9, or any other
                 // PWM-capable pin
-int ledPin = BOARD_LED_PIN;
+int ledPin = 33;
 void setup() {
     pinMode(ledPin, PWM);  // setup the pin as PWM
 }

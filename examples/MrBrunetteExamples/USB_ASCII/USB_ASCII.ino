@@ -31,12 +31,12 @@
 
 void setup() {
   // initialize the digital pin as an output.
-  pinMode(BOARD_LED_PIN, OUTPUT);
+  pinMode(33, OUTPUT);
   Serial.begin();  // USB does not require BAUD
   // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
     Serial.println("ASCII Table ~ Character Map");

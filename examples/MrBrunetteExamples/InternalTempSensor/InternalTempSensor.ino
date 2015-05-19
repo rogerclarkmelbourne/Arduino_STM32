@@ -9,7 +9,7 @@
 //#include <stdio.h>
 #include <libmaple/adc.h>
 
-#define LED_PIN BOARD_LED_PIN
+#define LED_PIN 33
 #define A_RANDOM_ANALOG_PIN 15
 
 void setup_temperature_sensor() {
@@ -40,7 +40,7 @@ void setup(void)
 // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
   
@@ -73,7 +73,7 @@ void loop(void)
     sprintf(buf,"%04x %08x  %04x %08x" , vsense, t3-t2, alogpin, t2-t1);
     Serial.println(buf);
   }
-  toggleLED();
+  digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
   delay(1000);
 }
 

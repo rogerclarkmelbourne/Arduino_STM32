@@ -14,12 +14,12 @@
 void setup()                    // run once, when the sketch starts
 {
   // initialize the digital pin as an output.
-  pinMode(BOARD_LED_PIN, OUTPUT);
+  pinMode(33, OUTPUT);
   Serial.begin(BAUD);  // BAUD has no effect on USB serial: placeholder for physical UART
   // wait for serial monitor to be connected.
   while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
   {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
   }
   Serial.println("Print Float Format");

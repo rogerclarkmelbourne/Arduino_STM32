@@ -23,7 +23,7 @@ const char* dummy_data = ("qwertyuiopasdfghjklzxcvbnmmmmmm,./1234567890-="
 void setup() {
 	Serial.begin(115200); // Ignored by Maple. But needed by boards using hardware serial via a USB to Serial adaptor
     // Set up the LED to blink
-    pinMode(BOARD_LED_PIN, OUTPUT);
+    pinMode(33, OUTPUT);
 
     // Start up the serial ports
     Serial1.begin(BAUD);
@@ -48,7 +48,7 @@ void setup() {
 }
 
 void loop () {
-    toggleLED();
+    digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);
 
     while (Serial.available()) {
@@ -248,7 +248,7 @@ void cmd_print_help(void) {
 
 void cmd_adc_stats(void) {
     Serial.println("Taking ADC noise stats.");
-    digitalWrite(BOARD_LED_PIN, 0);
+    digitalWrite(33, 0);
     for (uint32 i = 0; i < BOARD_NR_ADC_PINS; i++) {
         delay(5);
         measure_adc_noise(boardADCPins[i]);
@@ -490,7 +490,7 @@ void cmd_sequential_gpio_writes(void) {
 
         pinMode(i, OUTPUT);
         do {
-            togglePin(i);
+		    gpio_toggle_bit(PIN_MAP[i].gpio_device, PIN_MAP[i].gpio_bit);
         } while (!Serial.available());
 
         digitalWrite(i, LOW);
@@ -513,7 +513,7 @@ void cmd_gpio_toggling(void) {
         for (uint32 i = 0; i < BOARD_NR_GPIO_PINS; i++) {
             if (boardUsesPin(i))
                 continue;
-            togglePin(i);
+		    gpio_toggle_bit(PIN_MAP[i].gpio_device, PIN_MAP[i].gpio_bit);
         }
     }
 
@@ -596,8 +596,8 @@ void cmd_board_info(void) {     // TODO print more information
     Serial.print("* Clock speed (cycles/us): ");
     Serial.println(CYCLES_PER_MICROSECOND);
 
-    Serial.print("* BOARD_LED_PIN: ");
-    Serial.println(BOARD_LED_PIN);
+    Serial.print("* 33: ");
+    Serial.println(33);
 
     Serial.print("* BOARD_BUTTON_PIN: ");
     Serial.println(BOARD_BUTTON_PIN);
