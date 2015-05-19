@@ -187,18 +187,18 @@ genericSTM32F103C.upload.auto_reset=true
 genericSTM32F103C.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Flash)
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB  
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
-genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=128000
-genericSTM32F103C.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20000
-genericSTM32F103C.menu.device_variant.STM32F103CB.upload.flash.maximum_size=128000
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=131072
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20480
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.flash.maximum_size=131072
 
 
 ## STM32F103C8 -------------------------
 genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8  
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_size=64000
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20000
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.flash.maximum_size=64000
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_size=65536
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20480
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.flash.maximum_size=65536
 
 #---------------------------- UPLOAD METHODS ---------------------------
 genericSTM32F103C.menu.upload_method.serialMethod=Serial
@@ -211,6 +211,11 @@ genericSTM32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
 
+
+genericSTM32F103C.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericSTM32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericSTM32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
 ########################### Generic STM32F103R  ###########################
 
