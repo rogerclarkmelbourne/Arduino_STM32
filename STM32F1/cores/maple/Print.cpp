@@ -65,7 +65,7 @@ size_t Print::write(const void *buffer, uint32 size) {
 }
 
 size_t Print::print(uint8 b, int base) {
-    print((uint64)b, base);
+    return print((uint64)b, base);
 }
 
 size_t Print::print(const String &s)
