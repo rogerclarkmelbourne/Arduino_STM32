@@ -73,10 +73,8 @@ public:
     uint8 pending();
 };
 
-#if BOARD_HAVE_SERIALUSB
-	#ifdef SERIAL_USB 
+#ifdef SERIAL_USB 
 	extern USBSerial Serial;
-	#endif
 #endif
 
 #endif
