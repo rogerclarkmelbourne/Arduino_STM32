@@ -5,14 +5,12 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-
 RTClock	KEYWORD1
 
-#######################################
-# Methods and Functions (KEYWORD2)
-#######################################
+
 setTime					KEYWORD2
 getTime					KEYWORD2
+
 createAlarm				KEYWORD2
 attachSecondsInterrupt	KEYWORD2
 detachSecondsInterrupt	KEYWORD2
