@@ -104,6 +104,9 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
            setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
            pushColor(uint16_t color),
            fillScreen(uint16_t color),
+		   #if defined (__STM32F1__)
+		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
+		   #endif
            drawPixel(int16_t x, int16_t y, uint16_t color),
            drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color),
            drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color),
@@ -145,7 +148,7 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
     volatile uint32 *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
     uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-	volatile byte lineBuffer[640];
+	uint16_t lineBuffer[ILI9341_TFTHEIGHT]; // DMA buffer. 16bit color data per pixel
 #elif defined (__arm__)
     volatile RwReg *mosiport, *clkport, *dcport, *rsport, *csport;
     uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
