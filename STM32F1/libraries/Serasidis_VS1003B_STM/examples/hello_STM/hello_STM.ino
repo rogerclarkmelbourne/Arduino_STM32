@@ -10,20 +10,8 @@
   email: avrsite@yahoo.gr
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-//#include <avr/io.h>
-
-#include <Arduino.h>
-
-//#include "printf.h"
 #include <VS1003_STM.h>
 #include <SPI.h>
-
-
-
 
 /*
  * VS1003 development board connected by it's header pins the following way:
