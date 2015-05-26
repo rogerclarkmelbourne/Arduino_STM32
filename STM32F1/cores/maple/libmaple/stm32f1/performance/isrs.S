@@ -163,15 +163,14 @@ __default_handler:
 	.weak	__irq_tim1_cc
 	.globl	__irq_tim1_cc
 	.set	__irq_tim1_cc, __default_handler
-	.weak	__irq_tim2
-	.globl	__irq_tim2
-	.set	__irq_tim2, __default_handler
-	.weak	__irq_tim3
-	.globl	__irq_tim3
-	.set	__irq_tim3, __default_handler
-	.weak	__irq_tim4
-	.globl	__irq_tim4
-	.set	__irq_tim4, __default_handler
+
+	.weakref __irq_tim2, __default_handler
+	.globl  __irq_tim2
+	.weakref __irq_tim3, __default_handler
+	.globl  __irq_tim3
+	.weakref __irq_tim4, __default_handler
+	.globl  __irq_tim4	
+	
 	.weak	__irq_i2c1_ev
 	.globl	__irq_i2c1_ev
 	.set	__irq_i2c1_ev, __default_handler
