@@ -1,12 +1,11 @@
 /*
- * Linker script for Generic STM32F103RE boards. 
+ * Linker script for Generic STM32F103RB boards, using the generic bootloader (which takes the lower 8k of memory)
  */
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
-  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+	rom (rx)  : ORIGIN = 0x08002000, LENGTH = 120K
 }
-
 
 /* Provide memory region aliases for common.inc */
 REGION_ALIAS("REGION_TEXT", rom);
