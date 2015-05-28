@@ -37,54 +37,58 @@
 #include <libmaple/timer.h>
 #include <libmaple/usart.h>
 
-#define DEFINE_HWSERIAL(name, n)                                   \
-    HardwareSerial name(USART##n,                                  \
-                        BOARD_USART##n##_TX_PIN,                   \
-                        BOARD_USART##n##_RX_PIN)
+#if 0
 
-#define DEFINE_HWSERIAL_UART(name, n)                             \
-    HardwareSerial name(UART##n,                                  \
-                        BOARD_USART##n##_TX_PIN,                   \
-                        BOARD_USART##n##_RX_PIN)						
-						
-#ifdef SERIAL_USB
-	#if BOARD_HAVE_USART1
-	DEFINE_HWSERIAL(Serial1, 1);
+	#define DEFINE_HWSERIAL(name, n)                                   \
+		HardwareSerial name(USART##n,                                  \
+							BOARD_USART##n##_TX_PIN,                   \
+							BOARD_USART##n##_RX_PIN)
+
+	#define DEFINE_HWSERIAL_UART(name, n)                             \
+		HardwareSerial name(UART##n,                                  \
+							BOARD_USART##n##_TX_PIN,                   \
+							BOARD_USART##n##_RX_PIN)						
+							
+	#ifdef SERIAL_USB
+		#if BOARD_HAVE_USART1
+		DEFINE_HWSERIAL(Serial1, 1);
+		#endif
+		#if BOARD_HAVE_USART2
+		DEFINE_HWSERIAL(Serial2, 2);
+		#endif
+		#if BOARD_HAVE_USART3
+		DEFINE_HWSERIAL(Serial3, 3);
+		#endif
+		#if BOARD_HAVE_UART4
+		DEFINE_HWSERIAL_UART(Serial4, 4);
+		#endif
+		#if BOARD_HAVE_UART5
+		DEFINE_HWSERIAL_UART(Serial5, 5);
+		#endif
+		#if BOARD_HAVE_USART6
+		DEFINE_HWSERIAL_UART(Serial6, 6);
+		#endif
+	#else
+		#if BOARD_HAVE_USART1
+		DEFINE_HWSERIAL(Serial, 1);
+		#endif
+		#if BOARD_HAVE_USART2
+		DEFINE_HWSERIAL(Serial1, 2);
+		#endif
+		#if BOARD_HAVE_USART3
+		DEFINE_HWSERIAL(Serial2, 3);
+		#endif
+		#if BOARD_HAVE_UART4
+		DEFINE_HWSERIAL_UART(Serial3, 4);
+		#endif
+		#if BOARD_HAVE_UART5
+		DEFINE_HWSERIAL_UART(Serial4, 5);
+		#endif
+		#if BOARD_HAVE_USART6
+		DEFINE_HWSERIAL_UART(Serial5, 6);
+		#endif
 	#endif
-	#if BOARD_HAVE_USART2
-	DEFINE_HWSERIAL(Serial2, 2);
-	#endif
-	#if BOARD_HAVE_USART3
-	DEFINE_HWSERIAL(Serial3, 3);
-	#endif
-	#if BOARD_HAVE_UART4
-	DEFINE_HWSERIAL_UART(Serial4, 4);
-	#endif
-	#if BOARD_HAVE_UART5
-	DEFINE_HWSERIAL_UART(Serial5, 5);
-	#endif
-	#if BOARD_HAVE_USART6
-	DEFINE_HWSERIAL_UART(Serial6, 6);
-	#endif
-#else
-	#if BOARD_HAVE_USART1
-	DEFINE_HWSERIAL(Serial, 1);
-	#endif
-	#if BOARD_HAVE_USART2
-	DEFINE_HWSERIAL(Serial1, 2);
-	#endif
-	#if BOARD_HAVE_USART3
-	DEFINE_HWSERIAL(Serial2, 3);
-	#endif
-	#if BOARD_HAVE_UART4
-	DEFINE_HWSERIAL_UART(Serial3, 4);
-	#endif
-	#if BOARD_HAVE_UART5
-	DEFINE_HWSERIAL_UART(Serial4, 5);
-	#endif
-	#if BOARD_HAVE_USART6
-	DEFINE_HWSERIAL_UART(Serial5, 6);
-	#endif
+
 #endif
 HardwareSerial::HardwareSerial(usart_dev *usart_device,
                                uint8 tx_pin,
