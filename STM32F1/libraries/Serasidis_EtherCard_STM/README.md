@@ -17,7 +17,7 @@ See the comments in the example sketches for details about how to try them out.
 
 ## Physical Installation
 
-### PIN Connections (Using Arduino UNO):
+### PIN Connections ( Using Arduino UNO ):
 
     VCC -   3.3V
     GND -    GND
