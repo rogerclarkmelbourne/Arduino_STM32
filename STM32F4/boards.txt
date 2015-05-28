@@ -30,4 +30,64 @@ discovery_f407.build.error_led_pin=14
 #discovery_f407.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
+stm32f4stamp.name=STM32F4Stamp F405
+
+stm32f4stamp.upload.tool=maple_upload
+stm32f4stamp.upload.protocol=maple_dfu
+
+#stm32f4stamp.upload.use_1200bps_touch=false
+stm32f4stamp.upload.file_type=bin
+stm32f4stamp.upload.ram.maximum_size=196608
+stm32f4stamp.upload.flash.maximum_size=1048576
+stm32f4stamp.upload.maximum_size=1048576
+
+stm32f4stamp.upload.usbID=0483:df11
+stm32f4stamp.upload.altID=0
+#stm32f4stamp.upload.auto_reset=true
+stm32f4stamp.upload.dfuse_addr=0x8000000
+
+stm32f4stamp.build.mcu=cortex-m4
+stm32f4stamp.build.f_cpu=168000000L
+stm32f4stamp.build.core=maple
+stm32f4stamp.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -march=armv7-m  -DSTM32F2 -DBOARD_discovery_f4
+stm32f4stamp.build.ldscript=ld/jtag.ld
+stm32f4stamp.build.variant=discovery_f407
+stm32f4stamp.build.variant_system_lib=lib_f407.a
+stm32f4stamp.build.vect=VECT_TAB_BASE
+stm32f4stamp.build.density=STM32_HIGH_DENSITY
+stm32f4stamp.build.error_led_port=GPIOD
+stm32f4stamp.build.error_led_pin=14
+#stm32f4stamp.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
+##############################################################
+netduino2plus.name=Netduino2 F405
+
+netduino2plus.upload.tool=maple_upload
+netduino2plus.upload.protocol=maple_dfu
+
+#netduino2plus.upload.use_1200bps_touch=false
+netduino2plus.upload.file_type=bin
+netduino2plus.upload.ram.maximum_size=196608
+netduino2plus.upload.flash.maximum_size=1048576
+netduino2plus.upload.maximum_size=1048576
+
+netduino2plus.upload.usbID=0483:df11
+netduino2plus.upload.altID=0
+#netduino2plus.upload.auto_reset=true
+netduino2plus.upload.dfuse_addr=0x8000000
+
+netduino2plus.build.mcu=cortex-m4
+netduino2plus.build.f_cpu=168000000L
+netduino2plus.build.core=maple
+netduino2plus.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -march=armv7-m  -DSTM32F2 -DBOARD_discovery_f4
+netduino2plus.build.ldscript=ld/jtag.ld
+netduino2plus.build.variant=discovery_f407
+netduino2plus.build.variant_system_lib=lib_f407.a
+netduino2plus.build.vect=VECT_TAB_BASE
+netduino2plus.build.density=STM32_HIGH_DENSITY
+netduino2plus.build.error_led_port=GPIOD
+netduino2plus.build.error_led_pin=14
+#netduino2plus.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
+##############################################################
 

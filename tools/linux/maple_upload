@@ -6,7 +6,12 @@ if [ $# -lt 4 ]; then
     echo "Usage: $0 $# <dummy_port> <altID> <usbID> <binfile>" >&2
     exit 1
 fi
-dummy_port=$1; altID=$2; usbID=$3; binfile=$4
+dummy_port=$1; altID=$2; usbID=$3; binfile=$4; 
+if [ $# -eq 5 ]; then
+    dfuse_addr="--dfuse-address $5"
+else
+    dfuse_addr=""
+fi
 
 #DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
 DFU_UTIL=/usr/bin/dfu-util
@@ -15,4 +20,4 @@ if [ ! -x ${DFU_UTIL} ]; then
     exit 2
 fi
 
-${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile}
+${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr}
