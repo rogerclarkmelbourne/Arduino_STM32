@@ -83,34 +83,6 @@ mapleRET6.upload.auto_reset=true
 
 
 ##############################################################
-genericSTM32.name=STM32F103C8 (deprecated - use Generic STM32F103C)
-
-genericSTM32.menu.upload_method.serialMethod=Serial
-genericSTM32.menu.upload_method.serialMethod.upload.protocol=maple_serial
-genericSTM32.menu.upload_method.serialMethod.upload.tool=serial_upload
-genericSTM32.menu.upload_method.serialMethod.build.extra_flags=-DMCU_STM32F103CB -mthumb   -march=armv7-m  -D__STM32F1__ 
-
-genericSTM32.menu.upload_method.STLinkMethod=STLink
-genericSTM32.menu.upload_method.STLinkMethod.upload.protocol=STLink
-genericSTM32.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32.menu.upload_method.STLinkMethod.build.extra_flags=-DMCU_STM32F103CB -mthumb   -march=armv7-m  -D__STM32F1__ -DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
-
-
-genericSTM32.upload.maximum_size=108000
-genericSTM32.upload.use_1200bps_touch=false
-genericSTM32.upload.file_type=bin
-genericSTM32.upload.ram.maximum_size=17000
-genericSTM32.upload.flash.maximum_size=108000
-genericSTM32.upload.auto_reset=true
-
-genericSTM32.build.board=STM32F103C8
-genericSTM32.build.core=maple
-
-genericSTM32.build.ldscript=ld/jtag.ld
-genericSTM32.build.variant=maple_mini
-genericSTM32.build.vect=VECT_TAB_ADDR=0x8000000
-
-##############################################################
 
 microduino32_flash.name=Microduino Core STM32 to Flash
 
@@ -209,7 +181,7 @@ genericSTM32F103C.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103C.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 
 genericSTM32F103C.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
@@ -220,7 +192,7 @@ genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 genericSTM32F103C.menu.upload_method.DFUUploadMethod=Maple DFU
 genericSTM32F103C.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 genericSTM32F103C.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
-genericSTM32F103C.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103C.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
 genericSTM32F103C.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
 genericSTM32F103C.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_20.ld
 genericSTM32F103C.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
@@ -256,12 +228,17 @@ genericSTM32F103R.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103R.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103R.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103R.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103R.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+genericSTM32F103R.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+genericSTM32F103R.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
 genericSTM32F103R.menu.upload_method.DFUUploadMethod=Maple DFU
 genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
-genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
 genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
 genericSTM32F103R.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103re-bootloader.ld
 genericSTM32F103R.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
@@ -301,7 +278,7 @@ genericSTM32F103V.menu.device_variant.STM32F103VD.build.ldscript=ld/stm32f103vd.
 
 
 genericSTM32F103V.menu.device_variant.STM32F103VE=STM32F103VE
-genericSTM32F103V.menu.device_variant.STM32F103VE.build.cpu_flags=-DMCU_STM32F103VE -DSERIAL_USB
+genericSTM32F103V.menu.device_variant.STM32F103VE.build.cpu_flags=-DMCU_STM32F103VE
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_size=524288
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.ram.maximum_size=65536
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.flash.maximum_size=524288
@@ -316,12 +293,17 @@ genericSTM32F103V.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103V.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103V.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103V.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103V.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1
+genericSTM32F103V.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+genericSTM32F103V.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericSTM32F103V.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericSTM32F103V.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
 genericSTM32F103V.menu.upload_method.DFUUploadMethod=Maple DFU
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
-genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103veDFU.ld
 genericSTM32F103V.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
@@ -370,14 +352,18 @@ genericSTM32F103Z.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103Z.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1   -DSERIAL_USB
+genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1   -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+genericSTM32F103Z.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod=Maple DFU
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
-genericSTM32F103Z.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB
+genericSTM32F103Z.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103z_dfu.ld
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
 genericSTM32F103Z.menu.upload_method.DFUUploadMethod.upload.altID=2
-

@@ -215,7 +215,7 @@ public:
      * @brief Transmit a byte.
      * @param data Byte to transmit.
      */
-    void write(uint8 data);
+//    void write(uint8 data);
 
     /**
      * @brief Transmit a half word.
