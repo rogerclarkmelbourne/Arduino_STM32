@@ -1,46 +1,45 @@
 # EtherCard
 
-**EtherCard** is a driver for the ENC28J60 chip, compatible with Arduino IDE.  
+**EtherCard** is a driver for the ENC28J60 chip, compatible with Arduino IDE 1.6.3 (or later).  
 Adapted and extended from code written by Guido Socher and Pascal Stang.
 
 License: GPL2
 
 The documentation for this library is at http://jeelabs.net/pub/docs/ethercard/.
 
-## Library Installation
-
-1. Download the ZIP file from https://github.com/jcw/ethercard/archive/master.zip
-2. From the Arduino IDE: Sketch -> Import Library... -> Add Library...
-3. Restart the Arduino IDE to see the new "EtherCard" library with examples
-
-See the comments in the example sketches for details about how to try them out.
-
 ## Physical Installation
 
-### PIN Connections ( Using Arduino UNO ):
+### PIN Connections (Using STM32F103):
 
-    VCC -   3.3V
-    GND -    GND
-    SCK - Pin 13
-    SO  - Pin 12
-    SI  - Pin 11
-    CS  - Pin  8 # Selectable with the ether.begin() function
+|ENC28J60|STM32F103|
+|:------:|:-----:|
+|Vcc|3.3V|
+|SCK|PA5|
+|SO|PA6|
+|SI|PA7|
+|CS|PA8| # Selectable with the ether.begin() function
+|RST|3.3V|
 
-### PIN Connections using an Arduino Mega
+The **CS** pin is selectable with the ether.begin() function.
 
-    VCC -   3.3V
-    GND -    GND
-    SCK - Pin 52
-    SO  - Pin 50
-    SI  - Pin 51
-    CS  - Pin 53 # Selectable with the ether.begin() function
-    # The default CS pin defaults to 8, so you have to set it on a mega:
-    ether.begin(sizeof Ethernet::buffer, mymac, 53)
+e.g. If you want to use the **PA9** as **CS** pin then you can initiallize the ethernet module inside the sketch as:
+
+`if (ether.begin(sizeof Ethernet::buffer, mymac) == 0,`**`PA9`**`) `
+
+By default the pin **PA8** is used as **CS** (you don't have to initiallize it).
+
+
+## Credits
+
+The **EtherCard** library was written by [Jean-Claude Wippler][F] and ported to **STM32F103** by [Vassilis Serasidis][V] 
 
 ## Support
 
-For questions and help, see the [forums][F] (at JeeLabs.net).  
-The issue tracker has been moved back to [Github][I] again.
+That library works perfect on Arduino IDE 1.6.3 (or later) with [Arduino_STM32 project][S] installed.
 
-[F]: http://jeenet.net/projects/cafe/boards
-[I]: https://github.com/jcw/ethercard/issues
+The Arduino STM32 project has a forum ([STM32duino][F]) also for getting or for providing help to people that are interested in that project .
+
+[F]: https://github.com/jcw
+[S]: https://github.com/rogerclarkmelbourne/Arduino_STM32
+[F]: http://www.stm32duino.com
+[V]: https://github.com/Serasidis
