@@ -324,7 +324,7 @@ void SPIClass::write(uint16 data) {
 	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 }
 
-void SPIClass::write(uint8 byte) {
+//void SPIClass::write(uint8 byte) {
   //  this->write(&byte, 1);
 
 	/* Roger Clark 
@@ -333,10 +333,10 @@ void SPIClass::write(uint8 byte) {
 	 * This almost doubles the speed of this function.
 	 */
   
-	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
-	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
-	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
-}
+//	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
+//	while (spi_is_tx_empty(this->spi_d) == 0); // "5. Wait until TXE=1 ..."
+//	while (spi_is_busy(this->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+//}
 
 void SPIClass::write(const uint8 *data, uint32 length) {
     uint32 txed = 0;
