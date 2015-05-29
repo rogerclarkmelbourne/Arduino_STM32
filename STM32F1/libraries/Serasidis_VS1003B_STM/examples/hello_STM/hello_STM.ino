@@ -8,21 +8,13 @@
   Ported to STM32F103 by Vassilis Serasidis on 21 May 2015
   Home:  http://www.serasidis.gr
   email: avrsite@yahoo.gr
+  
+   29 May 2015 - Added a fix for booting the VS1053B boards into 
+                 mp3 decoding instead of booting into MID (modeSwitch function).
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-//#include <avr/io.h>
-
-#include <Arduino.h>
-
-//#include "printf.h"
 #include <VS1003_STM.h>
 #include <SPI.h>
-
-
 
 
 /*
@@ -39,6 +31,7 @@
  * GND  - GND  -
  * 5V   - 5V   -
  */
+
 VS1003_STM player(PC14, PB10, PA8, PA9); // cs_pin, dcs_pin, dreq_pin, reset_pin
 
 unsigned char HelloMP3[] = {
@@ -208,6 +201,8 @@ void setup () {
                                                                                                                                        
   // initiate a player
   player.begin();
+  player.modeSwitch(); //Change mode from MIDI to MP3 decoding (Vassilis Serasidis).
+  
   // set maximum output volume
   player.setVolume(0x00);
 }
