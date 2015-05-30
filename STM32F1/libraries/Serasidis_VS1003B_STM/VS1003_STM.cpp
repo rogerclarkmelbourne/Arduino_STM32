@@ -9,29 +9,15 @@
   Home:  http://www.serasidis.gr
   email: avrsite@yahoo.gr
   
+  29 May 2015 - Added a fix for booting the VS1053B boards into
+                 mp3 decoding instead of booting into MIDI (modeSwitch function).
+  
  */
 
-// STL headers
-// C headers
-#include <avr/pgmspace.h>
-// Framework headers
-// Library headers
-#include <avr/pgmspace.h>
-#include <limits.h>
-#include <libmaple/dma.h>
-#include "pins_arduino.h"
-#include "wiring_private.h"
 #include <SPI.h>
-// Project headers
-// This component's header
 #include <VS1003_STM.h>
 
 const uint8_t vs1003_chunk_size = 32;
-
-#undef PROGMEM
-#define PROGMEM __attribute__ ((section (".progmem.data"))) 
-#undef PSTR 
-#define PSTR(s) (__extension__({static char __c[] PROGMEM = (s); &__c[0];}))
 
 /****************************************************************************/
 
@@ -319,6 +305,20 @@ void VS1003_STM::printDetails(void) const
 }
 
 /****************************************************************************/
+void VS1003_STM::modeSwitch(void)
+{
+  //GPIO_DDR
+  write_register(SCI_WRAMADDR, 0xc017);
+  write_register(SCI_WRAM, 0x0003);
+  //GPIO_ODATA
+  write_register(SCI_WRAMADDR, 0xc019);
+  write_register(SCI_WRAM, 0x0000);
+  
+  delay(100);
+  write_register(SCI_MODE, (1<<SM_SDINEW) | (1<<SM_RESET));
+  delay(100);
+}
+/****************************************************************************/
 
 void VS1003_STM::loadUserCode(const uint16_t* buf, size_t len) const
 {
@@ -330,13 +330,13 @@ void VS1003_STM::loadUserCode(const uint16_t* buf, size_t len) const
       n &= 0x7FFF;
       uint16_t val = pgm_read_word(buf++); len--;
       while (n--) {
-	//printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
+  //printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
         write_register(addr, val);
       }
     } else {           /* Copy run, copy n samples */
       while (n--) {
-	uint16_t val = pgm_read_word(buf++); len--;
-	//printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
+  uint16_t val = pgm_read_word(buf++); len--;
+  //printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
         write_register(addr, val);
       }
     }
