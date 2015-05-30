@@ -12,19 +12,7 @@
                 mp3 decoding instead of booting into MID (modeSwitch function).
  */
 
-// STL headers
-// C headers
-#include <avr/pgmspace.h>
-// Framework headers
-// Library headers
-#include <avr/pgmspace.h>
-#include <limits.h>
-#include <libmaple/dma.h>
-#include "pins_arduino.h"
-#include "wiring_private.h"
 #include <SPI.h>
-// Project headers
-// This component's header
 #include <VS1003_STM.h>
 
 const uint8_t vs1003_chunk_size = 32;
