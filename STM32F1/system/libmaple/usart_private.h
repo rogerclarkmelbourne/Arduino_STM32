@@ -38,14 +38,21 @@
 #include <libmaple/usart.h>
 
 static __always_inline void usart_irq(ring_buffer *rb, usart_reg_map *regs) {
+    /* We can get RXNE and ORE interrupts here. Only RXNE signifies
+     * availability of a byte in DR.
+     *
+     * See table 198 (sec 27.4, p809) in STM document RM0008 rev 15.
+     * We enable RXNEIE. */
+    if (regs->SR & USART_SR_RXNE) {
 #ifdef USART_SAFE_INSERT
-    /* If the buffer is full and the user defines USART_SAFE_INSERT,
-     * ignore new bytes. */
-    rb_safe_insert(rb, (uint8)regs->DR);
+        /* If the buffer is full and the user defines USART_SAFE_INSERT,
+         * ignore new bytes. */
+        rb_safe_insert(rb, (uint8)regs->DR);
 #else
-    /* By default, push bytes around in the ring buffer. */
-    rb_push_insert(rb, (uint8)regs->DR);
+        /* By default, push bytes around in the ring buffer. */
+        rb_push_insert(rb, (uint8)regs->DR);
 #endif
+    }
 }
 
 uint32 _usart_clock_freq(usart_dev *dev);
