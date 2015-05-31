@@ -32,6 +32,10 @@
 
 #include <board/board.h>         // For this board's header file
 
+/* Roger Clark. Added next to includes for changes to Serial */
+#include <libmaple/usart.h>
+#include <HardwareSerial.h>
+
 #include <wirish_types.h> // For stm32_pin_info and its contents
                                  // (these go into PIN_MAP).
 
@@ -141,3 +145,19 @@ extern const uint8 boardUsedPins[] __FLASH__ = {
     13, 33, BOARD_JTMS_SWDIO_PIN,
     BOARD_JTCK_SWCLK_PIN, BOARD_JTDI_PIN, BOARD_JTDO_PIN, BOARD_NJTRST_PIN
 };
+
+/* 
+ * Roger Clark
+ * 
+ * 2015/05/28
+ *
+ * Moved definitions for Hardware Serial devices from HardwareSerial.cpp so that each board can define which Arduino "Serial" instance
+ * Maps to which hardware serial port on the microprocessor
+ *
+ * Note. Maple always has SERIAL USB, so there is no need for the #fidef for this
+ * As its a Medium Density device (F103RB), it only has 3 hardware serial devices. 
+ */							
+ 
+DEFINE_HWSERIAL(Serial1, 1);
+DEFINE_HWSERIAL(Serial2, 2);
+DEFINE_HWSERIAL(Serial3, 3);

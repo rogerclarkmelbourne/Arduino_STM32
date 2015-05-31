@@ -249,15 +249,11 @@ MOSI alternate functions on the GPIO ports.
  */
 						
 #ifdef SERIAL_USB
-	DEFINE_HWSERIAL(Serial1, 2);
-
-	DEFINE_HWSERIAL(Serial2, 1);
-
-	DEFINE_HWSERIAL(Serial3, 3);
+   DEFINE_HWSERIAL(Serial1, 1);
+   DEFINE_HWSERIAL(Serial2, 2);
+   DEFINE_HWSERIAL(Serial3, 3);
 #else
-	DEFINE_HWSERIAL(Serial, 2);// Use HW Serial 2 as "Serial"
-
-	DEFINE_HWSERIAL(Serial1, 1);
-
-	DEFINE_HWSERIAL(Serial2, 3);
+   DEFINE_HWSERIAL(Serial, 3);// Use HW Serial 2 as "Serial"
+   DEFINE_HWSERIAL(Serial1, 2);
+   DEFINE_HWSERIAL(Serial2, 1);
 #endif
