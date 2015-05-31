@@ -18,6 +18,11 @@ if [ -e $dummy_port_fullpath ]; then
 #	sleep 1
 fi
 
+if [ $# -eq 5 ]; then
+    dfuse_addr="--dfuse-address $5"
+else
+    dfuse_addr=""
+fi
 
 DFU_UTIL=/usr/local/bin/dfu-util
 if [ ! -x ${DFU_UTIL} ]; then
@@ -29,4 +34,4 @@ if [ ! -x ${DFU_UTIL} ]; then
     exit 2
 fi
 
-${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R
+${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R ${dfuse_addr}
