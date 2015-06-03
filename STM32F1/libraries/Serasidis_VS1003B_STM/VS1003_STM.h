@@ -9,8 +9,10 @@
   Home:  http://www.serasidis.gr
   email: avrsite@yahoo.gr
   
+  29 May 2015 - Added a fix for booting the VS1053B boards into mp3 decoding instead of booting into MIDI.
  */
 
+//This is an additional test line
 #ifndef __VS1003_STM_H__
 #define __VS1003_STM_H__
 
@@ -125,6 +127,12 @@ public:
    * (see fdevopen() in avr/io.h).
    */
   void printDetails(void) const;
+  
+  /**
+  *
+  *
+  */
+  void modeSwitch(void);
 
   /**
    * Set the player volume
