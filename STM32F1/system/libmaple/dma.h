@@ -26,7 +26,7 @@
  *****************************************************************************/
 
 /**
- * @file libmaple/stm32f1/include/series/dma.h
+ * @file libmaple/dma.h
  * @author Marti Bolivar <mbolivar@leaflabs.com>;
  *         Original implementation by Michael Hope
  * @brief STM32F1 DMA series header.
