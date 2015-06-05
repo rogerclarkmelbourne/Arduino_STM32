@@ -19,19 +19,16 @@
 // STL headers
 // C headers
 // Framework headers
-#if ARDUINO < 100
-#include <WProgram.h>
-#else
-#include <Arduino.h>
-#endif
 
+#include <Arduino.h>
+#include <SPI.h>
 /**
  * Driver for VS1003 - MP3 / WMA / MIDI Audio Codec Chip
  *
  * See http://www.vlsi.fi/en/products/vs1003.html
  */
 
-class VS1003_STM
+class VS1003
 {
 private:
   uint8_t cs_pin; /**< Pin where CS line is connected */
@@ -40,7 +37,8 @@ private:
   uint8_t reset_pin; /**< Pin where RESET line is connected */
   uint8_t my_SPCR; /**< Value of the SPCR register how we like it. */
   uint8_t my_SPSR; /**< Value of the SPSR register how we like it. */
-protected:
+  SPIClass my_SPI;
+public:
   inline void await_data_request(void) const
   {
     while ( !digitalRead(dreq_pin) );
@@ -82,14 +80,14 @@ protected:
    */
   void loadUserCode(const uint16_t* buf, size_t len) const;
 
-public:
+//public:
 
   /**
    * Constructor
    *
    * Only sets pin values.  Doesn't do touch the chip.  Be sure to call begin()!
    */
-  VS1003_STM( uint8_t _cs_pin, uint8_t _dcs_pin, uint8_t _dreq_pin, uint8_t _reset_pin);
+  VS1003( uint8_t _cs_pin, uint8_t _dcs_pin, uint8_t _dreq_pin, uint8_t _reset_pin, SPIClass _spi = SPIClass(1));
 
   /**
    * Begin operation

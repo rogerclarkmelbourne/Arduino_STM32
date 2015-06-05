@@ -347,7 +347,7 @@ void SPIClass::write(const uint8 *data, uint32 length) {
 	while (spi_is_busy(this->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
 }
 
-uint8 SPIClass::transfer(uint8 byte) {
+uint8 SPIClass::transfer(uint8 byte) const {
 	uint8 b;
 	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
   	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."

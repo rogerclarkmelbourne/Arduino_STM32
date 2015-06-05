@@ -12,16 +12,10 @@
                 mp3 decoding instead of booting into MID (modeSwitch function).
  */
 
-#include <SPI.h>
+//#include <my_SPI.h>
 #include <VS1003_STM.h>
 
-const uint8_t vs1003_chunk_size = 32;
-
-#undef PROGMEM
-#define PROGMEM __attribute__ ((section (".progmem.data"))) 
-#undef PSTR 
-#define PSTR(s) (__extension__({static char __c[] PROGMEM = (s); &__c[0];}))
-
+#define vs1003_chunk_size  32
 /****************************************************************************/
 
 // VS1003 SCI Write Command byte is 0x02
@@ -70,24 +64,24 @@ const uint8_t SM_LINE_IN = 14;
 
 // Register names
 
-char reg_name_MODE[] PROGMEM = "MODE";
-char reg_name_STATUS[] PROGMEM  = "STATUS";
-char reg_name_BASS[] PROGMEM  = "BASS";
-char reg_name_CLOCKF[] PROGMEM  = "CLOCKF";
-char reg_name_DECODE_TIME[] PROGMEM  = "DECODE_TIME";
-char reg_name_AUDATA[] PROGMEM  = "AUDATA";
-char reg_name_WRAM[] PROGMEM  = "WRAM";
-char reg_name_WRAMADDR[] PROGMEM  = "WRAMADDR";
-char reg_name_HDAT0[] PROGMEM  = "HDAT0";
-char reg_name_HDAT1[] PROGMEM  = "HDAT1";
-char reg_name_AIADDR[] PROGMEM  = "AIADDR";
-char reg_name_VOL[] PROGMEM  = "VOL";
-char reg_name_AICTRL0[] PROGMEM  = "AICTRL0";
-char reg_name_AICTRL1[] PROGMEM  = "AICTRL1";
-char reg_name_AICTRL2[] PROGMEM  = "AICTRL2";
-char reg_name_AICTRL3[] PROGMEM  = "AICTRL3";
+const char reg_name_MODE[]  		= "MODE";
+const char reg_name_STATUS[]   		= "STATUS";
+const char reg_name_BASS[]   		= "BASS";
+const char reg_name_CLOCKF[]   		= "CLOCKF";
+const char reg_name_DECODE_TIME[]   = "DECODE_TIME";
+const char reg_name_AUDATA[]   		= "AUDATA";
+const char reg_name_WRAM[]   		= "WRAM";
+const char reg_name_WRAMADDR[]   	= "WRAMADDR";
+const char reg_name_HDAT0[]   		= "HDAT0";
+const char reg_name_HDAT1[]   		= "HDAT1";
+const char reg_name_AIADDR[]   		= "AIADDR";
+const char reg_name_VOL[]  			= "VOL";
+const char reg_name_AICTRL0[]   	= "AICTRL0";
+const char reg_name_AICTRL1[]   	= "AICTRL1";
+const char reg_name_AICTRL2[]   	= "AICTRL2";
+const char reg_name_AICTRL3[]   	= "AICTRL3";
 
-static PGM_P register_names[] PROGMEM =
+static PGM_P const register_names[] =
 {
   reg_name_MODE,
   reg_name_STATUS,
@@ -116,15 +110,15 @@ inline void DMA1_CH3_Event() {
 
 /****************************************************************************/
 
-uint16_t VS1003_STM::read_register(uint8_t _reg) const
+uint16_t VS1003::read_register(uint8_t _reg) const
 {
   uint16_t result;
   control_mode_on();
   delayMicroseconds(1); // tXCSS
-  SPI.transfer(VS_READ_COMMAND); // Read operation
-  SPI.transfer(_reg); // Which register
-  result = SPI.transfer(0xff) << 8; // read high byte
-  result |= SPI.transfer(0xff); // read low byte
+  my_SPI.transfer(VS_READ_COMMAND); // Read operation
+  my_SPI.transfer(_reg); // Which register
+  result = my_SPI.transfer(0xff) << 8; // read high byte
+  result |= my_SPI.transfer(0xff); // read low byte
   delayMicroseconds(1); // tXCSH
   await_data_request();
   control_mode_off();
@@ -133,14 +127,14 @@ uint16_t VS1003_STM::read_register(uint8_t _reg) const
 
 /****************************************************************************/
 
-void VS1003_STM::write_register(uint8_t _reg,uint16_t _value) const
+void VS1003::write_register(uint8_t _reg,uint16_t _value) const
 {
   control_mode_on();
   delayMicroseconds(1); // tXCSS
-  SPI.transfer(VS_WRITE_COMMAND); // Write operation
-  SPI.transfer(_reg); // Which register
-  SPI.transfer(_value >> 8); // Send hi byte
-  SPI.transfer(_value & 0xff); // Send lo byte
+  my_SPI.transfer(VS_WRITE_COMMAND); // Write operation
+  my_SPI.transfer(_reg); // Which register
+  my_SPI.transfer(_value >> 8); // Send hi byte
+  my_SPI.transfer(_value & 0xff); // Send lo byte
   delayMicroseconds(1); // tXCSH
   await_data_request();
   control_mode_off();
@@ -148,7 +142,7 @@ void VS1003_STM::write_register(uint8_t _reg,uint16_t _value) const
 
 /****************************************************************************/
 
-void VS1003_STM::sdi_send_buffer(const uint8_t* data, size_t len)
+void VS1003::sdi_send_buffer(const uint8_t* data, size_t len)
 {
   data_mode_on();
   while ( len )
@@ -159,14 +153,14 @@ void VS1003_STM::sdi_send_buffer(const uint8_t* data, size_t len)
     size_t chunk_length = min(len,vs1003_chunk_size);
     len -= chunk_length;
     while ( chunk_length-- )
-      SPI.transfer(*data++);
+      my_SPI.transfer(*data++);
   }
   data_mode_off();
 }
 
 /****************************************************************************/
 
-void VS1003_STM::sdi_send_zeroes(size_t len)
+void VS1003::sdi_send_zeroes(size_t len)
 {
   data_mode_on();
   while ( len )
@@ -176,21 +170,21 @@ void VS1003_STM::sdi_send_zeroes(size_t len)
     size_t chunk_length = min(len,vs1003_chunk_size);
     len -= chunk_length;
     while ( chunk_length-- )
-      SPI.transfer(0);
+      my_SPI.transfer(0);
   }
   data_mode_off();
 }
 
 /****************************************************************************/
 
-VS1003_STM::VS1003_STM( uint8_t _cs_pin, uint8_t _dcs_pin, uint8_t _dreq_pin, uint8_t _reset_pin):
-  cs_pin(_cs_pin), dcs_pin(_dcs_pin), dreq_pin(_dreq_pin), reset_pin(_reset_pin)
+VS1003::VS1003( uint8_t _cs_pin, uint8_t _dcs_pin, uint8_t _dreq_pin, uint8_t _reset_pin, SPIClass _spiChan):
+  cs_pin(_cs_pin), dcs_pin(_dcs_pin), dreq_pin(_dreq_pin), reset_pin(_reset_pin), my_SPI(_spiChan)
 {
 }
 
 /****************************************************************************/
 
-void VS1003_STM::begin(void)
+void VS1003::begin(void)
 {
 
   // Keep the chip in reset until we are ready
@@ -206,17 +200,19 @@ void VS1003_STM::begin(void)
   // DREQ is an input
   pinMode(dreq_pin,INPUT);
 
+  
   // Boot VS1003
-  //Serial.println(PSTR("Booting VS1003...\r\n"));
+  //printf(("Booting VS1003...\r\n"));
 
   delay(1);
 
-  SPI.begin();
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setDataMode(SPI_MODE0);
+  my_SPI.begin();
+  my_SPI.setBitOrder(MSBFIRST);
+  my_SPI.setDataMode(SPI_MODE0);
   // init SPI slow mode
-  SPI.setClockDivider(SPI_CLOCK_DIV64); // Slow!
-
+ 
+  my_SPI.setClockDivider(SPI_CLOCK_DIV64); // Slow!
+  
   // release from reset
   digitalWrite(reset_pin,HIGH);
   
@@ -231,7 +227,7 @@ void VS1003_STM::begin(void)
   /* Switch on the analog parts */
   write_register(SCI_VOL,0xfefe); // VOL
   
-  //printf_P(PSTR("VS1003 still booting\r\n"));
+  //printf(("VS1003 still booting\r\n"));
 
   write_register(SCI_AUDATA,44101); // 44.1kHz stereo
 
@@ -248,17 +244,17 @@ void VS1003_STM::begin(void)
 
   // Now you can set high speed SPI clock
   // 72 MHz / 16 = 4.5 MHz max is practically allowed by VS1003 SPI interface.
-  SPI.setClockDivider(SPI_CLOCK_DIV16); 
+  my_SPI.setClockDivider(SPI_CLOCK_DIV16); 
 
-  //printf_P(PSTR("VS1003 Set\r\n"));
+  //printf(("VS1003 Set\r\n"));
   //printDetails();
-  //printf_P(PSTR("VS1003 OK\r\n"));
+  //printf(("VS1003 OK\r\n"));
 
 }
 
 /****************************************************************************/
 
-void VS1003_STM::setVolume(uint8_t vol) const
+void VS1003::setVolume(uint8_t vol) const
 {
   uint16_t value = vol;
   value <<= 8;
@@ -269,46 +265,46 @@ void VS1003_STM::setVolume(uint8_t vol) const
 
 /****************************************************************************/
 
-void VS1003_STM::startSong(void)
+void VS1003::startSong(void)
 {
   sdi_send_zeroes(10);
 }
 
 /****************************************************************************/
 
-void VS1003_STM::playChunk(const uint8_t* data, size_t len)
+void VS1003::playChunk(const uint8_t* data, size_t len)
 {
   sdi_send_buffer(data,len);
 }
 
 /****************************************************************************/
 
-void VS1003_STM::stopSong(void)
+void VS1003::stopSong(void)
 {
   sdi_send_zeroes(2048);
 }
 
 /****************************************************************************/
 
-void VS1003_STM::print_byte_register(uint8_t reg) const
+void VS1003::print_byte_register(uint8_t reg) const
 {
   const char *name = reinterpret_cast<const char*>(pgm_read_word( register_names + reg ));
   char extra_tab = strlen_P(name) < 5 ? '\t' : 0;
-  //printf_P(PSTR("%02x %S\t%c = 0x%02x\r\n"),reg,name,extra_tab,read_register(reg));
+  //printf(("%02x %S\t%c = 0x%02x\r\n"),reg,name,extra_tab,read_register(reg));
 }
 
 /****************************************************************************/
 
-void VS1003_STM::printDetails(void) const
+void VS1003::printDetails(void) const
 {
-  //printf_P(PSTR("VS1003 Configuration:\r\n"));
+  //printf(("VS1003 Configuration:\r\n"));
   int i = 0;
   while ( i <= SCI_num_registers )
     print_byte_register(i++);
 }
 
 /****************************************************************************/
-void VS1003_STM::modeSwitch(void)
+void VS1003::modeSwitch(void)
 {
 	//GPIO_DDR
 	write_register(SCI_WRAMADDR, 0xc017);
@@ -323,7 +319,7 @@ void VS1003_STM::modeSwitch(void)
 }
 /****************************************************************************/
 
-void VS1003_STM::loadUserCode(const uint16_t* buf, size_t len) const
+void VS1003::loadUserCode(const uint16_t* buf, size_t len) const
 {
   while (len)
   {
@@ -333,13 +329,13 @@ void VS1003_STM::loadUserCode(const uint16_t* buf, size_t len) const
       n &= 0x7FFF;
       uint16_t val = pgm_read_word(buf++); len--;
       while (n--) {
-	//printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
+	//printf(("W %02x: %04x\r\n"),addr,val);
         write_register(addr, val);
       }
     } else {           /* Copy run, copy n samples */
       while (n--) {
 	uint16_t val = pgm_read_word(buf++); len--;
-	//printf_P(PSTR("W %02x: %04x\r\n"),addr,val);
+	//printf(("W %02x: %04x\r\n"),addr,val);
         write_register(addr, val);
       }
     }
