@@ -8,10 +8,14 @@
   Ported to STM32F103 by Vassilis Serasidis on 21 May 2015
   Home:  http://www.serasidis.gr
   email: avrsite@yahoo.gr
+  
+   29 May 2015 - Added a fix for booting the VS1053B boards into 
+                 mp3 decoding instead of booting into MID (modeSwitch function).
 */
 
 #include <VS1003_STM.h>
 #include <SPI.h>
+
 
 /*
  * VS1003 development board connected by it's header pins the following way:
@@ -27,9 +31,10 @@
  * GND  - GND  -
  * 5V   - 5V   -
  */
+
 VS1003_STM player(PC14, PB10, PA8, PA9); // cs_pin, dcs_pin, dreq_pin, reset_pin
 
-unsigned char HelloMP3[] = {
+static const unsigned char HelloMP3[] = {
   0xFF,0xF2,0x40,0xC0,0x19,0xB7,0x00,0x14,0x02,0xE6,0x5C, /* ..@.......\ */
   0x01,0x92,0x68,0x01,0xF1,0x5E,0x03,0x08,0xF0,0x24,0x80, /* ..h..^...$. */
   0x05,0x9E,0x20,0xC6,0xFC,0x12,0x32,0x5C,0xBF,0xF9,0xB9, /* .. ...2\... */
@@ -196,6 +201,8 @@ void setup () {
                                                                                                                                        
   // initiate a player
   player.begin();
+  player.modeSwitch(); //Change mode from MIDI to MP3 decoding (Vassilis Serasidis).
+  
   // set maximum output volume
   player.setVolume(0x00);
 }
