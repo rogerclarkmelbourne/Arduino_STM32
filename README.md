@@ -4,6 +4,8 @@ Arduino STM32
 ##Summary:  
 This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.5.x to the latest version (currently 1.6.3)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
 
+***PRIMARY SUPPORT FORUM: http://www.stm32duino.com/***
+
 ##Background & Support:  
 * Based on https://github.com/bobc/maple-asp, which is in turn based on LibMaple by Leaflabs  
 * **Please read the wiki (https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki) for full details**
