@@ -10,6 +10,7 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 * See also my blog: http://www.rogerclark.net/stm32f103-and-maple-maple-mini-with-arduino-1-5-x-ide/  
 * **NEW: Main support site for using STM32 boards with the Arduino IDE: http://www.stm32duino.com/**  
 * LeafLabs "Maple Language Reference:" http://leaflabs.com/docs/language.html
+* LeafLabs "Maple-Arduino Compatibility:" http://leaflabs.com/docs/arduino-compatibility.html
 
 **YouTube Videos:** 
 * 20141116: [Arduino 1.5.8 IDE with STM32 board](https://www.youtube.com/watch?v=-zwGnytGT8M)
