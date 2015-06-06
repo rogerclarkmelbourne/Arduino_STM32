@@ -12,9 +12,9 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 * LeafLabs "Maple Language Reference:" http://leaflabs.com/docs/language.html
 
 **YouTube Videos:** 
-* 20141116: Arduino 1.5.8 IDE with STM32 board - https://www.youtube.com/watch?v=-zwGnytGT8M
-* 20150413: STM32 for Arduino 1.6.2 or newer (update) - https://www.youtube.com/watch?v=TePglhSkghg
-* 20150419: Uploading via USB to Serial to STM32F103 boards - https://www.youtube.com/watch?v=G_RF0a0hrak
+* 20141116: [Arduino 1.5.8 IDE with STM32 board](https://www.youtube.com/watch?v=-zwGnytGT8M)
+* 20150413: [STM32 for Arduino 1.6.2 or newer (update)](https://www.youtube.com/watch?v=TePglhSkghg)
+* 20150419: [Uploading via USB to Serial to STM32F103 boards](https://www.youtube.com/watch?v=G_RF0a0hrak)
 
 ##Additional Links & Info:  
 * https://www.hackster.io/rayburne/4-dollar-90-mips-32-bit-72-mhz-arm-arduino  
