@@ -1,8 +1,8 @@
 Arduino STM32  
 =============  
 
-##Background:  
-This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.5.x to the latest version (currently 1.6.3)  including LeafLabs Maple, and Maple mini, and other generic STM32F103 boards  
+##Summary:  
+This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.5.x to the latest version (currently 1.6.3)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
 
 ##Support:  
 * Please read the wiki  https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki for full details  
@@ -20,4 +20,4 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 * https://www.hackster.io/rayburne/4-dollar-90-mips-32-bit-72-mhz-arm-arduino  
 
 ##Purchase info:  
-[Ebay search for "arduino maple"](http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=arduino+maple&_sop=15) (currently costs <$5 with shipping)
+* [Ebay search for "arduino maple"](http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=arduino+maple&_sop=15) (currently costs <$5 with shipping)
