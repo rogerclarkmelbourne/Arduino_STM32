@@ -24,3 +24,5 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 
 ##Purchase info:  
 * [Ebay search for "arduino maple"](http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=arduino+maple&_sop=15) (currently costs <$5 with shipping)
+* [AliExpress search for "leaflabs maple"] (http://www.aliexpress.com/wholesale?catId=0&initiative_id=SB_20150607085526&SearchText=leaflabs+maple)
+
