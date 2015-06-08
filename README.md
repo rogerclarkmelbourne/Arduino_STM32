@@ -34,6 +34,6 @@ Some supplier have this board e.g.
 
 *[ STM32F103VET ](http://www.ebay.com.au/itm/1PCS-STM32F103VET6-ARM-STM32-Minimum-System-Development-Board-Arduino-M77-/301433302819)
 
-There is also a STM32F103ZET board which also works, however they are not always available. They have been listed as "STM32F103ZET6 Minimum System Development Board ARM STM32 Cortex-m3 M75"
-
+*[There is also a STM32F103ZET board which also works, however they are not always available. They have been listed as "STM32F103ZET6 Minimum System Development Board ARM STM32 Cortex-m3 M75"]
+(http://www.ebay.com.au/itm/1pcs-STM32F103ZET6-Minimum-System-Development-Board-ARM-STM32-Cortex-m3-M75-/291305557264)
 
