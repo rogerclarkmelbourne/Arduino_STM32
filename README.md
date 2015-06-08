@@ -23,6 +23,17 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 * https://www.hackster.io/rayburne/4-dollar-90-mips-32-bit-72-mhz-arm-arduino  
 
 ##Purchase info:  
+###Entry level boards
+
 * [Ebay search for "arduino maple"](http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=arduino+maple&_sop=15) (currently costs <$5 with shipping)
 * [AliExpress search for "leaflabs maple"] (http://www.aliexpress.com/wholesale?catId=0&initiative_id=SB_20150607085526&SearchText=leaflabs+maple)
+
+### Bigger boards (You need to load the stm32duino bootloader)
+
+Some supplier have this board e.g.
+
+*[ STM32F103VET ](http://www.ebay.com.au/itm/1PCS-STM32F103VET6-ARM-STM32-Minimum-System-Development-Board-Arduino-M77-/301433302819)
+
+There is also a STM32F103ZET board which also works, however they are not always available. They have been listed as "STM32F103ZET6 Minimum System Development Board ARM STM32 Cortex-m3 M75"
+
 
