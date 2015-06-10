@@ -150,6 +150,11 @@ public:
      * @brief Equivalent to begin(SPI_1_125MHZ, MSBFIRST, 0).
      */
     void begin(void);
+    
+    /**
+    * EXPERIMENTAL METHODE (Vassilis Serasidis)
+    */
+    void begin(int8_t pin, SPISettings settings);
 
     /**
      * @brief Turn on a SPI port and set its GPIO pin modes for use as a slave.
@@ -176,8 +181,8 @@ public:
 	void endTransaction(void);
 
 	void setClockDivider(uint32_t clockDivider);
-	void setBitOrder(BitOrder bitOrder);	
-	void setDataMode(uint8_t dataMode);		
+	void setBitOrder(BitOrder bitOrder);
+	void setDataMode(uint8_t dataMode);
 	
 	// SPI Configuration methods
 	void attachInterrupt(void);

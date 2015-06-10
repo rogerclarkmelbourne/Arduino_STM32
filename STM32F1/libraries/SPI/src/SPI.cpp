@@ -132,6 +132,14 @@ void SPIClass::begin(void) {
     spi_master_enable(spi_d, (spi_baud_rate)clockDivider, (spi_mode)dataMode, flags);
 }
 
+void SPIClass::begin(int8_t nssPin, SPISettings settings) {
+    setBitOrder(settings.bitOrder);
+    setDataMode(settings.dataMode);
+    setClockDivider(determine_baud_rate(spi_d, settings.clock));
+    begin();
+    pinMode(nssPin,OUTPUT);
+}
+
 void SPIClass::beginSlave(void) {
     if (dataMode >= 4) {
         ASSERT(0);
@@ -358,8 +366,8 @@ uint8 SPIClass::transfer(uint8 byte) {
 }
 /*  Roger Clark and Victor Perez, 2015
 *	Performs a DMA SPI transfer with at least a receive buffer.
-*	If a TX buffer is not provided, FF is sent over and over for the lenght of the transfer. 
-*	On exit TX buffer is not modified, and RX buffer cotains the received data.
+*	If a TX buffer is not provided, FF is sent over and over for the length of the transfer. 
+*	On exit TX buffer is not modified, and RX buffer contains the received data.
 *	Still in progress.
 */
 uint8 SPIClass::dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length) {
