@@ -16,8 +16,8 @@
     https://github.com/Serasidis/Arduino_STM32
     
     Using the first SPI port (SPI)
-    SS	  <-->  PA4 <-->  BOARD_SPI1_NSS_PIN
-    SCK	  <-->  PA5 <-->  BOARD_SPI1_SCK_PIN
+    SS    <-->  PA4 <-->  BOARD_SPI1_NSS_PIN
+    SCK   <-->  PA5 <-->  BOARD_SPI1_SCK_PIN
     MISO  <-->  PA6 <-->  BOARD_SPI1_MISO_PIN
     MOSI  <-->  PA7 <-->  BOARD_SPI1_MOSI_PIN
 */
@@ -38,10 +38,10 @@ void setup() {
 
 void loop() {
   digitalWrite(BOARD_SPI1_NSS_PIN, LOW); // manually take CSN low for spi transmission
-  //gpio_write_bit(GPIOB, 12, LOW); // faster than digitalWrite()
+  //gpio_write_bit(GPIOA, 4, LOW); // faster than digitalWrite()
   data = SPI.transfer(0x55); //Send the HEX data 0x55 over SPI-2 port and store the received byte to the <data> variable.
   digitalWrite(BOARD_SPI1_NSS_PIN, HIGH); // manually take CSN high between spi transmissions
-  //gpio_write_bit(GPIOB, 12, HIGH);  // faster than digitalWrite()
+  //gpio_write_bit(GPIOA, 4, HIGH);  // faster than digitalWrite()
 
   delayMicroseconds(10);    //Delay 10 micro seconds.
 }
