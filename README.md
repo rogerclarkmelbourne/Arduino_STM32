@@ -1,6 +1,13 @@
 Arduino STM32  
 =============  
 
+##Notice
+
+This software is experimental and a work in progress.
+Under no circumstances should these files be used in relation to any critical system(s).
+Use of these files is at your own risk.
+
+
 ##Summary:  
 This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.5.x to the latest version (currently 1.6.3)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
 
