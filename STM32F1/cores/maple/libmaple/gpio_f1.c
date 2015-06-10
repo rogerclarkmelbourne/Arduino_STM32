@@ -138,6 +138,23 @@ void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
     }
 }
 
+gpio_pin_mode gpio_get_mode(gpio_dev *dev, uint8 pin) {
+    gpio_reg_map *regs = dev->regs;
+    __io uint32 *cr = &regs->CRL + (pin >> 3);
+    uint32 shift = (pin & 0x7) * 4;
+    uint32 tmp = *cr;
+
+	uint32 crMode = (*cr>>shift) & 0x0F;
+	
+	// could be pull up or pull down. Nee to check the ODR
+	if (crMode==GPIO_INPUT_PD && ((regs->ODR >> pin) & 0x01) !=0 )
+	{
+		crMode = GPIO_INPUT_PU;
+	}
+	
+    return(crMode);
+}
+
 /*
  * AFIO
  */
