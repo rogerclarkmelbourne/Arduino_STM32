@@ -119,34 +119,6 @@ SPIClass::SPIClass(uint32 spi_num) {
  */
 
 void SPIClass::begin(void) {
-	gpio_pin_mode nssPinMode;
-	int nssPin;
-    if (dataMode >= 4) {
-        ASSERT(0);
-        return;
-    }
-	
-#if BOARD_NR_SPI >= 1
-	if (this->spi_d == SPI1)
-	{
-		nssPin=BOARD_SPI1_NSS_PIN;
-	}
-#endif
-#if BOARD_NR_SPI >= 2
-	if (this->spi_d == SPI2)
-	{
-		nssPin=BOARD_SPI2_NSS_PIN;
-	}
-#endif
-#if BOARD_NR_SPI >= 3
-	if (this->spi_d == SPI3)
-	{
-		nssPin=BOARD_SPI3_NSS_PIN;
-	}
-#endif	
-
-
-	nssPinMode = gpio_get_mode(PIN_MAP[nssPin].gpio_device, PIN_MAP[nssPin].gpio_bit);// get and save NSS pin mode
 	
     uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
     spi_init(spi_d);
@@ -155,7 +127,6 @@ void SPIClass::begin(void) {
 	Serial.print("spi_master_enable("); Serial.print(clockDivider); Serial.print(","); Serial.print(dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
     spi_master_enable(spi_d, (spi_baud_rate)clockDivider, (spi_mode)dataMode, flags);
-	gpio_set_mode(PIN_MAP[nssPin].gpio_device, PIN_MAP[nssPin].gpio_bit, nssPinMode);// restore pin mode of nss pin (work around for bug in the STM32)
 }
 
 void SPIClass::beginSlave(void) {
