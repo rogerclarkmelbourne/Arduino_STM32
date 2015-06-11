@@ -1,5 +1,5 @@
 /**
-    SPI_1 port example code
+    SPI_1 and SPI_2 port example code
     
     Description:
     This sketch sends one byte with value 0x55 over the SPI_1 or SPI_2 port.
@@ -27,6 +27,9 @@
 
 #include <SPI.h>
 
+#define SPI1_NSS_PIN PA4    //SPI_1 Chip Select pin is PA4. You can change it to the STM32 pin you want.
+#define SPI2_NSS_PIN PB12   //SPI_2 Chip Select pin is PB12. You can change it to the STM32 pin you want.
+
 //SPIClass SPI_2(2); //un-comment this line in case you want to use the SPI_2 port.
 byte data;
 
@@ -43,25 +46,19 @@ void setup() {
   SPI.setClockDivider(SPI_CLOCK_DIV16);      // Slow speed (72 / 16 = 4.5 MHz SPI_1 speed)
   //SPI_2.setClockDivider(SPI_CLOCK_DIV16);  // Slow speed (72 / 16 = 4.5 MHz SPI_2 speed) 
 
-  pinMode(BOARD_SPI1_NSS_PIN, OUTPUT); // note: this must be after the SPI.begin() for gpio control of CSN
-  //pinMode(BOARD_SPI2_NSS_PIN, OUTPUT); // note: this must be after the SPI_2.begin() for gpio control of CSN
+  pinMode(SPI1_NSS_PIN, OUTPUT); // note: this must be after the SPI.begin() for gpio control of CSN
+  //pinMode(SPI2_NSS_PIN, OUTPUT); // note: this must be after the SPI_2.begin() for gpio control of CSN
 }
 
 void loop() {
-  digitalWrite(BOARD_SPI1_NSS_PIN, LOW); // manually take CSN low for SPI_1 transmission
-  //digitalWrite(BOARD_SPI2_NSS_PIN, LOW); // manually take CSN low for SPI_2 transmission
-  
-  //gpio_write_bit(GPIOA, BOARD_SPI1_NSS_PIN, LOW); // faster than digitalWrite() [For SPI_1]
-  //gpio_write_bit(GPIOB, BOARD_SPI2_NSS_PIN, LOW); // faster than digitalWrite() [For SPI_2]
+  digitalWrite(SPI1_NSS_PIN, LOW); // manually take CSN low for SPI_1 transmission
+  //digitalWrite(SPI2_NSS_PIN, LOW); // manually take CSN low for SPI_2 transmission
   
   data = SPI.transfer(0x55); //Send the HEX data 0x55 over SPI-1 port and store the received byte to the <data> variable.
   //data = SPI_2.transfer(0x55); //Send the HEX data 0x55 over SPI-2 port and store the received byte to the <data> variable.
   
-  digitalWrite(BOARD_SPI1_NSS_PIN, HIGH); // manually take CSN high between spi transmissions
-  //digitalWrite(BOARD_SPI2_NSS_PIN, HIGH); // manually take CSN high between spi transmissions
-  
-  //gpio_write_bit(GPIOA, BOARD_SPI1_NSS_PIN, HIGH);  // faster than digitalWrite() [For SPI_1]
-  //gpio_write_bit(GPIOB, BOARD_SPI2_NSS_PIN, HIGH);  // faster than digitalWrite() [For SPI_2]
+  digitalWrite(SPI1_NSS_PIN, HIGH); // manually take CSN high between spi transmissions
+  //digitalWrite(SPI2_NSS_PIN, HIGH); // manually take CSN high between spi transmissions
 
   delayMicroseconds(10);    //Delay 10 micro seconds.
 }
