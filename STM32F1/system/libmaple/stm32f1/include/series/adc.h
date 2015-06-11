@@ -42,10 +42,12 @@
 /*
  * Devices
  */
-
+extern adc_dev adc1;
 extern const struct adc_dev *ADC1;
+extern adc_dev adc2;
 extern const struct adc_dev *ADC2;
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+extern adc_dev adc3;
 extern const struct adc_dev *ADC3;
 #endif
 
