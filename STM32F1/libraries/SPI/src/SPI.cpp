@@ -119,10 +119,7 @@ SPIClass::SPIClass(uint32 spi_num) {
  */
 
 void SPIClass::begin(void) {
-    if (dataMode >= 4) {
-        ASSERT(0);
-        return;
-    }
+	
     uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
     spi_init(spi_d);
     configure_gpios(spi_d, 1);
