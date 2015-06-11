@@ -39,14 +39,14 @@
  * Devices
  */
 
-static adc_dev adc1 = {
+extern adc_dev adc1 = {
     .regs   = ADC1_BASE,
     .clk_id = RCC_ADC1,
 };
 /** ADC1 device. */
 const adc_dev *ADC1 = &adc1;
 
-static adc_dev adc2 = {
+extern adc_dev adc2 = {
     .regs   = ADC2_BASE,
     .clk_id = RCC_ADC2,
 };
@@ -54,7 +54,7 @@ static adc_dev adc2 = {
 const adc_dev *ADC2 = &adc2;
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-static adc_dev adc3 = {
+extern adc_dev adc3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3,
 };
