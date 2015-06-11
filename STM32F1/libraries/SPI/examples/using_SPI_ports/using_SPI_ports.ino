@@ -30,7 +30,7 @@
 #define SPI1_NSS_PIN PA4    //SPI_1 Chip Select pin is PA4. You can change it to the STM32 pin you want.
 #define SPI2_NSS_PIN PB12   //SPI_2 Chip Select pin is PB12. You can change it to the STM32 pin you want.
 
-//SPIClass SPI_2(2); //un-comment this line in case you want to use the SPI_2 port.
+//SPIClass SPI_2(2); //un-comment this line in case you want to use the SPI_2 port. 
 byte data;
 
 void setup() {
