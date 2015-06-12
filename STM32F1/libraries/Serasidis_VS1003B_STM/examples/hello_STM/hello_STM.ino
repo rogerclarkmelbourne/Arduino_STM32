@@ -8,6 +8,10 @@
   Ported to STM32F103 by Vassilis Serasidis on 21 May 2015
   Home:  http://www.serasidis.gr
   email: avrsite@yahoo.gr
+  
+   06 Jun 2015 - Roger Clark, added support for SPI 2 and SPI 3
+   29 May 2015 - Added a fix for booting the VS1053B boards into 
+                 mp3 decoding instead of booting into MID (modeSwitch function).
 */
 
 #include <VS1003_STM.h>
@@ -27,9 +31,8 @@
  * GND  - GND  -
  * 5V   - 5V   -
  */
-VS1003_STM player(PC14, PB10, PA8, PA9); // cs_pin, dcs_pin, dreq_pin, reset_pin
 
-unsigned char HelloMP3[] = {
+static const unsigned char HelloMP3[] = {
   0xFF,0xF2,0x40,0xC0,0x19,0xB7,0x00,0x14,0x02,0xE6,0x5C, /* ..@.......\ */
   0x01,0x92,0x68,0x01,0xF1,0x5E,0x03,0x08,0xF0,0x24,0x80, /* ..h..^...$. */
   0x05,0x9E,0x20,0xC6,0xFC,0x12,0x32,0x5C,0xBF,0xF9,0xB9, /* .. ...2\... */
@@ -184,24 +187,29 @@ unsigned char HelloMP3[] = {
   0x20,0x20,0x20,0x4D,0x50,0x33,0x20,0x48,0x65,0x6C,0x6C, /*    MP3 Hell */
   0x6F,0x2C,0x20,0x57,0x6F,0x72,0x6C,0x64,0x21,0x20,0x20, /* o, World!   */
   0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20, /*             */
-  0x00, /* . */
+  0x00
 };
 
-void setup () {
+VS1003 player(PC14, PB10, PA8, PA9); // cs_pin, dcs_pin, dreq_pin, reset_pin, SPI channel - defaults to SPI
+
+/* Example of how to use the VS21003 attached to SPI 2 
+VS1003 player(PC14, PB10, PA8, PA9,SPIClass(2)); // cs_pin, dcs_pin, dreq_pin, reset_pin, use SPI 2
+*/
+
+/* Example of how to use the VS21003 attached to SPI 2 
+VS1003 player(PC14, PB10, PA8, PA9,SPIClass(3)); // cs_pin, dcs_pin, dreq_pin, reset_pin, use SPI 3
+*/
+void setup () 
+{
   Serial.begin(9600);
-  while (!Serial) {
-    ; //Give some time to Serial port to be initiallized.
-  }
-  Serial.println("VS1003 test");
-                                                                                                                                       
-  // initiate a player
+  Serial.println("VS1003 HelloMP3");
+
   player.begin();
-  // set maximum output volume
-  player.setVolume(0x00);
+  player.modeSwitch(); //Change mode from MIDI to MP3 decoding (Vassilis Serasidis).
+  player.setVolume(0x00);  // set maximum output volume
 }
 
 void loop() {
-  // play hellomp3 flow each 0.5s ;)
-   player.playChunk(HelloMP3, sizeof(HelloMP3));
-   delay(500);
+   player.playChunk(HelloMP3, sizeof(HelloMP3));  // play hellomp3 - this blocks until the player is ready to receive more data
+   delay(1000);
 }

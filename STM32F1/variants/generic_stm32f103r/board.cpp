@@ -32,6 +32,11 @@
 
 #include <board/board.h>         // For this board's header file
 
+
+/* Roger Clark. Added next to includes for changes to Serial */
+#include <libmaple/usart.h>
+#include <HardwareSerial.h>
+
 #include <wirish_types.h> // For stm32_pin_info and its contents
                                  // (these go into PIN_MAP).
 
@@ -148,3 +153,19 @@ extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
     BOARD_JTMS_SWDIO_PIN,
     BOARD_JTCK_SWCLK_PIN, BOARD_JTDI_PIN, BOARD_JTDO_PIN, BOARD_NJTRST_PIN
 };
+
+
+#ifdef SERIAL_USB
+	DEFINE_HWSERIAL(Serial1, 1);
+	DEFINE_HWSERIAL(Serial2, 2);
+	DEFINE_HWSERIAL(Serial3, 3);
+	DEFINE_HWSERIAL_UART(Serial4, 4);
+	DEFINE_HWSERIAL_UART(Serial5, 5);
+#else
+	DEFINE_HWSERIAL(Serial, 1);
+	DEFINE_HWSERIAL(Serial1, 2);
+	DEFINE_HWSERIAL(Serial2, 3);
+	DEFINE_HWSERIAL_UART(Serial3, 4);
+	DEFINE_HWSERIAL_UART(Serial4, 5);
+#endif
+

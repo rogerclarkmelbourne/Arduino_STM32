@@ -119,10 +119,7 @@ SPIClass::SPIClass(uint32 spi_num) {
  */
 
 void SPIClass::begin(void) {
-    if (dataMode >= 4) {
-        ASSERT(0);
-        return;
-    }
+	
     uint32 flags = ((bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
     spi_init(spi_d);
     configure_gpios(spi_d, 1);
@@ -347,7 +344,7 @@ void SPIClass::write(const uint8 *data, uint32 length) {
 	while (spi_is_busy(this->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
 }
 
-uint8 SPIClass::transfer(uint8 byte) {
+uint8 SPIClass::transfer(uint8 byte) const {
 	uint8 b;
 	spi_tx_reg(this->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
   	while (spi_is_rx_nonempty(this->spi_d) == 0); // "4. Wait until RXNE=1 ..."

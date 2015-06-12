@@ -35,6 +35,10 @@
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
+/* Roger Clark. Added next to includes for changes to Serial */
+#include <libmaple/usart.h>
+#include <HardwareSerial.h>
+
 #include <wirish_debug.h>
 #include <wirish_types.h>
 
@@ -103,3 +107,22 @@ extern const uint8 boardADCPins[BOARD_NR_ADC_PINS] __FLASH__ = {
 extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
     32, 32, USB_DP, USB_DM
 };
+
+
+/* 
+ * Roger Clark
+ * 
+ * 2015/05/28
+ *
+ * Moved definitions for Hardware Serial devices from HardwareSerial.cpp so that each board can define which Arduino "Serial" instance
+ * Maps to which hardware serial port on the microprocessor
+ *
+ * Note. Maple mini always has SERIAL USB, so there is no need for the #fidef for this
+ * As its a Medium Density device, it only has 3 hardware serial devices. 
+ */							
+ 
+DEFINE_HWSERIAL(Serial1, 1);
+DEFINE_HWSERIAL(Serial2, 2);
+DEFINE_HWSERIAL(Serial3, 3);
+		
+	

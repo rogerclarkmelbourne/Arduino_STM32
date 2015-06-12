@@ -238,7 +238,7 @@ public:
      * @param data Byte to transmit.
      * @return Next unread byte.
      */
-    uint8 transfer(uint8 data);
+    uint8 transfer(uint8 data) const;
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
