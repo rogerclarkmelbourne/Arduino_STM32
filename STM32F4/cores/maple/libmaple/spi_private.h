@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2010 Perry Hung.
+ * Copyright (c) 2012 LeafLabs, LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,17 +22,16 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*****************************************************************************/
+ *****************************************************************************/
 
-/**
- *  @file dma.h
- *
- *  @brief Direct Memory Access peripheral support
- */
+#ifndef _LIBMAPLE_SPI_PRIVATE_H_
+#define _LIBMAPLE_SPI_PRIVATE_H_
 
-#ifdef STM32F2
-#include "dmaF2.h"
-#include <libmaple/dma_common.h>
-#else
-#include "dmaF1.h"
+#define SPI_DEV(num)                              \
+    {                                             \
+        .regs    = SPI##num##_BASE,               \
+        .clk_id  = RCC_SPI##num,                  \
+        .irq_num = NVIC_SPI##num,                 \
+    }
+
 #endif
