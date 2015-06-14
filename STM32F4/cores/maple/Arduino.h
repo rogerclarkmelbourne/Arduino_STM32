@@ -2,3 +2,5 @@
 #define Arduino_h
 #include "WProgram.h"
 #endif
+
+#include "variant.h"
