@@ -62,7 +62,7 @@ public:
     uint32 pending(void);
     int read(void);
     void flush(void);
-    virtual void write(unsigned char);
+    virtual size_t write(unsigned char);
     using Print::write;
 
     /* Pin accessors */
