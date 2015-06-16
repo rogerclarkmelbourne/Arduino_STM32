@@ -8,15 +8,30 @@ if [ $# -lt 4 ]; then
 fi
 dummy_port=$1; altID=$2; usbID=$3; binfile=$4;dummy_port_fullpath="/dev/$1"
 
-#if we can find the Serial device try resetting it and then sleeping for 1 sec while the board reboots
 
-if [ -e $dummy_port_fullpath ]; then
-	echo "resetting " $dummy_port_fullpath
-	stty -f $dummy_port_fullpath 1200
-	sleep 1
+# Get the directory where the script is running.
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+
+# -----------------  Old code to reset the USB - which doesn't seem to work --------
+#
+#if we can find the Serial device try resetting it and then sleeping for 1 sec while the board reboots
+#if [ -e $dummy_port_fullpath ]; then
+#	echo "resetting " $dummy_port_fullpath
 #	stty -f $dummy_port_fullpath 1200
 #	sleep 1
-fi
+##	stty -f $dummy_port_fullpath 1200
+##	sleep 1
+#fi
+# ------------------  End of old code -----------------
+
+#  ----------------- IMPORTANT -----------------
+# The 2nd parameter to upload-reset is the delay after resetting before it exits
+# This value is in milliseonds
+# You may need to tune this to your system
+# 750ms to 1500ms seems to work on my Mac
+
+${DIR}/upload-reset ${dummy_port_fullpath} 750
 
 
 DFU_UTIL=/usr/local/bin/dfu-util
