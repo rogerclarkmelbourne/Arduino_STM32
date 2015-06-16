@@ -77,22 +77,18 @@ namespace wirish {
       
 
 	
-	#ifdef SERIAL_USB 
-			/*
-			//Attempt to reset the USB interface - developed by Victor PV
-			
+#ifdef SERIAL_USB 
+#ifdef GENERIC_BOOTLOADER			
+			//Reset the USB interface on generic boards - developed by Victor PV
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_OUTPUT_PP);
 			gpio_write_bit(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit,0);
-
 			
-			for(volatile unsigned int i=0;i<5000000;i++)
-			{
-				asm("nop");
-			}
+			for(volatile unsigned int i=0;i<256;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
-			*/
+#endif	
+
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
-	#endif
+#endif
         }
 
         __weak void series_init(void) {

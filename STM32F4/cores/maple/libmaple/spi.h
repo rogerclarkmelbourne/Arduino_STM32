@@ -1,6 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
+ * Copyright (c) 2011, 2012 LeafLabs, LLC.
  * Copyright (c) 2010 Perry Hung.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -25,7 +26,7 @@
  *****************************************************************************/
 
 /**
- * @file spi.h
+ * @file libmaple/include/libmaple/spi.h
  * @author Marti Bolivar <mbolivar@leaflabs.com>
  * @brief Serial Peripheral Interface (SPI) and Integrated
  *        Interchip Sound (I2S) peripheral support.
@@ -33,18 +34,18 @@
  * I2S support is currently limited to register maps and bit definitions.
  */
 
-#ifndef _SPI_H_
-#define _SPI_H_
-
-#include "libmaple_types.h"
-#include "rcc.h"
-#include "nvic.h"
-#include "gpio.h"
-#include "util.h"
+#ifndef _LIBMAPLE_SPI_H_
+#define _LIBMAPLE_SPI_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <libmaple/libmaple_types.h>
+#include <libmaple/rcc.h>
+#include <libmaple/nvic.h>
+#include "spiF4.h"
+
 
 /*
  * Register maps
@@ -62,13 +63,6 @@ typedef struct spi_reg_map {
     __io uint32 I2SCFGR;        /**< I2S configuration register */
     __io uint32 I2SPR;          /**< I2S prescaler register */
 } spi_reg_map;
-
-/** SPI1 register map base pointer */
-#define SPI1_BASE                       ((struct spi_reg_map*)0x40013000)
-/** SPI2 register map base pointer */
-#define SPI2_BASE                       ((struct spi_reg_map*)0x40003800)
-/** SPI3 register map base pointer */
-#define SPI3_BASE                       ((struct spi_reg_map*)0x40003C00)
 
 /*
  * Register bit definitions
@@ -90,20 +84,20 @@ typedef struct spi_reg_map {
 #define SPI_CR1_CPOL_BIT                1
 #define SPI_CR1_CPHA_BIT                0
 
-#define SPI_CR1_BIDIMODE                BIT(SPI_CR1_BIDIMODE_BIT)
+#define SPI_CR1_BIDIMODE                (1U << SPI_CR1_BIDIMODE_BIT)
 #define SPI_CR1_BIDIMODE_2_LINE         (0x0 << SPI_CR1_BIDIMODE_BIT)
 #define SPI_CR1_BIDIMODE_1_LINE         (0x1 << SPI_CR1_BIDIMODE_BIT)
-#define SPI_CR1_BIDIOE                  BIT(SPI_CR1_BIDIOE_BIT)
-#define SPI_CR1_CRCEN                   BIT(SPI_CR1_CRCEN_BIT)
-#define SPI_CR1_CRCNEXT                 BIT(SPI_CR1_CRCNEXT_BIT)
-#define SPI_CR1_DFF                     BIT(SPI_CR1_DFF_BIT)
+#define SPI_CR1_BIDIOE                  (1U << SPI_CR1_BIDIOE_BIT)
+#define SPI_CR1_CRCEN                   (1U << SPI_CR1_CRCEN_BIT)
+#define SPI_CR1_CRCNEXT                 (1U << SPI_CR1_CRCNEXT_BIT)
+#define SPI_CR1_DFF                     (1U << SPI_CR1_DFF_BIT)
 #define SPI_CR1_DFF_8_BIT               (0x0 << SPI_CR1_DFF_BIT)
 #define SPI_CR1_DFF_16_BIT              (0x1 << SPI_CR1_DFF_BIT)
-#define SPI_CR1_RXONLY                  BIT(SPI_CR1_RXONLY_BIT)
-#define SPI_CR1_SSM                     BIT(SPI_CR1_SSM_BIT)
-#define SPI_CR1_SSI                     BIT(SPI_CR1_SSI_BIT)
-#define SPI_CR1_LSBFIRST                BIT(SPI_CR1_LSBFIRST_BIT)
-#define SPI_CR1_SPE                     BIT(SPI_CR1_SPE_BIT)
+#define SPI_CR1_RXONLY                  (1U << SPI_CR1_RXONLY_BIT)
+#define SPI_CR1_SSM                     (1U << SPI_CR1_SSM_BIT)
+#define SPI_CR1_SSI                     (1U << SPI_CR1_SSI_BIT)
+#define SPI_CR1_LSBFIRST                (1U << SPI_CR1_LSBFIRST_BIT)
+#define SPI_CR1_SPE                     (1U << SPI_CR1_SPE_BIT)
 #define SPI_CR1_BR                      (0x7 << 3)
 #define SPI_CR1_BR_PCLK_DIV_2           (0x0 << 3)
 #define SPI_CR1_BR_PCLK_DIV_4           (0x1 << 3)
@@ -113,16 +107,13 @@ typedef struct spi_reg_map {
 #define SPI_CR1_BR_PCLK_DIV_64          (0x5 << 3)
 #define SPI_CR1_BR_PCLK_DIV_128         (0x6 << 3)
 #define SPI_CR1_BR_PCLK_DIV_256         (0x7 << 3)
-#define SPI_CR1_MSTR                    BIT(SPI_CR1_MSTR_BIT)
-#define SPI_CR1_CPOL                    BIT(SPI_CR1_CPOL_BIT)
+#define SPI_CR1_MSTR                    (1U << SPI_CR1_MSTR_BIT)
+#define SPI_CR1_CPOL                    (1U << SPI_CR1_CPOL_BIT)
 #define SPI_CR1_CPOL_LOW                (0x0 << SPI_CR1_CPOL_BIT)
 #define SPI_CR1_CPOL_HIGH               (0x1 << SPI_CR1_CPOL_BIT)
-#define SPI_CR1_CPHA                    BIT(SPI_CR1_CPHA_BIT)
+#define SPI_CR1_CPHA                    (1U << SPI_CR1_CPHA_BIT)
 
 /* Control register 2 */
-
-/* RM0008-ism: SPI CR2 has "TXDMAEN" and "RXDMAEN" bits, while the
- * USARTs have CR3 "DMAR" and "DMAT" bits. */
 
 #define SPI_CR2_TXEIE_BIT               7
 #define SPI_CR2_RXNEIE_BIT              6
@@ -131,12 +122,12 @@ typedef struct spi_reg_map {
 #define SPI_CR2_TXDMAEN_BIT             1
 #define SPI_CR2_RXDMAEN_BIT             0
 
-#define SPI_CR2_TXEIE                   BIT(SPI_CR2_TXEIE_BIT)
-#define SPI_CR2_RXNEIE                  BIT(SPI_CR2_RXNEIE_BIT)
-#define SPI_CR2_ERRIE                   BIT(SPI_CR2_ERRIE_BIT)
-#define SPI_CR2_SSOE                    BIT(SPI_CR2_SSOE_BIT)
-#define SPI_CR2_TXDMAEN                 BIT(SPI_CR2_TXDMAEN_BIT)
-#define SPI_CR2_RXDMAEN                 BIT(SPI_CR2_RXDMAEN_BIT)
+#define SPI_CR2_TXEIE                   (1U << SPI_CR2_TXEIE_BIT)
+#define SPI_CR2_RXNEIE                  (1U << SPI_CR2_RXNEIE_BIT)
+#define SPI_CR2_ERRIE                   (1U << SPI_CR2_ERRIE_BIT)
+#define SPI_CR2_SSOE                    (1U << SPI_CR2_SSOE_BIT)
+#define SPI_CR2_TXDMAEN                 (1U << SPI_CR2_TXDMAEN_BIT)
+#define SPI_CR2_RXDMAEN                 (1U << SPI_CR2_RXDMAEN_BIT)
 
 /* Status register */
 
@@ -149,20 +140,18 @@ typedef struct spi_reg_map {
 #define SPI_SR_TXE_BIT                  1
 #define SPI_SR_RXNE_BIT                 0
 
-#define SPI_SR_BSY                      BIT(SPI_SR_BSY_BIT)
-#define SPI_SR_OVR                      BIT(SPI_SR_OVR_BIT)
-#define SPI_SR_MODF                     BIT(SPI_SR_MODF_BIT)
-#define SPI_SR_CRCERR                   BIT(SPI_SR_CRCERR_BIT)
-#define SPI_SR_UDR                      BIT(SPI_SR_UDR_BIT)
-#define SPI_SR_CHSIDE                   BIT(SPI_SR_CHSIDE_BIT)
+#define SPI_SR_BSY                      (1U << SPI_SR_BSY_BIT)
+#define SPI_SR_OVR                      (1U << SPI_SR_OVR_BIT)
+#define SPI_SR_MODF                     (1U << SPI_SR_MODF_BIT)
+#define SPI_SR_CRCERR                   (1U << SPI_SR_CRCERR_BIT)
+#define SPI_SR_UDR                      (1U << SPI_SR_UDR_BIT)
+#define SPI_SR_CHSIDE                   (1U << SPI_SR_CHSIDE_BIT)
 #define SPI_SR_CHSIDE_LEFT              (0x0 << SPI_SR_CHSIDE_BIT)
 #define SPI_SR_CHSIDE_RIGHT             (0x1 << SPI_SR_CHSIDE_BIT)
-#define SPI_SR_TXE                      BIT(SPI_SR_TXE_BIT)
-#define SPI_SR_RXNE                     BIT(SPI_SR_RXNE_BIT)
+#define SPI_SR_TXE                      (1U << SPI_SR_TXE_BIT)
+#define SPI_SR_RXNE                     (1U << SPI_SR_RXNE_BIT)
 
 /* I2S configuration register */
-
-/* RM0008-ism: CR1 has "CPOL", I2SCFGR has "CKPOL". */
 
 #define SPI_I2SCFGR_I2SMOD_BIT          11
 #define SPI_I2SCFGR_I2SE_BIT            10
@@ -170,16 +159,16 @@ typedef struct spi_reg_map {
 #define SPI_I2SCFGR_CKPOL_BIT           3
 #define SPI_I2SCFGR_CHLEN_BIT           0
 
-#define SPI_I2SCFGR_I2SMOD              BIT(SPI_I2SCFGR_I2SMOD_BIT)
+#define SPI_I2SCFGR_I2SMOD              (1U << SPI_I2SCFGR_I2SMOD_BIT)
 #define SPI_I2SCFGR_I2SMOD_SPI          (0x0 << SPI_I2SCFGR_I2SMOD_BIT)
 #define SPI_I2SCFGR_I2SMOD_I2S          (0x1 << SPI_I2SCFGR_I2SMOD_BIT)
-#define SPI_I2SCFGR_I2SE                BIT(SPI_I2SCFGR_I2SE_BIT)
+#define SPI_I2SCFGR_I2SE                (1U << SPI_I2SCFGR_I2SE_BIT)
 #define SPI_I2SCFGR_I2SCFG              (0x3 << 8)
 #define SPI_I2SCFGR_I2SCFG_SLAVE_TX     (0x0 << 8)
 #define SPI_I2SCFGR_I2SCFG_SLAVE_RX     (0x1 << 8)
 #define SPI_I2SCFGR_I2SCFG_MASTER_TX    (0x2 << 8)
 #define SPI_I2SCFGR_I2SCFG_MASTER_RX    (0x3 << 8)
-#define SPI_I2SCFGR_PCMSYNC             BIT(SPI_I2SCFGR_PCMSYNC_BIT)
+#define SPI_I2SCFGR_PCMSYNC             (1U << SPI_I2SCFGR_PCMSYNC_BIT)
 #define SPI_I2SCFGR_PCMSYNC_SHORT       (0x0 << SPI_I2SCFGR_PCMSYNC_BIT)
 #define SPI_I2SCFGR_PCMSYNC_LONG        (0x1 << SPI_I2SCFGR_PCMSYNC_BIT)
 #define SPI_I2SCFGR_I2SSTD              (0x3 << 4)
@@ -187,16 +176,25 @@ typedef struct spi_reg_map {
 #define SPI_I2SCFGR_I2SSTD_MSB          (0x1 << 4)
 #define SPI_I2SCFGR_I2SSTD_LSB          (0x2 << 4)
 #define SPI_I2SCFGR_I2SSTD_PCM          (0x3 << 4)
-#define SPI_I2SCFGR_CKPOL               BIT(SPI_I2SCFGR_CKPOL_BIT)
+#define SPI_I2SCFGR_CKPOL               (1U << SPI_I2SCFGR_CKPOL_BIT)
 #define SPI_I2SCFGR_CKPOL_LOW           (0x0 << SPI_I2SCFGR_CKPOL_BIT)
 #define SPI_I2SCFGR_CKPOL_HIGH          (0x1 << SPI_I2SCFGR_CKPOL_BIT)
 #define SPI_I2SCFGR_DATLEN              (0x3 << 1)
 #define SPI_I2SCFGR_DATLEN_16_BIT       (0x0 << 1)
 #define SPI_I2SCFGR_DATLEN_24_BIT       (0x1 << 1)
 #define SPI_I2SCFGR_DATLEN_32_BIT       (0x2 << 1)
-#define SPI_I2SCFGR_CHLEN               BIT(SPI_I2SCFGR_CHLEN_BIT)
+#define SPI_I2SCFGR_CHLEN               (1U << SPI_I2SCFGR_CHLEN_BIT)
 #define SPI_I2SCFGR_CHLEN_16_BIT        (0x0 << SPI_I2SCFGR_CHLEN_BIT)
 #define SPI_I2SCFGR_CHLEN_32_BIT        (0x1 << SPI_I2SCFGR_CHLEN_BIT)
+
+/* I2S prescaler register */
+
+#define SPI_I2SPR_MCKOE_BIT             9
+#define SPI_I2SPR_ODD_BIT               8
+
+#define SPI_I2SPR_MCKOE                 (1U << SPI_I2SPR_MCKOE_BIT)
+#define SPI_I2SPR_ODD                   (1U << SPI_I2SPR_ODD_BIT)
+#define SPI_I2SPR_I2SDIV                0xFF
 
 /*
  * Devices
@@ -209,45 +207,55 @@ typedef struct spi_dev {
     nvic_irq_num irq_num;       /**< NVIC interrupt number */
 } spi_dev;
 
-extern spi_dev *SPI1;
-extern spi_dev *SPI2;
-#ifdef STM32_HIGH_DENSITY
-extern spi_dev *SPI3;
-#endif
-#ifdef STM32F2
-extern spi_dev *SPI4;
-#endif
-
 /*
  * SPI Convenience functions
  */
 
 void spi_init(spi_dev *dev);
 
-void spi_gpio_cfg(uint8 as_master,
-                  gpio_dev *nss_dev,
-                  uint8 nss_bit,
-                  gpio_dev *comm_dev,
-                  uint8 sck_bit,
-                  uint8 miso_bit,
-                  uint8 mosi_bit);
+struct gpio_dev;
+/**
+ * @brief Configure GPIO bit modes for use as a SPI port's pins.
+ *
+ * @param dev SPI device
+ * @param as_master If true, configure as bus master; otherwise, as slave.
+ * @param nss_dev NSS pin's GPIO device
+ * @param nss_bit NSS pin's GPIO bit on nss_dev
+ * @param comm_dev SCK, MISO, MOSI pins' GPIO device
+ * @param sck_bit SCK pin's GPIO bit on comm_dev
+ * @param miso_bit MISO pin's GPIO bit on comm_dev
+ * @param mosi_bit MOSI pin's GPIO bit on comm_dev
+ */
+extern void spi_config_gpios(spi_dev *dev,
+                             uint8 as_master,
+                             struct gpio_dev *nss_dev,
+                             uint8 nss_bit,
+                             struct gpio_dev *comm_dev,
+                             uint8 sck_bit,
+                             uint8 miso_bit,
+                             uint8 mosi_bit);
 
 /**
  * @brief SPI mode configuration.
  *
- * Determines a combination of clock polarity (CPOL), which determines
- * idle state of the clock line, and clock phase (CPHA), which
- * determines which clock edge triggers data capture.
+ * A SPI mode determines a combination of the idle state of the clock
+ * line (the clock polarity, or "CPOL"), and which clock edge triggers
+ * data capture (the clock phase, or "CPHA").
  */
 typedef enum spi_mode {
-    SPI_MODE_0,  /**< Clock line idles low (0), data capture on first
-                    clock transition. */
-    SPI_MODE_1,  /**< Clock line idles low (0), data capture on second
-                    clock transition */
-    SPI_MODE_2,  /**< Clock line idles high (1), data capture on first
-                    clock transition. */
-    SPI_MODE_3   /**< Clock line idles high (1), data capture on
-                    second clock transition. */
+    /** Clock idles low, data captured on rising edge (first transition) */
+    SPI_MODE_LOW_RISING = 0,
+    /** Clock idles low, data captured on falling edge (second transition) */
+    SPI_MODE_LOW_FALLING = 1,
+    /** Clock idles high, data captured on falling edge (first transition) */
+    SPI_MODE_HIGH_FALLING = 2,
+    /** Clock idles high, data captured on rising edge (second transition) */
+    SPI_MODE_HIGH_RISING = 3,
+
+    SPI_MODE_0 = SPI_MODE_LOW_RISING,   /**< Same as SPI_MODE_LOW_RISING */
+    SPI_MODE_1 = SPI_MODE_LOW_FALLING,  /**< Same as SPI_MODE_LOW_FALLING */
+    SPI_MODE_2 = SPI_MODE_HIGH_FALLING, /**< Same as SPI_MODE_HIGH_FALLING */
+    SPI_MODE_3 = SPI_MODE_HIGH_RISING,  /**< Same as SPI_MODE_HIGH_RISING */
 } spi_mode;
 
 /**
@@ -302,7 +310,11 @@ void spi_slave_enable(spi_dev *dev,
 
 uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len);
 
-void spi_foreach(void (*fn)(spi_dev (*dev)));
+/**
+ * @brief Call a function on each SPI port
+ * @param fn Function to call.
+ */
+extern void spi_foreach(void (*fn)(spi_dev*));
 
 void spi_peripheral_enable(spi_dev *dev);
 void spi_peripheral_disable(spi_dev *dev);

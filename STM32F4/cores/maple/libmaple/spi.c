@@ -1,6 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
+ * Copyright (c) 2011, 2012 LeafLabs, LLC.
  * Copyright (c) 2010 Perry Hung.
  *
  * Permission is hereby granted, free of charge, to any person
@@ -25,56 +26,16 @@
  *****************************************************************************/
 
 /**
- * @file spi.c
+ * @file libmaple/spi.c
  * @author Marti Bolivar <mbolivar@leaflabs.com>
  * @brief Serial Peripheral Interface (SPI) support.
  *        Currently, there is no Integrated Interchip Sound (I2S) support.
  */
 
-#include "spi.h"
-#include "bitband.h"
+#include <libmaple/spi.h>
+#include <libmaple/bitband.h>
 
 static void spi_reconfigure(spi_dev *dev, uint32 cr1_config);
-
-/*
- * SPI devices
- */
-
-static spi_dev spi1 = {
-    .regs     = SPI1_BASE,
-    .clk_id   = RCC_SPI1,
-    .irq_num  = NVIC_SPI1,
-};
-/** SPI device 1 */
-spi_dev *SPI1 = &spi1;
-
-static spi_dev spi2 = {
-    .regs     = SPI2_BASE,
-    .clk_id   = RCC_SPI2,
-    .irq_num  = NVIC_SPI2,
-};
-/** SPI device 2 */
-spi_dev *SPI2 = &spi2;
-
-#ifdef STM32_HIGH_DENSITY
-static spi_dev spi3 = {
-    .regs     = SPI3_BASE,
-    .clk_id   = RCC_SPI3,
-    .irq_num  = NVIC_SPI3,
-};
-/** SPI device 3 */
-spi_dev *SPI3 = &spi3;
-#endif
-
-#ifdef STM32F2
-static spi_dev spi4 = {
-    .regs     = SPI3_BASE,
-    .clk_id   = RCC_SPI4,
-    .irq_num  = NVIC_SPI3,
-};
-/** SPI device 3 remapped*/
-spi_dev *SPI4 = &spi4;
-#endif
 
 /*
  * SPI convenience routines
@@ -87,42 +48,6 @@ spi_dev *SPI4 = &spi4;
 void spi_init(spi_dev *dev) {
     rcc_clk_enable(dev->clk_id);
     rcc_reset_dev(dev->clk_id);
-}
-
-/**
- * @brief Configure GPIO bit modes for use as a SPI port's pins.
- * @param as_master If true, configure bits for use as a bus master.
- *                  Otherwise, configure bits for use as slave.
- * @param nss_dev NSS pin's GPIO device
- * @param comm_dev SCK, MISO, MOSI pins' GPIO device
- * @param nss_bit NSS pin's GPIO bit on nss_dev
- * @param sck_bit SCK pin's GPIO bit on comm_dev
- * @param miso_bit MISO pin's GPIO bit on comm_dev
- * @param mosi_bit MOSI pin's GPIO bit on comm_dev
- */
-void spi_gpio_cfg(uint8 as_master,
-                  gpio_dev *nss_dev,
-                  uint8 nss_bit,
-                  gpio_dev *comm_dev,
-                  uint8 sck_bit,
-                  uint8 miso_bit,
-                  uint8 mosi_bit) {
-    if (as_master) {
-		if(nss_dev != NULL) {
-			gpio_set_mode(nss_dev, nss_bit, GPIO_OUTPUT_PP);
-		}
-        gpio_set_mode(comm_dev, sck_bit, GPIO_AF_OUTPUT_PP);
-        //gpio_set_mode(comm_dev, miso_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(comm_dev, miso_bit, GPIO_AF_INPUT_PD);		
-        gpio_set_mode(comm_dev, mosi_bit, GPIO_AF_OUTPUT_PP);
-    } else {
-		if(nss_dev != NULL) {
-	        gpio_set_mode(nss_dev, nss_bit, GPIO_INPUT_FLOATING);
-		}
-        gpio_set_mode(comm_dev, sck_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(comm_dev, miso_bit, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(comm_dev, mosi_bit, GPIO_INPUT_FLOATING);
-    }
 }
 
 /**
@@ -177,21 +102,6 @@ uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len) {
         }
     }
     return txed;
-}
-
-/**
- * @brief Call a function on each SPI port
- * @param fn Function to call.
- */
-void spi_foreach(void (*fn)(spi_dev*)) {
-    fn(SPI1);
-    fn(SPI2);
-#ifdef STM32_HIGH_DENSITY
-    fn(SPI3);
-#endif
-#ifdef STM32F2
-    fn(SPI4);
-#endif
 }
 
 /**
@@ -252,7 +162,3 @@ static void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
     dev->regs->CR1 = cr1_config;
     spi_peripheral_enable(dev);
 }
-
-/*
- * IRQ handlers (TODO)
- */

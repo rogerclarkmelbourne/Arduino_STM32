@@ -38,6 +38,7 @@ extern "C"{
 #endif
 
 #include <libmaple/libmaple_types.h>
+#include <libmaple/bitband.h>
 
 /*
  * Register map
@@ -356,6 +357,7 @@ typedef struct rcc_reg_map {
 #define RCC_BDCR_RTCSEL                 (0x3 << 8)
 #define RCC_BDCR_RTCSEL_NONE            (0x0 << 8)
 #define RCC_BDCR_RTCSEL_LSE             (0x1 << 8)
+#define RCC_BDCR_RTCSEL_LSI             (0x2 << 8) // added to support RTClock
 #define RCC_BDCR_RTCSEL_HSE             (0x3 << 8)
 #define RCC_BDCR_LSEBYP                 (1U << RCC_BDCR_LSEBYP_BIT)
 #define RCC_BDCR_LSERDY                 (1U << RCC_BDCR_LSERDY_BIT)
@@ -523,6 +525,14 @@ typedef enum rcc_ahb_divider {
 } rcc_ahb_divider;
 
 /**
+ * @brief Start the low speed internal oscillatior
+ */
+static inline void rcc_start_lsi(void) {
+	*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;
+	while (*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSIRDY_BIT) == 0);
+}
+
+/**
  * @brief STM32F1 clock sources.
  */
 typedef enum rcc_clk {
@@ -563,6 +573,14 @@ typedef enum rcc_pll_multiplier {
 } rcc_pll_multiplier;
 
 /* FIXME [0.0.13] Just have data point to an rcc_pll_multiplier! */
+/**
+ * @brief Start the low speed external oscillatior
+ */
+static inline void rcc_start_lse(void) {
+	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
+	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEON_BIT, 1);
+	while (bb_peri_get_bit(&RCC_BASE->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
+}
 
 /**
  * @brief STM32F1 PLL configuration values.
@@ -576,6 +594,10 @@ typedef struct stm32f1_rcc_pll_data {
 /*
  * Deprecated bits.
  */
+static inline void rcc_start_hse(void) {				// Added to support RTClock
+//	*bb_perip(&RCC_BASE->CR, RCC_CR_HSEON_BIT) = 1;
+	while (bb_peri_get_bit(&RCC_BASE->CR, RCC_CR_HSERDY_BIT) == 0);
+}
 
 /**
  * @brief Deprecated; STM32F1 only.

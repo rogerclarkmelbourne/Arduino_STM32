@@ -65,12 +65,12 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
      BOARD_SPI2_MOSI_PIN},
 #endif
 #ifdef STM32_HIGH_DENSITY
-    {BOARD_SPI3_NSS_PIN,
-     BOARD_SPI3_SCK_PIN,
-     BOARD_SPI3_MISO_PIN,
-     BOARD_SPI3_MOSI_PIN},
+    {BOARD_SPI3B_NSS_PIN,
+     BOARD_SPI3B_SCK_PIN,
+     BOARD_SPI3B_MISO_PIN,
+     BOARD_SPI3B_MOSI_PIN},
 #endif
-#ifdef STM32F2
+#ifdef STM32F4
     {BOARD_SPI3B_NSS_PIN,
      BOARD_SPI3B_SCK_PIN,
      BOARD_SPI3B_MISO_PIN,
@@ -96,10 +96,10 @@ HardwareSPI::HardwareSPI(uint32 spi_num) {
         this->spi_d = SPI3;
         break;
 #endif
-#ifdef STM32F2
-    case 4:
-        this->spi_d = SPI4;
-        break;
+#ifdef STM32F4
+//    case 4:
+//        this->spi_d = SPI4;
+//        break;
 #endif
     default:
         ASSERT(0);
@@ -137,6 +137,15 @@ void HardwareSPI::beginSlave(uint32 bitOrder, uint32 mode) {
 void HardwareSPI::beginSlave(void) {
     this->beginSlave(MSBFIRST, 0);
 }
+
+
+/*
+void HardwareSPI::beginTransaction(uint8_t pin, SPISettings settings)
+{
+//    this->begin(settings.clock, settings.bitOrder, settings.dataMode);
+    this->begin(SPI_1_125MHZ, settings.bitOrder, settings.dataMode);
+}
+*/
 
 void HardwareSPI::end(void) {
     if (!spi_is_enabled(this->spi_d)) {
@@ -300,7 +309,7 @@ static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
 #ifdef STM32_HIGH_DENSITY
     case RCC_SPI3: return board_spi_pins + 2;
 #endif
-#ifdef STM32F2
+#ifdef STM32F4
     case RCC_SPI4: return board_spi_pins + 3;
 #endif
     default:       return NULL;
@@ -353,7 +362,7 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
     disable_pwm(misoi);
     disable_pwm(mosii);
 
-#ifdef STM32F2
+#ifdef STM32F4
 	if(dev->clk_id <= RCC_SPI2) {
 		if(nssi) {
 			if(!as_master) {
@@ -363,9 +372,6 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
 		gpio_set_af_mode(scki->gpio_device,  scki->gpio_bit, 5);
 		gpio_set_af_mode(misoi->gpio_device, misoi->gpio_bit, 5);
 		gpio_set_af_mode(mosii->gpio_device, mosii->gpio_bit, 5);
-		//gpio_set_af_mode(GPIOC, 10, 6);
-		//gpio_set_af_mode(GPIOC, 11, 6);
-		//gpio_set_af_mode(GPIOC, 12, 6);
 	} else {
 		if(nssi) {
 			if(!as_master) {
@@ -375,9 +381,6 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
 		gpio_set_af_mode(scki->gpio_device,  scki->gpio_bit, 6);
 		gpio_set_af_mode(misoi->gpio_device, misoi->gpio_bit, 6);
 		gpio_set_af_mode(mosii->gpio_device, mosii->gpio_bit, 6);
-		//gpio_set_af_mode(GPIOC, 10, 6);
-		//gpio_set_af_mode(GPIOC, 11, 6);
-		//gpio_set_af_mode(GPIOC, 12, 6);
 	}
 #endif
 

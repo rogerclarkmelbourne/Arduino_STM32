@@ -360,7 +360,11 @@ void SetupClock168MHz()
 	/******************************************************************************/
 	/************************* PLL Parameters *************************************/
 	/* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+	int PLL_M = 25; // The NETDUINO has a 25MHz external oscillator
+#else
 	int PLL_M = 8;
+#endif
 	int PLL_N = 336;
 
 	/* SYSCLK = PLL_VCO / PLL_P */

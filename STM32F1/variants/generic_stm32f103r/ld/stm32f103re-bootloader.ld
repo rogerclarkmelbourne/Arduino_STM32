@@ -1,28 +1,10 @@
 /*
- * libmaple linker script for "JTAG" builds.
- *
- * A "JTAG" build puts .text (and .rodata) in Flash, and
- * .data/.bss/heap (of course) in SRAM, but links starting at the
- * Flash and SRAM starting addresses (0x08000000 and 0x20000000
- * respectively). This will wipe out a Maple bootloader if there's one
- * on the board, so only use this if you know what you're doing.
- *
- * Of course, a "JTAG" build is perfectly usable for upload over SWD,
- * the system memory bootloader, etc. The name is just a historical
- * artifact.
- */
-
-/*
- * This pulls in the appropriate MEMORY declaration from the right
- * subdirectory of stm32/mem/ (the environment must call ld with the
- * right include directory flags to make this happen). Boards can also
- * use this file to use any of libmaple's memory-related hooks (like
- * where the heap should live).
+ * Linker script for Generic STM32F103RE boards, using the generic bootloader (which takes the lower 8k of memory)
  */
 MEMORY
 {
-ram (rwx) : ORIGIN = 0x20000C00, LENGTH = 61K
-rom (rx) : ORIGIN = 0x08005000, LENGTH = 492K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
+	rom (rx) : ORIGIN = 0x08002000, LENGTH = 504K
 }
 
 
