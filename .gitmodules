@@ -13,3 +13,6 @@
 [submodule "STM32duino-bootloader"]
 	path = STM32duino-bootloader
 	url = https://github.com/rogerclarkmelbourne/STM32duino-bootloader.git
+[submodule "STM32F1/libraries/TFT_ILI9163C"]
+	path = STM32F1/libraries/TFT_ILI9163C
+	url = https://github.com/victorpv/TFT_ILI9163C.git
