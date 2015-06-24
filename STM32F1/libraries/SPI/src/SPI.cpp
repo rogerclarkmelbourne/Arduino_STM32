@@ -110,8 +110,11 @@ SPIClass::SPIClass(uint32 spi_num) {
     default:
         ASSERT(0);
     }
+    
+    bitOrder=MSBFIRST;
+//pinMode(BOARD_SPI_DEFAULT_SS,OUTPUT);
+
 	
-	//pinMode(BOARD_SPI_DEFAULT_SS,OUTPUT);
 }
 
 /*
