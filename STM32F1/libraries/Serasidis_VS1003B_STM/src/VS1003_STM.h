@@ -10,6 +10,7 @@
   email: avrsite@yahoo.gr
   
   29 May 2015 - Added a fix for booting the VS1053B boards into mp3 decoding instead of booting into MIDI.
+  01 July 2015 - Added a Flac decoder patch.
  */
 
 //This is an additional test line
@@ -19,6 +20,8 @@
 // STL headers
 // C headers
 // Framework headers
+
+//#define USEFLAC
 
 #include <Arduino.h>
 #include <SPI.h>
