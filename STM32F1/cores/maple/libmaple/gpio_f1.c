@@ -36,7 +36,7 @@
  * GPIO devices
  */
 
-gpio_dev gpioa = {
+extern gpio_dev gpioa = {
     .regs      = GPIOA_BASE,
     .clk_id    = RCC_GPIOA,
     .exti_port = EXTI_PA,
@@ -44,7 +44,7 @@ gpio_dev gpioa = {
 /** GPIO port A device. */
 gpio_dev* const GPIOA = &gpioa;
 
-gpio_dev gpiob = {
+extern gpio_dev gpiob = {
     .regs      = GPIOB_BASE,
     .clk_id    = RCC_GPIOB,
     .exti_port = EXTI_PB,
@@ -52,7 +52,7 @@ gpio_dev gpiob = {
 /** GPIO port B device. */
 gpio_dev* const GPIOB = &gpiob;
 
-gpio_dev gpioc = {
+extern gpio_dev gpioc = {
     .regs      = GPIOC_BASE,
     .clk_id    = RCC_GPIOC,
     .exti_port = EXTI_PC,
@@ -60,7 +60,7 @@ gpio_dev gpioc = {
 /** GPIO port C device. */
 gpio_dev* const GPIOC = &gpioc;
 
-gpio_dev gpiod = {
+extern gpio_dev gpiod = {
     .regs      = GPIOD_BASE,
     .clk_id    = RCC_GPIOD,
     .exti_port = EXTI_PD,
@@ -69,7 +69,7 @@ gpio_dev gpiod = {
 gpio_dev* const GPIOD = &gpiod;
 
 #ifdef STM32_HIGH_DENSITY
-gpio_dev gpioe = {
+extern gpio_dev gpioe = {
     .regs      = GPIOE_BASE,
     .clk_id    = RCC_GPIOE,
     .exti_port = EXTI_PE,
@@ -77,7 +77,7 @@ gpio_dev gpioe = {
 /** GPIO port E device. */
 gpio_dev* const GPIOE = &gpioe;
 
-gpio_dev gpiof = {
+extern gpio_dev gpiof = {
     .regs      = GPIOF_BASE,
     .clk_id    = RCC_GPIOF,
     .exti_port = EXTI_PF,
@@ -85,7 +85,7 @@ gpio_dev gpiof = {
 /** GPIO port F device. */
 gpio_dev* const GPIOF = &gpiof;
 
-gpio_dev gpiog = {
+extern gpio_dev gpiog = {
     .regs      = GPIOG_BASE,
     .clk_id    = RCC_GPIOG,
     .exti_port = EXTI_PG,

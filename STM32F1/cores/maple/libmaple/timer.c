@@ -47,74 +47,74 @@ static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
  */
 
 #if STM32_HAVE_TIMER(1)
-static timer_dev timer1 = ADVANCED_TIMER(1);
+extern timer_dev timer1 = ADVANCED_TIMER(1);
 /** Timer 1 device (advanced) */
-timer_dev *TIMER1 = &timer1;
+timer_dev *const TIMER1 = &timer1;
 #endif
 #if STM32_HAVE_TIMER(2)
-static timer_dev timer2 = GENERAL_TIMER(2);
+extern timer_dev timer2 = GENERAL_TIMER(2);
 /** Timer 2 device (general-purpose) */
-timer_dev *TIMER2 = &timer2;
+timer_dev *const TIMER2 = &timer2;
 #endif
 #if STM32_HAVE_TIMER(3)
-static timer_dev timer3 = GENERAL_TIMER(3);
+extern timer_dev timer3 = GENERAL_TIMER(3);
 /** Timer 3 device (general-purpose) */
-timer_dev *TIMER3 = &timer3;
+timer_dev *const TIMER3 = &timer3;
 #endif
 #if STM32_HAVE_TIMER(4)
-static timer_dev timer4 = GENERAL_TIMER(4);
+extern timer_dev timer4 = GENERAL_TIMER(4);
 /** Timer 4 device (general-purpose) */
-timer_dev *TIMER4 = &timer4;
+timer_dev *const TIMER4 = &timer4;
 #endif
 #if STM32_HAVE_TIMER(5)
-static timer_dev timer5 = GENERAL_TIMER(5);
+extern timer_dev timer5 = GENERAL_TIMER(5);
 /** Timer 5 device (general-purpose) */
-timer_dev *TIMER5 = &timer5;
+timer_dev *const TIMER5 = &timer5;
 #endif
 #if STM32_HAVE_TIMER(6)
-static timer_dev timer6 = BASIC_TIMER(6);
+extern timer_dev timer6 = BASIC_TIMER(6);
 /** Timer 6 device (basic) */
-timer_dev *TIMER6 = &timer6;
+timer_dev *const TIMER6 = &timer6;
 #endif
 #if STM32_HAVE_TIMER(7)
-static timer_dev timer7 = BASIC_TIMER(7);
+extern timer_dev timer7 = BASIC_TIMER(7);
 /** Timer 7 device (basic) */
-timer_dev *TIMER7 = &timer7;
+timer_dev *const TIMER7 = &timer7;
 #endif
 #if STM32_HAVE_TIMER(8)
-static timer_dev timer8 = ADVANCED_TIMER(8);
+extern timer_dev timer8 = ADVANCED_TIMER(8);
 /** Timer 8 device (advanced) */
-timer_dev *TIMER8 = &timer8;
+timer_dev *const TIMER8 = &timer8;
 #endif
 #if STM32_HAVE_TIMER(9)
-static timer_dev timer9 = RESTRICTED_GENERAL_TIMER(9, TIMER_DIER_TIE_BIT);
+extern timer_dev timer9 = RESTRICTED_GENERAL_TIMER(9, TIMER_DIER_TIE_BIT);
 /** Timer 9 device (general-purpose) */
-timer_dev *TIMER9 = &timer9;
+timer_dev *const TIMER9 = &timer9;
 #endif
 #if STM32_HAVE_TIMER(10)
-static timer_dev timer10 = RESTRICTED_GENERAL_TIMER(10, TIMER_DIER_CC1IE_BIT);
+extern timer_dev timer10 = RESTRICTED_GENERAL_TIMER(10, TIMER_DIER_CC1IE_BIT);
 /** Timer 10 device (general-purpose) */
-timer_dev *TIMER10 = &timer10;
+timer_dev *const TIMER10 = &timer10;
 #endif
 #if STM32_HAVE_TIMER(11)
-static timer_dev timer11 = RESTRICTED_GENERAL_TIMER(11, TIMER_DIER_CC1IE_BIT);
+extern timer_dev timer11 = RESTRICTED_GENERAL_TIMER(11, TIMER_DIER_CC1IE_BIT);
 /** Timer 11 device (general-purpose) */
-timer_dev *TIMER11 = &timer11;
+timer_dev *const TIMER11 = &timer11;
 #endif
 #if STM32_HAVE_TIMER(12)
-static timer_dev timer12 = RESTRICTED_GENERAL_TIMER(12, TIMER_DIER_TIE_BIT);
+extern timer_dev timer12 = RESTRICTED_GENERAL_TIMER(12, TIMER_DIER_TIE_BIT);
 /** Timer 12 device (general-purpose) */
-timer_dev *TIMER12 = &timer12;
+timer_dev *const TIMER12 = &timer12;
 #endif
 #if STM32_HAVE_TIMER(13)
-static timer_dev timer13 = RESTRICTED_GENERAL_TIMER(13, TIMER_DIER_CC1IE_BIT);
+extern timer_dev timer13 = RESTRICTED_GENERAL_TIMER(13, TIMER_DIER_CC1IE_BIT);
 /** Timer 13 device (general-purpose) */
-timer_dev *TIMER13 = &timer13;
+timer_dev *const TIMER13 = &timer13;
 #endif
 #if STM32_HAVE_TIMER(14)
-static timer_dev timer14 = RESTRICTED_GENERAL_TIMER(14, TIMER_DIER_CC1IE_BIT);
+extern timer_dev timer14 = RESTRICTED_GENERAL_TIMER(14, TIMER_DIER_CC1IE_BIT);
 /** Timer 14 device (general-purpose) */
-timer_dev *TIMER14 = &timer14;
+timer_dev *const TIMER14 = &timer14;
 #endif
 
 /*
@@ -410,3 +410,94 @@ static void enable_bas_gen_irq(timer_dev *dev) {
     }
     nvic_irq_enable(irq_num);
 }
+
+
+/*
+ * This section was merged from the timer_f1.c file on 6/6/2015
+ * IRQ handlers
+ *
+ * Defer to the timer_private dispatch API.
+ *
+ * FIXME: The names of these handlers are inaccurate since XL-density
+ * devices came out. Update these to match the STM32F2 names, maybe
+ * using some weak symbol magic to preserve backwards compatibility if
+ * possible. Once that's done, we can just move the IRQ handlers into
+ * the top-level libmaple/timer.c, and there will be no need for this
+ * file.
+ */
+
+void __attribute__((weak)) __irq_tim1_brk(void) {
+    dispatch_adv_brk(TIMER1);
+#if STM32_HAVE_TIMER(9)
+    dispatch_tim_9_12(TIMER9);
+#endif
+}
+
+void __irq_tim1_up(void) {
+    dispatch_adv_up(TIMER1);
+#if STM32_HAVE_TIMER(10)
+    dispatch_tim_10_11_13_14(TIMER10);
+#endif
+}
+
+void __irq_tim1_trg_com(void) {
+    dispatch_adv_trg_com(TIMER1);
+#if STM32_HAVE_TIMER(11)
+    dispatch_tim_10_11_13_14(TIMER11);
+#endif
+}
+
+void __irq_tim1_cc(void) {
+    dispatch_adv_cc(TIMER1);
+}
+
+void __irq_tim2(void) {
+    dispatch_general(TIMER2);
+}
+
+void __irq_tim3(void) {
+    dispatch_general(TIMER3);
+}
+
+void __irq_tim4(void) {
+    dispatch_general(TIMER4);
+}
+
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+void __irq_tim5(void) {
+    dispatch_general(TIMER5);
+}
+
+void __irq_tim6(void) {
+    dispatch_basic(TIMER6);
+}
+
+void __irq_tim7(void) {
+    dispatch_basic(TIMER7);
+}
+
+void __irq_tim8_brk(void) {
+    dispatch_adv_brk(TIMER8);
+#if STM32_HAVE_TIMER(12)
+    dispatch_tim_9_12(TIMER12);
+#endif
+}
+
+void __irq_tim8_up(void) {
+    dispatch_adv_up(TIMER8);
+#if STM32_HAVE_TIMER(13)
+    dispatch_tim_10_11_13_14(TIMER13);
+#endif
+}
+
+void __irq_tim8_trg_com(void) {
+    dispatch_adv_trg_com(TIMER8);
+#if STM32_HAVE_TIMER(14)
+    dispatch_tim_10_11_13_14(TIMER14);
+#endif
+}
+
+void __irq_tim8_cc(void) {
+    dispatch_adv_cc(TIMER8);
+}
+#endif  /* defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY) */
