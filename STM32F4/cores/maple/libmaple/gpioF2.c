@@ -126,6 +126,18 @@ void gpio_init_all(void) {
     gpio_init(GPIOF);
     gpio_init(GPIOG);
 #endif
+
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+    // PA8 Output the Master Clock MCO1
+    gpio_set_af_mode(GPIOA, 8, 0);
+    gpio_set_mode(GPIOA, 8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
+    // PB4 as alternate MISO Input
+    gpio_set_af_mode(GPIOB, 4, 5);
+    // PA5 as alternate SCK Output
+    gpio_set_af_mode(GPIOA, 5, 5);
+    // PA7 as alternate MOSI Output
+    gpio_set_af_mode(GPIOA, 7, 5);
+#endif
 }
 
 /**

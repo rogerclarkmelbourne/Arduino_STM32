@@ -125,6 +125,17 @@ typedef struct
 #define RCC_CFGR_SW_PLL                 0x2
 #define RCC_CFGR_SW_HSE                 0x1
 
+#define  RCC_CFGR_MCO1Source_HSI             ((uint32_t)0x00000000)
+#define  RCC_CFGR_MCO1Source_LSE             ((uint32_t)0x00200000)
+#define  RCC_CFGR_MCO1Source_HSE             ((uint32_t)0x00400000)
+#define  RCC_CFGR_MCO1Source_PLLCLK          ((uint32_t)0x00600000)
+#define  RCC_CFGR_MCO1Div_1                  ((uint32_t)0x00000000)
+#define  RCC_CFGR_MCO1Div_2                  ((uint32_t)0x04000000)
+#define  RCC_CFGR_MCO1Div_3                  ((uint32_t)0x05000000)
+#define  RCC_CFGR_MCO1Div_4                  ((uint32_t)0x06000000)
+#define  RCC_CFGR_MCO1Div_5                  ((uint32_t)0x07000000)
+#define  RCC_CFGR_MCO1_RESET_MASK            ((uint32_t)0xF89FFFFF)
+
 /* Clock interrupt register */
 
 #define RCC_CIR_CSSC_BIT                23
