@@ -1,6 +1,13 @@
 /*
 * Multitasking Example with Maple CoOS. Victor Perez 2015
-*
+* Can use the stm32duino SPI and ILI9163C libraries. The ones included here just show how to use a semaphore.
+* This example also shows how much CPU is used while runing the sketch. In this one it ranges between 28% when rotating
+* both cubes, and 100% when it uses all the CPU left to run SQRT calculations.
+* The sketch is designed to use all CPU available for short periods to test the task scheduling of high priority tasks
+* while a low priority one hogs the CPU.
+* The CPU measurement code is taken from this CoOS tree (old version) https://github.com/coocox/CoOS/tree/staticstic_task
+* But rather than make it part of the OS, which was problematic, is implemented as additional tasks.
+* In OsConfig.h, make sure you allow for enough tasks, i.e.: #define CFG_MAX_USER_TASKS      (10)
 */
 
 #include <MapleCoOS116.h>
@@ -8,9 +15,13 @@
 #include ".\TFT_ILI9163C.h"
 #include <Adafruit_GFX.h>
 
+#include <libmaple/pwr.h>
+#include <libmaple/scb.h>
+
 #define __CS 8
 #define __RST 9
 #define __DC 10
+#define BOARD_LED_PIN 33
 
 TFT_ILI9163C tft = TFT_ILI9163C(__CS, __DC, __RST);
 
@@ -20,7 +31,15 @@ OS_STK   vCube1LoopStk[TASK_STK_SIZE];
 OS_STK   vCube2LoopStk[TASK_STK_SIZE];
 OS_STK   vLEDFlashStk[TASK_STK_SIZE];
 OS_STK   vSqrtStk[TASK_STK_SIZE];
+OS_STK   NewIdleTaskStk[TASK_STK_SIZE];
+OS_STK   CoStatTaskStk[TASK_STK_SIZE];
 
+volatile U32  CoIdleCtrl = 0;		// Counter for Idle Task  
+volatile U32  CoIdleCtrMax = 0;		// Max Counter for Idle Task  
+volatile U8   CoStatRdy = 0;			// Enable Stat task.  
+volatile S8   CoCPUUsage = 0;			// Use %  
+volatile S8  CoCPUUsagePeak = 0;		// Peak %  
+volatile U32 CoIdleCtrRun = 0;		// val. reached by idle ctr at run time in 1 sec  
 
 const float sin_d[] = {
   0, 0.17, 0.34, 0.5, 0.64, 0.77, 0.87, 0.94, 0.98, 1, 0.98, 0.94,
@@ -89,6 +108,7 @@ static void vLEDFlashTask(void *pdata) {
 }
 
 static void vCube1LoopTask(void *pdata) {
+  CoTimeDelay(0,0,5,0); //Give time to calculate CPU Idle time.
   while (1) {
     CoEnterMutexSection (xDisplayFree);
     cube(cube1_px, cube1_py, cube1_pz, cube1_p2x, cube1_p2y, cube1_r, &cube1_x, &cube1_y, &cube1_color);
@@ -98,6 +118,7 @@ static void vCube1LoopTask(void *pdata) {
 }
 
 static void vCube2LoopTask(void *pdata) {
+  CoTimeDelay(0,0,5,0); //Give time to calculate CPU Idle time.
   while (1) {
     CoEnterMutexSection (xDisplayFree);
     cube(cube2_px, cube2_py, cube2_pz, cube2_p2x, cube2_p2y, cube2_r, &cube2_x, &cube2_y, &cube2_color);
@@ -105,6 +126,75 @@ static void vCube2LoopTask(void *pdata) {
     CoTickDelay(40);
   }
 }
+
+void  CoStatInit (void)  
+{  
+    CoTimeDelay(0,0,0,100);                    	  // Mi sincronizzo con il timer e con la statistic task  
+    CoSchedLock();  
+    CoIdleCtrl    = 0L;                           /* Clear idle counter                                 */  
+    CoSchedUnlock();  
+    CoTimeDelay(0,0,1,0);                         /* Determine MAX. idle counter value for 1 second     */  
+    CoSchedLock();  
+    CoIdleCtrMax = CoIdleCtrl;                    /* Store maximum idle counter count in 1 second       */  
+    CoStatRdy    = 1;  
+    CoSchedUnlock();	
+}
+
+void NewIdleTask(void* pdata)
+{
+    /* Add your codes here */
+    for(; ;) 
+    {
+     	CoSchedLock();  
+    	CoIdleCtrl++;  
+        CoSchedUnlock();
+        asm("    wfi");
+    }
+}
+
+
+void CoStatTask(void* pdata)  
+{  
+   U32	    max,run;  
+   S8      usage;  
+    if (CoIdleCtrMax==0) CoStatInit ();
+/*   while (CoStatRdy == 0)  
+	{  
+	    CoTickDelay(100);;			// Wait until statistic task is ready  
+	}  
+*/
+	max = CoIdleCtrMax / 100;  
+  
+	for(; ;)  
+    {  
+    	CoSchedLock();  
+        CoIdleCtrRun   = CoIdleCtrl;        /* Obtain the of the idle counter for the past second */  
+        CoIdleCtrl    = 0L;                 /* Reset the idle counter for the next second         */  
+        CoSchedUnlock();  
+        run = CoIdleCtrRun;  
+        if (max > 0L)  
+        {  
+              usage = (S8)(100L - (run / max));  
+              if (usage >= 0)  
+              {  
+            	  CoCPUUsage = usage;  
+            	  if(CoCPUUsage > CoCPUUsagePeak)  
+            	  {  
+            		  CoCPUUsagePeak = CoCPUUsage;  
+             	  }  
+              }  
+              else CoCPUUsage = 0;  
+         }  
+        else CoCPUUsage = 0;
+        tft.setCursor(0, 0);
+        tft.setTextColor(BLACK, WHITE);  
+        tft.setTextSize(1);
+        tft.print("USED CPU %=");
+        tft.print(CoCPUUsage);
+        tft.print(" ");
+	CoTimeDelay(0,0,1,0);  
+    }  
+}  
 
 
 void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint16 *x, uint16 *y, uint16 *color) {
@@ -152,6 +242,7 @@ void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint1
 }
 
 static void vSqrtTask(void *pdata) {
+    CoTimeDelay(0,0,2,0); //Give time to calculate CPU Idle time.
   while (1) {
     Serial.println ("Starting Sqrt calculations...");
     uint16 x = 0;
@@ -164,13 +255,13 @@ static void vSqrtTask(void *pdata) {
     uint32_t t1 = millis() - t0;
     Serial.print ("Sqrt calculations took (ms): ");
     Serial.println (t1);
-    CoTickDelay (5000);
+    CoTimeDelay(0,0,10,0);
   }
 }
 
 void setup() {
   // initialize the digital pin as an output:
-  Serial.begin(9600);
+  Serial.begin();
   delay (5000);
   Serial.println ("Running...");
   pinMode(BOARD_LED_PIN, OUTPUT);
@@ -182,6 +273,10 @@ void setup() {
   cube2_y = ((tft.height()) / 2);
   cube1_color = BLACK;
   cube2_color = RED;
+  // Clear PDDS and LPDS bits
+  PWR_BASE->CR &= PWR_CR_LPDS | PWR_CR_PDDS;
+//  set sleepdeep in the system control register
+//  SCB_BASE->SCR |= SCB_SCR_SLEEPDEEP;
   CoInitOS();
   xDisplayFree = CoCreateMutex();
   CoCreateTask(vLEDFlashTask,
@@ -203,12 +298,27 @@ void setup() {
               &vCube2LoopStk[TASK_STK_SIZE - 1],
               TASK_STK_SIZE
              );
+  CoCreateTask(NewIdleTask,
+              (void *)0 ,
+              (CFG_LOWEST_PRIO-1),
+              &NewIdleTaskStk[TASK_STK_SIZE - 1],
+              TASK_STK_SIZE
+             );
+  CoCreateTask(CoStatTask,
+              (void *)0 ,
+              4,
+              &CoStatTaskStk[TASK_STK_SIZE - 1],
+              TASK_STK_SIZE
+             );
+
   CoCreateTask(vSqrtTask,
               (void *)0 ,
-              6,
+              5,
               &vSqrtStk[TASK_STK_SIZE - 1],
               TASK_STK_SIZE
              );
+
+
 
   CoStartOS();
 }
