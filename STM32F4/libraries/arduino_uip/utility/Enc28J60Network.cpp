@@ -74,13 +74,13 @@ void Enc28J60Network::init(uint8_t* macaddr)
 #ifdef ENC28J60DEBUG
   Serial.println("ENC28J60::initialize / after initSPI()");
   Serial.print("ENC28J60::initialize / csPin = ");
-  Serial.println(ENC28J60_CONTROL_CS);
+  Serial.println(SPI.nssPin());
   Serial.print("ENC28J60::initialize / miso = ");
-  Serial.println(BOARD_SPI1_MISO_PIN);
+  Serial.println(SPI.misoPin());
   Serial.print("ENC28J60::initialize / mosi = ");
-  Serial.println(BOARD_SPI1_MOSI_PIN);
+  Serial.println(SPI.mosiPin());
   Serial.print("ENC28J60::initialize / sck = ");
-  Serial.println(BOARD_SPI1_SCK_PIN);
+  Serial.println(SPI.sckPin());
 #endif
   selectPin = ENC28J60_CONTROL_CS;
   pinMode(selectPin, OUTPUT);
