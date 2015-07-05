@@ -6,7 +6,7 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 
 ##############################################################
-mapleMini.name=LeafLabs Maple Mini Rev 2 to Flash
+mapleMini.name=Maple Mini
 
 mapleMini.build.board=MAPLE_MINI
 mapleMini.build.core=maple
@@ -37,7 +37,7 @@ mapleMini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
 mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 
 ##############################################################
-maple.name=LeafLabs Maple Rev 3+ to Flash
+maple.name=Maple (Rev 3)
 
 maple.upload.tool=maple_upload
 maple.upload.protocol=maple_dfu
@@ -60,7 +60,7 @@ maple.build.vect=VECT_TAB_ADDR=0x8005000
 
 
 ##############################################################
-mapleRET6.name=LeafLabs Maple RET6 to Flash
+mapleRET6.name=Maple (RET6)
 
 mapleRET6.build.board=MAPLE_RET6
 mapleRET6.build.core=maple
