@@ -118,6 +118,11 @@ private:
 	uint32_t clock;
 	BitOrder bitOrder;
 	uint8_t dataMode;
+	
+	spi_dev *spi_d;
+	uint8_t _SSPin;
+	//uint32_t clockDivider;	
+	
 	friend class SPIClass;
 };
 
@@ -304,7 +309,7 @@ public:
      * @brief Get a pointer to the underlying libmaple spi_dev for
      *        this HardwareSPI instance.
      */
-    spi_dev* c_dev(void) { return this->spi_d; }
+    spi_dev* c_dev(void) { return _currentSetting->spi_d; }
 
     /* -- The following methods are deprecated --------------------------- */
 
@@ -338,7 +343,7 @@ public:
      */
     uint8 recv(void);
 	
-	spi_dev *dev(){ return spi_d;}
+	spi_dev *dev(){ return _currentSetting->spi_d;}
 	
 	
 	
@@ -351,11 +356,17 @@ private:
 		
 		// To Do. Need to wait for 
 	}
+	
+	SPISettings _settings[BOARD_NR_SPI];
+	SPISettings *_currentSetting;
+	
+	/*
 	spi_dev *spi_d;
 	uint8_t _SSPin;
 	uint32_t clockDivider;
 	uint8_t dataMode;
 	BitOrder bitOrder;
+	*/
 };
 
 
