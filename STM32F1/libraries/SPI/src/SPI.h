@@ -121,7 +121,7 @@ private:
 	
 	spi_dev *spi_d;
 	uint8_t _SSPin;
-	//uint32_t clockDivider;	
+	uint32_t clockDivider;	
 	
 	friend class SPIClass;
 };
@@ -345,7 +345,10 @@ public:
 	
 	spi_dev *dev(){ return _currentSetting->spi_d;}
 	
-	
+	void setModule(int spi_num)
+	{
+		_currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
+	}
 	
 private:
 

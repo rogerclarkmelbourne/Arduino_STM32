@@ -92,7 +92,9 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 
 SPIClass::SPIClass(uint32 spi_num) {
 
-	_currentSetting=&_settings[spi_num];
+	_currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
+
+	
     switch (spi_num) {
 #if BOARD_NR_SPI >= 1
     case 1:
@@ -113,6 +115,14 @@ SPIClass::SPIClass(uint32 spi_num) {
         ASSERT(0);
     }
 	
+	// Hack to set the clock divider.
+	// This should really be done in the SPISetting
+	_settings[0].clockDivider = determine_baud_rate(_settings[0].spi_d, _settings[0].clock);
+	_settings[1].clockDivider = determine_baud_rate(_settings[1].spi_d, _settings[1].clock);
+#if BOARD_NR_SPI >= 3
+	_settings[2].clockDivider = determine_baud_rate(_settings[2].spi_d, _settings[2].clock);
+#endif	
+	
 	//pinMode(BOARD_SPI_DEFAULT_SS,OUTPUT);
 }
 
@@ -126,9 +136,9 @@ void SPIClass::begin(void) {
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 1);
 	#ifdef SPI_DEBUG
-	Serial.print("spi_master_enable("); Serial.print(_currentSetting->clock); Serial.print(","); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
+	Serial.print("spi_master_enable("); Serial.print(_currentSetting->clockDivider); Serial.print(","); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
-    spi_master_enable(_currentSetting->spi_d, (spi_baud_rate)_currentSetting->clock, (spi_mode)_currentSetting->dataMode, flags);
+    spi_master_enable(_currentSetting->spi_d, (spi_baud_rate)_currentSetting->clockDivider, (spi_mode)_currentSetting->dataMode, flags);
 }
 
 void SPIClass::beginSlave(void) {
@@ -169,7 +179,7 @@ void SPIClass::setClockDivider(uint32_t clockDivider)
 	#ifdef SPI_DEBUG
 	Serial.print("Clock divider set to "); Serial.println(clockDivider);
 	#endif
-	_currentSetting->clock = clockDivider;
+	_currentSetting->clockDivider = clockDivider;
 	this->begin();
 }
 
