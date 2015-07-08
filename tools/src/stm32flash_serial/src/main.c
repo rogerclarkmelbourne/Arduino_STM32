@@ -38,7 +38,7 @@
 #include "parsers/binary.h"
 #include "parsers/hex.h"
 
-#define VERSION "0.4"
+#define VERSION "Arduino_STM32_0.9"
 
 /* device globals */
 stm32_t		*stm		= NULL;
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
 	FILE *diag = stdout;
 
 	fprintf(diag, "stm32flash " VERSION "\n\n");
-	fprintf(diag, "http://stm32flash.googlecode.com/\n\n");
+	fprintf(diag, "http://github.com/rogerclarkmelbourne/arduino_stm32\n\n");
 	if (parse_options(argc, argv) != 0)
 		goto close;
 
