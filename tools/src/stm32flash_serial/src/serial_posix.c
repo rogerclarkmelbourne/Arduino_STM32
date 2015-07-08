@@ -198,18 +198,34 @@ static port_err_t serial_setup(serial_t *h, const serial_baud_t baud,
 	return PORT_ERR_OK;
 }
 
+/* 
+ * Roger clark.
+ * This function is no longer used. But has just been commented out in case it needs 
+ * to be reinstated in the future
+ 
 static int startswith(const char *haystack, const char *needle) {
 	return strncmp(haystack, needle, strlen(needle)) == 0;
 }
+*/
 
 static int is_tty(const char *path) {
 	char resolved[PATH_MAX];
 
 	if(!realpath(path, resolved)) return 0;
+	
 
+	/*
+	 * Roger Clark
+	 * Commented out this check, because on OSX some devices are /dev/cu
+	 * and some users use symbolic links to devices, hence the name may not even start
+	 * with /dev
+	 
 	if(startswith(resolved, "/dev/tty")) return 1;
-
+	
 	return 0;
+	*/
+	
+	return 1;
 }
 
 static port_err_t serial_posix_open(struct port_interface *port,
