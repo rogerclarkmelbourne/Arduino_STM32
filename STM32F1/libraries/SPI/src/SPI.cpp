@@ -115,11 +115,14 @@ SPIClass::SPIClass(uint32 spi_num) {
         ASSERT(0);
     }
 	
-	// Hack to set the clock divider.
-	// This should really be done in the SPISetting
+	// Init things specific to each SPI device
+	// clock divider setup is a bit of hack, and needs to be improved at a later date.
+	_settings[0].spi_d = SPI1;
 	_settings[0].clockDivider = determine_baud_rate(_settings[0].spi_d, _settings[0].clock);
+	_settings[1].spi_d = SPI2;
 	_settings[1].clockDivider = determine_baud_rate(_settings[1].spi_d, _settings[1].clock);
 #if BOARD_NR_SPI >= 3
+	_settings[2].spi_d = SPI3;
 	_settings[2].clockDivider = determine_baud_rate(_settings[2].spi_d, _settings[2].clock);
 #endif	
 	
