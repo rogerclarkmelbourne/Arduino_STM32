@@ -1,0 +1,4 @@
+# Example udev rules (usually placed in /etc/udev/rules.d)
+# Makes STM32 DfuSe device writeable for the "plugdev" group
+
+ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE="664", GROUP="plugdev"

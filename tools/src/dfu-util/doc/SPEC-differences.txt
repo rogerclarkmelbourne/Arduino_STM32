@@ -1,0 +1,21 @@
+From 1.0 to 1.1:
+----------------
+(Page references in 1.1 spec)
+
+Page 10: Added protocol column to table 3.2
+Page 12: Changed value for bInterfaceProtocol from 00h to 01h (table 4.1)
+Page 13: Added bitWillDetach flag in bmAttributes at bit 3 (table 4.2)
+         Changed bLength from 07h to 09h (table 4.2)
+Page 14: Added bcdDFUVersion (table 4.2)
+         Changed bDeviceClass value from FEh to 00h (table 4.3)
+         Changed bDevicesubClass value from 01h to 00h (table 4.3)
+Page 15: Changed bInterfaceProtocol value from 00h to 02h (table 4.4)
+Page 17: Adjust wording for bitWillDetach addition (5.1)
+Page 26: Adjust wording for bitWillDetach addition (7)
+Page 29: Adjust wording for bitWillDetach addition (A.2.1)
+
+Summary:
+- Addition of the bitWillDetach flag which allows the device to detach instead
+  of waiting of the host to reset the device.
+- Version changes for bInterfaceProtocol, bDeviceClass and bDevicesubClass
+- Addition of bcdDFUVersion

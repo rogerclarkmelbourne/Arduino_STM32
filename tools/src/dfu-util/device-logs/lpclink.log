@@ -1,0 +1,59 @@
+(The on-board LPC3154 has some encryption key set and LPCXpressoWIN.enc
+is encrypted.)
+
+$ lsusb | grep NXP
+Bus 003 Device 011: ID 0471:df55 Philips (or NXP) LPCXpresso LPC-Link
+
+$ dfu-util -v -v -v -R -D /opt/lpc/lpcxpresso/bin/LPCXpressoWIN.enc
+
+dfu-util 0.7
+
+Copyright 2005-2008 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2012 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to dfu-util@lists.gnumonks.org
+
+dfu-util: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release!!!
+Deducing device DFU version from functional descriptor length
+Opening DFU capable USB device...
+ID 0471:df55
+Run-time device DFU version 0100
+Claiming USB DFU Runtime Interface...
+Determining device status: 
+state = dfuIDLE, status = 0
+dfu-util: WARNING: Runtime device already in DFU state ?!?
+Claiming USB DFU Interface...
+Setting Alternate Setting #0 ...
+Determining device status: 
+state = dfuIDLE, status = 0
+dfuIDLE, continuing
+DFU mode device DFU version 0100
+Device returned transfer size 2048
+Copying data from PC to DFU device
+Download	[                         ]   0%            0 bytes
+Download	[=                        ]   6%         2048 bytes
+Download	[===                      ]  13%         4096 bytes
+Download	[====                     ]  19%         6144 bytes
+Download	[======                   ]  26%         8192 bytes
+Download	[========                 ]  32%        10240 bytes
+Download	[=========                ]  39%        12288 bytes
+Download	[===========              ]  45%        14336 bytes
+Download	[=============            ]  52%        16384 bytes
+Download	[==============           ]  59%        18432 bytes
+Download	[================         ]  65%        20480 bytes
+Download	[==================       ]  72%        22528 bytes
+Download	[===================      ]  78%        24576 bytes
+Download	[=====================    ]  85%        26624 bytes
+Download	[======================   ]  91%        28672 bytes
+Download	[======================== ]  98%        29192 bytes
+Download	[=========================] 100%        29192 bytes
+Download done.
+Sent a total of 29192 bytes
+state(8) = dfuMANIFEST-WAIT-RESET, status(0) = No error condition is present
+Done!
+dfu-util: can't detach
+Resetting USB to switch back to runtime mode
+
+$ lsusb | grep NXP
+Bus 003 Device 012: ID 1fc9:0009 NXP Semiconductors
