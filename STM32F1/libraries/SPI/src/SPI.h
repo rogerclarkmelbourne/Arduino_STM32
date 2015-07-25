@@ -121,7 +121,9 @@ private:
 	
 	spi_dev *spi_d;
 	uint8_t _SSPin;
-	uint32_t clockDivider;	
+	uint32_t clockDivider;
+	dma_channel spiRxDmaChannel, spiTxDmaChannel;
+	dma_dev* spiDmaDev;
 	
 	friend class SPIClass;
 };
@@ -310,6 +312,23 @@ public:
      *        this HardwareSPI instance.
      */
     spi_dev* c_dev(void) { return _currentSetting->spi_d; }
+	
+		
+	spi_dev *dev(){ return _currentSetting->spi_d;}
+	
+	 /**
+     * @brief Sets the number of the SPI peripheral to be used by
+     *        this HardwareSPI instance.
+	 *
+	 * @param spi_num Number of the SPI port. 1-2 in low density devices
+	 *			or 1-3 in high density devices.
+     */
+	
+	void setModule(int spi_num)
+	{
+		_currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
+	}
+
 
     /* -- The following methods are deprecated --------------------------- */
 
@@ -343,15 +362,8 @@ public:
      */
     uint8 recv(void);
 	
-	spi_dev *dev(){ return _currentSetting->spi_d;}
-	
-	void setModule(int spi_num)
-	{
-		_currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
-	}
-	
 private:
-
+/*
 	static inline void DMA1_CH3_Event() {
 		dma1_ch3_Active = 0;
 //		dma_disable(DMA1, DMA_CH3);
@@ -359,7 +371,7 @@ private:
 		
 		// To Do. Need to wait for 
 	}
-	
+*/	
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
 	
