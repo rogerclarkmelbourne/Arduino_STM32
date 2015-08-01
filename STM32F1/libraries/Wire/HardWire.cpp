@@ -41,11 +41,14 @@
 uint8 HardWire::process() {
     int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, 0);
     if (res == I2C_ERROR_PROTOCOL) {
-        if (sel_hard->error_flags & I2C_SR1_AF)
+        if (sel_hard->error_flags & I2C_SR1_AF) { /* NACK */
             res = (sel_hard->error_flags & I2C_SR1_ADDR ? ENACKADDR : 
-                                                           ENACKTRNS);
-        else if (sel_hard->error_flags & I2C_SR1_OVR) res = EDATA;
-        else res = EOTHER;
+                                                          ENACKTRNS);
+        } else if (sel_hard->error_flags & I2C_SR1_OVR) { /* Over/Underrun */
+            res = EDATA;
+        } else { /* Bus or Arbitration error */
+            res = EOTHER;
+        }
         i2c_disable(sel_hard);
         i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags));
     }

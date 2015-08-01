@@ -349,7 +349,7 @@ void _i2c_irq_handler(i2c_dev *dev) {
              */
             if (msg->length > 1) {
                 i2c_write(dev, msg->data[msg->xferred++]);
-            } else if (msg->length == 0){ /* We're just sending an address */
+            } else if (msg->length == 0) { /* We're just sending an address */
                 i2c_stop_condition(dev);
               /*
                * Turn off event interrupts to keep BTF from firing until
