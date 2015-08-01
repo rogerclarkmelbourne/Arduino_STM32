@@ -235,7 +235,7 @@ int32 i2c_master_xfer(i2c_dev *dev,
 
     i2c_enable_irq(dev, I2C_IRQ_EVENT);
     i2c_start_condition(dev);
-
+    
     rc = wait_for_state_change(dev, I2C_STATE_XFER_DONE, timeout);
     if (rc < 0) {
         goto out;
@@ -347,9 +347,20 @@ void _i2c_irq_handler(i2c_dev *dev) {
              * register.  We should get another TXE interrupt
              * immediately to fill DR again.
              */
-            if (msg->length != 1) {
+            if (msg->length > 1) {
                 i2c_write(dev, msg->data[msg->xferred++]);
-            }
+            } else if (msg->length == 0){ /* We're just sending an address */
+                i2c_stop_condition(dev);
+              /*
+               * Turn off event interrupts to keep BTF from firing until
+               * the end of the stop condition. Why on earth they didn't
+               * have a start/stop condition request clear BTF is beyond
+               * me.
+               */
+              i2c_disable_irq(dev, I2C_IRQ_EVENT);
+              I2C_CRUMB(STOP_SENT, 0, 0);
+              dev->state = I2C_STATE_XFER_DONE;
+            } /* else we're just sending one byte */
         }
         sr1 = sr2 = 0;
     }
@@ -456,7 +467,7 @@ void _i2c_irq_handler(i2c_dev *dev) {
 void _i2c_irq_error_handler(i2c_dev *dev) {
     I2C_CRUMB(ERROR_ENTRY, dev->regs->SR1, dev->regs->SR2);
 
-    dev->error_flags = dev->regs->SR2 & (I2C_SR1_BERR |
+    dev->error_flags = dev->regs->SR1 & (I2C_SR1_BERR |
                                          I2C_SR1_ARLO |
                                          I2C_SR1_AF |
                                          I2C_SR1_OVR);
