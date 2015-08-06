@@ -67,5 +67,5 @@ public:
 
     void begin(uint8 = 0x00);
 };
-
+extern HardWire HWire;
 #endif // _HARDWIRE_H_
