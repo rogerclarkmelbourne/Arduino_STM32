@@ -35,7 +35,7 @@
 #include "libmaple_types.h"
 #include "usart.h"
 
-#include "Print.h"
+#include "Stream.h"
 
 /*
  * IMPORTANT:
@@ -47,7 +47,7 @@
  * the documentation accordingly.
  */
 
-class HardwareSerial : public Print {
+class HardwareSerial : public Stream {
 public:
     HardwareSerial(usart_dev *usart_device,
                    uint8 tx_pin,
@@ -58,10 +58,11 @@ public:
     void end(void);
 
     /* I/O */
-    uint32 available(void);
+    virtual int available(void);
+    virtual int peek(void);
+    virtual void flush(void);
     uint32 pending(void);
-    int read(void);
-    void flush(void);
+    virtual int read(void);
     virtual size_t write(unsigned char);
     using Print::write;
 
