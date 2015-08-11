@@ -323,6 +323,18 @@ static inline uint8 usart_getc(usart_dev *dev) {
     return rb_remove(&dev->rbRX);
 }
 
+/*
+ * Roger Clark. 20141125,
+ * added peek function.
+ * @param dev Serial port to read from
+ * @return byte read
+ */
+static inline int usart_peek(usart_dev *dev)
+{
+    return rb_peek(&dev->rbRX);
+}
+
+
 /**
  * @brief Return the amount of data available in a serial port's RX buffer.
  * @param dev Serial port to check

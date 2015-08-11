@@ -138,10 +138,15 @@ int HardwareSerial::read(void) {
 	}
 }
 
-uint32 HardwareSerial::available(void) {
+int HardwareSerial::available(void) {
     return usart_data_available(usart_device);
 }
 
+int HardwareSerial::peek(void)
+{
+    return usart_peek(usart_device);
+}
+    
 uint32 HardwareSerial::pending(void) {
     return usart_data_pending(usart_device);
 }
