@@ -214,14 +214,14 @@ genericSTM32F103R.upload.auto_reset=true
 
 genericSTM32F103R.menu.device_variant.STM32F103R8=STM32F103R8 (20k RAM. 64k Flash)
 genericSTM32F103R.menu.device_variant.STM32F103R8.build.variant=generic_stm32f103r8
-genericSTM32F103R.menu.device_variant.STM32F103R8.build.cpu_flags=-DMCU_STM32F103RB 
-genericSTM32F103R.menu.device_variant.STM32F103RB.upload.maximum_size=65536
-genericSTM32F103R.menu.device_variant.STM32F103RB.upload.ram.maximum_size=20480
-genericSTM32F103R.menu.device_variant.STM32F103RB.upload.flash.maximum_size=65536
-genericSTM32F103R.menu.device_variant.STM32F103RB.build.ldscript=ld/stm32f103r8.ld
+genericSTM32F103R.menu.device_variant.STM32F103R8.build.cpu_flags=-DMCU_STM32F103R8 
+genericSTM32F103R.menu.device_variant.STM32F103R8.upload.maximum_size=65536
+genericSTM32F103R.menu.device_variant.STM32F103R8.upload.ram.maximum_size=20480
+genericSTM32F103R.menu.device_variant.STM32F103R8.upload.flash.maximum_size=65536
+genericSTM32F103R.menu.device_variant.STM32F103R8.build.ldscript=ld/stm32f103r8.ld
 
 genericSTM32F103R.menu.device_variant.STM32F103RB=STM32F103RB (20k RAM. 128k Flash)
-genericSTM32F103R.menu.device_variant.STM32F103R8.build.variant=generic_stm32f103r8
+genericSTM32F103R.menu.device_variant.STM32F103RB.build.variant=generic_stm32f103r8
 genericSTM32F103R.menu.device_variant.STM32F103RB.build.cpu_flags=-DMCU_STM32F103RB 
 genericSTM32F103R.menu.device_variant.STM32F103RB.upload.maximum_size=131072
 genericSTM32F103R.menu.device_variant.STM32F103RB.upload.ram.maximum_size=20480
