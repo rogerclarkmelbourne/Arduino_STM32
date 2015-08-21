@@ -49,6 +49,9 @@ DhcpClass* UIPEthernetClass::_dhcp(NULL);
 
 unsigned long UIPEthernetClass::periodic_timer;
 
+static DhcpClass s_dhcp; // Placing this instance here is saving 40K to final *.bin (see bug below)
+
+
 // Because uIP isn't encapsulated within a class we have to use global
 // variables, so we can only have one TCP/IP stack per program.
 
@@ -60,7 +63,8 @@ UIPEthernetClass::UIPEthernetClass()
 int
 UIPEthernetClass::begin(const uint8_t* mac)
 {
-  static DhcpClass s_dhcp;
+  //static DhcpClass s_dhcp; // <-- this is a bug !
+  // I leave it there commented for history. It is bring all GCC "new" memory allocation code, making the *.bin almost 40K bigger. I've move it globally.
   _dhcp = &s_dhcp;
   // Initialise the basic info
   init(mac);
