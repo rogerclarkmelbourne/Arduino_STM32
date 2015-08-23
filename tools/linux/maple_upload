@@ -37,4 +37,4 @@ if [ ! -x ${DFU_UTIL} ]; then
     exit 2
 fi
 
-${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr}
+${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr} -R

@@ -365,7 +365,7 @@ uint8 SPIClass::transfer(uint8 byte) const {
 */
 uint8 SPIClass::dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length) {
 	if (length == 0) return 0;
-	uint8 b;
+	uint8 b = 0;
 	if (spi_is_rx_nonempty(_currentSetting->spi_d) == 1) b = spi_rx_reg(_currentSetting->spi_d); //Clear the RX buffer in case a byte is waiting on it.
 //	dma1_ch3_Active=true;
     dma_init(_currentSetting->spiDmaDev);
@@ -427,7 +427,7 @@ uint8 SPIClass::dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length
 uint8 SPIClass::dmaSend(uint8 *transmitBuf, uint16 length, bool minc) {
 	if (length == 0) return 0;
 	uint32 flags = ((DMA_MINC_MODE * minc) |  DMA_FROM_MEM | DMA_TRNS_CMPLT);
-	uint8 b;
+	uint8 b = 0;
 //	dma1_ch3_Active=true;
     dma_init(_currentSetting->spiDmaDev);
 //	dma_attach_interrupt(DMA1, DMA_CH3, &SPIClass::DMA1_CH3_Event);

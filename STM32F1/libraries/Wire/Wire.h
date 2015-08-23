@@ -50,7 +50,7 @@
 #define SDA 19
 #define SCL 20
 
-#define SOFT_STANDARD 16
+#define SOFT_STANDARD 27
 #define SOFT_FAST 0
 
 
