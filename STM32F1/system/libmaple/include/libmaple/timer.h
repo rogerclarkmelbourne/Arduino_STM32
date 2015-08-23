@@ -255,7 +255,7 @@ extern timer_dev *TIMER14;
 #define TIMER_SMCR_ETPS_DIV8            (0x3 << 12)
 #define TIMER_SMCR_ETF                  (0xF << 12)
 #define TIMER_SMCR_MSM                  (1U << TIMER_SMCR_MSM_BIT)
-#define TIMER_SMCR_TS                   (0x3 << 4)
+#define TIMER_SMCR_TS                   (0x7 << 4)
 #define TIMER_SMCR_TS_ITR0              (0x0 << 4)
 #define TIMER_SMCR_TS_ITR1              (0x1 << 4)
 #define TIMER_SMCR_TS_ITR2              (0x2 << 4)
@@ -264,7 +264,7 @@ extern timer_dev *TIMER14;
 #define TIMER_SMCR_TS_TI1FP1            (0x5 << 4)
 #define TIMER_SMCR_TS_TI2FP2            (0x6 << 4)
 #define TIMER_SMCR_TS_ETRF              (0x7 << 4)
-#define TIMER_SMCR_SMS                  0x3
+#define TIMER_SMCR_SMS                  0x7
 #define TIMER_SMCR_SMS_DISABLED         0x0
 #define TIMER_SMCR_SMS_ENCODER1         0x1
 #define TIMER_SMCR_SMS_ENCODER2         0x2
