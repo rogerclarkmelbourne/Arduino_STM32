@@ -1,0 +1,93 @@
+0.8:
+	o New, separate dfu-prefix tool (Uwe Bonnes)
+	o Allow filtering on serial number (Uwe Bonnes)
+	o Improved VID/PID/serial filtering (Bradley Scott)
+	o Support reading firmware from stdin (Tormod Volden)
+	o Warn if missing DFU suffix (Tormod Volden)
+	o Improved progress bar (Hans Petter Selasky)
+	o Fix dfuse leave option (Uwe Bonnes)
+	o Major code rework (Hans Petter Selasky)
+	o MS Visual Studio build support (Henrique Mendonca)
+	o dfuse-pack.py tool for .dfu files (Antonio Galeo)
+	o Many other fixes from many people
+
+2014-09-13: Tormod Volden <debian.tormod@gmail.com>	
+
+0.7:
+	o Support for TI Stellaris devices (Tommi Keisala)
+	o Fix libusb detection on MacOSX (Marc Singer)
+	o Fix libusb detection on FreeBSD (Tormod Volden)
+	o Improved DfuSe support (Tormod Volden)
+	  o Support all special commands (leave, unprotect, mass-erase)
+	  o Arbitrary upload lengths
+	  o "force" option for various possible (dangerous) overrides
+
+2012-10-07: Tormod Volden <debian.tormod@gmail.com>	
+
+0.6:
+	o Add detach mode (Stefan Schmidt)
+	o Check return value on all libusb calls (Tormod Volden)
+	o Fix segmentation fault with -s option (Tormod Volden)
+	o Add DFU suffix manipulation tool (Stefan Schmidt)
+	o Port to Windows: (Tormod Volden, some parts based on work from Satz
+	  Klauer)
+	  o Port file handling to stdio streams
+	  o Sleep() macros
+	  o C99 types
+	  o Pack structs
+	o Detect DfuSe device correctly on big-endian architectures (Tormod
+	  Volden)
+	o Add dfuse progress indication on download (Tormod Volden)
+	o Cleanup: gcc pedantic, gcc extension, ... (Tormod Volden)
+	o Rely on page size from functional descriptor. Please report if you get
+	  an error about it.  (Tormod Volden)
+	o Add quirk for Maple since it reports wrong DFU version (Tormod Volden)
+
+2012-04-22: Stefan Schmidt <stefan@datenfreihafen.org>
+
+0.5:
+	o DfuSe extension support for ST devices (Tormod Volden)
+	o Add initial support for bitWillDetach flag from DFU 1.1 (Tormod
+	  Volden)
+	o Internal cleanup and some manual page fixes (Tormod Volden)
+
+2011-11-02: Stefan Schmidt <stefan@datenfreihafen.org>
+
+0.4:
+	o Rework to use libusb-1.0 (Stefan Schmidt)
+	o DFU suffix support (Tormod Volden, Stefan Schmidt)
+	o Sspeed up DFU downloads directly into memory (Bernard Blackham)
+	o More flexible -d vid:pid parsing (Tormod Volden)
+	o Many bug fixes and cleanups
+
+2011-07-20: Stefan Schmidt <stefan@datenfreihafen.org>
+
+0.3:
+	o quirks: Add OpenOCD to the poll timeout quirk table.
+
+2010-12-22: Stefan Schmidt <stefan@datenfreihafen.org>
+
+0.2:
+	o Fix some typos on the website and the README (Antonio Ospite, Uwe
+	  Hermann)
+	o Remove build rule for a static binary. We can use autotools for this.
+	  (Mike Frysinger)
+	o Fix infinite loop in download error path (C. Scott Ananian)
+	o Break out to show the 'finished' in upload (C. Scott Ananian)
+	o Add GPLv2+ headers (Harald Welte)
+	o Remove dead code (commands.[ch]) remnescent of dfu-programmer (Harald
+	  Welte)
+	o Simple quirk system with Openmoko quirk for missing bwPollTimeout (Tormod Volden)
+	o New default (1024) and clamping of transfer size (Tormod Volden)
+	o Verify sending of completion packet (Tormod Volden)
+	o Look for DFU functional descriptor among all descriptors (Tormod
+	  Volden)
+	o Print out in which direction we are transferring data
+	o Abort in upload if the file already exists
+
+2010-11-17 Stefan Schmidt <stefan@datenfreihafen.org>
+
+0.1:
+	Initial release
+
+2010-05-23 Stefan Schmidt <stefan@datenfreihafen.org>

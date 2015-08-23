@@ -1,0 +1,60 @@
+
+Bus 001 Device 008: ID 1d50:607f OpenMoko, Inc. 
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               1.00
+  bDeviceClass            0 (Defined at Interface level)
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0        64
+  idVendor           0x1d50 OpenMoko, Inc.
+  idProduct          0x607f 
+  bcdDevice            2.00
+  iManufacturer           1 Spark Devices     
+  iProduct                2 CORE DFU 
+  iSerial                 3 8D80527B5055
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           36
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           0
+      bInterfaceClass       254 Application Specific Interface
+      bInterfaceSubClass      1 Device Firmware Update
+      bInterfaceProtocol      2 
+      iInterface              4 @Internal Flash  /0x08000000/20*001Ka,108*001Kg
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       1
+      bNumEndpoints           0
+      bInterfaceClass       254 Application Specific Interface
+      bInterfaceSubClass      1 Device Firmware Update
+      bInterfaceProtocol      2 
+      iInterface              5 @SPI Flash : SST25x/0x00000000/512*04Kg
+      Device Firmware Upgrade Interface Descriptor:
+        bLength                             9
+        bDescriptorType                    33
+        bmAttributes                       11
+          Will Detach
+          Manifestation Intolerant
+          Upload Supported
+          Download Supported
+        wDetachTimeout                    255 milliseconds
+        wTransferSize                    1024 bytes
+        bcdDFUVersion                   1.1a
+Device Status:     0x0001
+  Self Powered

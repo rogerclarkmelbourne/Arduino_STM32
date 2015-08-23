@@ -1,0 +1,147 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+
+<head>
+	<title>Building dfu-util from source</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=iso-8859-1" />
+	<meta name="author" content="Tormod Volden" />
+	<meta name="keywords" content="dfu-util, build, compile" />
+	<meta name="description" content="How to build dfu-util from source" />
+	<link rel="icon" type="image/png" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="simple.css" media="screen, print" />
+</head>
+
+<body>
+<div id="middlebox">
+    <h1>How to build dfu-util from source</h1>
+
+<h2>Prerequisites for building from git</h2>
+<h3>Mac OS X</h3>
+<p>
+First install MacPorts (and if you are on 10.6 or older, the Java Developer Package) and then run:
+</p>
+<pre>
+	sudo port install libusb-devel git-core
+</pre>
+
+<h3>FreeBSD</h3>
+<pre>
+	sudo pkg_add -r git pkgconf
+</pre>
+
+<h3>Ubuntu and Debian and derivatives</h3>
+<pre>
+	sudo apt-get build-dep dfu-util
+	sudo apt-get install libusb-1.0-0-dev
+</pre>
+
+<h2>Get the source code and build it</h2>
+<p>
+The first time you will have to clone the git repository:
+</p>
+<pre>
+	git clone git://gitorious.org/dfu-util/dfu-util.git
+	cd dfu-util
+</pre>
+<p>
+If you later want to update to latest git version, just run this:
+</p>
+<pre>
+	make maintainer-clean
+	git pull
+</pre>
+<p>
+To build the source:
+</p>
+<pre>
+	./autogen.sh
+	./configure  # on most systems
+	make
+</pre>
+
+<p>
+If you are building on Mac OS X, replace the ./configure command with:
+</p>
+<pre>
+	./configure --libdir=/opt/local/lib --includedir=/opt/local/include  # on MacOSX only
+</pre>
+
+<p>
+Your dfu-util binary will be inside the src folder. Use it from there, or install it to /usr/local/bin by running "sudo make install". 
+</p>
+
+<h2>Cross-building for Windows</h2>
+
+<p>
+Windows binaries can be built in a <a href="http://mingw.org/">MinGW</a>
+environment, on a Windows computer or cross-hosted in another OS.
+To build it on a Debian or Ubuntu host, first install build dependencies:
+</p>
+<pre>
+	sudo apt-get build-dep libusb-1.0-0 dfu-util
+	sudo apt-get install mingw32
+</pre>
+
+<p>
+The below example builds dfu-util 0.8 and libusb 1.0.19 from unpacked release
+tarballs. If you instead build from git, you will have to run "./autogen.sh"
+before running the "./configure" steps.
+</p>
+
+<pre>
+mkdir -p build
+cd libusb-1.0.19
+PKG_CONFIG_PATH=$PWD/../build/lib/pkgconfig ./configure \
+    --host=i586-mingw32msvc --prefix=$PWD/../build
+# WINVER workaround needed for 1.0.19 only
+make CFLAGS="-DWINVER=0x0501"
+make install
+cd ..
+
+cd dfu-util-0.8
+PKG_CONFIG_PATH=$PWD/../build/lib/pkgconfig ./configure \
+    --host=i586-mingw32msvc --prefix=$PWD/../build
+make
+make install
+cd ..
+</pre>
+The build files will now be in build/bin.
+<p>
+
+<h2>Building on Windows using MinGW</h2>
+This assumes using release tarballs or having run ./autogen.sh on 
+the git sources.
+<pre>
+cd libusb-1.0.19
+./configure --prefix=$HOME
+# WINVER workaround needed for 1.0.19 only
+# MKDIR_P setting should not really be needed...
+make CFLAGS="-DWINVER=0x0501" MKDIR_P="mkdir -p"
+make install
+cd ..
+
+cd dfu-util-0.8
+./configure USB_CFLAGS="-I$HOME/include/libusb-1.0" \
+            USB_LIBS="-L $HOME/lib -lusb-1.0" PKG_CONFIG=true
+make
+make install
+cd ..
+</pre>
+To link libusb statically into dfu-util.exe use instead of "make":
+<pre>
+make LDFLAGS=-static
+</pre>
+The built executables (and DLL) will now be under $HOME/bin.
+
+<p>
+[<a href="index.html">Back to dfu-util main page</a>]
+</p>
+      <p id="footer">
+        &copy;2014 Tormod Volden &mdash; Valid <a href="http://validator.w3.org/check?uri=referer" title="validate XHTML">XHTML</a> &amp; <a href="http://jigsaw.w3.org/css-validator" title="validate CSS">CSS</a>
+      </p>
+</div>
+</body>
+</html>

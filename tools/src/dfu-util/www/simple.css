@@ -1,0 +1,56 @@
+body {
+  margin: 10px;
+  font-size: 0.82em;
+  background-color: #EEE;
+}
+
+h1 {
+  clear: both;
+  padding: 0 0 12px 0;
+  margin: 0;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+h2 {
+  clear: both;
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+h3 {
+  clear: both;
+  margin: 15px 0 0 0;
+  font-size: 1.0em;
+  font-weight: bold;
+}
+
+p {
+  line-height: 20px;
+  padding: 8px 0 8px 0;
+  margin: 0;
+  font-size: 1.1em;
+}
+
+pre {
+  white-space: pre-wrap; 
+  background-color: #CCC;
+  padding: 3px;
+}
+
+a:hover {
+  background-color: #DDD;
+}
+
+#middlebox {
+  width: 600px;
+  margin: 0px auto;
+  text-align: left;
+}
+
+#footer {
+  height: 100px;
+  padding: 28px 3px 0 0;
+  margin: 20px 0 20px 0;
+}

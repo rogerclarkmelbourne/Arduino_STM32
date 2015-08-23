@@ -10,10 +10,15 @@
   email: avrsite@yahoo.gr
   29 May 2015 - Added a fix for booting the VS1053B boards into 
                 mp3 decoding instead of booting into MID (modeSwitch function).
+  01 July 2015 - Added a Flac decoder patch.
  */
 
 //#include <my_SPI.h>
 #include <VS1003_STM.h>
+
+#if defined(USEFLAC)
+#include "flac.h"
+#endif
 
 #define vs1003_chunk_size  32
 /****************************************************************************/
@@ -237,6 +242,9 @@ void VS1003::begin(void)
   write_register(SCI_MODE, (1<<SM_SDINEW) | (1<<SM_RESET));
   delay(1);
   await_data_request();
+#if defined(USEFLAC)
+  loadUserCode(flac_patch,FLAC_PATCHLEN);
+#endif
   //write_register(SCI_CLOCKF,0xB800); // Experimenting with higher clock settings
   write_register(SCI_CLOCKF,0x6000);
   delay(1);

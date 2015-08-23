@@ -94,8 +94,14 @@ void HardwareSerial::begin(uint32 baud) {
     const stm32_pin_info *rxi = &PIN_MAP[rx_pin];
 #ifdef STM32F2
 	// int af = 7<<8;
-    gpio_set_af_mode(txi->gpio_device, txi->gpio_bit, 7);
-    gpio_set_af_mode(rxi->gpio_device, rxi->gpio_bit, 7);
+    if (usart_device == UART4 || usart_device == UART5) {
+        gpio_set_af_mode(txi->gpio_device, txi->gpio_bit, 8);
+        gpio_set_af_mode(rxi->gpio_device, rxi->gpio_bit, 8);
+    }
+    else {
+        gpio_set_af_mode(txi->gpio_device, txi->gpio_bit, 7);
+        gpio_set_af_mode(rxi->gpio_device, rxi->gpio_bit, 7);
+    }
     gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_AF_OUTPUT_PP | GPIO_PUPD_INPUT_PU | 0x700));
     gpio_set_mode(rxi->gpio_device, rxi->gpio_bit, (gpio_pin_mode)(GPIO_MODE_AF      | GPIO_PUPD_INPUT_PU | 0x700));
     //gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));

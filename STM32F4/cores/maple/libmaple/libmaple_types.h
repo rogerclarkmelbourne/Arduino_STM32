@@ -48,6 +48,8 @@ typedef void (*voidFuncPtr)(void);
 #define __io volatile
 #define __attr_flash __attribute__((section (".USER_FLASH")))
 
+#define __always_inline inline __attribute__((always_inline))
+
 #ifndef NULL
 #define NULL 0
 #endif

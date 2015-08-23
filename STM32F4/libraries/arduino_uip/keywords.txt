@@ -1,0 +1,58 @@
+#######################################
+# Syntax Coloring Map for SerialIP
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+UIPEthernet KEYWORD1
+UIPServer KEYWORD1
+UIPClient KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+PSOCK_BEGIN	KEYWORD2
+PSOCK_CLOSE	KEYWORD2
+PSOCK_END	KEYWORD2
+PSOCK_EXIT	KEYWORD2
+PSOCK_INIT	KEYWORD2
+PSOCK_READBUF	KEYWORD2
+PSOCK_READTO	KEYWORD2
+PSOCK_SEND	KEYWORD2
+PSOCK_SEND_STR	KEYWORD2
+
+uip_listen	KEYWORD2
+uip_unlisten	KEYWORD2
+uip_connect	KEYWORD2
+uip_outstanding	KEYWORD2
+uip_send	KEYWORD2
+uip_datalen	KEYWORD2
+uip_close	KEYWORD2
+uip_abort	KEYWORD2
+uip_stop	KEYWORD2
+uip_stopped	KEYWORD2
+uip_restart	KEYWORD2
+uip_acked	KEYWORD2
+uip_connected	KEYWORD2
+uip_closed	KEYWORD2
+uip_aborted	KEYWORD2
+uip_timedout	KEYWORD2
+uip_rexmit	KEYWORD2
+uip_poll	KEYWORD2
+uip_initialmss	KEYWORD2
+uip_mss	KEYWORD2
+uip_ipaddr	KEYWORD2
+uip_ipaddr_maskcmp	KEYWORD2
+uip_ipaddr_mask	KEYWORD2
+HTONS	KEYWORD2
+htons	KEYWORD2
+
+use_device	KEYWORD2
+set_uip_callback	KEYWORD2
+set_gateway	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################

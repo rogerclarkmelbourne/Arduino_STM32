@@ -63,9 +63,17 @@
 #define BOARD_UART5_RX_PIN      Port2Pin('D', 2)
 
 #define BOARD_NR_SPI            3
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI1_NSS_PIN      Port2Pin('C', 8)
+#else
 #define BOARD_SPI1_NSS_PIN      Port2Pin('A', 4)
+#endif
 #define BOARD_SPI1_MOSI_PIN     Port2Pin('A', 7)
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI1_MISO_PIN     Port2Pin('B', 4)
+#else
 #define BOARD_SPI1_MISO_PIN     Port2Pin('A', 6)
+#endif
 #define BOARD_SPI1_SCK_PIN      Port2Pin('A', 5)
 #define BOARD_SPI2_NSS_PIN      Port2Pin('B',12)
 #define BOARD_SPI2_MOSI_PIN     Port2Pin('B',15)
@@ -76,7 +84,11 @@
 #define BOARD_SPI3_MISO_PIN     Port2Pin('B', 4)
 #define BOARD_SPI3_SCK_PIN      Port2Pin('B', 3)
 
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI3B_NSS_PIN      Port2Pin('B', 0)
+#else
 #define BOARD_SPI3B_NSS_PIN      Port2Pin('B', 8)
+#endif
 #define BOARD_SPI3B_MOSI_PIN     Port2Pin('C',12)
 #define BOARD_SPI3B_MISO_PIN     Port2Pin('C',11)
 #define BOARD_SPI3B_SCK_PIN      Port2Pin('C',10)
