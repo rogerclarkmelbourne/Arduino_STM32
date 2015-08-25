@@ -134,46 +134,60 @@ typedef struct timer_dev {
 } timer_dev;
 
 #if STM32_HAVE_TIMER(1)
-extern timer_dev *TIMER1;
+extern timer_dev *const TIMER1;
+extern timer_dev timer1;
 #endif
 #if STM32_HAVE_TIMER(2)
-extern timer_dev *TIMER2;
+extern timer_dev *const TIMER2;
+extern timer_dev timer2;
 #endif
 #if STM32_HAVE_TIMER(3)
-extern timer_dev *TIMER3;
+extern timer_dev *const TIMER3;
+extern timer_dev timer3;
 #endif
 #if STM32_HAVE_TIMER(4)
-extern timer_dev *TIMER4;
+extern timer_dev *const TIMER4;
+extern timer_dev timer4;
 #endif
 #if STM32_HAVE_TIMER(5)
-extern timer_dev *TIMER5;
+extern timer_dev *const TIMER5;
+extern timer_dev timer5;
 #endif
 #if STM32_HAVE_TIMER(6)
-extern timer_dev *TIMER6;
+extern timer_dev *const TIMER6;
+extern timer_dev timer6;
 #endif
 #if STM32_HAVE_TIMER(7)
-extern timer_dev *TIMER7;
+extern timer_dev *const TIMER7;
+extern timer_dev timer7;
 #endif
 #if STM32_HAVE_TIMER(8)
-extern timer_dev *TIMER8;
+extern timer_dev *const TIMER8;
+extern timer_dev timer8;
 #endif
 #if STM32_HAVE_TIMER(9)
-extern timer_dev *TIMER9;
+extern timer_dev *const TIMER9;
+extern timer_dev timer9;
 #endif
 #if STM32_HAVE_TIMER(10)
-extern timer_dev *TIMER10;
+extern timer_dev *const TIMER10;
+extern timer_dev timer10;
 #endif
 #if STM32_HAVE_TIMER(11)
-extern timer_dev *TIMER11;
+extern timer_dev *const TIMER11;
+extern timer_dev timer11;
 #endif
 #if STM32_HAVE_TIMER(12)
-extern timer_dev *TIMER12;
+extern timer_dev *const TIMER12;
+extern timer_dev timer12;
 #endif
 #if STM32_HAVE_TIMER(13)
-extern timer_dev *TIMER13;
+extern timer_dev *const TIMER13;
+extern timer_dev timer13;
 #endif
 #if STM32_HAVE_TIMER(14)
-extern timer_dev *TIMER14;
+extern timer_dev *const TIMER14;
+extern timer_dev timer14;
 #endif
 
 /*

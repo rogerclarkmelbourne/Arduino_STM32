@@ -106,23 +106,23 @@ struct timer_bas_reg_map;
 
 struct timer_dev;
 
-extern struct timer_dev *TIMER1;
-extern struct timer_dev *TIMER2;
-extern struct timer_dev *TIMER3;
-extern struct timer_dev *TIMER4;
+extern struct timer_dev *const TIMER1;
+extern struct timer_dev *const TIMER2;
+extern struct timer_dev *const TIMER3;
+extern struct timer_dev *const TIMER4;
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-extern struct timer_dev *TIMER5;
-extern struct timer_dev *TIMER6;
-extern struct timer_dev *TIMER7;
-extern struct timer_dev *TIMER8;
+extern struct timer_dev *const TIMER5;
+extern struct timer_dev *const TIMER6;
+extern struct timer_dev *const TIMER7;
+extern struct timer_dev *const TIMER8;
 #endif
 #ifdef STM32_XL_DENSITY
-extern struct timer_dev *TIMER9;
-extern struct timer_dev *TIMER10;
-extern struct timer_dev *TIMER11;
-extern struct timer_dev *TIMER12;
-extern struct timer_dev *TIMER13;
-extern struct timer_dev *TIMER14;
+extern struct timer_dev *const TIMER9;
+extern struct timer_dev *const TIMER10;
+extern struct timer_dev *const TIMER11;
+extern struct timer_dev *const TIMER12;
+extern struct timer_dev *const TIMER13;
+extern struct timer_dev *const TIMER14;
 #endif
 
 #endif
