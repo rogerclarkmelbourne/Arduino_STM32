@@ -1,0 +1,36 @@
+dfu-util  --device 0483:df11 --alt 0 \
+	--dfuse-address 0x08000000 \
+        -v -v -v \
+	--download arm/iotoggle.bin
+No valid DFU suffix signature
+Warning: File has no DFU suffix
+dfu-util 0.5
+
+(C) 2005-2008 by Weston Schmidt, Harald Welte and OpenMoko Inc.
+(C) 2010-2011 Tormod Volden (DfuSe support)
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+
+dfu-util does currently only support DFU version 1.0
+
+Filter on vendor = 0x0483 product = 0xdf11
+Opening DFU capable USB device... ID 0483:df11
+Run-time device DFU version 011a
+Found DFU: [0483:df11] devnum=0, cfg=1, intf=0, alt=0, name="@Internal Flash  /0x08000000/04*016Kg,01*064Kg,07*128Kg"
+Claiming USB DFU Interface...
+Setting Alternate Setting #0 ...
+Determining device status: state = dfuERROR, status = 10
+dfuERROR, clearing status
+Determining device status: state = dfuIDLE, status = 0
+dfuIDLE, continuing
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Memory segment at 0x08000000   4 x 16384 = 65536 (rew)
+Memory segment at 0x08010000   1 x 65536 = 65536 (rew)
+Memory segment at 0x08020000   7 x 131072 = 917504 (rew)
+Uploading to address = 0x08000000, size = 2308
+Erasing page size 16384 at address 0x08000000, page starting at 0x08000000
+ Download from image offset 00000000 to memory 08000000-080007ff, size 2048
+  Setting address pointer to 0x08000000
+ Download from image offset 00000800 to memory 08000800-08000903, size 260
+  Setting address pointer to 0x08000800

@@ -34,6 +34,7 @@
 
 #include "libmaple.h"
 #include "flash.h"
+#include "gpio.h"
 #include "rcc.h"
 #include "bitband.h"
 
@@ -166,6 +167,18 @@ typedef struct
 #define RESET 0
 
 typedef uint32 uint32_t;
+
+void InitMCO1()
+{
+    rcc_reg_map *RCC = RCC_BASE;
+    // Turn MCO1 Master Clock Output mode
+    RCC->CFGR &= RCC_CFGR_MCO1_RESET_MASK;
+    RCC->CFGR |= RCC_CFGR_MCO1Source_HSE | RCC_CFGR_MCO1Div_1;
+    // PA8 Output the Master Clock MCO1
+    gpio_set_af_mode(GPIOA, 8, 0);
+    gpio_set_mode(GPIOA, 8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
+}
+
 
 void SetupClock72MHz()
 {
@@ -360,7 +373,11 @@ void SetupClock168MHz()
 	/******************************************************************************/
 	/************************* PLL Parameters *************************************/
 	/* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+	int PLL_M = 25; // The NETDUINO has a 25MHz external oscillator
+#else
 	int PLL_M = 8;
+#endif
 	int PLL_N = 336;
 
 	/* SYSCLK = PLL_VCO / PLL_P */
@@ -373,6 +390,10 @@ void SetupClock168MHz()
 	uint32 StartUpCounter = 0, HSEStatus = 0;
 	rcc_reg_map *RCC = RCC_BASE;
 
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+        InitMCO1();
+#endif
+        
 	/* Enable HSE */
 	RCC->CR |= ((uint32_t)RCC_CR_HSEON);
 
@@ -443,20 +464,19 @@ void SetupClock168MHz()
 }
 
 
-
 void rcc_clk_init(rcc_sysclk_src sysclk_src,
                   rcc_pllsrc pll_src,
                   rcc_pll_multiplier pll_mul) {
 
   //SetupClock72MHz();
 #if STM32_TICKS_PER_US == 168
-					  SetupClock168MHz();
+	  SetupClock168MHz();
 #endif
 #if STM32_TICKS_PER_US == 120
-					  SetupClock120MHz();
+	  SetupClock120MHz();
 #endif
 #if STM32_TICKS_PER_US == 72
-					  SetupClock72MHz();
+	  SetupClock72MHz();
 #endif
 }
 

@@ -35,6 +35,10 @@
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
+/* Roger Clark. Added next to includes for changes to Serial */
+#include <libmaple/usart.h>
+#include <HardwareSerial.h>
+
 #include <wirish_debug.h>
 #include <wirish_types.h>
 
@@ -52,13 +56,13 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 
     {GPIOA, TIMER2, ADC1,  0, 1,    0}, /* PA0 */
-	{GPIOA, TIMER2, ADC1,  1, 2,    1}, /* PA1 */
+    {GPIOA, TIMER2, ADC1,  1, 2,    1}, /* PA1 */
     {GPIOA, TIMER2, ADC1,  2, 3,    2}, /* PA2 */	
     {GPIOA, TIMER2, ADC1,  3, 4,    3}, /* PA3 */
-	{GPIOA,   NULL, ADC1,  4, 0,    4}, /* PA4 */
-	{GPIOA,   NULL, ADC1,  5, 0,    5}, /* PA5 */
-	{GPIOA, TIMER3, ADC1,  6, 1,    6}, /* PA6 */
-	{GPIOA, TIMER3, ADC1,  7, 2,    7}, /* PA7 */
+    {GPIOA,   NULL, ADC1,  4, 0,    4}, /* PA4 */
+    {GPIOA,   NULL, ADC1,  5, 0,    5}, /* PA5 */
+    {GPIOA, TIMER3, ADC1,  6, 1,    6}, /* PA6 */
+    {GPIOA, TIMER3, ADC1,  7, 2,    7}, /* PA7 */
     {GPIOA, TIMER1, NULL,  8, 1, ADCx}, /* PA8 */	
     {GPIOA, TIMER1, NULL,  9, 2, ADCx}, /* PA9 */	
     {GPIOA, TIMER1, NULL, 10, 3, ADCx}, /* PA10 */
@@ -77,7 +81,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     {GPIOB, TIMER4, NULL,  6, 1, ADCx}, /* PB6 */
     {GPIOB, TIMER4, NULL,  7, 2, ADCx}, /* PB7 */	
     {GPIOB, TIMER4, NULL,  8, 3, ADCx}, /* PB8 */	
-	{GPIOB,   NULL, NULL,  9, 0, ADCx}, /* PB9 */	
+    {GPIOB, TIMER4, NULL,  9, 4, ADCx}, /* PB9 */	
     {GPIOB,   NULL, NULL, 10, 0, ADCx}, /* PB10 */	
     {GPIOB,   NULL, NULL, 11, 0, ADCx}, /* PB11 */
     {GPIOB,   NULL, NULL, 12, 0, ADCx}, /* PB12 */
@@ -109,3 +113,27 @@ extern const uint8 boardADCPins[BOARD_NR_ADC_PINS] __FLASH__ = {
 extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
      USB_DP, USB_DM
 };
+
+
+/* 
+ * Roger Clark
+ * 
+ * 2015/05/28
+ *
+ * Moved definitions for Hardware Serial devices from HardwareSerial.cpp so that each board can define which Arduino "Serial" instance
+ * Maps to which hardware serial port on the microprocessor
+ */
+						
+#ifdef SERIAL_USB
+	DEFINE_HWSERIAL(Serial1, 1);
+
+	DEFINE_HWSERIAL(Serial2, 2);
+
+	DEFINE_HWSERIAL(Serial3, 3);
+#else
+	DEFINE_HWSERIAL(Serial, 1);
+
+	DEFINE_HWSERIAL(Serial1, 2);
+
+	DEFINE_HWSERIAL(Serial2, 3);
+#endif

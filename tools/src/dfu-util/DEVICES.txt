@@ -1,0 +1,20 @@
+List of supported software and hardware products:
+
+Software user (bootloader, etc)
+-------------------------------
+- Sam7DFU: http://www.openpcd.org/Sam7dfu
+- U-boot: DFU patches
+- Barebox: http://www.barebox.org/
+- Leaflabs: http://code.google.com/p/leaflabs/
+- Blackmagic DFU
+
+Products using DFU
+------------------
+- OpenPCD (sam7dfu)
+- Openmoko Neo 1973 and Freerunner (u-boot with DFU patches)
+- Leaflabs Maple
+- ATUSB from Qi Hardware
+- STM32F105/7, STM32F2/F3/F4 in System Bootloader
+- Blackmagic debug probe
+- NXP LPC31xx/LPC43XX, e.g. LPC-Link and LPC-Link2, need binaries
+  with LPC prefix and encoding (LPC-Link)

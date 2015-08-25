@@ -20,10 +20,11 @@
  * Modified 12 April 2011 by Marti Bolivar <mbolivar@leaflabs.com>
  */
 
-#ifndef _PRINT_H_
-#define _PRINT_H_
+#ifndef _WIRISH_PRINT_H_
+#define _WIRISH_PRINT_H_
 
-#include "libmaple_types.h"
+#include <libmaple/libmaple_types.h>
+#include "WString.h"
 
 enum {
     BYTE = 0,
@@ -35,33 +36,49 @@ enum {
 
 class Print {
 public:
-    virtual void write(uint8 ch) = 0;
-    virtual void write(const char *str);
-    virtual void write(const void *buf, uint32 len);
-    void print(char);
-    void print(const char[]);
-    void print(uint8, int=DEC);
-    void print(int, int=DEC);
-    void print(unsigned int, int=DEC);
-    void print(long, int=DEC);
-    void print(unsigned long, int=DEC);
-    void print(long long, int=DEC);
-    void print(unsigned long long, int=DEC);
-    void print(double, int=2);
-    void println(void);
-    void println(char);
-    void println(const char[]);
-    void println(uint8, int=DEC);
-    void println(int, int=DEC);
-    void println(unsigned int, int=DEC);
-    void println(long, int=DEC);
-    void println(unsigned long, int=DEC);
-    void println(long long, int=DEC);
-    void println(unsigned long long, int=DEC);
-    void println(double, int=2);
+    virtual size_t write(uint8 ch) = 0;
+    virtual size_t write(const char *str);
+    virtual size_t write(const void *buf, uint32 len);
+	
+	size_t print(const String &);
+    size_t print(char);
+    size_t print(const char[]);
+    size_t print(uint8, int=DEC);
+    size_t print(int, int=DEC);
+    size_t print(unsigned int, int=DEC);
+    size_t print(long, int=DEC);
+    size_t print(unsigned long, int=DEC);
+    size_t print(long long, int=DEC);
+    size_t print(unsigned long long, int=DEC);
+    size_t print(double, int=2);
+    size_t println(void);
+	size_t println(const String &s);
+	size_t println(char);
+	size_t println(const char[]);
+    size_t println(uint8, int=DEC);
+    size_t println(int, int=DEC);
+    size_t println(unsigned int, int=DEC);
+    size_t println(long, int=DEC);
+    size_t println(unsigned long, int=DEC);
+    size_t println(long long, int=DEC);
+    size_t println(unsigned long long, int=DEC);
+    size_t println(double, int=2);
+#ifdef SUPPORTS_PRINTF
+// Roger Clark. Work in progress to add printf support
+	int printf(const char * format, ...);
+#endif
+    Print() : write_error(0) {}
+
+    int getWriteError() { return write_error; }
+    void clearWriteError() { setWriteError(0); }
+	
+  protected:
+    void setWriteError(int err = 1) { write_error = err; }
+
 private:
-    void printNumber(unsigned long long, uint8);
-    void printFloat(double, uint8);
+	int write_error;
+    size_t printNumber(unsigned long long, uint8);
+    size_t printFloat(double, uint8);
 };
 
 #endif

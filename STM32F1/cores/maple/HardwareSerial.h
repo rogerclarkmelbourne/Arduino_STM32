@@ -100,6 +100,20 @@ struct usart_dev;
 #define SERIAL_9O2	0B00101011
 
 
+/* Roger Clark 
+ * Moved macros from hardwareSerial.cpp
+ */
+ 
+#define DEFINE_HWSERIAL(name, n)                                   \
+	HardwareSerial name(USART##n,                                  \
+						BOARD_USART##n##_TX_PIN,                   \
+						BOARD_USART##n##_RX_PIN)
+
+#define DEFINE_HWSERIAL_UART(name, n)                             \
+	HardwareSerial name(UART##n,                                  \
+						BOARD_USART##n##_TX_PIN,                   \
+						BOARD_USART##n##_RX_PIN)				
+
 
 /* Roger clark. Changed class inheritance from Print to Stream.
  * Also added new functions for peek() and availableForWrite()

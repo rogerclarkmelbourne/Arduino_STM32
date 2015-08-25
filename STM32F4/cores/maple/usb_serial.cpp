@@ -50,18 +50,18 @@ void USBSerial::end(void) {
     disableUSB();
 }
 
-void USBSerial::write(uint8 ch) {
+size_t USBSerial::write(uint8 ch) {
     const uint8 buf[] = {ch};
-    this->write(buf, 1);
+    return this->write(buf, 1);
 }
 
-void USBSerial::write(const char *str) {
-    this->write(str, strlen(str));
+size_t USBSerial::write(const char *str) {
+    return this->write(str, strlen(str));
 }
 
-void USBSerial::write(const void *buf, uint32 len) {
+size_t USBSerial::write(const void *buf, uint32 len) {
     if (!(usbIsConnected() && usbIsConfigured()) || !buf) {
-        return;
+        return 0;
     }
 
     uint32 txed = 0;
@@ -75,13 +75,14 @@ void USBSerial::write(const void *buf, uint32 len) {
         }
         old_txed = txed;
     }
+    return txed;
 }
 
-uint32 USBSerial::available(void) {
+int USBSerial::available(void) {
     return usbBytesAvailable();
 }
 
-uint32 USBSerial::read(void *buf, uint32 len) {
+int USBSerial::read(void *buf, uint32 len) {
     if (!buf) {
         return 0;
     }
@@ -95,10 +96,36 @@ uint32 USBSerial::read(void *buf, uint32 len) {
 }
 
 /* Blocks forever until 1 byte is received */
-uint8 USBSerial::read(void) {
+int USBSerial::read(void) {
     uint8 buf[1];
     this->read(buf, 1);
     return buf[0];
+}
+
+int USBSerial::peek(void)
+{
+    // ThingToDo : Don't do any thing yet, since F4 doesn't have usb_cdcacm_peek() yet.
+    /*
+    uint8 b;
+    if (usb_cdcacm_peek(&b, 1)==1)
+    {
+	return b;
+    }
+    else */
+    {
+	return -1;
+    }
+}
+
+void USBSerial::flush(void)
+{
+    /*Roger Clark. Rather slow method. Need to improve this */
+    uint8 b;
+    while(usbBytesAvailable())
+    {
+	this->read(&b, 1);
+    }
+    return;
 }
 
 uint8 USBSerial::pending(void) {

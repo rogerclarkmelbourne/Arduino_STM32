@@ -31,12 +31,12 @@
 #ifndef _USB_SERIAL_H_
 #define _USB_SERIAL_H_
 
-#include "Print.h"
+#include "Stream.h"
 
 /**
  * @brief Virtual serial terminal.
  */
-class USBSerial : public Print {
+class USBSerial : public Stream {
 public:
     USBSerial(void);
 
@@ -44,14 +44,16 @@ public:
     void begin(int);
     void end(void);
 
-    uint32 available(void);
+    virtual int available(void);
+    virtual int peek(void);
+    virtual void flush(void);
 
-    uint32 read(void *buf, uint32 len);
-    uint8  read(void);
+    virtual int read(void *buf, uint32 len);
+    virtual int read(void);
 
-    void write(uint8);
-    void write(const char *str);
-    void write(const void*, uint32);
+    size_t write(uint8);
+    size_t write(const char *str);
+    size_t write(const void*, uint32);
 
     uint8 getRTS();
     uint8 getDTR();

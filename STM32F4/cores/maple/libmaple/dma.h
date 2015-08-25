@@ -32,6 +32,7 @@
 
 #ifdef STM32F2
 #include "dmaF2.h"
+#include <libmaple/dma_common.h>
 #else
 #include "dmaF1.h"
 #endif

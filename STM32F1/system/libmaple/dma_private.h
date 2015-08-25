@@ -38,10 +38,11 @@
  * in the series support files, which need dma_irq_handler().) */
 #ifdef DMA_GET_HANDLER
 static __always_inline void dma_irq_handler(dma_dev *dev, dma_tube tube) {
-    dma_clear_isr_bits(dev, tube); /* in case handler doesn't */
+
     void (*handler)(void) = DMA_GET_HANDLER(dev, tube);
     if (handler) {
         handler();
+	    dma_clear_isr_bits(dev, tube); /* in case handler doesn't */
     }
 }
 #endif

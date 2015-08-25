@@ -61,9 +61,19 @@ void boardInit(void) {
 	gpio_set_af_mode(GPIOB,  0, 2);
 	gpio_set_af_mode(GPIOB,  1, 2);
 
-
 	//gpio_set_af_mode(GPIOA, 2, 7);
 	//gpio_set_af_mode(GPIOA, 3, 7);
+
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+    // PA8 Output the Master Clock MCO1
+    gpio_set_af_mode(GPIOA, 8, 0);
+    // PB4 as alternate MISO Input
+    gpio_set_af_mode(GPIOB, 4, 5);
+    // PA5 as alternate SCK Output
+    gpio_set_af_mode(GPIOA, 5, 5);
+    // PA7 as alternate MOSI Output
+    gpio_set_af_mode(GPIOA, 7, 5);
+#endif
 	return;
 }
 

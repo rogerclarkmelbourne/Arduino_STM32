@@ -1,0 +1,5 @@
+This project is built of many different components.
+
+Substantial portions were derived from leaflabs libmaple - see https://github.com/leaflabs/libmaple/blob/master/LICENSE
+
+Other sub projects e.g. Texane STlink  have their own licenses

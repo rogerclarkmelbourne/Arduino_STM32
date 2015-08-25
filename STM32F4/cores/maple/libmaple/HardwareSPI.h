@@ -37,6 +37,7 @@
 #include "spi.h"
 
 #include "boards.h"
+#include "wirish.h"
 
 #ifndef _HARDWARESPI_H_
 #define _HARDWARESPI_H_
@@ -61,6 +62,42 @@ typedef enum SPIFrequency {
 /* TODO [0.2.0?] something smarter than this */
 //#warning "Unexpected clock speed; SPI frequency calculation will be incorrect"
 #endif
+
+
+//#define BOARD_SPI_DEFAULT_SS PC13
+#define BOARD_SPI_DEFAULT_SS PB0
+#define SPI_MODE0 SPI_MODE_0
+#define SPI_MODE1 SPI_MODE_1
+#define SPI_MODE2 SPI_MODE_2
+#define SPI_MODE3 SPI_MODE_3
+
+/*
+class SPISettings {
+public:
+	SPISettings(uint32 clock, BitOrder bitOrder, uint8 dataMode) {
+		if (__builtin_constant_p(clock)) {
+			init_AlwaysInline(clock, bitOrder, dataMode);
+		} else {
+			init_MightInline(clock, bitOrder, dataMode);
+		}
+	}
+	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0); }
+private:
+	void init_MightInline(uint32 clock, BitOrder bitOrder, uint8 dataMode) {
+		init_AlwaysInline(clock, bitOrder, dataMode);
+	}
+	void init_AlwaysInline(uint32 clock, BitOrder bitOrder, uint8 dataMode) __attribute__((__always_inline__)) {
+		this->clock = clock;
+		this->bitOrder = bitOrder;
+		this->dataMode = dataMode;
+	}
+	uint32 clock;
+	BitOrder bitOrder;
+	uint8 dataMode;
+	friend class HardwareSPI;
+};
+*/
+
 
 /**
  * @brief Wirish SPI interface.
@@ -226,9 +263,17 @@ public:
      * @see HardwareSPI::read()
      */
     uint8 recv(void);
+    
+//    void beginTransaction(SPISettings settings) { beginTransaction(BOARD_SPI_DEFAULT_SS, settings); }
+//    void beginTransaction(uint8 pin, SPISettings settings);
+    void endTransaction(void) { }
+                            
 private:
     spi_dev *spi_d;
 };
+
+
+extern HardwareSPI SPI;
 
 #endif
 
