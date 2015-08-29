@@ -91,35 +91,42 @@ uint8 WireBase::requestFrom(int address, int numBytes) {
     return WireBase::requestFrom((uint8)address, numBytes);
 }
 
-void WireBase::write(uint8 value) {
+bool WireBase::write(uint8 value) {
     if (tx_buf_idx == WIRE_BUFSIZ) {
         tx_buf_overflow = true;
-        return;
+        return false;
     }
     tx_buf[tx_buf_idx++] = value;
     itc_msg.length++;
+    return true;
 }
 
-void WireBase::write(uint8* buf, int len) {
+bool WireBase::write(uint8* buf, int len) {
     for (uint8 i = 0; i < len; i++) {
-        write(buf[i]);
+        if(!write(buf[i])) {
+            return false;
+        }
     }
+    return true;
 }
 
-void WireBase::write(int value) {
-    write((uint8)value);
+bool WireBase::write(int value) {
+    return write((uint8)value);
 }
 
-void WireBase::write(int* buf, int len) {
-    write((uint8*)buf, (uint8)len);
+bool WireBase::write(int* buf, int len) {
+    return write((uint8*)buf, (uint8)len);
 }
 
-void WireBase::write(char* buf) {
+bool WireBase::write(char* buf) {
     uint8 *ptr = (uint8*)buf;
     while (*ptr) {
-        write(*ptr);
+        if(!write(*ptr)){
+            return false;
+        }
         ptr++;
     }
+    return true;
 }
 
 uint8 WireBase::available() {

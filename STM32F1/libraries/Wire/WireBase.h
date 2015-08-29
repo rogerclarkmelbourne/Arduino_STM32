@@ -106,27 +106,27 @@ public:
     /*
      * Stack up bytes to be sent when transmitting
      */
-    void write(uint8);
+    bool write(uint8);
 
     /*
      * Stack up bytes from the array to be sent when transmitting
      */
-    void write(uint8*, int);
+    bool write(uint8*, int);
 
     /*
      * Ensure that a sending data will only be 8-bit bytes
      */
-    void write(int);
+    bool write(int);
 
     /*
      * Ensure that an array sending data will only be 8-bit bytes
      */
-    void write(int*, int);
+    bool write(int*, int);
 
     /*
      * Stack up bytes from a string to be sent when transmitting
      */
-    void write(char*);
+    bool write(char*);
 
     /*
      * Return the amount of bytes that is currently in the receiving buffer
