@@ -48,74 +48,74 @@ static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
  */
 
 #if STM32_HAVE_TIMER(1)
-static timer_dev timer1 = ADVANCED_TIMER(1);
+timer_dev timer1 = ADVANCED_TIMER(1);
 /** Timer 1 device (advanced) */
-timer_dev *TIMER1 = &timer1;
+timer_dev *const TIMER1 = &timer1;
 #endif
 #if STM32_HAVE_TIMER(2)
-static timer_dev timer2 = GENERAL_TIMER(2);
+timer_dev timer2 = GENERAL_TIMER(2);
 /** Timer 2 device (general-purpose) */
-timer_dev *TIMER2 = &timer2;
+timer_dev *const TIMER2 = &timer2;
 #endif
 #if STM32_HAVE_TIMER(3)
-static timer_dev timer3 = GENERAL_TIMER(3);
+timer_dev timer3 = GENERAL_TIMER(3);
 /** Timer 3 device (general-purpose) */
-timer_dev *TIMER3 = &timer3;
+timer_dev *const TIMER3 = &timer3;
 #endif
 #if STM32_HAVE_TIMER(4)
-static timer_dev timer4 = GENERAL_TIMER(4);
+timer_dev timer4 = GENERAL_TIMER(4);
 /** Timer 4 device (general-purpose) */
-timer_dev *TIMER4 = &timer4;
+timer_dev *const TIMER4 = &timer4;
 #endif
 #if STM32_HAVE_TIMER(5)
-static timer_dev timer5 = GENERAL_TIMER(5);
+timer_dev timer5 = GENERAL_TIMER(5);
 /** Timer 5 device (general-purpose) */
-timer_dev *TIMER5 = &timer5;
+timer_dev *const TIMER5 = &timer5;
 #endif
 #if STM32_HAVE_TIMER(6)
-static timer_dev timer6 = BASIC_TIMER(6);
+timer_dev timer6 = BASIC_TIMER(6);
 /** Timer 6 device (basic) */
-timer_dev *TIMER6 = &timer6;
+timer_dev *const TIMER6 = &timer6;
 #endif
 #if STM32_HAVE_TIMER(7)
-static timer_dev timer7 = BASIC_TIMER(7);
+timer_dev timer7 = BASIC_TIMER(7);
 /** Timer 7 device (basic) */
-timer_dev *TIMER7 = &timer7;
+timer_dev *const TIMER7 = &timer7;
 #endif
 #if STM32_HAVE_TIMER(8)
-static timer_dev timer8 = ADVANCED_TIMER(8);
+timer_dev timer8 = ADVANCED_TIMER(8);
 /** Timer 8 device (advanced) */
-timer_dev *TIMER8 = &timer8;
+timer_dev *const TIMER8 = &timer8;
 #endif
 #if STM32_HAVE_TIMER(9)
-static timer_dev timer9 = RESTRICTED_GENERAL_TIMER(9, TIMER_DIER_TIE_BIT);
+timer_dev timer9 = RESTRICTED_GENERAL_TIMER(9, TIMER_DIER_TIE_BIT);
 /** Timer 9 device (general-purpose) */
-timer_dev *TIMER9 = &timer9;
+timer_dev *const TIMER9 = &timer9;
 #endif
 #if STM32_HAVE_TIMER(10)
-static timer_dev timer10 = RESTRICTED_GENERAL_TIMER(10, TIMER_DIER_CC1IE_BIT);
+timer_dev timer10 = RESTRICTED_GENERAL_TIMER(10, TIMER_DIER_CC1IE_BIT);
 /** Timer 10 device (general-purpose) */
-timer_dev *TIMER10 = &timer10;
+timer_dev *const TIMER10 = &timer10;
 #endif
 #if STM32_HAVE_TIMER(11)
-static timer_dev timer11 = RESTRICTED_GENERAL_TIMER(11, TIMER_DIER_CC1IE_BIT);
+timer_dev timer11 = RESTRICTED_GENERAL_TIMER(11, TIMER_DIER_CC1IE_BIT);
 /** Timer 11 device (general-purpose) */
-timer_dev *TIMER11 = &timer11;
+timer_dev *const TIMER11 = &timer11;
 #endif
 #if STM32_HAVE_TIMER(12)
-static timer_dev timer12 = RESTRICTED_GENERAL_TIMER(12, TIMER_DIER_TIE_BIT);
+timer_dev timer12 = RESTRICTED_GENERAL_TIMER(12, TIMER_DIER_TIE_BIT);
 /** Timer 12 device (general-purpose) */
-timer_dev *TIMER12 = &timer12;
+timer_dev *const TIMER12 = &timer12;
 #endif
 #if STM32_HAVE_TIMER(13)
-static timer_dev timer13 = RESTRICTED_GENERAL_TIMER(13, TIMER_DIER_CC1IE_BIT);
+timer_dev timer13 = RESTRICTED_GENERAL_TIMER(13, TIMER_DIER_CC1IE_BIT);
 /** Timer 13 device (general-purpose) */
-timer_dev *TIMER13 = &timer13;
+timer_dev *const TIMER13 = &timer13;
 #endif
 #if STM32_HAVE_TIMER(14)
-static timer_dev timer14 = RESTRICTED_GENERAL_TIMER(14, TIMER_DIER_CC1IE_BIT);
+timer_dev timer14 = RESTRICTED_GENERAL_TIMER(14, TIMER_DIER_CC1IE_BIT);
 /** Timer 14 device (general-purpose) */
-timer_dev *TIMER14 = &timer14;
+timer_dev *const TIMER14 = &timer14;
 #endif
 
 /*
