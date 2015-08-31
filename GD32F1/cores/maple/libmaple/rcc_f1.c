@@ -131,7 +131,7 @@ void rcc_configure_pll(rcc_pll_cfg *pll_cfg) {
 
     cfgr = RCC_BASE->CFGR;
     cfgr &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL);
-    cfgr |= pll_cfg->pllsrc | pll_mul;
+    cfgr |= pll_cfg->pllsrc | pll_mul;// | (0B10 << 22);
     RCC_BASE->CFGR = cfgr;
 }
 

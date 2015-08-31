@@ -49,6 +49,7 @@
 // currently officially supports).
 #ifndef BOARD_RCC_PLLMUL
 #define BOARD_RCC_PLLMUL RCC_PLLMUL_10
+//#define BOARD_RCC_PLLMUL RCC_PLLMUL_6
 #endif
 
 namespace wirish {
