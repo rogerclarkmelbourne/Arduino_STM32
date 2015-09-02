@@ -120,6 +120,7 @@ __attribute__((noreturn)) void throb(void) {
     uint32 CC      = 0x0000;
     uint32 TOP_CNT = 0x0200;
     uint32 i       = 0;
+	volatile int dly;
 
     gpio_set_mode(ERROR_LED_PORT, ERROR_LED_PIN, GPIO_MODE_OUTPUT);
     /* Error fade. */
@@ -141,6 +142,7 @@ __attribute__((noreturn)) void throb(void) {
             gpio_write_bit(ERROR_LED_PORT, ERROR_LED_PIN, 0);
         }
         i++;
+		for( dly=0;dly<10;dly++);
     }
 #else
     /* No error LED is defined; do nothing. */

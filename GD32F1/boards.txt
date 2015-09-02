@@ -4,6 +4,7 @@
 menu.device_variant=Variant
 menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
+menu.cpu_speed=CPU Speed(MHz)
 
 
 ###################### Generic GD32F103C  ########################################
@@ -17,7 +18,7 @@ genericGD32F103C.upload.use_1200bps_touch=false
 genericGD32F103C.upload.file_type=bin
 genericGD32F103C.upload.auto_reset=true
 genericGD32F103C.build.cpu_flags=-DMCU_STM32F103CB  
-genericGD32F103C.build.f_cpu=120000000L
+genericGD32F103C.build.f_cpu=72000000L
 
 ## GD32F103CB -------------------------
 genericGD32F103C.menu.device_variant.GD32F103CB=GD32F103CB (20k RAM. 128k Flash)
@@ -62,4 +63,12 @@ genericGD32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericGD32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericGD32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+genericGD32F103C.menu.cpu_speed.speed_120mhz=120Mhz (overdrive)
+genericGD32F103C.menu.cpu_speed.speed_120mhz.build.f_cpu=120000000L
+
+genericGD32F103C.menu.cpu_speed.speed_96mhz=96Mhz (Stable)
+genericGD32F103C.menu.cpu_speed.speed_96mhz.build.f_cpu=96000000L
+
+genericGD32F103C.menu.cpu_speed.speed_72mhz=72Mhz (compatibility)
+genericGD32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 

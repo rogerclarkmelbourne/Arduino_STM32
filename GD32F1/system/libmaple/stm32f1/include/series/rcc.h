@@ -93,7 +93,7 @@ typedef struct rcc_reg_map {
 #define RCC_CFGR_PLLSRC_BIT             16
 
 #define RCC_CFGR_MCO                    (0x3 << 24)
-#define RCC_CFGR_USBPRE                 (1U << RCC_CFGR_USBPRE_BIT)
+#define RCC_CFGR_USBPRE                 (0x3 << RCC_CFGR_USBPRE_BIT)
 #define RCC_CFGR_PLLMUL                 (0xF << 18)
 #define RCC_CFGR_PLLXTPRE               (1U << RCC_CFGR_PLLXTPRE_BIT)
 #define RCC_CFGR_PLLSRC                 (1U << RCC_CFGR_PLLSRC_BIT)
@@ -525,7 +525,28 @@ typedef enum rcc_ahb_divider {
 } rcc_ahb_divider;
 
 /**
- * @brief Start the low speed internal oscillatior
+ * @brief STM32F1 USB prescaler dividers
+ * @see rcc_set_prescaler()
+ */
+ /*
+ Set and reset by software to control the USB clock prescaler value. The USB clock
+must be 48MHz. These bits can’t be reset if the USB clock is enabled.
+00: (CK_PLL / 1.5) selected
+01: CK_PLL selected
+10: (CK_PLL / 2.5) selected
+11: (CK_PLL / 2) selected
+ */
+ 
+typedef enum rcc_usb_divider {
+    RCC_USB_SYSCLK_DIV_1 = 0x1 << 22,
+    RCC_USB_SYSCLK_DIV_1_5 = 0x0 << 22,
+    RCC_USB_SYSCLK_DIV_2 = 0x3 << 22,
+    RCC_USB_SYSCLK_DIV_2_5 = 0x2 << 22,
+} rcc_usb_divider;
+
+
+/**
+ * @brief Start the low speed internal oscillator
  */
 static inline void rcc_start_lsi(void) {
 	*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;

@@ -48,7 +48,18 @@
 // works for F103 performance line MCUs, which is all that LeafLabs
 // currently officially supports).
 #ifndef BOARD_RCC_PLLMUL
-#define BOARD_RCC_PLLMUL RCC_PLLMUL_10
+#if F_CPU==120000000
+	#define BOARD_RCC_PLLMUL RCC_PLLMUL_10
+#elif F_CPU==96000000
+	#define BOARD_RCC_PLLMUL RCC_PLLMUL_8
+#elif F_CPU==72000000
+	#define BOARD_RCC_PLLMUL RCC_PLLMUL_6
+
+// TEST FOR STM32	#define BOARD_RCC_PLLMUL RCC_PLLMUL_9
+
+	
+#endif
+
 //#define BOARD_RCC_PLLMUL RCC_PLLMUL_6
 #endif
 
@@ -68,6 +79,13 @@ namespace wirish {
             rcc_set_prescaler(RCC_PRESCALER_AHB, RCC_AHB_SYSCLK_DIV_1);
             rcc_set_prescaler(RCC_PRESCALER_APB1, RCC_APB1_HCLK_DIV_2);
             rcc_set_prescaler(RCC_PRESCALER_APB2, RCC_APB2_HCLK_DIV_1);
+			#if F_CPU == 120000000
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_2_5);
+			#elif F_CPU == 96000000
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_2);
+			#elif F_CPU == 72000000
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);
+			#endif
         }
 
         __weak void board_setup_gpio(void) {
@@ -77,13 +95,15 @@ namespace wirish {
         __weak void board_setup_usb(void) {
 #ifdef SERIAL_USB
 			
-#ifdef GENERIC_BOOTLOADER			
-			//Reset the USB interface on generic boards - developed by Victor PV
-			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_OUTPUT_PP);
-			gpio_write_bit(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit,0);
-			
-			for(volatile unsigned int i=0;i<512;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
-			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
+#ifdef GENERIC_BOOTLOADER	
+#define USB_RST_PIN PA12
+	
+				//Reset the USB interface on generic boards - developed by Victor PV
+				gpio_set_mode(PIN_MAP[USB_RST_PIN].gpio_device, PIN_MAP[USB_RST_PIN].gpio_bit, GPIO_OUTPUT_PP);
+				gpio_write_bit(PIN_MAP[USB_RST_PIN].gpio_device, PIN_MAP[USB_RST_PIN].gpio_bit,0);
+				
+				for(volatile unsigned int i=0;i<512;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
+				gpio_set_mode(PIN_MAP[USB_RST_PIN].gpio_device, PIN_MAP[USB_RST_PIN].gpio_bit, GPIO_INPUT_FLOATING);
 #endif			
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 #endif

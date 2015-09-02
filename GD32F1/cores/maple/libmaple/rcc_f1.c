@@ -104,7 +104,7 @@ void rcc_clk_init(rcc_sysclk_src sysclk_src,
     ASSERT(sysclk_src == RCC_CLKSRC_PLL &&
            pll_src    == RCC_PLLSRC_HSE);
 
-    RCC_BASE->CFGR = pll_src | pll_mul;
+    RCC_BASE->CFGR = pll_src | pll_mul | (0x3<<22);
 
     /* Turn on, and wait for, HSE. */
     rcc_turn_on_clk(RCC_CLK_HSE);
@@ -125,13 +125,13 @@ void rcc_configure_pll(rcc_pll_cfg *pll_cfg) {
     stm32f1_rcc_pll_data *data = pll_cfg->data;
     rcc_pll_multiplier pll_mul = data->pll_mul;
     uint32 cfgr;
-
     /* Check that the PLL is disabled. */
     ASSERT_FAULT(!rcc_is_clk_on(RCC_CLK_PLL));
 
     cfgr = RCC_BASE->CFGR;
     cfgr &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL);
-    cfgr |= pll_cfg->pllsrc | pll_mul;// | (0B10 << 22);
+    cfgr |= pll_cfg->pllsrc | pll_mul;
+
     RCC_BASE->CFGR = cfgr;
 }
 

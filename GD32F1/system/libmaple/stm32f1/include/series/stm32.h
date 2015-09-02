@@ -227,7 +227,13 @@ extern "C" {
 #    define STM32_PCLK2                     F_CPU
 #    endif
 #    ifndef STM32_DELAY_US_MULT
-#    define STM32_DELAY_US_MULT             40 /* FIXME: value is incorrect. */
+#if F_CPU == 120000000
+	#define STM32_DELAY_US_MULT             40 /* FIXME: value is incorrect. */
+#elif F_CPU == 96000000
+	#define STM32_DELAY_US_MULT             32 /* FIXME: value is incorrect. */
+#elif F_CPU == 72000000
+	#define STM32_DELAY_US_MULT             24 /* FIXME: value is incorrect. */
+#endif
 #    endif
 #elif STM32_F1_LINE == STM32_F1_LINE_VALUE        /* TODO */
 #    ifndef STM32_PCLK1
