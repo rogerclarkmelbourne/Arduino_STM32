@@ -1,0 +1,63 @@
+The USB submodule of libmaple is a separate piece of the codebase for
+reasons that are largely historical.
+
+Current Status:
+
+    There's only support for the USB device peripheral found on
+    STM32F103s.
+
+    We rely on the low level core library provided by ST to implement
+    the USB transfer protocol for control endpoint transfers.
+
+    The virtual com port (which is exposed via
+    <libmaple/usb_cdcacm.h>) serves two important purposes.
+
+    1) It allows serial data transfers between user sketches an a
+       host computer.
+
+    2) It allows the host PC to issue a system reset into the DFU
+       bootloader with the DTR + RTS + "1EAF" sequence (see
+       leaflabs.com/docs/bootloader.html for more information on
+       this).
+
+    After reset, Maple will run the DFU bootloader for a few seconds,
+    during which the user can begin a DFU upload operation (uploads
+    application binary into RAM/FLASH). Thus, without this virtual com
+    port, it would be necessary to find an alternative means to reset
+    the chip in order to enable the bootloader.
+
+    If you would like to develop your own USB application for whatever
+    reason (e.g. to use faster isochronous enpoints for streaming
+    audio, or implement the USB HID or Mass Storage specs), then
+    ensure that you leave some hook for resetting Maple remotely in
+    order to spin up the DFU bootloader.  Please make sure to get
+    yourself a unique vendor/product ID pair for your application, as
+    some operating systems will assign a host-side driver based on
+    these tags.
+
+    It would be possible to build a compound USB device, that
+    implements endpoints for both the virtual COM port as well as some
+    other components (mass storage etc.).  However, this turns out to
+    be a burden from the host driver side, as Windows and *nix handle
+    compound USB devices quite differently.
+
+    Be mindful that enabling the USB peripheral isn't "free." The
+    device must respond to periodic bus activity (every few
+    milliseconds) by servicing an ISR. Therefore, the USB application
+    should be disabled inside of timing critical applications.
+
+    In order to disconnect the device from the host, a USB_DISC pin is
+    asserted (e.g. on Maple, this is PC12). Alternatively, the NVIC
+    can be directly configured to disable the USB LP/HP IRQ's.
+
+    The files inside of usb_lib were provided by ST and are subject to
+    their own license, all other files were written by the LeafLabs
+    team and fall under the MIT license.
+
+TODO:
+
+    - Generic USB driver core with series-provided backends, like
+      libopencm3 has.
+    - Strip out ST code.
+    - Integration with a high level USB library (like LUFA/MyUSB) to
+      allow users to write custom USB applications.

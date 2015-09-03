@@ -62,7 +62,7 @@ void boardInit(void) {
 // PMAP_ROW() lets us specify a row (really a struct stm32_pin_info)
 // in the pin map. Its arguments are:
 //
-// - GPIO device for the pin (GPIOA, etc.)
+// - GPIO device for the pin (&gpioa, etc.)
 // - GPIO bit for the pin (0 through 15)
 // - Timer device, or NULL if none
 // - Timer channel (1 to 4, for PWM), or 0 if none
@@ -72,59 +72,59 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
 
-    PMAP_ROW(GPIOA,   3, TIMER2,  4, ADC1,    3), /* D0/PA3 */
-    PMAP_ROW(GPIOA,   2, TIMER2,  3, ADC1,    2), /* D1/PA2 */
-    PMAP_ROW(GPIOA,   0, TIMER2,  1, ADC1,    0), /* D2/PA0 */
-    PMAP_ROW(GPIOA,   1, TIMER2,  2, ADC1,    1), /* D3/PA1 */
-    PMAP_ROW(GPIOB,   5,   NULL,  0, NULL, ADCx), /* D4/PB5 */
-    PMAP_ROW(GPIOB,   6, TIMER4,  1, NULL, ADCx), /* D5/PB6 */
-    PMAP_ROW(GPIOA,   8, TIMER1,  1, NULL, ADCx), /* D6/PA8 */
-    PMAP_ROW(GPIOA,   9, TIMER1,  2, NULL, ADCx), /* D7/PA9 */
-    PMAP_ROW(GPIOA,  10, TIMER1,  3, NULL, ADCx), /* D8/PA10 */
-    PMAP_ROW(GPIOB,   7, TIMER4,  2, NULL, ADCx), /* D9/PB7 */
-    PMAP_ROW(GPIOA,   4,   NULL,  0, ADC1,    4), /* D10/PA4 */
-    PMAP_ROW(GPIOA,   7, TIMER3,  2, ADC1,    7), /* D11/PA7 */
-    PMAP_ROW(GPIOA,   6, TIMER3,  1, ADC1,    6), /* D12/PA6 */
-    PMAP_ROW(GPIOA,   5,   NULL,  0, ADC1,    5), /* D13/PA5 (LED) */
-    PMAP_ROW(GPIOB,   8, TIMER4,  3, NULL, ADCx), /* D14/PB8 */
+    PMAP_ROW(&gpioa,   3, &timer2,  4, &adc1,    3), /* D0/PA3 */
+    PMAP_ROW(&gpioa,   2, &timer2,  3, &adc1,    2), /* D1/PA2 */
+    PMAP_ROW(&gpioa,   0, &timer2,  1, &adc1,    0), /* D2/PA0 */
+    PMAP_ROW(&gpioa,   1, &timer2,  2, &adc1,    1), /* D3/PA1 */
+    PMAP_ROW(&gpiob,   5,   NULL,  0, NULL, ADCx), /* D4/PB5 */
+    PMAP_ROW(&gpiob,   6, &timer4,  1, NULL, ADCx), /* D5/PB6 */
+    PMAP_ROW(&gpioa,   8, &timer1,  1, NULL, ADCx), /* D6/PA8 */
+    PMAP_ROW(&gpioa,   9, &timer1,  2, NULL, ADCx), /* D7/PA9 */
+    PMAP_ROW(&gpioa,  10, &timer1,  3, NULL, ADCx), /* D8/PA10 */
+    PMAP_ROW(&gpiob,   7, &timer4,  2, NULL, ADCx), /* D9/PB7 */
+    PMAP_ROW(&gpioa,   4,   NULL,  0, &adc1,    4), /* D10/PA4 */
+    PMAP_ROW(&gpioa,   7, &timer3,  2, &adc1,    7), /* D11/PA7 */
+    PMAP_ROW(&gpioa,   6, &timer3,  1, &adc1,    6), /* D12/PA6 */
+    PMAP_ROW(&gpioa,   5,   NULL,  0, &adc1,    5), /* D13/PA5 (LED) */
+    PMAP_ROW(&gpiob,   8, &timer4,  3, NULL, ADCx), /* D14/PB8 */
 
     /* Little header */
 
-    PMAP_ROW(GPIOC,   0,   NULL,  0, ADC1,   10), /* D15/PC0 */
-    PMAP_ROW(GPIOC,   1,   NULL,  0, ADC1,   11), /* D16/PC1 */
-    PMAP_ROW(GPIOC,   2,   NULL,  0, ADC1,   12), /* D17/PC2 */
-    PMAP_ROW(GPIOC,   3,   NULL,  0, ADC1,   13), /* D18/PC3 */
-    PMAP_ROW(GPIOC,   4,   NULL,  0, ADC1,   14), /* D19/PC4 */
-    PMAP_ROW(GPIOC,   5,   NULL,  0, ADC1,   15), /* D20/PC5 */
+    PMAP_ROW(&gpioc,   0,   NULL,  0, &adc1,   10), /* D15/PC0 */
+    PMAP_ROW(&gpioc,   1,   NULL,  0, &adc1,   11), /* D16/PC1 */
+    PMAP_ROW(&gpioc,   2,   NULL,  0, &adc1,   12), /* D17/PC2 */
+    PMAP_ROW(&gpioc,   3,   NULL,  0, &adc1,   13), /* D18/PC3 */
+    PMAP_ROW(&gpioc,   4,   NULL,  0, &adc1,   14), /* D19/PC4 */
+    PMAP_ROW(&gpioc,   5,   NULL,  0, &adc1,   15), /* D20/PC5 */
 
     /* External header */
 
-    PMAP_ROW(GPIOC,  13,   NULL,  0, NULL, ADCx), /* D21/PC13 */
-    PMAP_ROW(GPIOC,  14,   NULL,  0, NULL, ADCx), /* D22/PC14 */
-    PMAP_ROW(GPIOC,  15,   NULL,  0, NULL, ADCx), /* D23/PC15 */
-    PMAP_ROW(GPIOB,   9, TIMER4,  4, NULL, ADCx), /* D24/PB9 */
-    PMAP_ROW(GPIOD,   2,   NULL,  0, NULL, ADCx), /* D25/PD2 */
-    PMAP_ROW(GPIOC,  10,   NULL,  0, NULL, ADCx), /* D26/PC10 */
-    PMAP_ROW(GPIOB,   0, TIMER3,  3, ADC1,    8), /* D27/PB0 */
-    PMAP_ROW(GPIOB,   1, TIMER3,  4, ADC1,    9), /* D28/PB1 */
-    PMAP_ROW(GPIOB,  10,   NULL,  0, NULL, ADCx), /* D29/PB10 */
-    PMAP_ROW(GPIOB,  11,   NULL,  0, NULL, ADCx), /* D30/PB11 */
-    PMAP_ROW(GPIOB,  12,   NULL,  0, NULL, ADCx), /* D31/PB12 */
-    PMAP_ROW(GPIOB,  13,   NULL,  0, NULL, ADCx), /* D32/PB13 */
-    PMAP_ROW(GPIOB,  14,   NULL,  0, NULL, ADCx), /* D33/PB14 */
-    PMAP_ROW(GPIOB,  15,   NULL,  0, NULL, ADCx), /* D34/PB15 */
-    PMAP_ROW(GPIOC,   6,   NULL,  0, NULL, ADCx), /* D35/PC6 */
-    PMAP_ROW(GPIOC,   7,   NULL,  0, NULL, ADCx), /* D36/PC7 */
-    PMAP_ROW(GPIOC,   8,   NULL,  0, NULL, ADCx), /* D37/PC8 */
-    PMAP_ROW(GPIOC,   9,   NULL,  0, NULL, ADCx), /* D38/PC9 (BUT) */
+    PMAP_ROW(&gpioc,  13,   NULL,  0, NULL, ADCx), /* D21/PC13 */
+    PMAP_ROW(&gpioc,  14,   NULL,  0, NULL, ADCx), /* D22/PC14 */
+    PMAP_ROW(&gpioc,  15,   NULL,  0, NULL, ADCx), /* D23/PC15 */
+    PMAP_ROW(&gpiob,   9, &timer4,  4, NULL, ADCx), /* D24/PB9 */
+    PMAP_ROW(&gpiod,   2,   NULL,  0, NULL, ADCx), /* D25/PD2 */
+    PMAP_ROW(&gpioc,  10,   NULL,  0, NULL, ADCx), /* D26/PC10 */
+    PMAP_ROW(&gpiob,   0, &timer3,  3, &adc1,    8), /* D27/PB0 */
+    PMAP_ROW(&gpiob,   1, &timer3,  4, &adc1,    9), /* D28/PB1 */
+    PMAP_ROW(&gpiob,  10,   NULL,  0, NULL, ADCx), /* D29/PB10 */
+    PMAP_ROW(&gpiob,  11,   NULL,  0, NULL, ADCx), /* D30/PB11 */
+    PMAP_ROW(&gpiob,  12,   NULL,  0, NULL, ADCx), /* D31/PB12 */
+    PMAP_ROW(&gpiob,  13,   NULL,  0, NULL, ADCx), /* D32/PB13 */
+    PMAP_ROW(&gpiob,  14,   NULL,  0, NULL, ADCx), /* D33/PB14 */
+    PMAP_ROW(&gpiob,  15,   NULL,  0, NULL, ADCx), /* D34/PB15 */
+    PMAP_ROW(&gpioc,   6,   NULL,  0, NULL, ADCx), /* D35/PC6 */
+    PMAP_ROW(&gpioc,   7,   NULL,  0, NULL, ADCx), /* D36/PC7 */
+    PMAP_ROW(&gpioc,   8,   NULL,  0, NULL, ADCx), /* D37/PC8 */
+    PMAP_ROW(&gpioc,   9,   NULL,  0, NULL, ADCx), /* D38/PC9 (BUT) */
 
     /* JTAG header */
 
-    PMAP_ROW(GPIOA,  13,   NULL,  0, NULL, ADCx), /* D39/PA13 */
-    PMAP_ROW(GPIOA,  14,   NULL,  0, NULL, ADCx), /* D40/PA14 */
-    PMAP_ROW(GPIOA,  15,   NULL,  0, NULL, ADCx), /* D41/PA15 */
-    PMAP_ROW(GPIOB,   3,   NULL,  0, NULL, ADCx), /* D42/PB3  */
-    PMAP_ROW(GPIOB,   4,   NULL,  0, NULL, ADCx), /* D43/PB4  */
+    PMAP_ROW(&gpioa,  13,   NULL,  0, NULL, ADCx), /* D39/PA13 */
+    PMAP_ROW(&gpioa,  14,   NULL,  0, NULL, ADCx), /* D40/PA14 */
+    PMAP_ROW(&gpioa,  15,   NULL,  0, NULL, ADCx), /* D41/PA15 */
+    PMAP_ROW(&gpiob,   3,   NULL,  0, NULL, ADCx), /* D42/PB3  */
+    PMAP_ROW(&gpiob,   4,   NULL,  0, NULL, ADCx), /* D43/PB4  */
 };
 
 // Array of pins you can use for pwmWrite(). Keep it in Flash because
