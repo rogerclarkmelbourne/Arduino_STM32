@@ -64,4 +64,11 @@ static inline void rcc_do_set_prescaler(const uint32 *masks,
     RCC_BASE->CFGR = cfgr;
 }
 
+static inline void rcc_do_clk_disable(__io uint32** enable_regs,
+                                     rcc_clk_id id) {
+    __io uint32 *enable_reg = enable_regs[rcc_dev_clk(id)];
+    uint8 line_num = rcc_dev_table[id].line_num;
+    bb_peri_set_bit(enable_reg, line_num, 0);
+}
+
 #endif

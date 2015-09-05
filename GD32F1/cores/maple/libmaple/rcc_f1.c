@@ -162,3 +162,12 @@ void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider) {
     };
     rcc_do_set_prescaler(masks, prescaler, divider);
 }
+
+void rcc_clk_disable(rcc_clk_id id) {
+    static __io uint32* enable_regs[] = {
+        [APB1] = &RCC_BASE->APB1ENR,
+        [APB2] = &RCC_BASE->APB2ENR,
+        [AHB] = &RCC_BASE->AHBENR,
+    };
+    rcc_do_clk_disable(enable_regs, id);
+}
