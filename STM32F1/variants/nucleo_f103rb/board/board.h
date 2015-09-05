@@ -34,7 +34,7 @@
 #define _BOARD_MAPLE_H_
 #define _BOARD_NUCLEOF103RB_ 1 // hack for HardwareSerial.cpp for a new order of serials
 #define CYCLES_PER_MICROSECOND  72
-#define SYSTICK_RELOAD_VAL     71999 /* takes a cycle to reload */
+#define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 /* Roger clark. Removed defines for LED pin and Button pin as they are not Arduino API defines */
 // Pin number for the built-in button

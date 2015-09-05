@@ -169,6 +169,12 @@ static inline void rcc_disable_css() {
     RCC_BASE->CR &= ~RCC_CR_CSSON;
 }
 
+/**
+ * @brief Turn off the clock line on a peripheral
+ * @param id Clock ID of the peripheral to turn on.
+ */
+extern void rcc_clk_disable(rcc_clk_id id);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
