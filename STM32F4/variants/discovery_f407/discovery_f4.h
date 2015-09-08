@@ -93,7 +93,7 @@
 #define BOARD_SPI3B_MISO_PIN     Port2Pin('C',11)
 #define BOARD_SPI3B_SCK_PIN      Port2Pin('C',10)
 
-#define BOARD_NR_GPIO_PINS      80
+#define BOARD_NR_GPIO_PINS      112
 #define BOARD_NR_PWM_PINS       22
 #define BOARD_NR_ADC_PINS       16
 #define BOARD_NR_USED_PINS      43 // ala42 not set yet
