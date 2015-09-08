@@ -174,7 +174,42 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     {GPIOE,   NULL, NULL, 12, 0, ADCx}, /* D76/PE12 */
     {GPIOE, TIMER1, NULL, 13, 3, ADCx}, /* D77/PE13 */  // remap in
     {GPIOE, TIMER1, NULL, 14, 4, ADCx}, /* D78/PE14 */  // remap in
-    {GPIOE,   NULL, NULL, 15, 0, ADCx}  /* D79/PE15 */
+    {GPIOE,   NULL, NULL, 15, 0, ADCx},  /* D79/PE15 */
+
+    {GPIOF,   NULL, NULL,  0, 0, ADCx}, /* D80/PF0  */
+    {GPIOF,   NULL, NULL,  1, 0, ADCx}, /* D81/PF1  */
+    {GPIOF,   NULL, NULL,  2, 0, ADCx}, /* D82/PF2  */
+    {GPIOF,   NULL, NULL,  3, 0, ADCx}, /* D83/PF3  */
+    {GPIOF,   NULL, NULL,  4, 0, ADCx}, /* D84/PF4  */
+    {GPIOF,   NULL, NULL,  5, 0, ADCx}, /* D85/PF5  */
+    {GPIOF,   NULL, NULL,  6, 0, ADCx}, /* D86/PF6  */
+    {GPIOF,   NULL, NULL,  7, 0, ADCx}, /* D87/PF7  */
+    {GPIOF,   NULL, NULL,  8, 0, ADCx}, /* D88/PF8  */
+    {GPIOF,   NULL, NULL,  9, 0, ADCx}, /* D89/PF9  */
+    {GPIOF,   NULL, NULL, 10, 0, ADCx}, /* D90/PF10 */
+    {GPIOF,   NULL, NULL, 11, 0, ADCx}, /* D91/PF11 */
+    {GPIOF,   NULL, NULL, 12, 0, ADCx}, /* D92/PF12 */
+    {GPIOF,   NULL, NULL, 13, 0, ADCx}, /* D93/PF13 */
+    {GPIOF,   NULL, NULL, 14, 0, ADCx}, /* D94/PF14 */
+    {GPIOF,   NULL, NULL, 15, 0, ADCx}, /* D95/PF15 */
+
+    {GPIOG,   NULL, NULL,  0, 0, ADCx}, /* D96/PG0  */
+    {GPIOG,   NULL, NULL,  1, 0, ADCx}, /* D97/PG1  */
+    {GPIOG,   NULL, NULL,  2, 0, ADCx}, /* D98/PG2  */
+    {GPIOG,   NULL, NULL,  3, 0, ADCx}, /* D99/PG3  */
+    {GPIOG,   NULL, NULL,  4, 0, ADCx}, /* D100/PG4  */
+    {GPIOG,   NULL, NULL,  5, 0, ADCx}, /* D101/PG5  */
+    {GPIOG,   NULL, NULL,  6, 0, ADCx}, /* D102/PG6  */
+    {GPIOG,   NULL, NULL,  7, 0, ADCx}, /* D103/PG7  */
+    {GPIOG,   NULL, NULL,  8, 0, ADCx}, /* D104/PG8  */
+    {GPIOG,   NULL, NULL,  9, 0, ADCx}, /* D105/PG9  */
+    {GPIOG,   NULL, NULL, 10, 0, ADCx}, /* D106/PG10 */
+    {GPIOG,   NULL, NULL, 11, 0, ADCx}, /* D107/PG11 */
+    {GPIOG,   NULL, NULL, 12, 0, ADCx}, /* D108/PG12 */
+    {GPIOG,   NULL, NULL, 13, 0, ADCx}, /* D109/PG13 */
+    {GPIOG,   NULL, NULL, 14, 0, ADCx}, /* D110/PG14 */
+    {GPIOG,   NULL, NULL, 15, 0, ADCx}  /* D111/PG15 */
+
 };
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
