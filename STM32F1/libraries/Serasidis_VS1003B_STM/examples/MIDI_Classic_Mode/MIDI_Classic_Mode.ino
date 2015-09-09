@@ -1414,15 +1414,13 @@ static const unsigned char Bubble_Bobble_MIDI[] = {
   0x1F, 0x00, 0x00, 0x20, 0x64, 0x81, 0x40, 0x20, 0x00, 0x01, 0xFF, 0x2F
 };
 
-VS1003 player(PC14, PB10, PA8, PA9); // cs_pin, dcs_pin, dreq_pin, reset_pin, SPI channel - defaults to SPI
+//Un-comment the line with the SPI port you want to use. Default is SPI1 port.
+SPIClass spiVS(1); //Create an SPI instance on SPI1 port.
+//SPIClass spi(2); //Create an SPI instance on SPI2 port.
+//SPIClass spi(3); //Create an SPI instance on SPI3 port.
 
-//* Example of how to use the VS21003 attached to SPI 2 
-//VS1003 player(PC14, PB10, PA8, PA9,SPIClass(2)); // cs_pin, dcs_pin, dreq_pin, reset_pin, use SPI 2
+VS1003 player(PC14, PB10, PA8, PA9, spiVS); // cs_pin, dcs_pin, dreq_pin, reset_pin, SPI channel - defaults to SPI
 
-
-/* Example of how to use the VS21003 attached to SPI 2 
-VS1003 player(PC14, PB10, PA8, PA9,SPIClass(3)); // cs_pin, dcs_pin, dreq_pin, reset_pin, use SPI 3
-*/
 void setup () {
     SPI.begin();            // initiate SPI
     Serial.begin(9600);     // initiate a serial port at 9600
