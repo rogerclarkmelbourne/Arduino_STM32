@@ -569,6 +569,8 @@ typedef enum timer_mode {
     /* TIMER_ONE_PULSE, TODO: In this mode, the timer can generate a single
      *                        pulse on a GPIO pin for a specified amount of
      *                        time. */
+     
+     TIMER_ENCODER,  //CARLOS Change
 } timer_mode;
 
 /** Timer channel numbers */
@@ -619,6 +621,11 @@ void timer_attach_interrupt(timer_dev *dev,
                             uint8 interrupt,
                             voidFuncPtr handler);
 void timer_detach_interrupt(timer_dev *dev, uint8 interrupt);
+
+//CARLOS 
+uint8 get_direction(timer_dev *dev);
+
+
 
 /**
  * Initialize all timer devices on the chip.
