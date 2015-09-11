@@ -1,0 +1,4 @@
+SUBSYSTEM=="usb", ATTRS{idProduct}=="1001", ATTRS{idVendor}=="0110", MODE="0666", GROUP="uucp"
+SUBSYSTEM=="usb", ATTRS{idProduct}=="1002", ATTRS{idVendor}=="0110", MODE="0666", GROUP="uucp"
+SUBSYSTEM=="usb", ATTRS{idProduct}=="0003", ATTRS{idVendor}=="1eaf", MODE="0666", GROUP="uucp" SYMLINK+="maple"
+SUBSYSTEM=="usb", ATTRS{idProduct}=="0004", ATTRS{idVendor}=="1eaf", MODE="0666", GROUP="uucp" SYMLINK+="maple"
