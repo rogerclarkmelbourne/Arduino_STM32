@@ -53,7 +53,7 @@
 #define ENACKTRNS 3        /* received nack on transmit of data */
 #define EOTHER    4        /* other error */
 
-class WireBase { // Abstraction is awesome!
+class TwoWire { // Abstraction is awesome!
 protected:
     i2c_msg itc_msg;
     uint8 rx_buf[WIRE_BUFSIZ];      /* receive buffer */
@@ -67,8 +67,8 @@ protected:
     // Force derived classes to define process function
     virtual uint8 process() = 0;
 public:
-    WireBase() {}
-    ~WireBase() {}
+    TwoWire() {}
+    ~TwoWire() {}
 
     /*
      * Initialises the class interface

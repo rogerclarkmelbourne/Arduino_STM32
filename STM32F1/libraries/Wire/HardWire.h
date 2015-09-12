@@ -43,7 +43,7 @@
 #include "wirish.h"
 #include <libmaple/i2c.h>
 
-class HardWire : public WireBase {
+class HardWire : public TwoWire {
 private:
     i2c_dev* sel_hard;
     uint8    dev_flags;
