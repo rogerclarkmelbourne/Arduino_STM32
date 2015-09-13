@@ -363,6 +363,7 @@ public:
     uint8 recv(void);
 	
 private:
+    void configure();
 /*
 	static inline void DMA1_CH3_Event() {
 		dma1_ch3_Active = 0;
@@ -374,7 +375,7 @@ private:
 */	
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
-	
+    bool _bIsMaster;
 	/*
 	spi_dev *spi_d;
 	uint8_t _SSPin;
