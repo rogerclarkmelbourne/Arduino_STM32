@@ -42,7 +42,7 @@ Idle task stack size(word).
 /*!< 
 System frequency (Hz).	                 	         
 */    
-#define CFG_CPU_FREQ            (72000000)  
+#define CFG_CPU_FREQ            (F_CPU)  
 
 /*!< 
 systick frequency (Hz).	                         

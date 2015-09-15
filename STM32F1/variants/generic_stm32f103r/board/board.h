@@ -39,7 +39,7 @@
  * high-density board. */
 
 #define CYCLES_PER_MICROSECOND  72
-#define SYSTICK_RELOAD_VAL      71999 /* takes a cycle to reload */
+#define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 // USARTS
 #define BOARD_NR_USARTS         5
