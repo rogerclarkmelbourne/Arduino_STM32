@@ -51,7 +51,7 @@
  * - always start with i2c_delay rather than end
  */
 
-void TwoWire::set_scl(bool state) {
+void SoftWire::set_scl(bool state) {
     I2C_DELAY(this->i2c_delay);
     digitalWrite(this->scl_pin,state);
     //Allow for clock stretching - dangerous currently
@@ -60,23 +60,23 @@ void TwoWire::set_scl(bool state) {
     }
 }
 
-void TwoWire::set_sda(bool state) {
-	I2C_DELAY(this->i2c_delay);
+void SoftWire::set_sda(bool state) {
+    I2C_DELAY(this->i2c_delay);
     digitalWrite(this->sda_pin, state);
 }
 
-void TwoWire::i2c_start() {
+void SoftWire::i2c_start() {
     set_sda(LOW);
     set_scl(LOW);
 }
 
-void TwoWire::i2c_stop() {
+void SoftWire::i2c_stop() {
     set_sda(LOW);
     set_scl(HIGH);
     set_sda(HIGH);
 }
 
-bool TwoWire::i2c_get_ack() {
+bool SoftWire::i2c_get_ack() {
     set_scl(LOW);
     set_sda(HIGH);
     set_scl(HIGH);
@@ -86,19 +86,19 @@ bool TwoWire::i2c_get_ack() {
     return ret;
 }
 
-void TwoWire::i2c_send_ack() {
+void SoftWire::i2c_send_ack() {
     set_sda(LOW);
     set_scl(HIGH);
     set_scl(LOW);
 }
 
-void TwoWire::i2c_send_nack() {
+void SoftWire::i2c_send_nack() {
     set_sda(HIGH);
     set_scl(HIGH);
     set_scl(LOW);
 }
 
-uint8 TwoWire::i2c_shift_in() {
+uint8 SoftWire::i2c_shift_in() {
     uint8 data = 0;
     set_sda(HIGH);
 
@@ -112,7 +112,7 @@ uint8 TwoWire::i2c_shift_in() {
     return data;
 }
 
-void TwoWire::i2c_shift_out(uint8 val) {
+void SoftWire::i2c_shift_out(uint8 val) {
     int i;
     for (i = 0; i < 8; i++) {
         set_sda(!!(val & (1 << (7 - i)) ) );
@@ -121,7 +121,7 @@ void TwoWire::i2c_shift_out(uint8 val) {
     }
 }
 
-uint8 TwoWire::process() {
+uint8 SoftWire::process() {
     itc_msg.xferred = 0;
 
     uint8 sla_addr = (itc_msg.addr << 1);
@@ -131,21 +131,21 @@ uint8 TwoWire::process() {
     i2c_start();
     // shift out the address we're transmitting to
     i2c_shift_out(sla_addr);
-    if (!i2c_get_ack()) 
-	{
-		i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
+    if (!i2c_get_ack())
+    {
+        i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
         return ENACKADDR;
     }
     // Recieving
     if (itc_msg.flags == I2C_MSG_READ) {
         while (itc_msg.xferred < itc_msg.length) {
             itc_msg.data[itc_msg.xferred++] = i2c_shift_in();
-            if (itc_msg.xferred < itc_msg.length) 
-			{
+            if (itc_msg.xferred < itc_msg.length)
+            {
                 i2c_send_ack();
-            } 
-			else 
-			{
+            }
+            else
+            {
                 i2c_send_nack();
             }
         }
@@ -154,9 +154,9 @@ uint8 TwoWire::process() {
     else {
         for (uint8 i = 0; i < itc_msg.length; i++) {
             i2c_shift_out(itc_msg.data[i]);
-            if (!i2c_get_ack()) 
-			{
-				i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
+            if (!i2c_get_ack())
+            {
+                i2c_stop();// Roger Clark. 20141110 added to set clock high again, as it will be left in a low state otherwise
                 return ENACKTRNS;
             }
             itc_msg.xferred++;
@@ -168,12 +168,12 @@ uint8 TwoWire::process() {
 
 // TODO: Add in Error Handling if pins is out of range for other Maples
 // TODO: Make delays more capable
-TwoWire::TwoWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
+SoftWire::SoftWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
     this->scl_pin=scl;
     this->sda_pin=sda;
 }
 
-void TwoWire::begin(uint8 self_addr) {
+void SoftWire::begin(uint8 self_addr) {
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
@@ -184,11 +184,11 @@ void TwoWire::begin(uint8 self_addr) {
     set_sda(HIGH);
 }
 
-TwoWire::~TwoWire() {
+SoftWire::~SoftWire() {
     this->scl_pin=0;
     this->sda_pin=0;
 }
 
 // Declare the instance that the users of the library can use
 //TwoWire Wire(SCL, SDA, SOFT_STANDARD);
-TwoWire Wire(PB6, PB7, SOFT_STANDARD);
+SoftWire Wire(PB6, PB7, SOFT_STANDARD);

@@ -41,25 +41,25 @@
 #include "WireBase.h"
 #include "wirish.h"
 
-void WireBase::begin(uint8 self_addr) {
+void TwoWire::begin(uint8 self_addr) {
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
     rx_buf_len = 0;
 }
 
-void WireBase::beginTransmission(uint8 slave_address) {
+void TwoWire::beginTransmission(uint8 slave_address) {
     itc_msg.addr = slave_address;
     itc_msg.data = &tx_buf[tx_buf_idx];
     itc_msg.length = 0;
     itc_msg.flags = 0;
 }
 
-void WireBase::beginTransmission(int slave_address) {
+void TwoWire::beginTransmission(int slave_address) {
     beginTransmission((uint8)slave_address);
 }
 
-uint8 WireBase::endTransmission(void) {
+uint8 TwoWire::endTransmission(void) {
     uint8 retVal;
     if (tx_buf_overflow) {
         return EDATA;
@@ -73,7 +73,7 @@ uint8 WireBase::endTransmission(void) {
 //TODO: Add the ability to queue messages (adding a boolean to end of function
 // call, allows for the Arduino style to stay while also giving the flexibility
 // to bulk send
-uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
+uint8 TwoWire::requestFrom(uint8 address, int num_bytes) {
     if (num_bytes > WIRE_BUFSIZ) {
         num_bytes = WIRE_BUFSIZ;
     }
@@ -87,46 +87,53 @@ uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
     return rx_buf_len;
 }
 
-uint8 WireBase::requestFrom(int address, int numBytes) {
-    return WireBase::requestFrom((uint8)address, numBytes);
+uint8 TwoWire::requestFrom(int address, int numBytes) {
+    return TwoWire::requestFrom((uint8)address, numBytes);
 }
 
-void WireBase::write(uint8 value) {
+bool TwoWire::write(uint8 value) {
     if (tx_buf_idx == WIRE_BUFSIZ) {
         tx_buf_overflow = true;
-        return;
+        return false;
     }
     tx_buf[tx_buf_idx++] = value;
     itc_msg.length++;
+    return true;
 }
 
-void WireBase::write(uint8* buf, int len) {
+bool TwoWire::write(uint8* buf, int len) {
     for (uint8 i = 0; i < len; i++) {
-        write(buf[i]);
+        if(!write(buf[i])) {
+            return false;
+        }
     }
+    return true;
 }
 
-void WireBase::write(int value) {
-    write((uint8)value);
+bool TwoWire::write(int value) {
+    return write((uint8)value);
 }
 
-void WireBase::write(int* buf, int len) {
-    write((uint8*)buf, (uint8)len);
+bool TwoWire::write(int* buf, int len) {
+    return write((uint8*)buf, (uint8)len);
 }
 
-void WireBase::write(char* buf) {
+bool TwoWire::write(char* buf) {
     uint8 *ptr = (uint8*)buf;
     while (*ptr) {
-        write(*ptr);
+        if(!write(*ptr)){
+            return false;
+        }
         ptr++;
     }
+    return true;
 }
 
-uint8 WireBase::available() {
+uint8 TwoWire::available() {
     return rx_buf_len - rx_buf_idx;
 }
 
-uint8 WireBase::read() {
+uint8 TwoWire::read() {
     if (rx_buf_idx == rx_buf_len) {
         rx_buf_idx = 0;
         rx_buf_len = 0;
