@@ -27,7 +27,7 @@ discovery_f407.build.vect=VECT_TAB_BASE
 discovery_f407.build.density=STM32_HIGH_DENSITY
 discovery_f407.build.error_led_port=GPIOD
 discovery_f407.build.error_led_pin=14
-#discovery_f407.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+discovery_f407.build.board=STM32DiscoveryF407
 
 ##############################################################
 stm32f4stamp.name=STM32F4Stamp F405
@@ -57,7 +57,7 @@ stm32f4stamp.build.vect=VECT_TAB_BASE
 stm32f4stamp.build.density=STM32_HIGH_DENSITY
 stm32f4stamp.build.error_led_port=GPIOD
 stm32f4stamp.build.error_led_pin=14
-#stm32f4stamp.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+stm32f4stamp.build.board=STM32F4StampF405
 
 ##############################################################
 netduino2plus.name=Netduino2 F405
@@ -87,7 +87,7 @@ netduino2plus.build.vect=VECT_TAB_BASE
 netduino2plus.build.density=STM32_HIGH_DENSITY
 netduino2plus.build.error_led_port=GPIOD
 netduino2plus.build.error_led_pin=14
-#netduino2plus.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+netduino2plus.build.board=Netduino2F405
 
 ##############################################################
 
