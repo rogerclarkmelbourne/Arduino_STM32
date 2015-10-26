@@ -322,7 +322,11 @@ void SPIClass::write(uint16 data) {
   
 	spi_tx_reg(_currentSetting->spi_d, data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+	// taken from SdSpiSTM32F1.cpp - Victor's lib, and adapted to support device selection
+	if (spi_is_rx_nonempty(_currentSetting->spi_d)) {
+		uint8_t b = spi_rx_reg(_currentSetting->spi_d);
+	}
 }
 
 //void SPIClass::write(uint8 byte) {
