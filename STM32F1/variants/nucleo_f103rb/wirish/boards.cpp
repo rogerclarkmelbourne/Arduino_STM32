@@ -122,9 +122,9 @@ static void setup_clocks(void) {
     RCC_BASE->CIR = 0x00000000;
 
     // Enable HSE, and wait until it's ready.
-    rcc_turn_on_clk(RCC_CLK_HSE);
-    while (!rcc_is_clk_ready(RCC_CLK_HSE))
-        ;
+    //rcc_turn_on_clk(RCC_CLK_HSE);
+    //while (!rcc_is_clk_ready(RCC_CLK_HSE))
+    //    ;
 
     // Configure AHBx, APBx, etc. prescalers and the main PLL.
     wirish::priv::board_setup_clock_prescalers();
