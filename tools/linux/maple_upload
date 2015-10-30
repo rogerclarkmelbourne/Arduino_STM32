@@ -17,7 +17,7 @@ fi
 
 
 # Get the directory where the script is running.
-DIR=$(dirname "$(readlink -f "$0")")
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 #  ----------------- IMPORTANT -----------------
 # The 2nd parameter to upload-reset is the delay after resetting before it exits
