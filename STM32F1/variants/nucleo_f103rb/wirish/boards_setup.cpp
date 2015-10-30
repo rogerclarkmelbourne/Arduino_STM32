@@ -48,15 +48,27 @@
 // works for F103 performance line MCUs, which is all that LeafLabs
 // currently officially supports).
 #ifndef BOARD_RCC_PLLMUL
+#ifdef NUCLEO_HSE_CRYSTAL
+// with crystal, run at 9x8, i.e. 72 MHz
 #define BOARD_RCC_PLLMUL RCC_PLLMUL_9
+#else
+// without crystal, run at 12x8/2, i.e. 48 MHz (max would be 64)
+// only 48 & 72 support USB, but without crystal the clock is not stable enough
+#define BOARD_RCC_PLLMUL RCC_PLLMUL_12
+#endif
 #endif
 
 namespace wirish {
     namespace priv {
 
         static stm32f1_rcc_pll_data pll_data = {BOARD_RCC_PLLMUL};
+#ifdef NUCLEO_HSE_CRYSTAL
         __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSE, &pll_data};
         __weak adc_prescaler w_adc_pre = ADC_PRE_PCLK2_DIV_6;
+#else
+        __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSI_DIV_2, &pll_data};
+        __weak adc_prescaler w_adc_pre = ADC_PRE_PCLK2_DIV_4;
+#endif
         __weak adc_smp_rate w_adc_smp = ADC_SMPR_55_5;
 
         __weak void board_reset_pll(void) {
@@ -71,7 +83,7 @@ namespace wirish {
 			#if F_CPU == 72000000
 			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);
 			#elif F_CPU == 48000000
-			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);			
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1);			
 			#endif	
         }
 
