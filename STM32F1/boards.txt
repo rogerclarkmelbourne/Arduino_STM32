@@ -130,7 +130,7 @@ nucleo_f103rb.upload.altID=1
 nucleo_f103rb.upload.auto_reset=true
 
 nucleo_f103rb.build.mcu=cortex-m3
-nucleo_f103rb.build.f_cpu=72000000L
+nucleo_f103rb.build.f_cpu=48000000L
 nucleo_f103rb.build.board=STM_NUCLEU_F103RB
 nucleo_f103rb.build.core=maple
 nucleo_f103rb.build.extra_flags=-DMCU_STM32F103RB -mthumb    -march=armv7-m  -D__STM32F1__ 
@@ -143,6 +143,37 @@ nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 nucleo_f103rb.build.vect=VECT_TAB_ADDR=0x8000000
+
+##############################################################
+nucleo_f103rb_hse.name=STM Nucleo F103RB w/ crystal (STLink)
+
+nucleo_f103rb_hse.upload.tool=stlink_upload
+nucleo_f103rb_hse.upload.protocol=maple_dfu
+nucleo_f103rb_hse.upload.maximum_size=108000
+nucleo_f103rb_hse.upload.use_1200bps_touch=false
+nucleo_f103rb_hse.upload.file_type=bin
+nucleo_f103rb_hse.upload.ram.maximum_size=17000
+nucleo_f103rb_hse.upload.flash.maximum_size=108000
+nucleo_f103rb_hse.upload.params.quiet=no
+
+nucleo_f103rb_hse.upload.usbID=1EAF:0003
+nucleo_f103rb_hse.upload.altID=1
+nucleo_f103rb_hse.upload.auto_reset=true
+
+nucleo_f103rb_hse.build.mcu=cortex-m3
+nucleo_f103rb_hse.build.f_cpu=72000000L
+nucleo_f103rb_hse.build.board=STM_NUCLEU_F103RB
+nucleo_f103rb_hse.build.core=maple
+nucleo_f103rb_hse.build.extra_flags=-DNUCLEO_HSE_CRYSTAL -DMCU_STM32F103RB -mthumb    -march=armv7-m  -D__STM32F1__ 
+nucleo_f103rb_hse.build.ldscript=ld/jtag.ld
+nucleo_f103rb_hse.build.variant=nucleo_f103rb
+nucleo_f103rb_hse.build.variant_system_lib=libmaple.a
+nucleo_f103rb_hse.build.vect=VECT_TAB_FLASH
+nucleo_f103rb_hse.build.density=STM32_MEDIUM_DENSITY
+nucleo_f103rb_hse.build.error_led_port=GPIOB
+nucleo_f103rb_hse.build.error_led_pin=1
+nucleo_f103rb_hse.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+nucleo_f103rb_hse.build.vect=VECT_TAB_ADDR=0x8000000
 
 ###################### Generic STM32F103C  ########################################
 
