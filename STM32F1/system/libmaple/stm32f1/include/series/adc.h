@@ -78,7 +78,7 @@ extern const struct adc_dev *ADC3;
 #define ADC_CR2_EXTTRIG_BIT             20
 #define ADC_CR2_JSWSTART_BIT            21
 #define ADC_CR2_SWSTART_BIT             22
-#define ADC_CR2_TSEREFE_BIT             23
+#define ADC_CR2_TSVREFE_BIT             23
 
 #define ADC_CR2_ADON                    (1U << ADC_CR2_ADON_BIT)
 #define ADC_CR2_CONT                    (1U << ADC_CR2_CONT_BIT)
@@ -92,7 +92,7 @@ extern const struct adc_dev *ADC3;
 #define ADC_CR2_EXTTRIG                 (1U << ADC_CR2_EXTTRIG_BIT)
 #define ADC_CR2_JSWSTART                (1U << ADC_CR2_JSWSTART_BIT)
 #define ADC_CR2_SWSTART                 (1U << ADC_CR2_SWSTART_BIT)
-#define ADC_CR2_TSEREFE                 (1U << ADC_CR2_TSEREFE_BIT)
+#define ADC_CR2_TSVREFE                 (1U << ADC_CR2_TSVREFE_BIT)
 
 /*
  * Other types
