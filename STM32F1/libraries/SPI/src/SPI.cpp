@@ -141,16 +141,19 @@ SPIClass::SPIClass(uint32 spi_num) {
 /*
  * Set up/tear down
  */
-
-void SPIClass::begin(void) {
-	
-    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
-    spi_init(_currentSetting->spi_d);
-    configure_gpios(_currentSetting->spi_d, 1);
+void SPIClass::updateSettings(void) {
+	uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
 	#ifdef SPI_DEBUG
 	Serial.print("spi_master_enable("); Serial.print(_currentSetting->clockDivider); Serial.print(","); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
-    spi_master_enable(_currentSetting->spi_d, (spi_baud_rate)_currentSetting->clockDivider, (spi_mode)_currentSetting->dataMode, flags);
+	spi_master_enable(_currentSetting->spi_d, (spi_baud_rate)_currentSetting->clockDivider, (spi_mode)_currentSetting->dataMode, flags);
+}
+
+void SPIClass::begin(void) {
+	
+    spi_init(_currentSetting->spi_d);
+    configure_gpios(_currentSetting->spi_d, 1);
+    updateSettings();
 }
 
 void SPIClass::beginSlave(void) {
@@ -192,7 +195,7 @@ void SPIClass::setClockDivider(uint32_t clockDivider)
 	Serial.print("Clock divider set to "); Serial.println(clockDivider);
 	#endif
 	_currentSetting->clockDivider = clockDivider;
-	this->begin();
+	updateSettings();
 }
 
 void SPIClass::setBitOrder(BitOrder bitOrder)
@@ -201,7 +204,7 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 	Serial.print("Bit order set to "); Serial.println(bitOrder);
 	#endif
 	_currentSetting->bitOrder = bitOrder;
-	this->begin();
+	updateSettings();
 }
 
 /*	Victor Perez. Added to test changing datasize from 8 to 16 bit modes on the fly.
@@ -250,8 +253,8 @@ If someone finds this is not the case or sees a logic error with this let me kno
 	Serial.print("Data mode set to "); Serial.println(dataMode);
 	#endif
 	_currentSetting->dataMode = dataMode;
-	this->begin();
-}	
+	updateSettings();
+}
 
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
@@ -266,7 +269,6 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	setDataMode(settings.dataMode);
 	setClockDivider(determine_baud_rate(_currentSetting->spi_d, settings.clock));
 	begin();
-
 }
 
 void SPIClass::endTransaction(void)
@@ -346,13 +348,16 @@ void SPIClass::write(const uint8 *data, uint32 length) {
     }
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "4. After writing the last data item into the SPI_DR register, wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
+	// taken from SdSpiSTM32F1.cpp - Victor's lib, and adapted to support device selection
+	if (spi_is_rx_nonempty(_currentSetting->spi_d)) {
+		uint8_t b = spi_rx_reg(_currentSetting->spi_d);
+	}
 }
 
 uint8 SPIClass::transfer(uint8 byte) const {
-	uint8 b;
 	spi_tx_reg(_currentSetting->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
   	while (spi_is_rx_nonempty(_currentSetting->spi_d) == 0); // "4. Wait until RXNE=1 ..."
-  	b = spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
+  	uint8 b = spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
   	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
   	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
     return b;

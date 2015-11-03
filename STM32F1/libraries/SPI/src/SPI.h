@@ -375,6 +375,7 @@ private:
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
 	
+	void updateSettings(void);
 	/*
 	spi_dev *spi_d;
 	uint8_t _SSPin;
