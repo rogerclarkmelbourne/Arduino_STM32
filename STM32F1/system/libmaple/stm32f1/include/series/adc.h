@@ -86,6 +86,7 @@ extern const struct adc_dev *ADC3;
 #define ADC_CR2_RSTCAL                  (1U << ADC_CR2_RSTCAL_BIT)
 #define ADC_CR2_DMA                     (1U << ADC_CR2_DMA_BIT)
 #define ADC_CR2_ALIGN                   (1U << ADC_CR2_ALIGN_BIT)
+#define ADC_CR2_JEXTSEL                 0x7000
 #define ADC_CR2_JEXTSEL_TIM1_TRGO       (0x0 << 12)
 #define ADC_CR2_JEXTSEL_TIM1_CC4        (0x1 << 12)
 #define ADC_CR2_JEXTSEL_TIM2_TRGO       (0x2 << 12)
@@ -95,6 +96,7 @@ extern const struct adc_dev *ADC3;
 #define ADC_CR2_JEXTSEL_EXTI15          (0x6 << 12)
 #define ADC_CR2_JEXTSEL_JSWSTART        (0x7 << 12)
 #define ADC_CR2_JEXTTRIG                (1U << ADC_CR2_JEXTTRIG_BIT)
+#define ADC_CR2_EXTSEL                  0xE0000
 #define ADC_CR2_EXTSEL_TIM1_CC1         (0x0 << 17)
 #define ADC_CR2_EXTSEL_TIM1_CC2         (0x1 << 17)
 #define ADC_CR2_EXTSEL_TIM1_CC3         (0x2 << 17)
