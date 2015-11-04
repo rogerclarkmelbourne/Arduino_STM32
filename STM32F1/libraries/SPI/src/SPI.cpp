@@ -348,10 +348,10 @@ void SPIClass::write(const uint8 *data, uint32 length) {
     }
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "4. After writing the last data item into the SPI_DR register, wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... then wait until BSY=0, this indicates that the transmission of the last data is complete."
--	// taken from SdSpiSTM32F1.cpp - Victor's lib, and adapted to support device selection
--	if (spi_is_rx_nonempty(_currentSetting->spi_d)) {
--		uint8_t b = spi_rx_reg(_currentSetting->spi_d);
--	}
+	// taken from SdSpiSTM32F1.cpp - Victor's lib, and adapted to support device selection
+	if (spi_is_rx_nonempty(_currentSetting->spi_d)) {
+		uint8_t b = spi_rx_reg(_currentSetting->spi_d);
+	}
 }
 
 uint8 SPIClass::transfer(uint8 byte) const {
