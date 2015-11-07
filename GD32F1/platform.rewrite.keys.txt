@@ -1,2 +1,0 @@
-old.0.compiler.path={runtime.ide.path}/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/bin/
-new.0.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
