@@ -125,7 +125,7 @@ nucleo_f103rb.upload.altID=1
 nucleo_f103rb.upload.auto_reset=true
 
 nucleo_f103rb.build.mcu=cortex-m3
-nucleo_f103rb.build.board=STM_NUCLEU_F103RB
+nucleo_f103rb.build.board=STM_NUCLEO_F103RB
 nucleo_f103rb.build.core=maple
 nucleo_f103rb.build.ldscript=ld/jtag.ld
 nucleo_f103rb.build.variant=nucleo_f103rb
