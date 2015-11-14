@@ -193,12 +193,12 @@ genericSTM32F103C.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103C.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 genericSTM32F103C.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 ########################### Generic STM32F103R ###########################
 
@@ -261,12 +261,12 @@ genericSTM32F103R.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103R.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103R.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103R.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103R.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103R.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 genericSTM32F103R.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 ###################### Generic STM32F103T ########################################
 
@@ -313,12 +313,12 @@ genericSTM32F103T.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103T.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103T.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103T.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103T.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103T.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 genericSTM32F103T.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-genericSTM32F103T.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+genericSTM32F103T.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 ########################### Generic STM32F103V ###########################
 
@@ -373,12 +373,12 @@ genericSTM32F103V.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103V.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103V.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103V.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103V.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103V.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 genericSTM32F103V.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 ########################### Generic STM32F103Z ###########################
 
@@ -430,9 +430,9 @@ genericSTM32F103Z.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103Z.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.protocol=STLink
 genericSTM32F103Z.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103Z.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
 
 genericSTM32F103Z.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG -DSERIAL_USB -DGENERIC_BOOTLOADER
