@@ -27,7 +27,7 @@ discovery_f3.build.vect=VECT_TAB_BASE
 discovery_f3.build.density=STM32_XL_DENSITY
 discovery_f3.build.error_led_port=GPIOE
 discovery_f3.build.error_led_pin=8
-#discovery_f407.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+discovery_f3.build.board=STM32F3Discovery
 
 ##############################################################
 

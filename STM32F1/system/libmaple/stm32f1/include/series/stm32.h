@@ -221,13 +221,13 @@ extern "C" {
 
 #if STM32_F1_LINE == STM32_F1_LINE_PERFORMANCE
 #    ifndef STM32_PCLK1
-#    define STM32_PCLK1                     36000000U
+#    define STM32_PCLK1                     F_CPU/2
 #    endif
 #    ifndef STM32_PCLK2
-#    define STM32_PCLK2                     72000000U
+#    define STM32_PCLK2                     F_CPU
 #    endif
 #    ifndef STM32_DELAY_US_MULT
-#    define STM32_DELAY_US_MULT             12 /* FIXME: value is incorrect. */
+#		define STM32_DELAY_US_MULT 				(F_CPU / 6000000L)
 #    endif
 #elif STM32_F1_LINE == STM32_F1_LINE_VALUE        /* TODO */
 #    ifndef STM32_PCLK1

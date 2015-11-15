@@ -55,61 +55,61 @@ void boardInit(void) {
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 
-    {GPIOA, TIMER2, ADC1,  0, 1,    0}, /* PA0 */
-    {GPIOA, TIMER2, ADC1,  1, 2,    1}, /* PA1 */
-    {GPIOA, TIMER2, ADC1,  2, 3,    2}, /* PA2 */	
-    {GPIOA, TIMER2, ADC1,  3, 4,    3}, /* PA3 */
-    {GPIOA,   NULL, ADC1,  4, 0,    4}, /* PA4 */
-    {GPIOA,   NULL, ADC1,  5, 0,    5}, /* PA5 */
-    {GPIOA, TIMER3, ADC1,  6, 1,    6}, /* PA6 */
-    {GPIOA, TIMER3, ADC1,  7, 2,    7}, /* PA7 */
-    {GPIOA, TIMER1, NULL,  8, 1, ADCx}, /* PA8 */	
-    {GPIOA, TIMER1, NULL,  9, 2, ADCx}, /* PA9 */	
-    {GPIOA, TIMER1, NULL, 10, 3, ADCx}, /* PA10 */
-    {GPIOA, TIMER1, NULL, 11, 4, ADCx}, /* PA11 */
-    {GPIOA,   NULL, NULL, 12, 0, ADCx}, /* PA12 */	
-    {GPIOA,   NULL, NULL, 13, 0, ADCx}, /* PA13 */	
-    {GPIOA,   NULL, NULL, 14, 0, ADCx}, /* PA14 */
-    {GPIOA,   NULL, NULL, 15, 0, ADCx}, /* PA15 */
+    {&gpioa, &timer2, &adc1,  0, 1,    0}, /* PA0 */
+    {&gpioa, &timer2, &adc1,  1, 2,    1}, /* PA1 */
+    {&gpioa, &timer2, &adc1,  2, 3,    2}, /* PA2 */	
+    {&gpioa, &timer2, &adc1,  3, 4,    3}, /* PA3 */
+    {&gpioa,   NULL, &adc1,  4, 0,    4}, /* PA4 */
+    {&gpioa,   NULL, &adc1,  5, 0,    5}, /* PA5 */
+    {&gpioa, &timer3, &adc1,  6, 1,    6}, /* PA6 */
+    {&gpioa, &timer3, &adc1,  7, 2,    7}, /* PA7 */
+    {&gpioa, &timer1, NULL,  8, 1, ADCx}, /* PA8 */	
+    {&gpioa, &timer1, NULL,  9, 2, ADCx}, /* PA9 */	
+    {&gpioa, &timer1, NULL, 10, 3, ADCx}, /* PA10 */
+    {&gpioa, &timer1, NULL, 11, 4, ADCx}, /* PA11 */
+    {&gpioa,   NULL, NULL, 12, 0, ADCx}, /* PA12 */	
+    {&gpioa,   NULL, NULL, 13, 0, ADCx}, /* PA13 */	
+    {&gpioa,   NULL, NULL, 14, 0, ADCx}, /* PA14 */
+    {&gpioa,   NULL, NULL, 15, 0, ADCx}, /* PA15 */
 	
-    {GPIOB, TIMER3, ADC1,  0, 3,    8}, /* PB0 */	
-    {GPIOB, TIMER3, ADC1,  1, 4,    9}, /* PB1 */
-    {GPIOB,   NULL, NULL,  2, 0, ADCx}, /* PB2 */
-    {GPIOB,   NULL, NULL,  3, 0, ADCx}, /* PB3 */
-    {GPIOB,   NULL, NULL,  4, 0, ADCx}, /* PB4 */
-    {GPIOB,   NULL, NULL,  5, 0, ADCx}, /* PB5 */
-    {GPIOB, TIMER4, NULL,  6, 1, ADCx}, /* PB6 */
-    {GPIOB, TIMER4, NULL,  7, 2, ADCx}, /* PB7 */	
-    {GPIOB, TIMER4, NULL,  8, 3, ADCx}, /* PB8 */	
-    {GPIOB, TIMER4, NULL,  9, 4, ADCx}, /* PB9 */	
-    {GPIOB,   NULL, NULL, 10, 0, ADCx}, /* PB10 */	
-    {GPIOB,   NULL, NULL, 11, 0, ADCx}, /* PB11 */
-    {GPIOB,   NULL, NULL, 12, 0, ADCx}, /* PB12 */
-    {GPIOB,   NULL, NULL, 13, 0, ADCx}, /* PB13 */
-    {GPIOB,   NULL, NULL, 14, 0, ADCx}, /* PB14 */
-    {GPIOB,   NULL, NULL, 15, 0, ADCx}, /* PB15 */
+    {&gpiob, &timer3, &adc1,  0, 3,    8}, /* PB0 */	
+    {&gpiob, &timer3, &adc1,  1, 4,    9}, /* PB1 */
+    {&gpiob,   NULL, NULL,  2, 0, ADCx}, /* PB2 */
+    {&gpiob,   NULL, NULL,  3, 0, ADCx}, /* PB3 */
+    {&gpiob,   NULL, NULL,  4, 0, ADCx}, /* PB4 */
+    {&gpiob,   NULL, NULL,  5, 0, ADCx}, /* PB5 */
+    {&gpiob, &timer4, NULL,  6, 1, ADCx}, /* PB6 */
+    {&gpiob, &timer4, NULL,  7, 2, ADCx}, /* PB7 */	
+    {&gpiob, &timer4, NULL,  8, 3, ADCx}, /* PB8 */	
+    {&gpiob, &timer4, NULL,  9, 4, ADCx}, /* PB9 */	
+    {&gpiob,   NULL, NULL, 10, 0, ADCx}, /* PB10 */	
+    {&gpiob,   NULL, NULL, 11, 0, ADCx}, /* PB11 */
+    {&gpiob,   NULL, NULL, 12, 0, ADCx}, /* PB12 */
+    {&gpiob,   NULL, NULL, 13, 0, ADCx}, /* PB13 */
+    {&gpiob,   NULL, NULL, 14, 0, ADCx}, /* PB14 */
+    {&gpiob,   NULL, NULL, 15, 0, ADCx}, /* PB15 */
 
 /* Andy Hull - the R8 is similar to the C8 but exposes more GPIO as follows */
-    {GPIOC,   NULL, ADC1, 0, 0, 10},  /* PC0 */
-    {GPIOC,   NULL, ADC1, 1, 0, 11},  /* PC1 */
-    {GPIOC,   NULL, ADC1, 2, 0, 12},  /* PC2 */
-    {GPIOC,   NULL, ADC1, 3, 0, 13},  /* PC3 */
-    {GPIOC,   NULL, ADC1, 4, 0, 14},  /* PC4 */
-    {GPIOC,   NULL, ADC1, 5, 0, 15},  /* PC5 */
+    {&gpioc,   NULL, &adc1, 0, 0, 10},  /* PC0 */
+    {&gpioc,   NULL, &adc1, 1, 0, 11},  /* PC1 */
+    {&gpioc,   NULL, &adc1, 2, 0, 12},  /* PC2 */
+    {&gpioc,   NULL, &adc1, 3, 0, 13},  /* PC3 */
+    {&gpioc,   NULL, &adc1, 4, 0, 14},  /* PC4 */
+    {&gpioc,   NULL, &adc1, 5, 0, 15},  /* PC5 */
 
-    {GPIOC,   NULL, NULL, 6, 0, ADCx},  /* PC6 */
-    {GPIOC,   NULL, NULL, 7, 0, ADCx},  /* PC7 */
-    {GPIOC,   NULL, NULL, 8, 0, ADCx},  /* PC8 */
-    {GPIOC,   NULL, NULL, 9, 0, ADCx},  /* PC9 */
+    {&gpioc,   NULL, NULL, 6, 0, ADCx},  /* PC6 */
+    {&gpioc,   NULL, NULL, 7, 0, ADCx},  /* PC7 */
+    {&gpioc,   NULL, NULL, 8, 0, ADCx},  /* PC8 */
+    {&gpioc,   NULL, NULL, 9, 0, ADCx},  /* PC9 */
 
-    {GPIOC,   NULL, NULL, 10, 0, ADCx}, /* PC10 */
-    {GPIOC,   NULL, NULL, 11, 0, ADCx}, /* PC11 */
-    {GPIOC,   NULL, NULL, 12, 0, ADCx}, /* PC12 */
-    {GPIOC,   NULL, NULL, 13, 0, ADCx}, /* PC13 */	
-    {GPIOC,   NULL, NULL, 14, 0, ADCx}, /* PC14 */
-    {GPIOC,   NULL, NULL, 15, 0, ADCx}, /* PC15 */
+    {&gpioc,   NULL, NULL, 10, 0, ADCx}, /* PC10 */
+    {&gpioc,   NULL, NULL, 11, 0, ADCx}, /* PC11 */
+    {&gpioc,   NULL, NULL, 12, 0, ADCx}, /* PC12 */
+    {&gpioc,   NULL, NULL, 13, 0, ADCx}, /* PC13 */	
+    {&gpioc,   NULL, NULL, 14, 0, ADCx}, /* PC14 */
+    {&gpioc,   NULL, NULL, 15, 0, ADCx}, /* PC15 */
 
-    {GPIOD,   NULL, NULL, 2, 0, ADCx},  /* PD2 */
+    {&gpiod,   NULL, NULL, 2, 0, ADCx},  /* PD2 */
 };
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
