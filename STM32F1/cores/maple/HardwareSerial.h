@@ -83,22 +83,25 @@ struct usart_dev;
  */
 // Define config for Serial.begin(baud, config);
 // Note. STM32 doesn't support as many different Serial modes as AVR or SAM cores.
+// The word legth bit M must be set when using parity bit.
 
 #define SERIAL_8N1	0B00000000
 #define SERIAL_8N2	0B00100000
 #define SERIAL_9N1	0B00001000
 #define SERIAL_9N2	0B00101000	
 
-#define SERIAL_8E1	0B00000010
-#define SERIAL_8E2	0B00100010
+#define SERIAL_8E1	0B00001010
+#define SERIAL_8E2	0B00101010
+/* not supported:
 #define SERIAL_9E1	0B00001010
 #define SERIAL_9E2	0B00101010
-
-#define SERIAL_8O1	0B00000011
-#define SERIAL_8O2	0B00100011
+*/
+#define SERIAL_8O1	0B00001011
+#define SERIAL_8O2	0B00101011
+/* not supported:
 #define SERIAL_9O1	0B00001011
 #define SERIAL_9O2	0B00101011
-
+*/
 
 /* Roger Clark 
  * Moved macros from hardwareSerial.cpp
