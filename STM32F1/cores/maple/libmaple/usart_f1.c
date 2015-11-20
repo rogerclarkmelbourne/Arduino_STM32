@@ -108,13 +108,14 @@ void usart_config_gpios_async(usart_dev *udev,
     gpio_set_mode(rx_dev, rx, GPIO_INPUT_FLOATING);
     gpio_set_mode(tx_dev, tx, GPIO_AF_OUTPUT_PP);
 /*
-
 CR1 bit 12 Word length 0=8  1=9 
 CR1 bit 11 wake (default value is 0) we can safely set this value to 0 (zero) each time 
 CR1 bit 10 parity enable (1 = enabled)
 CR1 bit 9  Parity selection 0 = Even  1 = Odd
 CR2 bits 13 and 12  00 = 1 01 = 0.5 10 = 2 11 = 1.5
 Not all USARTs support 1.5 or 0.5 bits so its best to avoid them.
+When parity enabled the word length must be increased (CR1 bit 12 set).
+Word length of 9 bit with parity is not supported.
 	CR2  CR1
 	0B00 0000
 	0B10 0000
@@ -136,21 +137,19 @@ Not all USARTs support 1.5 or 0.5 bits so its best to avoid them.
 #define SERIAL_9N1	0B 0000 1000
 #define SERIAL_9N2	0B 0010 1000	
 
-#define SERIAL_8E1	0B 0000 0010
-#define SERIAL_8E2	0B 0010 0010
-#define SERIAL_9E1	0B 0000 1010
-#define SERIAL_9E2	0B 0010 1010
+#define SERIAL_8E1	0B 0000 1010
+#define SERIAL_8E2	0B 0010 1010
+//#define SERIAL_9E1	0B 0000 1010
+//#define SERIAL_9E2	0B 0010 1010
 
-#define SERIAL_8O1	0B 0000 0011
-#define SERIAL_8O2	0B 0010 0011
-#define SERIAL_9O1	0B 0000 1011
-#define SERIAL_9O2	0B 0010 1011	
-	
-	*/
+#define SERIAL_8O1	0B 0000 1011
+#define SERIAL_8O2	0B 0010 1011
+//#define SERIAL_9O1	0B 0000 1011
+//#define SERIAL_9O2	0B 0010 1011
+*/
 
-
-	udev->regs->CR1  = udev->regs->CR1 ^ ((udev->regs->CR1 ^ (flags&0x0F)<<9 )  &  0B0001111000000000); 
-	udev->regs->CR2  = udev->regs->CR2 ^ ((udev->regs->CR2 ^ (flags&0xF0)<<8 ) &   0B0011000000000000); 			
+	udev->regs->CR1  = (udev->regs->CR1 & 0B1110000111111111) | ((uint32_t)(flags&0x0F)<<9);
+	udev->regs->CR2  = (udev->regs->CR2 & 0B1100111111111111) | ((uint32_t)(flags&0x30)<<8);
 }
 
 void usart_set_baud_rate(usart_dev *dev, uint32 clock_speed, uint32 baud) {
