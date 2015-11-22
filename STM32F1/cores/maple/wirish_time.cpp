@@ -34,10 +34,9 @@
 #include <libmaple/delay.h>
 
 void delay(unsigned long ms) {
-    uint32 i;
-    for (i = 0; i < ms; i++) {
-        delayMicroseconds(1000);
-    }
+    uint32 start = millis();
+    while (millis() - start < ms)
+        ;
 }
 
 void delayMicroseconds(uint32 us) {
