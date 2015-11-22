@@ -98,5 +98,9 @@ typedef unsigned int word;
                                                    bitClear(value, bit))
 #define bit(b)                         (1UL << (b))
 
+// Roger Clark. Added _BV macro for AVR compatibility. As requested by @sweetlilmre and @stevestrong
+#ifndef _BV
+#define _BV(bit) (1 << (bit))
+#endif 
 #endif
 

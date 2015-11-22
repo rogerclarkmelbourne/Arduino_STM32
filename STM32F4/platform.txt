@@ -10,7 +10,7 @@ version=0.1.0
 # ----------------------
 #build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
-compiler.path={runtime.ide.path}/hardware/tools/gcc-arm-none-eabi-4.8.3-2014q1/bin/
+compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
 compiler.c.elf.cmd=arm-none-eabi-g++
