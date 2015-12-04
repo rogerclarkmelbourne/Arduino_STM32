@@ -219,7 +219,7 @@ time_t RTClock::getTime() {
     int secs = 10 * ((tr_reg & 0x00000070) >> 4) + (tr_reg & 0x0000000F);
     // seconds from 1970 till 1 jan 00:00:00 of the given year
     time_t t = (years + 30) * SECS_PER_DAY * 365;
-    for (int i = 0; i < years; i++) {
+    for (int i = 0; i < (years + 30); i++) {
 	if (LEAP_YEAR(i)) {
 	    t +=  SECS_PER_DAY;   // add extra days for leap years
 	}
@@ -227,9 +227,9 @@ time_t RTClock::getTime() {
     // add days for this year, months start from 1
     for (int i = 1; i < months; i++) {
 	if ( (i == 2) && LEAP_YEAR(years)) { 
-		    t += SECS_PER_DAY * 29;
+	    t += SECS_PER_DAY * 29;
 	} else {
-		    t += SECS_PER_DAY * monthDays[i - 1];  //monthDays array starts from 0
+	    t += SECS_PER_DAY * monthDays[i - 1];  //monthDays array starts from 0
 	}
     }
     t += (days - 1) * SECS_PER_DAY + hours * SECS_PER_HOUR + mins * SECS_PER_MIN + secs;
