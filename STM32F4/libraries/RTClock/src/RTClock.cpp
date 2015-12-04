@@ -196,6 +196,9 @@ void RTClock::setTime (time_t time_stamp) {
 	
 void RTClock::setTime (struct tm* tm_ptr) {
     rtc_enter_config_mode();
+    if (tm_ptr->tm_year > 99)
+        tm_ptr->tm_year = tm_ptr->tm_year % 100;
+    tm_ptr->tm_wday = tm_ptr->tm_wday & 0x7;
     RTC_BASE->TR = ((tm_ptr->tm_hour / 10) << 20) | ((tm_ptr->tm_hour % 10) << 16) | 
 			((tm_ptr->tm_min / 10) << 12) | ((tm_ptr->tm_min % 10) << 8) | 
 			((tm_ptr->tm_sec / 10) << 4) | (tm_ptr->tm_sec % 10);
@@ -206,12 +209,14 @@ void RTClock::setTime (struct tm* tm_ptr) {
 }
 	
 time_t RTClock::getTime() {
-    int years = 10 * ((RTC_BASE->DR & 0x00F00000) >> 20) + ((RTC_BASE->DR & 0x000F0000) >> 16);
-    int months = 10 * ((RTC_BASE->DR & 0x00001000) >> 12) + ((RTC_BASE->DR & 0x00000F00) >> 8);
-    int days = 10 * ((RTC_BASE->DR & 0x00000030) >> 4) + (RTC_BASE->DR & 0x000000F);
-    int hours = 10 * ((RTC_BASE->TR & 0x00300000) >> 20) + ((RTC_BASE->TR & 0x000F0000) >> 16);
-    int mins = 10 * ((RTC_BASE->TR & 0x00007000) >> 12) + ((RTC_BASE->TR & 0x0000F00) >> 8);
-    int secs = 10 * ((RTC_BASE->TR & 0x00000070) >> 4) + (RTC_BASE->TR & 0x0000000F);
+    uint32 dr_reg = RTC_BASE->DR;
+    uint32 tr_reg = RTC_BASE->TR;
+    int years = 10 * ((dr_reg & 0x00F00000) >> 20) + ((dr_reg & 0x000F0000) >> 16);
+    int months = 10 * ((dr_reg & 0x00001000) >> 12) + ((dr_reg & 0x00000F00) >> 8);
+    int days = 10 * ((dr_reg & 0x00000030) >> 4) + (dr_reg & 0x000000F);
+    int hours = 10 * ((tr_reg & 0x00300000) >> 20) + ((tr_reg & 0x000F0000) >> 16);
+    int mins = 10 * ((tr_reg & 0x00007000) >> 12) + ((tr_reg & 0x0000F00) >> 8);
+    int secs = 10 * ((tr_reg & 0x00000070) >> 4) + (tr_reg & 0x0000000F);
     // seconds from 1970 till 1 jan 00:00:00 of the given year
     time_t t = (years + 30) * SECS_PER_DAY * 365;
     for (int i = 0; i < years; i++) {
@@ -232,12 +237,14 @@ time_t RTClock::getTime() {
 }
 	
 struct tm* RTClock::getTime(struct tm* tm_ptr) {
-    tm_ptr->tm_year = 10 * ((RTC_BASE->DR & 0x00F00000) >> 20) + ((RTC_BASE->DR & 0x000F0000) >> 16);
-    tm_ptr->tm_mon = 10 * ((RTC_BASE->DR & 0x00001000) >> 12) + ((RTC_BASE->DR & 0x00000F00) >> 8);
-    tm_ptr->tm_mday = 10 * ((RTC_BASE->DR & 0x00000030) >> 4) + (RTC_BASE->DR & 0x000000F);
-    tm_ptr->tm_hour = 10 * ((RTC_BASE->TR & 0x00300000) >> 20) + ((RTC_BASE->TR & 0x000F0000) >> 16);
-    tm_ptr->tm_min = 10 * ((RTC_BASE->TR & 0x00007000) >> 12) + ((RTC_BASE->TR & 0x0000F00) >> 8);
-    tm_ptr->tm_sec = 10 * ((RTC_BASE->TR & 0x00000070) >> 4) + (RTC_BASE->TR & 0x0000000F);
+    uint32 dr_reg = RTC_BASE->DR;
+    uint32 tr_reg = RTC_BASE->TR;
+    tm_ptr->tm_year = 10 * ((dr_reg & 0x00F00000) >> 20) + ((dr_reg & 0x000F0000) >> 16);
+    tm_ptr->tm_mon = 10 * ((dr_reg & 0x00001000) >> 12) + ((dr_reg & 0x00000F00) >> 8);
+    tm_ptr->tm_mday = 10 * ((dr_reg & 0x00000030) >> 4) + (dr_reg & 0x000000F);
+    tm_ptr->tm_hour = 10 * ((tr_reg & 0x00300000) >> 20) + ((tr_reg & 0x000F0000) >> 16);
+    tm_ptr->tm_min = 10 * ((tr_reg & 0x00007000) >> 12) + ((tr_reg & 0x0000F00) >> 8);
+    tm_ptr->tm_sec = 10 * ((tr_reg & 0x00000070) >> 4) + (tr_reg & 0x0000000F);
     return tm_ptr;
 }
 	
