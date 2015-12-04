@@ -10,11 +10,17 @@
 #ifndef _RTCLOCK_H_
 #define _RTCLOCK_H_
 
+//#define RTC_DEBUG
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void dbg_printf(const char *fmt, ... );
+#ifdef RTC_DEBUG
+        extern void dbg_printf(const char *fmt, ... );
+        #define rtc_debug_printf(fmt, ...) dbg_printf(fmt, ##__VA_ARGS__);
+#else
+        #define rtc_debug_printf(...) 
+#endif
 #ifdef __cplusplus
 }
 #endif
@@ -91,12 +97,25 @@ typedef enum rtc_clk_src {
 #define RTC_CR_WUTIE_BIT 	14
 #define RTC_CR_ALRBIE_BIT	13
 #define RTC_CR_ALRAIE_BIT 	12
+#define RTC_CR_TSE_BIT 		11
+#define RTC_CR_WUTE_BIT 	10
+#define RTC_CR_ALRBE_BIT	9
+#define RTC_CR_ALRAE_BIT 	8
 
 /* Initialization and Status Register */
+#define RTC_ISR_TSOVF_BIT 	12
+#define RTC_ISR_TSF_BIT 	11
+#define RTC_ISR_WUTF_BIT 	10
+#define RTC_ISR_ALRBF_BIT 	9
+#define RTC_ISR_ALRAF_BIT 	8
 #define RTC_ISR_INIT_BIT 	7
 #define RTC_ISR_INITF_BIT 	6
 #define RTC_ISR_RSF_BIT 	5
 #define RTC_ISR_INITS_BIT 	4
+#define RTC_ISR_SHPF_BIT 	3
+#define RTC_ISR_WUTWF_BIT 	2
+#define RTC_ISR_ALRBWF_BIT 	1
+#define RTC_ISR_ALRAWF_BIT 	0
 
 
 
@@ -113,12 +132,6 @@ class RTClock {
 	struct tm* getTime(struct tm* tm_ptr); 
 	time_t getTime();
 	
-	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
-	void createAlarm(voidFuncPtr function, struct tm* alarm_tm);
-	
-	void attachSecondsInterrupt(voidFuncPtr function); 
-	void detachSecondsInterrupt();
-	
 	void setAlarmATime (tm * tm_ptr, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false);
 	void setAlarmATime (time_t alarm_time, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false); 
 	void turnOffAlarmA();
@@ -127,6 +140,15 @@ class RTClock {
 	void turnOffAlarmB();
 	
 	void setPeriodicWakeup(uint16 period);
+
+	void attachPeriodicWakeupInterrupt(voidFuncPtr function); 
+	void detachPeriodicWakeupInterrupt();
+
+	void attachAlarmAInterrupt(voidFuncPtr function); 
+	void detachAlarmAInterrupt();
+	void attachAlarmBInterrupt(voidFuncPtr function); 
+	void detachAlarmBInterrupt();
+
  //private:
 
 } ;
@@ -145,15 +167,15 @@ static inline void rtc_clear_sync() {
  */
 static inline void rtc_wait_sync() {
         uint32 t = 0;
-	dbg_printf("entering rtc_wait_sync\r\n");
+	rtc_debug_printf("entering rtc_wait_sync\r\n");
 	while (*bb_perip(&(RTC->regs)->ISR, RTC_ISR_RSF_BIT) == 0) {
 	    if (++t > 1000000) {
-                dbg_printf("RTC_BASE->ISR.RSF Timeout !\r\n");
-                dbg_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
+                rtc_debug_printf("RTC_BASE->ISR.RSF Timeout !\r\n");
+                rtc_debug_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
                 return;
             }
 	}
-	dbg_printf("finished rtc_wait_sync\r\n");
+	rtc_debug_printf("finished rtc_wait_sync\r\n");
 }
 
 /**
@@ -165,15 +187,15 @@ static inline void rtc_enter_config_mode() {
         RTC_BASE->WPR = 0xCA;
         RTC_BASE->WPR = 0x53;
 	*bb_perip(&(RTC->regs)->ISR, RTC_ISR_INIT_BIT) = 1;
-	dbg_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
+	rtc_debug_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
 	while (!(RTC_BASE->ISR & 0x00000040)) {
 	    if (++t > 1000000) {
-                dbg_printf("RTC_BASE->ISR.INITF Timeout !\r\n");
-                dbg_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
+                rtc_debug_printf("RTC_BASE->ISR.INITF Timeout !\r\n");
+                rtc_debug_printf("RTC_BASE->ISR = %08X\r\n", RTC_BASE->ISR);
                 return;
             }
 	}
-	dbg_printf("rtc_enter_config_mode done !\r\n");
+	rtc_debug_printf("rtc_enter_config_mode done !\r\n");
 }
 
 /**
@@ -181,7 +203,7 @@ static inline void rtc_enter_config_mode() {
  */
 static inline void rtc_exit_config_mode() {
 	*bb_perip(&(RTC->regs)->ISR, RTC_ISR_INIT_BIT) = 0;
-	dbg_printf("rtc_exit_config_mode done !\r\n");
+	rtc_debug_printf("rtc_exit_config_mode done !\r\n");
 }
 
 
