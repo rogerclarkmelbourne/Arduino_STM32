@@ -195,7 +195,8 @@ void SPIClass::setClockDivider(uint32_t clockDivider)
 	Serial.print("Clock divider set to "); Serial.println(clockDivider);
 	#endif
 	_currentSetting->clockDivider = clockDivider;
-	updateSettings();
+	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_BR);
+	_currentSetting->spi_d->regs->CR1 = cr1 | (clockDivider & SPI_CR1_BR);
 }
 
 void SPIClass::setBitOrder(BitOrder bitOrder)
@@ -204,7 +205,9 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 	Serial.print("Bit order set to "); Serial.println(bitOrder);
 	#endif
 	_currentSetting->bitOrder = bitOrder;
-	updateSettings();
+	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_LSBFIRST);
+	if ( bitOrder==LSBFIRST )	cr1 |= SPI_CR1_LSBFIRST;
+	_currentSetting->spi_d->regs->CR1 = cr1;
 }
 
 /*	Victor Perez. Added to test changing datasize from 8 to 16 bit modes on the fly.
@@ -213,11 +216,8 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 */
 void SPIClass::setDataSize(uint32 datasize)
 {
-		uint32 cr1 = _currentSetting->spi_d->regs->CR1; 
-		datasize &= SPI_CR1_DFF;
-		cr1 &= ~(SPI_CR1_DFF); 
-		cr1 |= datasize;  
-		_currentSetting->spi_d->regs->CR1 = cr1; 
+	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_DFF); 
+	_currentSetting->spi_d->regs->CR1 = cr1 | (datasize & SPI_CR1_DFF);
 }
 
 void SPIClass::setDataMode(uint8_t dataMode)
@@ -253,7 +253,8 @@ If someone finds this is not the case or sees a logic error with this let me kno
 	Serial.print("Data mode set to "); Serial.println(dataMode);
 	#endif
 	_currentSetting->dataMode = dataMode;
-	updateSettings();
+	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_CPOL|SPI_CR1_CPHA);
+	_currentSetting->spi_d->regs->CR1 = cr1 | (dataMode & (SPI_CR1_CPOL|SPI_CR1_CPHA));
 }
 
 
