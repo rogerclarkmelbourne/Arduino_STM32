@@ -605,8 +605,9 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
 #endif
 
     spi_config_gpios(dev, as_master, nssi->gpio_device, nssi->gpio_bit,
-                     scki->gpio_device, scki->gpio_bit, misoi->gpio_bit,
-                     mosii->gpio_bit);
+                     scki->gpio_device, scki->gpio_bit, 
+                     misoi->gpio_device, misoi->gpio_bit,
+                     mosii->gpio_device, mosii->gpio_bit);
 }
 
 static const spi_baud_rate baud_rates[8] __FLASH__ = {
