@@ -30,6 +30,7 @@
  */
 
 #include "libmaple_types.h"
+#include "bitband.h"
 
 #ifndef _RCC_H_
 #define _RCC_H_
@@ -385,6 +386,7 @@ typedef struct
 #define RCC_BDCR_RTCSEL                 (0x3 << 8)
 #define RCC_BDCR_RTCSEL_NONE            (0x0 << 8)
 #define RCC_BDCR_RTCSEL_LSE             (0x1 << 8)
+#define RCC_BDCR_RTCSEL_LSI             (0x2 << 8)
 #define RCC_BDCR_RTCSEL_HSE             (0x3 << 8)
 #define RCC_BDCR_LSEBYP                 BIT(RCC_BDCR_LSEBYP_BIT)
 #define RCC_BDCR_LSERDY                 BIT(RCC_BDCR_LSERDY_BIT)
@@ -483,7 +485,7 @@ typedef enum rcc_clk_id {
     RCC_SPI2,
     RCC_DMA1,
     RCC_PWR,
-//    RCC_BKP,
+    RCC_BKP,
     RCC_I2C1,
     RCC_I2C2,
     RCC_CRC,
@@ -603,6 +605,35 @@ typedef enum rcc_ahb_divider {
 } rcc_ahb_divider;
 
 void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider);
+
+
+/**
+ * @brief Start the low speed internal oscillatior
+ */
+static inline void rcc_start_lsi(void) {
+	*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;
+	while (*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSIRDY_BIT) == 0);
+}
+
+/* FIXME [0.0.13] Just have data point to an rcc_pll_multiplier! */
+/**
+ * @brief Start the low speed external oscillatior
+ */
+static inline void rcc_start_lse(void) {
+	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
+	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEON_BIT, 1);
+	while (bb_peri_get_bit(&RCC_BASE->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
+}
+
+/*
+ * Deprecated bits.
+ */
+static inline void rcc_start_hse(void) {				// Added to support RTClock
+//	*bb_perip(&RCC_BASE->CR, RCC_CR_HSEON_BIT) = 1;
+	while (bb_peri_get_bit(&RCC_BASE->CR, RCC_CR_HSERDY_BIT) == 0);
+}
+
+
 
 #ifdef __cplusplus
 } // extern "C"
