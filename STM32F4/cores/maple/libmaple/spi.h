@@ -221,18 +221,22 @@ struct gpio_dev;
  * @param as_master If true, configure as bus master; otherwise, as slave.
  * @param nss_dev NSS pin's GPIO device
  * @param nss_bit NSS pin's GPIO bit on nss_dev
- * @param comm_dev SCK, MISO, MOSI pins' GPIO device
+ * @param sck_dev SCK pin's GPIO device
  * @param sck_bit SCK pin's GPIO bit on comm_dev
+ * @param miso_dev MISO pin's GPIO device
  * @param miso_bit MISO pin's GPIO bit on comm_dev
+ * @param mosi_dev MOSI pin's GPIO device
  * @param mosi_bit MOSI pin's GPIO bit on comm_dev
  */
 extern void spi_config_gpios(spi_dev *dev,
                              uint8 as_master,
                              struct gpio_dev *nss_dev,
                              uint8 nss_bit,
-                             struct gpio_dev *comm_dev,
+                             struct gpio_dev *sck_dev,
                              uint8 sck_bit,
+                             struct gpio_dev *miso_dev,
                              uint8 miso_bit,
+                             struct gpio_dev *mosi_dev,
                              uint8 mosi_bit);
 
 /**
