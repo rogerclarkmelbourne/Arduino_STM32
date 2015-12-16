@@ -1,12 +1,12 @@
 /*
- * aeroquad32 (STM32F103VET6, high density) linker script for
+ * STM32F4xx high density linker script for
  * JTAG (bare metal, no bootloader) builds.
  */
 
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
-  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 112K
+  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 1024K
 }
 
 /* GROUP(libcs3_stm32_high_density.a) */
