@@ -28,17 +28,12 @@
 #include <SPI.h> 
 #include "mempool.h"
 
-//#define ENC28J60_CONTROL_CS     SS
-//#define SPI_MOSI        MOSI
-//#define SPI_MISO        MISO
-//#define SPI_SCK         SCK
-//#define SPI_SS          SS
 
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
 #define ENC28J60_CONTROL_CS     PC8 
-//#define SPI_MOSI        PA7
-//#define SPI_MISO        PA6
-//#define SPI_SCK         PA5
-//#define SPI_SS          PA8
+#else
+#define ENC28J60_CONTROL_CS     SPI.nssPin()
+#endif
 
 #define UIP_RECEIVEBUFFERHANDLE 0xff
 
