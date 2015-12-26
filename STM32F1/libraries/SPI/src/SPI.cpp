@@ -142,7 +142,7 @@ SPIClass::SPIClass(uint32 spi_num) {
  * Set up/tear down
  */
 void SPIClass::updateSettings(void) {
-	uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE | SPI_SOFT_SS);
+	uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE | SPI_SOFT_SS);
 	#ifdef SPI_DEBUG
 	Serial.print("spi_master_enable("); Serial.print(_currentSetting->clockDivider); Serial.print(","); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
@@ -150,7 +150,6 @@ void SPIClass::updateSettings(void) {
 }
 
 void SPIClass::begin(void) {
-	
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 1);
     updateSettings();
@@ -161,7 +160,7 @@ void SPIClass::beginSlave(void) {
         ASSERT(0);
         return;
     }
-    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | SPI_DFF_8_BIT | SPI_SW_SLAVE);
+    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE);
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 0);
 	#ifdef SPI_DEBUG
@@ -216,6 +215,7 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 */
 void SPIClass::setDataSize(uint32 datasize)
 {
+	_currentSetting->dataSize = datasize;
 	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_DFF); 
 	_currentSetting->spi_d->regs->CR1 = cr1 | (datasize & SPI_CR1_DFF);
 }
@@ -268,6 +268,7 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	//digitalWrite(_SSPin,LOW);
 	setBitOrder(settings.bitOrder);
 	setDataMode(settings.dataMode);
+	setDataSize(settings.dataSize);
 	setClockDivider(determine_baud_rate(_currentSetting->spi_d, settings.clock));
 	begin();
 }
