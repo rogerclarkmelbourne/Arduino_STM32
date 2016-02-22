@@ -106,7 +106,7 @@ size_t n = 0;
 
 size_t USBSerial::write(const void *buf, uint32 len) {
 size_t n = 0;
-    if (!this->isConnected() || !buf) {
+    if (!this->isConnected() || !usb_cdcacm_get_dtr() || !buf) {
         return 0;
     }
 
