@@ -182,11 +182,18 @@ static port_err_t serial_setup(serial_t *h, const serial_baud_t baud,
 	if (tcsetattr(h->fd, TCSANOW, &h->newtio) != 0)
 		return PORT_ERR_UNKNOWN;
 
+/* this check fails on CDC-ACM devices, bits 16 and 17 of cflag differ!
+ * it has been disabled below for now -jcw, 2015-11-09
+    if (settings.c_cflag != h->newtio.c_cflag)
+        fprintf(stderr, "c_cflag mismatch %lx\n",
+                settings.c_cflag ^ h->newtio.c_cflag);
+ */
+
 	/* confirm they were set */
 	tcgetattr(h->fd, &settings);
 	if (settings.c_iflag != h->newtio.c_iflag ||
 	    settings.c_oflag != h->newtio.c_oflag ||
-	    settings.c_cflag != h->newtio.c_cflag ||
+	  //settings.c_cflag != h->newtio.c_cflag ||
 	    settings.c_lflag != h->newtio.c_lflag)
 		return PORT_ERR_UNKNOWN;
 
