@@ -204,7 +204,7 @@ uint8 USBSerial::pending(void) {
 }
 
 uint8 USBSerial::isConnected(void) {
-    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB);
+    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
 uint8 USBSerial::getDTR(void) {
