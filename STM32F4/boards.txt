@@ -9,8 +9,8 @@ discovery_f407.upload.protocol=stlink
 #discovery_f407.upload.use_1200bps_touch=false
 discovery_f407.upload.file_type=bin
 discovery_f407.upload.ram.maximum_size=17000
-discovery_f407.upload.flash.maximum_size=108000
-discovery_f407.upload.maximum_size=108000
+discovery_f407.upload.flash.maximum_size=1048576
+discovery_f407.upload.maximum_size=1048576
 
 #discovery_f407.upload.usbID=1EAF:0003
 #discovery_f407.upload.altID=1
