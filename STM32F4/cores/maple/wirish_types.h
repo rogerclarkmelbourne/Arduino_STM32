@@ -30,10 +30,10 @@
  * @brief  Wirish library type definitions.
  */
 
-#include "libmaple_types.h"
-#include "gpio.h"
-#include "timer.h"
-#include "adc.h"
+#include "libmaple/libmaple_types.h"
+#include "libmaple/gpio.h"
+#include "libmaple/timer.h"
+#include "libmaple/adc.h"
 
 #ifndef _WIRISH_TYPES_H_
 #define _WIRISH_TYPES_H_

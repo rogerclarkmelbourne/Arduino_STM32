@@ -24,8 +24,8 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include "libmaple_types.h"
-#include "nvic.h"
+#include "libmaple/libmaple_types.h"
+#include "libmaple/nvic.h"
 
 /**
  *  @file ext_interrupts.h

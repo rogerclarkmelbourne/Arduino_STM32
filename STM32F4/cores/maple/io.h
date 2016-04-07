@@ -33,8 +33,8 @@
 #ifndef _IO_H_
 #define _IO_H_
 
-#include "gpio.h"
-#include "adc.h"
+#include "libmaple/gpio.h"
+#include "libmaple/adc.h"
 
 #include "wirish_time.h"
 

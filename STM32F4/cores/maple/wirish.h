@@ -34,7 +34,7 @@
 #define _WIRISH_H_
 
 #include <stdlib.h>
-#include "libmaple.h"
+#include "libmaple/libmaple.h"
 
 #include "wirish_types.h"
 #include "boards.h"
@@ -46,8 +46,8 @@
 #include "wirish_math.h"
 #include "wirish_time.h"
 #include <wirish_constants.h>
-#include "HardwareSPI.h"
-#include "HardwareSerial.h"
+#include "libmaple/HardwareSPI.h"
+#include "libmaple/HardwareSerial.h"
 #include "HardwareTimer.h"
 #include "usb_serial.h"
 
