@@ -88,7 +88,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mcpu={b
 #recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" "{source_file}" -o "{object_file}"
 
 ## Create archives
-recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{build.path}/{archive_file}" "{object_file}"
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
 recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group {object_files} "{build.path}/{archive_file}" -Wl,--end-group
@@ -127,6 +127,17 @@ tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altI
 
 #Added tool for generic STM32 upload via serial to Serial Port 1 (pins PA9 and PA10) - note. Boot0 line needs to high on board reset to enable upload via serial
 # at the end up the upload the program is automatically run, without the board being reset
+
+tools.openocd_upload.cmd=openocd_upload
+#tools.openocd_upload.cmd.windows=openocd_upload
+tools.openocd_upload.cmd.macosx=openocd_upload
+tools.openocd_upload.path={runtime.hardware.path}/tools/win
+tools.openocd_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.openocd_upload.path.linux={runtime.hardware.path}/tools/linux
+
+tools.openocd_upload.upload.params.verbose=
+tools.openocd_upload.upload.params.quiet=
+tools.openocd_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin"
 
 tools.serial_upload.cmd=serial_upload
 tools.serial_upload.cmd.windows=serial_upload.bat

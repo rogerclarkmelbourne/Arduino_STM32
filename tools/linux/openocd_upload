@@ -1,0 +1,10 @@
+#! /bin/bash
+ 
+################################################################### 
+# openocd commands to program the flash
+###################################################################
+OPENOCD_CFG=/home/kristoff/arduino/arduino-1.6.6/hardware/Arduino_STM32-master/tools/linux/openocd.cfg
+BIN_IMAGE=$1
+ 
+killall -s 9 openocd
+openocd -f ${OPENOCD_CFG} -c init -c "reset halt" -c "flash write_image erase ${BIN_IMAGE} 0x8000000" -c "verify_image ${BIN_IMAGE} 0x8000000" -c reset -c shutdown
