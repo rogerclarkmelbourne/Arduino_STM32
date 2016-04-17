@@ -5,6 +5,15 @@ if sudo [ -w /etc/udev/rules.d ]; then
     sudo cp -v 45-maple.rules /etc/udev/rules.d/45-maple.rules
     sudo chown root:root /etc/udev/rules.d/45-maple.rules
     sudo chmod 644 /etc/udev/rules.d/45-maple.rules
+    sudo cp -v 49-stlinkv1.rules /etc/udev/rules.d/49-stlinkv1.rules
+    sudo chown root:root /etc/udev/rules.d/49-stlinkv1.rules
+    sudo chmod 644 /etc/udev/rules.d/49-stlinkv1.rules
+    sudo cp -v 49-stlinkv2.rules /etc/udev/rules.d/49-stlinkv2.rules
+    sudo chown root:root /etc/udev/rules.d/49-stlinkv2.rules
+    sudo chmod 644 /etc/udev/rules.d/49-stlinkv2.rules
+    sudo cp -v 49-stlinkv2-1.rules /etc/udev/rules.d/49-stlinkv2-1.rules
+    sudo chown root:root /etc/udev/rules.d/49-stlinkv2-1.rules
+    sudo chmod 644 /etc/udev/rules.d/49-stlinkv2-1.rules
     echo "Reloading udev rules"
     sudo udevadm control --reload-rules
     echo "Adding current user to dialout group"
