@@ -766,7 +766,7 @@ uint8_t Adafruit_ILI9341_STM::readcommand8(uint8_t c, uint8_t index) {
   digitalWrite(_cs, HIGH);
 
   digitalWrite(_dc, LOW);
-  if(_sclk) digitalWrite(_sclk, LOW);
+  //if(hwSPI) digitalWrite(_sclk, LOW);
   digitalWrite(_cs, LOW);
   spiwrite(c);
 
