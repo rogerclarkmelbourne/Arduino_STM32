@@ -43,6 +43,7 @@
 
 
 #include <string.h>
+
 #include <WString.h>
 #include <avr/dtostrf.h>
 #include <avr/pgmspace.h>
@@ -74,9 +75,7 @@
 
 #include <stdint.h>
 
-
-
-
+#include <WCharacter.h>
 
 typedef unsigned int word;
 // typedef uint16 word;// definition from Arduino website, now appears to be incorrect for 32 bit devices
