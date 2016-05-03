@@ -75,10 +75,7 @@
 #include <stdint.h>
 
 
-#define SS 		BOARD_SPI1_NSS_PIN
-#define MOSI 	BOARD_SPI1_MOSI_PIN 
-#define MISO 	BOARD_SPI1_MISO_PIN
-#define SCK 	BOARD_SPI1_SCK_PIN
+
 
 
 typedef unsigned int word;
