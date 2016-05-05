@@ -37,7 +37,7 @@
 /* Wrap this in an ifdef to shut up GCC. (We provide DMA_GET_HANDLER
  * in the series support files, which need dma_irq_handler().) */
 #ifdef DMA_GET_HANDLER
-static __always_inline void dma_irq_handler(dma_dev *dev, dma_tube tube) {
+static inline __always_inline void dma_irq_handler(dma_dev *dev, dma_tube tube) {
 
     void (*handler)(void) = DMA_GET_HANDLER(dev, tube);
     if (handler) {

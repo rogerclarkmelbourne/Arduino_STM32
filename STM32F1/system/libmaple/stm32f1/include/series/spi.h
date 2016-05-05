@@ -75,7 +75,7 @@ extern void spi_config_gpios(struct spi_dev*, uint8,
  * @brief Deprecated. Use spi_config_gpios() instead.
  * @see spi_config_gpios()
  */
-static __always_inline void spi_gpio_cfg(uint8 as_master,
+static inline __always_inline void spi_gpio_cfg(uint8 as_master,
                                          struct gpio_dev *nss_dev,
                                          uint8 nss_bit,
                                          struct gpio_dev *comm_dev,

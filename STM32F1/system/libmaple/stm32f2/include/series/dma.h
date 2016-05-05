@@ -707,7 +707,7 @@ void dma_set_mem_n_addr(dma_dev *dev, dma_tube tube, int n,
  * @param tube Tube whose memory 0 address to set
  * @param addr Address to use as memory 0
  */
-static __always_inline void
+static inline __always_inline void
 dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
     dma_set_mem_n_addr(dev, tube, 0, addr);
 }
@@ -720,13 +720,13 @@ dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
  * @param tube Tube whose memory 1 address to set
  * @param addr Address to use as memory 1
  */
-static __always_inline void
+static inline __always_inline void
 dma_set_mem1_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
     dma_set_mem_n_addr(dev, tube, 1, addr);
 }
 
 /* Assume the user means SM0AR in a non-double-buffered configuration. */
-static __always_inline void
+static inline __always_inline void
 dma_set_mem_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
     dma_set_mem0_addr(dev, tube, addr);
 }
@@ -743,7 +743,7 @@ static inline dma_xfer_size dma_get_per_size(dma_dev *dev, dma_tube tube) {
 void dma_enable_fifo(dma_dev *dev, dma_tube tube);
 void dma_disable_fifo(dma_dev *dev, dma_tube tube);
 
-static __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
+static inline __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
     return dma_tube_regs(dev, tube)->SFCR & DMA_SFCR_DMDIS;
 }
 
@@ -769,7 +769,7 @@ static __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
  * I can't imagine why ST didn't just use a byte for each group. The
  * bits fit, and it would have made functions like these simpler and
  * faster.  Oh well. */
-static __always_inline uint32 _dma_sr_fcr_shift(dma_tube tube) {
+static inline __always_inline uint32 _dma_sr_fcr_shift(dma_tube tube) {
     switch (tube) {
     case DMA_S0:                /* fall through */
     case DMA_S4:
