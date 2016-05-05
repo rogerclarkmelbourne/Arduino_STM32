@@ -3,6 +3,7 @@
 menu.device_variant=Variant
 menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
+menu.cpu_speed=CPU Speed(MHz)
 
 ##############################################################
 mapleMini.name=Maple Mini
