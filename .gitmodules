@@ -7,6 +7,3 @@
 [submodule "tools/src/texane-stlink"]
 	path = tools/src/texane-stlink
 	url = https://github.com/texane/stlink
-[submodule "STM32duino-bootloader"]
-	path = STM32duino-bootloader
-	url = https://github.com/rogerclarkmelbourne/STM32duino-bootloader.git
