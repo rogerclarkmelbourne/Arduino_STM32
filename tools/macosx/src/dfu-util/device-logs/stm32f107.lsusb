@@ -1,0 +1,60 @@
+
+Bus 001 Device 028: ID 0483:df11 SGS Thomson Microelectronics STM Device in DFU Mode
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               1.00
+  bDeviceClass            0 (Defined at Interface level)
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0        64
+  idVendor           0x0483 SGS Thomson Microelectronics
+  idProduct          0xdf11 STM Device in DFU Mode
+  bcdDevice           20.00
+  iManufacturer           1 STMicroelectronics
+  iProduct                2 STM32 0x418 DFU Bootloader
+  iSerial                 3 STM32
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           36
+    bNumInterfaces          1
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           0
+      bInterfaceClass       254 Application Specific Interface
+      bInterfaceSubClass      1 Device Firmware Update
+      bInterfaceProtocol      2 
+      iInterface              4 @Internal Flash  /0x08000000/128*002Kg
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       1
+      bNumEndpoints           0
+      bInterfaceClass       254 Application Specific Interface
+      bInterfaceSubClass      1 Device Firmware Update
+      bInterfaceProtocol      2 
+      iInterface              5 @Option Bytes  /0x1FFFF800/01*016 g
+      Device Firmware Upgrade Interface Descriptor:
+        bLength                             9
+        bDescriptorType                    33
+        bmAttributes                       11
+          Will Detach
+          Manifestation Intolerant
+          Upload Supported
+          Download Supported
+        wDetachTimeout                    255 milliseconds
+        wTransferSize                    2048 bytes
+        bcdDFUVersion                   1.1a
+Device Status:     0x0000
+  (Bus Powered)

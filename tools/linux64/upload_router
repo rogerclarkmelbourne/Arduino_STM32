@@ -1,0 +1,112 @@
+#!/bin/bash
+# Translates the windows Arduino IDE upload call - something like..
+#
+# upload_router ttyUSB0 1 1EAF:0003 /tmp/build9114565021046468906.tmp/STM32_Blink.cpp maple_dfu 0
+#
+# to the linux dfu-util equivalent of the form...
+#
+# dfu-util -D ./STM32_Blink.cpp.bin -d 1eaf:0003 --intf 0 --alt 1
+#
+#
+
+function leaf_status() 
+{
+
+this_leaf_status=$(lsusb |grep "1eaf" | awk '{ print $NF}')
+# Find the mode of the leaf bootloader
+case $this_leaf_status in 
+   "1eaf:0003")
+      echo "dfu"
+   ;;
+   "1eaf:0004")
+      echo "ttyACMx"
+   ;;
+   *)
+      #echo "$this_leaf_status"
+      echo "unknown"
+   ;;
+esac
+}
+
+
+DEVICE="$3"
+# Lowercase the 1eaf device name, since in Windows land everybody shouts.
+DEVICE=${DEVICE,,}
+
+BINFILE="$4.bin"
+INTERFACE="$6"
+ALT_INTERFACE="$2"
+
+# You will need the usb-reset code, see https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki/Using-a-generic-stm32-board-on-linux-with-Maple-bootloader
+#
+USBRESET=$(which usb-reset) || USBRESET="./usb-reset"
+
+# Check to see if a maple compatible board is attached
+LEAF_STATUS=$(leaf_status)
+
+# Borard not found, or no boot loader on board.
+if [[ $(leaf_status) = "unknown" ]]
+then
+   echo "STM32 Maple Bootloader compatible board not found."
+   sleep 5
+   exit 1
+fi
+
+# We got this far, so we need to get the board in bootloader mode. 
+# After the timeout period, the board goes back in to serial mode, we need it in dfu mode, which happens for the first few seconds at power on 
+# so we ask the user to unplug and re-plug the board. 
+echo -e "\n\rSTM32 Maple board is in $LEAF_STATUS mode."
+
+echo "Please unplug and replug the USB cable to the Maple device."
+sleep 2
+# On unplugging the board will be "unknown"
+while [[ $(leaf_status) != "unknown" ]]
+do
+   echo -n "."
+   sleep 1
+done
+# On re-plugging the board will be "dfu"
+while [[ $(leaf_status) != "dfu" ]]
+do
+   echo -n "."
+   sleep 1
+done
+
+echo -e "\n\rProgramming STM32 device with dfu-util"
+until dfu-util  -D "$BINFILE" -d "$DEVICE" --intf "$INTERFACE" --alt "$ALT_INTERFACE" 2>&1
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rUnplug and replug the USB cable to the STM32 board again please...."
+while [[  $(leaf_status) != "unknown" ]]
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rReconnecting"
+while [[ $(leaf_status) = "unknown" ]]
+do
+    echo -n "."
+    sleep 1
+done
+
+echo -e "\n\rWaiting for bootloader to exit."
+for i in {1..6}
+do
+    echo -n "."
+    sleep 1
+done
+
+"$USBRESET" "/dev/bus/usb/$(lsusb |grep "1eaf" |awk '{print $2,$4}'|sed 's/\://g'|sed 's/ /\//g')" >/dev/null 2>&1
+
+while [[ $(leaf_status) = "unknown" ]]
+do
+    echo -n "."
+    sleep 1
+done
+THIS_TTY=$(find /dev/ttyACM* -cmin -2)
+echo -e "\n\rSTM32 Maple board serial port re-created..."
+echo -e "\n\rSerial port is $THIS_TTY Please allow 15 seconds before attempting to read from serial port."

@@ -1,0 +1,1 @@
+The maple upload script needs its rights to be set to 755 

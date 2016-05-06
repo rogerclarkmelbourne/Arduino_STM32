@@ -1,0 +1,407 @@
+.TH STM32FLASH 1 "2013\-11\-03" STM32FLASH "User command"
+.SH NAME
+stm32flash \- flashing utility for STM32 and STM32W through UART or I2C
+.SH SYNOPSIS
+.B stm32flash
+.RB [ \-cfhjkouvCR ]
+.RB [ \-a
+.IR bus_address ]
+.RB [ \-b
+.IR baud_rate ]
+.RB [ \-m
+.IR serial_mode ]
+.RB [ \-r
+.IR filename ]
+.RB [ \-w
+.IR filename ]
+.RB [ \-e
+.IR num ]
+.RB [ \-n
+.IR count ]
+.RB [ \-g
+.IR address ]
+.RB [ \-s
+.IR start_page ]
+.RB [ \-S
+.IR address [: length ]]
+.RB [ \-F
+.IR RX_length [: TX_length ]]
+.RB [ \-i
+.IR GPIO_string ]
+.RI [ tty_device
+.R |
+.IR i2c_device ]
+
+.SH DESCRIPTION
+.B stm32flash
+reads or writes the flash memory of STM32 and STM32W.
+
+It requires the STM32[W] to embed a bootloader compliant with ST
+application note AN3155.
+.B stm32flash
+uses the serial port
+.I tty_device
+to interact with the bootloader of STM32[W].
+
+.SH OPTIONS
+.TP
+.BI "\-a" " bus_address"
+Specify address on bus for
+.IR i2c_device .
+This option is mandatory for I2C interface.
+
+.TP
+.BI "\-b" " baud_rate"
+Specify baud rate speed of
+.IR tty_device .
+Please notice that the ST bootloader can automatically detect the baud rate,
+as explaned in chapter 2 of AN3155.
+This option could be required together with option
+.B "\-c"
+or if following interaction with bootloader is expected.
+Default is
+.IR 57600 .
+
+.TP
+.BI "\-m" " mode"
+Specify the format of UART data.
+.I mode
+is a three characters long string where each character specifies, in
+this strict order, character size, parity and stop bits.
+The only values currenly used are
+.I 8e1
+for standard STM32 bootloader and
+.I 8n1
+for standard STM32W bootloader.
+Default is
+.IR 8e1 .
+
+.TP
+.BI "\-r" " filename"
+Specify to read the STM32[W] flash and write its content in
+.I filename
+in raw binary format (see below
+.BR "FORMAT CONVERSION" ).
+
+.TP
+.BI "\-w" " filename"
+Specify to write the STM32[W] flash with the content of
+.IR filename .
+File format can be either raw binary or intel hex (see below
+.BR "FORMAT CONVERSION" ).
+The file format is automatically detected.
+To by\-pass format detection and force binary mode (e.g. to
+write an intel hex content in STM32[W] flash), use
+.B \-f
+option.
+
+.TP
+.B \-u
+Specify to disable write\-protection from STM32[W] flash.
+The STM32[W] will be reset after this operation.
+
+.TP
+.B \-j
+Enable the flash read\-protection.
+
+.TP
+.B \-k
+Disable the flash read\-protection.
+
+.TP
+.B \-o
+Erase only.
+
+.TP
+.BI "\-e" " num"
+Specify to erase only
+.I num
+pages before writing the flash. Default is to erase the whole flash. With
+.B \-e 0
+the flash would not be erased.
+
+.TP
+.B \-v
+Specify to verify flash content after write operation.
+
+.TP
+.BI "\-n" " count"
+Specify to retry failed writes up to
+.I count
+times. Default is 10 times.
+
+.TP
+.BI "\-g" " address"
+Specify address to start execution from (0 = flash start).
+
+.TP
+.BI "\-s" " start_page"
+Specify flash page offset (0 = flash start).
+
+.TP
+.BI "\-S" " address" "[:" "length" "]"
+Specify start address and optionally length for read/write/erase/crc operations.
+
+.TP
+.BI "\-F" " RX_length" "[:" "TX_length" "]"
+Specify the maximum frame size for the current interface.
+Due to STM32 bootloader protocol, host will never handle frames bigger than
+256 byte in RX or 258 byte in TX.
+Due to current code, lowest limit in RX is 20 byte (to read a complete reply
+of command GET). Minimum limit in TX is 5 byte, required by protocol.
+
+.TP
+.B \-f
+Force binary parser while reading file with
+.BR "\-w" "."
+
+.TP
+.B \-h
+Show help.
+
+.TP
+.B \-c
+Specify to resume the existing UART connection and don't send initial
+INIT sequence to detect baud rate. Baud rate must be kept the same as the
+existing connection. This is useful if the reset fails.
+
+.TP
+.BI "\-i" " GPIO_string"
+Specify the GPIO sequences on the host to force STM32[W] to enter and
+exit bootloader mode. GPIO can either be real GPIO connected from host to
+STM32[W] beside the UART connection, or UART's modem signals used as
+GPIO. (See below
+.B BOOTLOADER GPIO SEQUENCE
+for the format of
+.I GPIO_string
+and further explanation).
+
+.TP
+.B \-C
+Specify to compute CRC on memory content.
+By default the CRC is computed on the whole flash content.
+Use
+.B "\-S"
+to provide different memory address range.
+
+.TP
+.B \-R
+Specify to reset the device at exit.
+This option is ignored if either
+.BR "\-g" ","
+.BR "\-j" ","
+.B "\-k"
+or
+.B "\-u"
+is also specified.
+
+.SH BOOTLOADER GPIO SEQUENCE
+This feature is currently available on Linux host only.
+
+As explained in ST application note AN2606, after reset the STM32 will
+execute either the application program in user flash or the bootloader,
+depending on the level applied at specific pins of STM32 during reset.
+
+STM32 bootloader is automatically activated by configuring the pins
+BOOT0="high" and BOOT1="low" and then by applying a reset.
+Application program in user flash is activated by configuring the pin
+BOOT0="low" (the level on BOOT1 is ignored) and then by applying a reset.
+
+When GPIO from host computer are connected to either configuration and
+reset pins of STM32,
+.B stm32flash
+can control the host GPIO to reset STM32 and to force execution of
+bootloader or execution of application program.
+
+The sequence of GPIO values to entry to and exit from bootloader mode is
+provided with command line option
+.B "\-i"
+.IR "GPIO_string" .
+
+.PD 0
+The format of
+.IR "GPIO_string" " is:"
+.RS
+GPIO_string = [entry sequence][:[exit sequence]]
+.P
+sequence = [\-]n[,sequence]
+.RE
+.P
+In the above sequences, negative numbers correspond to GPIO at "low" level;
+numbers without sign correspond to GPIO at "high" level.
+The value "n" can either be the GPIO number on the host system or the
+string "rts", "dtr" or "brk". The strings "rts" and "dtr" drive the
+corresponding UART's modem lines RTS and DTR as GPIO.
+The string "brk" forces the UART to send a BREAK sequence on TX line;
+after BREAK the UART is returned in normal "non\-break" mode.
+Note: the string "\-brk" has no effect and is ignored.
+.PD
+
+.PD 0
+As example, let's suppose the following connection between host and STM32:
+.IP \(bu 2
+host GPIO_3 connected to reset pin of STM32;
+.IP \(bu 2
+host GPIO_4 connected to STM32 pin BOOT0;
+.IP \(bu 2
+host GPIO_5 connected to STM32 pin BOOT1.
+.PD
+.P
+
+In this case, the sequence to enter in bootloader mode is: first put
+GPIO_4="high" and GPIO_5="low"; then send reset pulse by GPIO_3="low"
+followed by GPIO_3="high".
+The corresponding string for
+.I GPIO_string
+is "4,\-5,\-3,3".
+
+To exit from bootloade and run the application program, the sequence is:
+put GPIO_4="low"; then send reset pulse.
+The corresponding string for
+.I GPIO_string
+is "\-4,\-3,3".
+
+The complete command line flag is "\-i 4,\-5,\-3,3:\-4,\-3,3".
+
+STM32W uses pad PA5 to select boot mode; if during reset PA5 is "low" then
+STM32W will enter in bootloader mode; if PA5 is "high" it will execute the
+program in flash.
+
+As example, supposing GPIO_3 connected to PA5 and GPIO_2 to STM32W's reset.
+The command:
+.PD 0
+.RS
+stm32flash \-i \-3,\-2,2:3,\-2,2 /dev/ttyS0
+.RE
+provides:
+.IP \(bu 2
+entry sequence: GPIO_3=low, GPIO_2=low, GPIO_2=high
+.IP \(bu 2
+exit sequence: GPIO_3=high, GPIO_2=low, GPIO_2=high
+.PD
+
+.SH EXAMPLES
+Get device information:
+.RS
+.PD 0
+.P
+stm32flash /dev/ttyS0
+.PD
+.RE
+
+Write with verify and then start execution:
+.RS
+.PD 0
+.P
+stm32flash \-w filename \-v \-g 0x0 /dev/ttyS0
+.PD
+.RE
+
+Read flash to file:
+.RS
+.PD 0
+.P
+stm32flash \-r filename /dev/ttyS0
+.PD
+.RE
+
+Start execution:
+.RS
+.PD 0
+.P
+stm32flash \-g 0x0 /dev/ttyS0
+.PD
+.RE
+
+Specify:
+.PD 0
+.IP \(bu 2
+entry sequence: RTS=low, DTR=low, DTR=high
+.IP \(bu 2
+exit sequence: RTS=high, DTR=low, DTR=high
+.P
+.RS
+stm32flash \-i \-rts,\-dtr,dtr:rts,\-dtr,dtr /dev/ttyS0
+.PD
+.RE
+
+.SH FORMAT CONVERSION
+Flash images provided by ST or created with ST tools are often in file
+format Motorola S\-Record.
+Conversion between raw binary, intel hex and Motorola S\-Record can be
+done through software package SRecord.
+
+.SH AUTHORS
+The original software package
+.B stm32flash
+is written by
+.I Geoffrey McRae <geoff@spacevs.com>
+and is since 2012 maintained by
+.IR "Tormod Volden <debian.tormod@gmail.com>" .
+
+Man page and extension to STM32W and I2C are written by
+.IR "Antonio Borneo <borneo.antonio@gmail.com>" .
+
+Please report any bugs at the project homepage
+http://stm32flash.googlecode.com .
+
+.SH SEE ALSO
+.BR "srec_cat" "(1)," " srec_intel" "(5)," " srec_motorola" "(5)."
+
+The communication protocol used by ST bootloader is documented in
+following ST application notes, depending on communication port.
+The current version of
+.B stm32flash
+only supports
+.I UART
+and
+.I I2C
+ports.
+.PD 0
+.P
+.IP \(bu 2
+AN3154: CAN protocol used in the STM32 bootloader
+.P
+.RS
+http://www.st.com/web/en/resource/technical/document/application_note/CD00264321.pdf
+.RE
+
+.P
+.IP \(bu 2
+AN3155: USART protocol used in the STM32(TM) bootloader
+.P
+.RS
+http://www.st.com/web/en/resource/technical/document/application_note/CD00264342.pdf
+.RE
+
+.P
+.IP \(bu 2
+AN4221: I2C protocol used in the STM32 bootloader
+.P
+.RS
+http://www.st.com/web/en/resource/technical/document/application_note/DM00072315.pdf
+.RE
+
+.P
+.IP \(bu 2
+AN4286: SPI protocol used in the STM32 bootloader
+.P
+.RS
+http://www.st.com/web/en/resource/technical/document/application_note/DM00081379.pdf
+.RE
+
+.PD
+
+
+Boot mode selection for STM32 is documented in ST application note
+AN2606, available from the ST website:
+.PD 0
+.P
+http://www.st.com/web/en/resource/technical/document/application_note/CD00167594.pdf
+.PD
+
+.SH LICENSE
+.B stm32flash
+is distributed under GNU GENERAL PUBLIC LICENSE Version 2.
+Copy of the license is available within the source code in the file
+.IR "gpl\-2.0.txt" .
