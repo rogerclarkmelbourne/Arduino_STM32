@@ -1,0 +1,13 @@
+#! /bin/bash
+
+###################################################################
+# openocd commands to program the flash
+###################################################################
+
+
+OPENOCD_CFG=$( dirname "${BASH_SOURCE[0]}" )/openocd.cfg
+BIN_IMAGE=$1
+
+killall -s 9 openocd
+BIN_DIR=$( dirname "${BASH_SOURCE[0]}" )/../../../../tools/openocd/0.10.0-201601101000-dev
+$BIN_DIR/bin/openocd -f ${OPENOCD_CFG} -c init -c "reset halt" -c "flash write_image erase ${BIN_IMAGE} 0x8000000" -c "verify_image ${BIN_IMAGE} 0x8000000" -c reset -c shutdown

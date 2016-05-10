@@ -211,6 +211,14 @@ genericSTM32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+genericSTM32F103C.menu.upload_method.OpenOCDMethod=OpenOCD
+genericSTM32F103C.menu.upload_method.OpenOCDMethod.upload.protocol=openocd_upload
+genericSTM32F103C.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
+
+genericSTM32F103C.menu.upload_method.STLinkV2Method=STLinkV2
+genericSTM32F103C.menu.upload_method.STLinkV2Method.upload.protocol=stlinkv2_upload
+genericSTM32F103C.menu.upload_method.STLinkV2Method.upload.tool=stlinkv2_upload
+
 ########################### Generic STM32F103R ###########################
 
 genericSTM32F103R.name=Generic STM32F103R series
@@ -281,6 +289,14 @@ genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+genericSTM32F103R.menu.upload_method.OpenOCDMethod=OpenOCD
+genericSTM32F103R.menu.upload_method.OpenOCDMethod.upload.protocol=openocd_upload
+genericSTM32F103R.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
+
+genericSTM32F103R.menu.upload_method.STLinkV2Method=STLinkV2
+genericSTM32F103R.menu.upload_method.STLinkV2Method.upload.protocol=stlinkv2_upload
+genericSTM32F103R.menu.upload_method.STLinkV2Method.upload.tool=stlinkv2_upload
+
 ###################### Generic STM32F103T ########################################
 
 genericSTM32F103T.name=Generic STM32F103T series
@@ -348,8 +364,8 @@ genericSTM32F103V.upload.use_1200bps_touch=false
 genericSTM32F103V.upload.file_type=bin
 genericSTM32F103V.upload.auto_reset=true
 
-genericSTM32F103V.build.error_led_port=GPIOE
-genericSTM32F103V.build.error_led_pin=6
+genericSTM32F103V.build.error_led_port=GPIOB
+genericSTM32F103V.build.error_led_pin=9
 
 genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC
@@ -396,6 +412,14 @@ genericSTM32F103V.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+genericSTM32F103V.menu.upload_method.OpenOCDMethod=OpenOCD
+genericSTM32F103V.menu.upload_method.OpenOCDMethod.upload.protocol=openocd_upload
+genericSTM32F103V.menu.upload_method.OpenOCDMethod.upload.tool=openocd_upload
+
+genericSTM32F103V.menu.upload_method.STLinkV2Method=STLinkV2
+genericSTM32F103V.menu.upload_method.STLinkV2Method.upload.protocol=stlinkv2_upload
+genericSTM32F103V.menu.upload_method.STLinkV2Method.upload.tool=stlinkv2_upload
 
 ########################### Generic STM32F103Z ###########################
 

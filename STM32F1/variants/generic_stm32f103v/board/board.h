@@ -43,7 +43,7 @@
 
 #define BOARD_BUTTON_PIN        PC0
 #define BOARD_BUTTON_PIN2       PD12
-#define BOARD_LED_PIN           PE5
+#define BOARD_LED_PIN           PB9
 #define BOARD_LED_PIN2          PE6
 
 // USARTS
