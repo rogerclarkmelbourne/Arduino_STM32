@@ -1,0 +1,48 @@
+> src/dfu-util --intf 0 --alt 0 -v -v -v -s 0x8000000 -D test3
+dfu-util 0.4
+
+(C) 2005-2008 by Weston Schmidt, Harald Welte and OpenMoko Inc.
+(C) 2010-2011 Tormod Volden (DfuSe support)
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+
+dfu-util does currently only support DFU version 1.0
+
+Opening DFU USB device... ID 0483:df11
+Run-time device DFU version 011a
+Found DFU: [0483:df11] devnum=0, cfg=1, intf=0, alt=0, name="@Internal Flash  /0x08000000/128*002Kg"
+Claiming USB DFU Interface...
+Setting Alternate Setting #0 ...
+Determining device status: state = dfuIDLE, status = 0
+dfuIDLE, continuing
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+No valid DFU suffix signature
+Warning: File has no DFU suffix
+DfuSe interface name: "Internal Flash  "
+Memory segment at 0x08000000 128 x 2048 = 262144 (rew)
+Uploading to address = 0x08000000, size = 16384
+Erasing page size 2048 at address 0x08000000, page starting at 0x08000000
+ Download from image offset 00000000 to memory 08000000-080007ff, size 2048
+  Setting address pointer to 0x08000000
+Erasing page size 2048 at address 0x08000800, page starting at 0x08000800
+ Download from image offset 00000800 to memory 08000800-08000fff, size 2048
+  Setting address pointer to 0x08000800
+Erasing page size 2048 at address 0x08001000, page starting at 0x08001000
+ Download from image offset 00001000 to memory 08001000-080017ff, size 2048
+  Setting address pointer to 0x08001000
+Erasing page size 2048 at address 0x08001800, page starting at 0x08001800
+ Download from image offset 00001800 to memory 08001800-08001fff, size 2048
+  Setting address pointer to 0x08001800
+Erasing page size 2048 at address 0x08002000, page starting at 0x08002000
+ Download from image offset 00002000 to memory 08002000-080027ff, size 2048
+  Setting address pointer to 0x08002000
+Erasing page size 2048 at address 0x08002800, page starting at 0x08002800
+ Download from image offset 00002800 to memory 08002800-08002fff, size 2048
+  Setting address pointer to 0x08002800
+Erasing page size 2048 at address 0x08003000, page starting at 0x08003000
+ Download from image offset 00003000 to memory 08003000-080037ff, size 2048
+  Setting address pointer to 0x08003000
+Erasing page size 2048 at address 0x08003800, page starting at 0x08003800
+ Download from image offset 00003800 to memory 08003800-08003fff, size 2048
+  Setting address pointer to 0x08003800
+

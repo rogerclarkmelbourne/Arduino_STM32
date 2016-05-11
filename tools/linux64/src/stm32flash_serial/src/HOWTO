@@ -1,0 +1,35 @@
+Add new interfaces:
+=====================================================================
+Current version 0.4 supports the following interfaces:
+- UART Windows (either "COMn" and "\\.\COMn");
+- UART posix/Linux (e.g. "/dev/ttyUSB0");
+- I2C Linux through standard driver "i2c-dev" (e.g. "/dev/i2c-n").
+
+Starting from version 0.4, the back-end of stm32flash is modular and
+ready to be expanded to support new interfaces.
+I'm planning adding SPI on Linux through standard driver "spidev".
+You are invited to contribute with more interfaces.
+
+To add a new interface you need to add a new file, populate the struct
+port_interface (check at the end of files i2c.c, serial_posix.c and
+serial_w32.c) and provide the relative functions to operate on the
+interface: open/close, read/write, get_cfg_str and the optional gpio.
+The include the new drive in Makefile and register the new struct
+port_interface in file port.c in struct port_interface *ports[].
+
+There are several USB-I2C adapter in the market, each providing its
+own libraries to communicate with the I2C bus.
+Could be interesting to provide as back-end a bridge between stm32flash
+and such libraries (I have no plan on this item).
+
+
+Add new STM32 devices:
+=====================================================================
+Add a new line in file dev_table.c, in table devices[].
+The fields of the table are listed in stm32.h, struct stm32_dev.
+
+
+Cross compile on Linux host for Windows target with MinGW:
+=====================================================================
+I'm using a 64 bit Arch Linux machines, and I usually run:
+	make CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar
