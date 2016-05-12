@@ -71,5 +71,10 @@
 typedef uint8 boolean;
 typedef uint8 byte;
 
+#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000L) )
+
+
 #endif
 
