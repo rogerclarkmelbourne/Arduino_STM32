@@ -98,5 +98,10 @@ typedef unsigned int word;
 #ifndef _BV
 #define _BV(bit) (1 << (bit))
 #endif 
+
+#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000L) )
+
 #endif
 
