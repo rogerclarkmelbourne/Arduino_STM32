@@ -1,0 +1,14 @@
+DfuSe:
+- Do erase and write in two separate passes when downloading
+- Skip "Set Address" command when downloading contiguous blocks
+- Implement "Get Commands" command
+
+Devices:
+- Research iPhone/iPod/iPad support
+  Heavily modified dfu-util fork here:
+  https://github.com/planetbeing/xpwn/tree/master/dfu-util
+- Test against Niftylights
+
+Non-Code:
+- Logo
+- Re-License as LGPL for usage as library?

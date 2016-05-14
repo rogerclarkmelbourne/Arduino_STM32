@@ -1,0 +1,7 @@
+
+stm32:
+- Add support for variable page size
+
+AUTHORS:
+- Add contributors from Geoffrey's commits
+

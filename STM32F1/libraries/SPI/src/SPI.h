@@ -88,8 +88,8 @@
 #endif
 
 // PC13 or PA4
-//#define BOARD_SPI_DEFAULT_SS PA4
-#define BOARD_SPI_DEFAULT_SS PC13
+#define BOARD_SPI_DEFAULT_SS PA4
+//#define BOARD_SPI_DEFAULT_SS PC13
 
 #define SPI_MODE0 SPI_MODE_0
 #define SPI_MODE1 SPI_MODE_1
@@ -375,6 +375,7 @@ private:
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
 	
+	void updateSettings(void);
 	/*
 	spi_dev *spi_d;
 	uint8_t _SSPin;

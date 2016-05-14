@@ -43,6 +43,7 @@
 
 
 #include <string.h>
+
 #include <WString.h>
 #include <avr/dtostrf.h>
 #include <avr/pgmspace.h>
@@ -74,12 +75,7 @@
 
 #include <stdint.h>
 
-
-#define SS 		BOARD_SPI1_NSS_PIN
-#define MOSI 	BOARD_SPI1_MOSI_PIN 
-#define MISO 	BOARD_SPI1_MISO_PIN
-#define SCK 	BOARD_SPI1_SCK_PIN
-
+#include <WCharacter.h>
 
 typedef unsigned int word;
 // typedef uint16 word;// definition from Arduino website, now appears to be incorrect for 32 bit devices
@@ -102,5 +98,10 @@ typedef unsigned int word;
 #ifndef _BV
 #define _BV(bit) (1 << (bit))
 #endif 
+
+#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000L) )
+
 #endif
 

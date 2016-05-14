@@ -3,11 +3,14 @@
 menu.device_variant=Variant
 menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
+menu.cpu_speed=CPU Speed(MHz)
 
 ##############################################################
 mapleMini.name=Maple Mini
 
 mapleMini.build.board=MAPLE_MINI
+mapleMini.vid.0=0x1EAF
+mapleMini.pid.0=0x0004
 mapleMini.build.core=maple
 mapleMini.build.cpu_flags=-DMCU_STM32F103CB -DSERIAL_USB
 mapleMini.build.variant=maple_mini
@@ -38,6 +41,8 @@ mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 ##############################################################
 maple.name=Maple (Rev 3)
 
+maple.vid.0=0x1EAF
+maple.pid.0=0x0004
 maple.upload.tool=maple_upload
 maple.upload.protocol=maple_dfu
 maple.upload.maximum_size=108000
@@ -59,6 +64,8 @@ maple.build.vect=VECT_TAB_ADDR=0x8005000
 ##############################################################
 mapleRET6.name=Maple (RET6)
 
+mapleRET6.vid.0=0x1EAF
+mapleRET6.pid.0=0x0004
 mapleRET6.build.board=MAPLE_RET6
 mapleRET6.build.core=maple
 mapleRET6.build.cpu_flags=-DMCU_STM32F103RE -DSERIAL_USB
@@ -82,6 +89,8 @@ mapleRET6.upload.auto_reset=true
 
 microduino32_flash.name=Microduino Core STM32 to Flash
 
+microduino32_flash.vid.0=0x1EAF
+microduino32_flash.pid.0=0x0004
 microduino32_flash.upload.tool=maple_upload
 microduino32_flash.upload.protocol=maple_dfu
 microduino32_flash.upload.maximum_size=108000
@@ -125,10 +134,8 @@ nucleo_f103rb.upload.altID=1
 nucleo_f103rb.upload.auto_reset=true
 
 nucleo_f103rb.build.mcu=cortex-m3
-nucleo_f103rb.build.f_cpu=72000000L
-nucleo_f103rb.build.board=STM_NUCLEU_F103RB
+nucleo_f103rb.build.board=STM_NUCLEO_F103RB
 nucleo_f103rb.build.core=maple
-nucleo_f103rb.build.extra_flags=-DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
 nucleo_f103rb.build.ldscript=ld/jtag.ld
 nucleo_f103rb.build.variant=nucleo_f103rb
 nucleo_f103rb.build.variant_system_lib=libmaple.a
@@ -139,9 +146,21 @@ nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 nucleo_f103rb.build.vect=VECT_TAB_ADDR=0x8000000
 
+## internal oscillator (HSI), running at 64 MHz
+nucleo_f103rb.menu.device_variant.NucleoF103_HSI=Nucleo F103 @ 64 MHz
+nucleo_f103rb.menu.device_variant.NucleoF103_HSI.build.f_cpu=64000000L
+nucleo_f103rb.menu.device_variant.NucleoF103_HSI.build.extra_flags=-DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
+
+## external crystal (HSE), running at 72 MHz
+nucleo_f103rb.menu.device_variant.NucleoF103_HSE=Nucleo F103 @ 72 MHz w/ crystal
+nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.f_cpu=72000000L
+nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.extra_flags=-DNUCLEO_HSE_CRYSTAL -DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
+
 ###################### Generic STM32F103C ########################################
 
 genericSTM32F103C.name=Generic STM32F103C series
+genericSTM32F103C.vid.0=0x1EAF
+genericSTM32F103C.pid.0=0x0004
 genericSTM32F103C.build.variant=generic_stm32f103c
 genericSTM32F103C.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103C.build.core=maple
@@ -195,6 +214,8 @@ genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 ########################### Generic STM32F103R ###########################
 
 genericSTM32F103R.name=Generic STM32F103R series
+genericSTM32F103R.vid.0=0x1EAF
+genericSTM32F103R.pid.0=0x0004
 #genericSTM32F103R.build.variant=generic_stm32f103r
 genericSTM32F103R.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103R.build.core=maple
@@ -263,6 +284,8 @@ genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 ###################### Generic STM32F103T ########################################
 
 genericSTM32F103T.name=Generic STM32F103T series
+genericSTM32F103T.vid.0=0x1EAF
+genericSTM32F103T.pid.0=0x0004
 genericSTM32F103T.build.variant=generic_stm32f103t
 genericSTM32F103T.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103T.build.core=maple
@@ -315,6 +338,8 @@ genericSTM32F103T.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 ########################### Generic STM32F103V ###########################
 
 genericSTM32F103V.name=Generic STM32F103V series
+genericSTM32F103V.vid.0=0x1EAF
+genericSTM32F103V.pid.0=0x0004
 genericSTM32F103V.build.variant=generic_stm32f103v
 genericSTM32F103V.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103V.build.core=maple
@@ -375,6 +400,8 @@ genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 ########################### Generic STM32F103Z ###########################
 
 genericSTM32F103Z.name=Generic STM32F103Z series
+genericSTM32F103Z.vid.0=0x1EAF
+genericSTM32F103Z.pid.0=0x0004
 genericSTM32F103Z.build.variant=generic_stm32f103z
 genericSTM32F103Z.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103Z.build.core=maple
@@ -428,3 +455,68 @@ genericSTM32F103Z.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+###################### Generic GD32F103C  ########################################
+
+genericGD32F103C.name=Generic GD32F103C series
+genericGD32F103C.build.variant=generic_GD32f103c
+genericGD32F103C.build.vect=VECT_TAB_ADDR=0x8000000
+genericGD32F103C.build.core=maple
+genericGD32F103C.build.board=GENERIC_GD32F103C
+genericGD32F103C.upload.use_1200bps_touch=false
+genericGD32F103C.upload.file_type=bin
+genericGD32F103C.upload.auto_reset=true
+genericGD32F103C.build.cpu_flags=-DMCU_STM32F103CB  
+genericGD32F103C.build.f_cpu=72000000L
+
+## GD32F103CB -------------------------
+genericGD32F103C.menu.device_variant.GD32F103CB=GD32F103CB (20k RAM. 128k Flash)
+genericGD32F103C.menu.device_variant.GD32F103CB.build.ldscript=ld/jtag.ld
+genericGD32F103C.menu.device_variant.GD32F103CB.upload.maximum_size=131072
+genericGD32F103C.menu.device_variant.GD32F103CB.upload.ram.maximum_size=20480
+genericGD32F103C.menu.device_variant.GD32F103CB.upload.flash.maximum_size=131072
+
+
+## GD32F103C8 -------------------------
+genericGD32F103C.menu.device_variant.GD32F103C8=GD32F103C8 (20k RAM. 64k Flash)
+genericGD32F103C.menu.device_variant.GD32F103C8.build.ldscript=ld/jtag_c8.ld
+genericGD32F103C.menu.device_variant.GD32F103C8.upload.maximum_size=65536
+genericGD32F103C.menu.device_variant.GD32F103C8.upload.ram.maximum_size=20480
+genericGD32F103C.menu.device_variant.GD32F103C8.upload.flash.maximum_size=65536
+
+#---------------------------- UPLOAD METHODS ---------------------------
+
+genericGD32F103C.menu.upload_method.DFUUploadMethod=GD32duino bootloader
+
+genericGD32F103C.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+genericGD32F103C.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+genericGD32F103C.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+genericGD32F103C.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+genericGD32F103C.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_20.ld
+genericGD32F103C.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+genericGD32F103C.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+genericGD32F103C.menu.upload_method.serialMethod=Serial
+genericGD32F103C.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericGD32F103C.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+
+genericGD32F103C.menu.upload_method.STLinkMethod=STLink
+genericGD32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericGD32F103C.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericGD32F103C.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+
+genericGD32F103C.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericGD32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericGD32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericGD32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+genericGD32F103C.menu.cpu_speed.speed_120mhz=120Mhz (overdrive)
+genericGD32F103C.menu.cpu_speed.speed_120mhz.build.f_cpu=120000000L
+
+genericGD32F103C.menu.cpu_speed.speed_96mhz=96Mhz (Stable)
+genericGD32F103C.menu.cpu_speed.speed_96mhz.build.f_cpu=96000000L
+
+genericGD32F103C.menu.cpu_speed.speed_72mhz=72Mhz (compatibility)
+genericGD32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L

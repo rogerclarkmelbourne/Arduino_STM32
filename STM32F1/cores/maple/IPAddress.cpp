@@ -19,6 +19,7 @@
 
 #include <Arduino.h>
 #include <IPAddress.h>
+#include <Print.h>
 
 IPAddress::IPAddress()
 {
@@ -70,5 +71,17 @@ size_t IPAddress::printTo(Print& p) const
     }
     n += p.print(_address.bytes[3], DEC);
     return n;
+}
+
+String IPAddress::toString()
+{
+    String str = String(_address.bytes[0]);
+    str += ".";
+    str += String(_address.bytes[1]);
+    str += ".";
+    str += String(_address.bytes[2]);
+    str += ".";
+    str += String(_address.bytes[3]);
+    return str;
 }
 

@@ -126,12 +126,17 @@ size_t n = 0;
     }
 
 
-    if (sent == USB_CDCACM_TX_EPSIZE) {
-        while (usb_cdcacm_is_transmitting() != 0) {
-        }
-        /* flush out to avoid having the pc wait for more data */
-        usb_cdcacm_tx(NULL, 0);
-    }
+#if 0
+// this code leads to a serious performance drop and appears to be
+// unnecessary - everything seems to work fine without, -jcw, 2015-11-05
+// see http://stm32duino.com/posting.php?mode=quote&f=3&p=7746
+	if (sent == USB_CDCACM_TX_EPSIZE) {
+	while (usb_cdcacm_is_transmitting() != 0) {
+	}
+	/* flush out to avoid having the pc wait for more data */
+	usb_cdcacm_tx(NULL, 0);
+	}
+#endif
 		return n;
 }
 
@@ -199,7 +204,7 @@ uint8 USBSerial::pending(void) {
 }
 
 uint8 USBSerial::isConnected(void) {
-    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB);
+    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
 uint8 USBSerial::getDTR(void) {

@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-US">
+
+<head>
+	<title>DfuSe and dfu-util</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=iso-8859-1" />
+	<meta name="author" content="Tormod Volden" />
+	<meta name="keywords" content="dfu-util, DfuSe, ST DFU extensions" />
+	<meta name="description" content="How to use dfu-util with DfuSe devices" />
+	<link rel="icon" type="image/png" href="favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="simple.css" media="screen, print" />
+</head>
+
+<body>
+<div id="middlebox">
+    <h1>Using dfu-util with DfuSe devices</h1>
+      <h2>DfuSe</h2>
+      <p>
+	DfuSe (DFU with ST Microsystems extensions) is a protocol based on
+	DFU 1.1. However, in expanding the functionality of the DFU protocol,
+	ST Microsystems broke all compatibility with the DFU 1.1 standard.
+	DfuSe devices report the DFU version as "1.1a".
+      </p>
+      <p>
+	DfuSe can be used to download firmware and other data
+	from a host computer to a conforming device (or upload in the
+	opposite direction) over USB similar to standard DFU.
+      </p>
+      <p>
+	The main difference from standard DFU is that the target address in
+	the device (flash) memory is specified by the host, so that a
+	download can be performed to parts of the device memory. The host
+	program is also responsible for erasing flash pages before they
+	are written to.
+      </p>
+      <h2>.dfu files</h2>
+      <p>
+	A special file format is defined by ST Microsystems to carry firmware
+	for DfuSe devices. The file contains target information such as address
+	and alternate interface information in addition to the binary data.
+	Several blocks of binary data can be combined in one .dfu file.
+      </p>
+      <h2>Alternate interfaces</h2>
+      <p>
+	Different memory locations of the device may have different
+	characteristics that the host program (dfu-util) has to take
+	into considerations, such as flash memory page size, read-only
+	versus read-write segments, the need to erase, and so on.
+	These parameters are reported by the device in the string
+	descriptors meant for describing the USB interfaces.
+	The host program decodes these strings to build a memory map of
+	the device. Different memory units or address spaces are listed
+	in separate alternate interface settings that must be selected
+	according to the memory unit to access.
+      </p>
+      <p>
+	Note that dfu-util leaves it to the user to select alternate
+	interface. When parsing a .dfu file it will skip file segments
+	not matching the selected alternate interface. Also, some
+	DfuSe device firmware implementations ignore the setting of
+	alternate interface and deduct the memory unit from the
+	address, since they have no address space overlap.
+      </p>
+      <h2>DfuSe special commands</h2>
+      <p>
+	DfuSe special commands are used by the host program during normal
+	downloads or uploads, such as SET_ADDRESS and ERASE_PAGE. Also
+	the normal DFU_DNLOAD and DFU_UPLOAD commands have special
+	implementations in DfuSe.
+	Many DfuSe devices also support commands to leave DFU mode,
+	read unprotect the flash memory or mass erase the flash memory.
+	dfu-util (from version 0.7)
+	supports adding "leave", "unprotect", or "mass-erase"
+	to the -s option argument to send such requests in combination
+	with a download request. These modifiers are separated with a colon.
+      </p>
+      <p>
+	Some DfuSe devices have their DfuSe bootloader running from flash
+	memory. Erasing the whole flash memory would therefore destroy
+	the DfuSe bootloader itself and practically brick the device
+	for most users. Any use of modifiers such as "unprotect"
+	and "mass-erase" therefore needs to be combined with the "force"
+	modifer. This is not included in the examples, to not encourage
+	ignorant users to copy and paste such instructions and shoot
+	themselves in the foot.
+      </p>
+      <p>
+	Devices based on for instance STM32F103 all run the bootloader
+	from flash, since there is no USB bootloader in ROM.
+      </p>
+      <p>
+	For instance STM32F107, STM32F2xx and STM32F4xx devices have a
+	DfuSe bootloader in ROM, so the flash can be erased while
+	keeping the device available for USB DFU transfers as long
+	as the device designers use this built-in bootloader and have
+	not implemented another DfuSe bootloader in flash that the user is
+	dependent upon.
+      </p>
+      <p>
+	Well-written bootloaders running from flash will report their
+	own memory region as read-only and not eraseable, but this does
+	not prevent dfu-util from sending a "unprotect" or "mass-erase"
+	request which overrides this, if the user insists.
+      </p>
+      <h2>Example usage</h2>
+      <p>
+       Flashing a .dfu (special DfuSe format) file to the device:
+      </p>
+	<pre>
+         $ dfu-util -a 0 -D /path/to/dfuse-image.dfu
+	</pre>
+      <p>
+       Reading out 1 KB of flash starting at address 0x8000000:
+      </p>
+	<pre>
+         $ dfu-util -a 0 -s 0x08000000:1024 -U newfile.bin
+	</pre>
+      <p>
+       Flashing  a  binary  file to address 0x8004000 of device memory and ask
+       the device to leave DFU mode:
+      </p>
+	<pre>
+         $ dfu-util -a 0 -s 0x08004000:leave -D /path/to/image.bin
+	</pre>
+      <p>
+	[<a href="index.html">Back to dfu-util main page</a>]
+      </p>
+      <p id="footer">
+        &copy;2012 Tormod Volden &mdash; Valid <a href="http://validator.w3.org/check?uri=referer" title="validate XHTML">XHTML</a> &amp; <a href="http://jigsaw.w3.org/css-validator" title="validate CSS">CSS</a>
+      </p>
+</div>
+</body>
+</html>

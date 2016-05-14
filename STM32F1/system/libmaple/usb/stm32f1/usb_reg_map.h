@@ -439,7 +439,7 @@ static inline uint16 usb_get_ep_tx_addr(uint8 ep) {
 }
 
 static inline void usb_set_ep_tx_addr(uint8 ep, uint16 addr) {
-    uint32 *tx_addr = usb_ep_tx_addr_ptr(ep);
+    volatile uint32 *tx_addr = usb_ep_tx_addr_ptr(ep);
     *tx_addr = addr & ~0x1;
 }
 
@@ -454,7 +454,7 @@ static inline uint16 usb_get_ep_rx_addr(uint8 ep) {
 }
 
 static inline void usb_set_ep_rx_addr(uint8 ep, uint16 addr) {
-    uint32 *rx_addr = usb_ep_rx_addr_ptr(ep);
+    volatile uint32 *rx_addr = usb_ep_rx_addr_ptr(ep);
     *rx_addr = addr & ~0x1;
 }
 
@@ -471,7 +471,7 @@ static inline uint16 usb_get_ep_tx_count(uint8 ep) {
 }
 
 static inline void usb_set_ep_tx_count(uint8 ep, uint16 count) {
-    uint32 *txc = usb_ep_tx_count_ptr(ep);
+    volatile uint32 *txc = usb_ep_tx_count_ptr(ep);
     *txc = count;
 }
 
