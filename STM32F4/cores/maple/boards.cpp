@@ -158,7 +158,6 @@ static void timerDefaultConfig(timer_dev *dev) {
     regs->PSC = 1;
     regs->SR = 0;
     regs->DIER = 0;
-    regs->EGR = TIMER_EGR_UG;
 
     switch (dev->type) {
     case TIMER_ADVANCED:
@@ -176,5 +175,6 @@ static void timerDefaultConfig(timer_dev *dev) {
         break;
     }
 
+    regs->EGR = TIMER_EGR_UG;
     timer_resume(dev);
 }
