@@ -49,8 +49,8 @@ extern "C"{
     __io uint32 CCR;    /*!< ADC common control register,                 Address offset: ADC1 base address + 0x304 */
     __io uint32 CDR;    /*!< ADC common regular data register for dual
                              AND triple modes,                            Address offset: ADC1 base address + 0x308 */
-  } ADC_Common_TypeDef;
-#define ADC_COMMON  ((ADC_Common_TypeDef *) 0x40012300)
+  } ADC_Common_TypeDef_libmaple;
+#define ADC_COMMON  ((ADC_Common_TypeDef_libmaple *) 0x40012300)
 
 #endif
 
