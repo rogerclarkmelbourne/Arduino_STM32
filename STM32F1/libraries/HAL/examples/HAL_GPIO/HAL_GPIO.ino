@@ -25,7 +25,7 @@ void setup()
 
 void loop()
 {
-//	Serial.println(c++);
+	Serial.println(c++);
 
 	HAL_GPIO_WritePin(LED_PORT,LED_PIN,GPIO_PIN_SET);
 

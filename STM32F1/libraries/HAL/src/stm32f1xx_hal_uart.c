@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_uart.c
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   UART HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities of the Universal Asynchronous Receiver Transmitter (UART) peripheral:
@@ -209,21 +209,7 @@ static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, 
         (++) Baud Rate
         (++) Word Length 
         (++) Stop Bit
-        (++) Parity: If the parity is enabled, then the MSB bit of the data written
-             in the data register is transmitted but is changed by the parity bit.
-             Depending on the frame length defined by the M bit (8-bits or 9-bits),
-             the possible UART frame formats are as listed in the following table:
-        (+++)    +-------------------------------------------------------------+     
-        (+++)    |   M bit |  PCE bit  |            UART frame                 |
-        (+++)    |---------------------|---------------------------------------|             
-        (+++)    |    0    |    0      |    | SB | 8 bit data | STB |          |
-        (+++)    |---------|-----------|---------------------------------------|  
-        (+++)    |    0    |    1      |    | SB | 7 bit data | PB | STB |     |
-        (+++)    |---------|-----------|---------------------------------------|  
-        (+++)    |    1    |    0      |    | SB | 9 bit data | STB |          |
-        (+++)    |---------|-----------|---------------------------------------|  
-        (+++)    |    1    |    1      |    | SB | 8 bit data | PB | STB |     |
-        (+++)    +-------------------------------------------------------------+            
+        (++) Parity
         (++) Hardware flow control
         (++) Receiver/transmitter modes
     [..]
@@ -236,6 +222,24 @@ static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, 
 @endverbatim
   * @{
   */
+
+/*
+  Additionnal remark: If the parity is enabled, then the MSB bit of the data written
+                      in the data register is transmitted but is changed by the parity bit.
+                      Depending on the frame length defined by the M bit (8-bits or 9-bits),
+                      the possible UART frame formats are as listed in the following table:
+    +-------------------------------------------------------------+
+    |   M bit |  PCE bit  |            UART frame                 |
+    |---------------------|---------------------------------------|
+    |    0    |    0      |    | SB | 8 bit data | STB |          |
+    |---------|-----------|---------------------------------------|
+    |    0    |    1      |    | SB | 7 bit data | PB | STB |     |
+    |---------|-----------|---------------------------------------|
+    |    1    |    0      |    | SB | 9 bit data | STB |          |
+    |---------|-----------|---------------------------------------|
+    |    1    |    1      |    | SB | 8 bit data | PB | STB |     |
+    +-------------------------------------------------------------+
+*/
 
 /**
   * @brief  Initializes the UART mode according to the specified parameters in

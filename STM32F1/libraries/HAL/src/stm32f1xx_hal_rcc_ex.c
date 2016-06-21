@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_rcc_ex.c
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Extended RCC HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities RCC extension peripheral:
@@ -92,7 +92,7 @@
     (@) Important note: Care must be taken when HAL_RCCEx_PeriphCLKConfig() is used to
         select the RTC clock source; in this case the Backup domain will be reset in  
         order to modify the RTC Clock source, as consequence RTC registers (including 
-        the backup registers) and RCC_BDCR register are set to their reset values.
+        the backup registers) are set to their reset values.
       
 @endverbatim
   * @{
@@ -148,8 +148,9 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
       }      
     }
       
-    /* Reset the Backup domain only if the RTC Clock source selection is modified */ 
-    if((RCC->BDCR & RCC_BDCR_RTCSEL) != (PeriphClkInit->RTCClockSelection & RCC_BDCR_RTCSEL))
+    /* Reset the Backup domain only if the RTC Clock source selection is modified from reset value */ 
+    temp_reg = (RCC->BDCR & RCC_BDCR_RTCSEL);
+    if((temp_reg != 0x00000000U) && (temp_reg != (PeriphClkInit->RTCClockSelection & RCC_BDCR_RTCSEL)))
     {
       /* Store the content of BDCR register before the reset of Backup Domain */
       temp_reg = (RCC->BDCR & ~(RCC_BDCR_RTCSEL));
@@ -160,7 +161,7 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
       RCC->BDCR = temp_reg;
 
       /* Wait for LSERDY if LSE was enabled */
-      if (HAL_IS_BIT_SET(temp_reg, RCC_BDCR_LSERDY))
+      if (HAL_IS_BIT_SET(temp_reg, RCC_BDCR_LSEON))
       {
         /* Get timeout */
         tickstart = HAL_GetTick();
@@ -174,8 +175,8 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
           }      
         }  
       }
-      __HAL_RCC_RTC_CONFIG(PeriphClkInit->RTCClockSelection); 
     }
+    __HAL_RCC_RTC_CONFIG(PeriphClkInit->RTCClockSelection); 
   }
 
   /*------------------------------ ADC clock Configuration ------------------*/ 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    stm32f1xx_hal_dma.h
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    11-January-2016
+  * @version V1.0.4
+  * @date    29-April-2016
   * @brief   Header file of DMA HAL module.
   ******************************************************************************
   * @attention
@@ -349,6 +349,14 @@ typedef struct __DMA_HandleTypeDef
   * @retval The state of DMA_IT (SET or RESET).
   */
 #define __HAL_DMA_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)  ((((__HANDLE__)->Instance->CCR & (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
+
+/**
+  * @brief  Returns the number of remaining data units in the current DMAy Channelx transfer.
+  * @param  __HANDLE__: DMA handle
+  *   
+  * @retval The number of remaining data units in the current DMA Channel transfer.
+  */
+#define __HAL_DMA_GET_COUNTER(__HANDLE__) ((__HANDLE__)->Instance->CNDTR)
 
 /**
   * @}
