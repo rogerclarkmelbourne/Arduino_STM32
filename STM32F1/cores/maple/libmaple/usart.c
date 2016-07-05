@@ -39,9 +39,28 @@
  * @param dev         Serial port to be initialized
  */
 void usart_init(usart_dev *dev) {
-    rb_init(dev->rb, USART_RX_BUF_SIZE, dev->rx_buf);
+    usart_init_new(dev,USART_RX_BUF_SIZE,USART_TX_BUF_SIZE);
+    
+    //rb_init(dev->rb, USART_RX_BUF_SIZE, dev->rx_buf);
+    //rb_init(dev->wb, USART_TX_BUF_SIZE, dev->tx_buf);
+    //rcc_clk_enable(dev->clk_id);
+    //nvic_irq_enable(dev->irq_num);
+}
+
+/**
+ * @brief Initialize a serial port.
+ * @param dev         Serial port to be initialized
+ * @param rx_buf      Pointer to RX buffer
+ * @param rx_buf_size Size of RX buffer
+ * @param tx_buf      Pointer to TX buffer
+ * @param tx_buf_size Size of TX buffer
+ */
+void usart_init_new(usart_dev *dev,uint16 rx_buf_size,uint16 tx_buf_size) {
+    rb_init(dev->rb, rx_buf_size);
+    rb_init(dev->wb, tx_buf_size);
     rcc_clk_enable(dev->clk_id);
     nvic_irq_enable(dev->irq_num);
+    dev->blockingTx = 1; // default to blocking TX
 }
 
 /**
@@ -78,6 +97,7 @@ void usart_disable(usart_dev *dev) {
 
     /* Clean up buffer */
     usart_reset_rx(dev);
+    usart_reset_tx(dev);
 }
 
 /**
@@ -90,9 +110,23 @@ void usart_disable(usart_dev *dev) {
 uint32 usart_tx(usart_dev *dev, const uint8 *buf, uint32 len) {
     usart_reg_map *regs = dev->regs;
     uint32 txed = 0;
-    while ((regs->SR & USART_SR_TXE) && (txed < len)) {
+    uint32 buffered = 0;
+    while (rb_is_empty(dev->wb) && (regs->SR & USART_SR_TXE) && (txed < len)) {
         regs->DR = buf[txed++];
     }
+    
+    while (txed < len) {
+        if (rb_safe_insert(dev->wb, buf[txed])) {
+            txed++;
+            buffered++;
+        }
+        else
+            break;
+    }
+    if (buffered) {
+        regs->CR1 |= USART_CR1_TXEIE;
+    }
+    
     return txed;
 }
 
@@ -134,4 +168,12 @@ void usart_putudec(usart_dev *dev, uint32 val) {
     while (--i >= 0) {
         usart_putc(dev, digits[i]);
     }
+}
+
+void usart_enabableBlockingTX(usart_dev *dev) {
+    dev->blockingTx = 1;
+}
+
+void usart_disabableBlockingTX(usart_dev *dev) {
+    dev->blockingTx = 0;
 }

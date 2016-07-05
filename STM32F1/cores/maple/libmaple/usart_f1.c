@@ -40,10 +40,12 @@
  * Devices
  */
 
-static ring_buffer usart1_rb;
+static ring_buffer usart1_rb = {0};
+static ring_buffer usart1_wb = {0};
 static usart_dev usart1 = {
     .regs     = USART1_BASE,
     .rb       = &usart1_rb,
+    .wb       = &usart1_wb,
     .max_baud = 4500000UL,
     .clk_id   = RCC_USART1,
     .irq_num  = NVIC_USART1,
@@ -51,10 +53,12 @@ static usart_dev usart1 = {
 /** USART1 device */
 usart_dev *USART1 = &usart1;
 
-static ring_buffer usart2_rb;
+static ring_buffer usart2_rb = {0};
+static ring_buffer usart2_wb = {0};
 static usart_dev usart2 = {
     .regs     = USART2_BASE,
     .rb       = &usart2_rb,
+    .wb       = &usart2_wb,
     .max_baud = 2250000UL,
     .clk_id   = RCC_USART2,
     .irq_num  = NVIC_USART2,
@@ -62,10 +66,12 @@ static usart_dev usart2 = {
 /** USART2 device */
 usart_dev *USART2 = &usart2;
 
-static ring_buffer usart3_rb;
+static ring_buffer usart3_rb = {0};
+static ring_buffer usart3_wb = {0};
 static usart_dev usart3 = {
     .regs     = USART3_BASE,
     .rb       = &usart3_rb,
+    .wb       = &usart3_wb,
     .max_baud = 2250000UL,
     .clk_id   = RCC_USART3,
     .irq_num  = NVIC_USART3,
@@ -74,10 +80,12 @@ static usart_dev usart3 = {
 usart_dev *USART3 = &usart3;
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-static ring_buffer uart4_rb;
+static ring_buffer uart4_rb = {0};
+static ring_buffer uart4_wb = {0};
 static usart_dev uart4 = {
     .regs     = UART4_BASE,
     .rb       = &uart4_rb,
+    .wb       = &uart4_wb,
     .max_baud = 2250000UL,
     .clk_id   = RCC_UART4,
     .irq_num  = NVIC_UART4,
@@ -85,10 +93,12 @@ static usart_dev uart4 = {
 /** UART4 device */
 usart_dev *UART4 = &uart4;
 
-static ring_buffer uart5_rb;
+static ring_buffer uart5_rb = {0};
+static ring_buffer uart5_wb = {0};
 static usart_dev uart5 = {
     .regs     = UART5_BASE,
     .rb       = &uart5_rb,
+    .wb       = &uart5_wb,
     .max_baud = 2250000UL,
     .clk_id   = RCC_UART5,
     .irq_num  = NVIC_UART5,
@@ -191,23 +201,23 @@ void usart_foreach(void (*fn)(usart_dev*)) {
  */
 
 void __irq_usart1(void) {
-    usart_irq(&usart1_rb, USART1_BASE);
+    usart_irq(&usart1_rb, &usart1_wb, USART1_BASE);
 }
 
 void __irq_usart2(void) {
-    usart_irq(&usart2_rb, USART2_BASE);
+    usart_irq(&usart2_rb, &usart2_wb, USART2_BASE);
 }
 
 void __irq_usart3(void) {
-    usart_irq(&usart3_rb, USART3_BASE);
+    usart_irq(&usart3_rb, &usart3_wb, USART3_BASE);
 }
 
 #ifdef STM32_HIGH_DENSITY
 void __irq_uart4(void) {
-    usart_irq(&uart4_rb, UART4_BASE);
+    usart_irq(&uart4_rb, &uart4_wb, UART4_BASE);
 }
 
 void __irq_uart5(void) {
-    usart_irq(&uart5_rb, UART5_BASE);
+    usart_irq(&uart5_rb, &uart5_wb, UART5_BASE);
 }
 #endif
