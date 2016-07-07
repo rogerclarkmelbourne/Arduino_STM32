@@ -65,15 +65,22 @@ typedef struct ring_buffer {
  *
  *  @param buf  Buffer to store items into
  */
-inline void rb_init(ring_buffer *rb, uint16 size);
-/*
 static inline void rb_init(ring_buffer *rb, uint16 size, uint8 *buf) {
     rb->head = 0;
     rb->used = 0;
     rb->size = size;
     rb->buf = buf;
 }
-*/
+
+/**
+ * Initialise a ring buffer. The buffer is dynamically allocated with malloc()
+ *
+ *  @param rb   Instance to initialise
+ *
+ *  @param size Number of items in buf
+ */
+inline void rb_init_new(ring_buffer *rb, uint16 size);
+
 /**
  * @brief Return the number of elements stored in the ring buffer.
  * @param rb Buffer whose elements to count.

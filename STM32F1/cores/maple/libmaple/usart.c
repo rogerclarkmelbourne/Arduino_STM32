@@ -56,8 +56,8 @@ void usart_init(usart_dev *dev) {
  * @param tx_buf_size Size of TX buffer
  */
 void usart_init_new(usart_dev *dev,uint16 rx_buf_size,uint16 tx_buf_size) {
-    rb_init(dev->rb, rx_buf_size);
-    rb_init(dev->wb, tx_buf_size);
+    rb_init_new(dev->rb, rx_buf_size);
+    rb_init_new(dev->wb, tx_buf_size);
     rcc_clk_enable(dev->clk_id);
     nvic_irq_enable(dev->irq_num);
     dev->blockingTx = 1; // default to blocking TX

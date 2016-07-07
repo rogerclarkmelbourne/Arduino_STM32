@@ -130,9 +130,9 @@ public:
                    uint8 rx_pin);
 
     /* Set up/tear down */
-    //void begin(uint32 baud);
-    //void begin(uint32 baud,uint8_t config);
-    void begin(uint32 baud, uint16 tx_buf_size=SERIAL_TX_BUFFER_SIZE, uint16 rx_buf_size=SERIAL_RX_BUFFER_SIZE, uint8_t config=SERIAL_8N1);
+    void begin(uint32 baud);
+    void begin(uint32 baud,uint8_t config);
+    void beginNew(uint32 baud, uint16 tx_buf_size=SERIAL_TX_BUFFER_SIZE, uint16 rx_buf_size=SERIAL_RX_BUFFER_SIZE, uint8_t config=SERIAL_8N1);
     void end();
     virtual int available(void);
     virtual int peek(void);
