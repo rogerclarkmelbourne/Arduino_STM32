@@ -8,7 +8,7 @@ cd %~dp0
 rem: the two line below are needed to fix path issues with incorrect slashes before the bin file name
 set str=%4
 set str=%str:/=\%
-stm32flash -g 0x8000000 -b 230400 -w %str% %1 
+stm32flash -g 0x8000000 -b 57600 -w %str% %1 
 rem: C:\Python27\python.exe stm32loader.py -e -w -p %1 -g -b 115200  %str%
 
 rem: ------------- use STM's own uploader 
