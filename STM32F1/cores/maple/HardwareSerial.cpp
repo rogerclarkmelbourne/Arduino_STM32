@@ -117,11 +117,6 @@ static void disable_timer_if_necessary(timer_dev *dev, uint8 ch) {
 #warning "Unsupported STM32 series; timer conflicts are possible"
 #endif
 
-void HardwareSerial::begin(uint32 baud) 
-{
-    beginNew(baud);
-}
-
 /*
  * Roger Clark.
  * Note. The config parameter is not currently used. This is a work in progress.  
