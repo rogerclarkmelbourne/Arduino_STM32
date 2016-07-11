@@ -40,6 +40,7 @@
  */
 void usart_init(usart_dev *dev) {
     rb_init(dev->rb, USART_RX_BUF_SIZE, dev->rx_buf);
+    rb_init(dev->wb, USART_TX_BUF_SIZE, dev->tx_buf);
     rcc_clk_enable(dev->clk_id);
     nvic_irq_enable(dev->irq_num);
 }
@@ -78,6 +79,7 @@ void usart_disable(usart_dev *dev) {
 
     /* Clean up buffer */
     usart_reset_rx(dev);
+    usart_reset_tx(dev);
 }
 
 /**
@@ -90,8 +92,19 @@ void usart_disable(usart_dev *dev) {
 uint32 usart_tx(usart_dev *dev, const uint8 *buf, uint32 len) {
     usart_reg_map *regs = dev->regs;
     uint32 txed = 0;
-    while ((regs->SR & USART_SR_TXE) && (txed < len)) {
+    while (rb_is_empty(dev->wb) && (regs->SR & USART_SR_TXE) && (txed < len)) {
         regs->DR = buf[txed++];
+    }
+    regs->CR1 &= ~((uint32)USART_CR1_TXEIE); // disable TXEIE while populating the buffer
+    while (txed < len) {
+        if (rb_safe_insert(dev->wb, buf[txed])) {
+            txed++;
+        }
+        else
+            break;
+    }
+    if (rb_full_count(dev->wb) > 0) {
+        regs->CR1 |= USART_CR1_TXEIE;
     }
     return txed;
 }
