@@ -70,6 +70,8 @@ void usart_disable(usart_dev *dev) {
     /* FIXME this misbehaves (on F1) if you try to use PWM on TX afterwards */
     usart_reg_map *regs = dev->regs;
 
+    while(!rb_is_empty(dev->wb))
+        ; // wait for TX completed
     /* TC bit must be high before disabling the USART */
     while((regs->CR1 & USART_CR1_UE) && !(regs->SR & USART_SR_TC))
         ;
