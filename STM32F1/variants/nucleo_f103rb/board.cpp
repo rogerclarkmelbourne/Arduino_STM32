@@ -248,7 +248,7 @@ MOSI alternate functions on the GPIO ports.
  * Maps to which hardware serial port on the microprocessor
  */
 						
-#ifdef SERIAL_USB
+#ifdef USB_HARDWARE
    DEFINE_HWSERIAL(Serial1, 1);
    DEFINE_HWSERIAL(Serial2, 2);
    DEFINE_HWSERIAL(Serial3, 3);

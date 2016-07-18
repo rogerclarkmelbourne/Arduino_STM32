@@ -33,6 +33,8 @@
  * the result made cleaner.
  */
 
+#ifdef USB_SERIAL
+
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
@@ -749,3 +751,5 @@ static void usbSetConfiguration(void) {
 static void usbSetDeviceAddress(void) {
     USBLIB->state = USB_ADDRESSED;
 }
+
+#endif

@@ -49,7 +49,7 @@
 							BOARD_USART##n##_TX_PIN,                   \
 							BOARD_USART##n##_RX_PIN)						
 							
-	#ifdef SERIAL_USB
+	#ifdef USB_HARDWARE
 		#if BOARD_HAVE_USART1
 		DEFINE_HWSERIAL(Serial1, 1);
 		#endif

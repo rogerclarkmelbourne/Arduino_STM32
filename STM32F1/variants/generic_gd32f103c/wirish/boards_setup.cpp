@@ -41,6 +41,8 @@
 
 #include <boards.h>
 #include <usb_serial.h>
+#include <usb_hid_device.h>
+#include <usb_midi.h>
 
 // Generic GD32 boards seem to have a 12Mhz crystal rather than the 8Mhz common on STM32 boards, hence the PLL multiplier settings are different.
 // Additionally the GD32 has a 4 USB PLL divider settings, rather than the 2 settings in the STM32, which allow it to operate on frequencies of 48,72,96 and 120Mhz and still have USB functioning
@@ -89,7 +91,6 @@ namespace wirish {
         }
 
         __weak void board_setup_usb(void) {
-#ifdef SERIAL_USB
 			
 #ifdef GENERIC_BOOTLOADER			
 			//Reset the USB interface on generic boards - developed by Victor PV
@@ -99,7 +100,16 @@ namespace wirish {
 			for(volatile unsigned int i=0;i<512;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
 #endif			
+#ifdef USB_HARDWARE 
+#ifdef USB_SERIAL
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
+#endif
+#if  defined(USB_HARDWARE) && (defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J))
+			HID.begin();
+#endif
+#ifdef USB_MIDI
+			MidiUSB.begin();
+#endif
 #endif
 		}
 

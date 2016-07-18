@@ -28,6 +28,8 @@
  * @brief Wirish USB virtual serial port (SerialUSB).
  */
 
+#ifdef USB_SERIAL
+
 #ifndef _WIRISH_USB_SERIAL_H_
 #define _WIRISH_USB_SERIAL_H_
 
@@ -73,9 +75,11 @@ public:
     uint8 pending();
 };
 
-#ifdef SERIAL_USB 
+#ifdef USB_HARDWARE 
 	extern USBSerial Serial;
 #endif
 
 #endif
 
+
+#endif
