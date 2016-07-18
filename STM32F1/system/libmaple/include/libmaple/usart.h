@@ -396,7 +396,7 @@ typedef struct usart_dev {
                                       * Actual RX buffer used by rb.
                                       * This field will be removed in
                                       * a future release. */
-    uint8 tx_buf[USART_TX_BUF_SIZE]; /* Actual TX buffer used by wb */
+    uint8 tx_buf[USART_TX_BUF_SIZE]; /**< Actual TX buffer used by wb */
     rcc_clk_id clk_id;               /**< RCC clock information */
     nvic_irq_num irq_num;            /**< USART NVIC interrupt */
 } usart_dev;
