@@ -62,7 +62,7 @@ public:
 
     /* I/O */
     uint32 available(void);
-    uint8 read(void);
+    int read(void);
     void flush(void);
     virtual void write(unsigned char);
     using Print::write;
