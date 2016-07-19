@@ -55,8 +55,9 @@ static inline __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, u
     }
     /* TXE signifies readiness to send a byte to DR. */
     if ((regs->CR1 & USART_CR1_TXEIE) && (regs->SR & USART_SR_TXE)) {
-        regs->DR=rb_remove(wb);
-        if (rb_is_empty(wb))
+        if (!rb_is_empty(wb))
+            regs->DR=rb_remove(wb);
+        else
             regs->CR1 &= ~((uint32)USART_CR1_TXEIE); // disable TXEIE
     }
 }
