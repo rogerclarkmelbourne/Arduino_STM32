@@ -88,7 +88,7 @@ struct usart_dev;
 #define SERIAL_8N1	0B00000000
 #define SERIAL_8N2	0B00100000
 #define SERIAL_9N1	0B00001000
-#define SERIAL_9N2	0B00101000	
+#define SERIAL_9N2	0B00101000
 
 #define SERIAL_8E1	0B00001010
 #define SERIAL_8E2	0B00101010
@@ -130,8 +130,8 @@ public:
                    uint8 rx_pin);
 
     /* Set up/tear down */
-    void begin(uint32 baud);
-    void begin(uint32 baud,uint8_t config);
+    void begin(uint32 baud,uint8_t config=SERIAL_8N1);
+    void beginNew(uint32 baud, uint16 tx_buf_size=SERIAL_TX_BUFFER_SIZE, uint16 rx_buf_size=SERIAL_RX_BUFFER_SIZE, uint8_t config=SERIAL_8N1);
     void end();
     virtual int available(void);
     virtual int peek(void);
@@ -148,16 +148,22 @@ public:
     /* Pin accessors */
     int txPin(void) { return this->tx_pin; }
     int rxPin(void) { return this->rx_pin; }
-	
-	operator bool() { return true; }
+    
+    operator bool() { return true; }
 
     /* Escape hatch into libmaple */
     /* FIXME [0.0.13] documentation */
     struct usart_dev* c_dev(void) { return this->usart_device; }
+
+    void enableBlockingTx(void);
+    void disableBlockingTx(void);
+
 private:
     struct usart_dev *usart_device;
     uint8 tx_pin;
     uint8 rx_pin;
+    uint8 *rx_buf = NULL;
+    uint8 *tx_buf = NULL;
   protected:
 #if 0  
     volatile uint8_t * const _ubrrh;
