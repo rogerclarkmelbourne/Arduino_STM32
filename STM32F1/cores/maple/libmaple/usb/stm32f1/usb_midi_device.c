@@ -311,12 +311,12 @@ static const usb_descriptor_string usbMIDIDescriptor_iJack1 = {
 };
 
 
-static ONE_DESCRIPTOR Device_Descriptor = {
+static ONE_DESCRIPTOR usbMidiDevice_Descriptor = {
     (uint8*)&usbMIDIDescriptor_Device,
     sizeof(usb_descriptor_device)
 };
 
-static ONE_DESCRIPTOR Config_Descriptor = {
+static ONE_DESCRIPTOR usbMidiConfig_Descriptor = {
     (uint8*)&usbMIDIDescriptor_Config,
     sizeof(usb_descriptor_config)
 };
@@ -662,11 +662,11 @@ static RESULT usbGetInterfaceSetting(uint8 interface, uint8 alt_setting) {
 }
 
 static uint8* usbGetDeviceDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Device_Descriptor);
+    return Standard_GetDescriptorData(length, &usbMidiDevice_Descriptor);
 }
 
 static uint8* usbGetConfigDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Config_Descriptor);
+    return Standard_GetDescriptorData(length, &usbMidiConfig_Descriptor);
 }
 
 static uint8* usbGetStringDescriptor(uint16 length) {

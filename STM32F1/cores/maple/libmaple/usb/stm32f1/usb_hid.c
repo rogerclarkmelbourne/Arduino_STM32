@@ -343,12 +343,12 @@ static const usb_descriptor_string usbHIDDescriptor_iInterface = {
     .bString = {'H', 0, 'I', 0, 'D', 0},
 };
 
-static ONE_DESCRIPTOR Device_Descriptor = {
+static ONE_DESCRIPTOR usbHIDDevice_Descriptor = {
     (uint8*)&usbHIDDescriptor_Device,
     sizeof(usb_descriptor_device)
 };
 
-static ONE_DESCRIPTOR Config_Descriptor = {
+static ONE_DESCRIPTOR usbHIDConfig_Descriptor = {
     (uint8*)&usbHIDDescriptor_Config,
     sizeof(usbHIDDescriptor_Config)
 };
@@ -359,7 +359,7 @@ static ONE_DESCRIPTOR HID_Report_Descriptor = {
 };
 
 #define N_STRING_DESCRIPTORS 3
-static ONE_DESCRIPTOR String_Descriptor[N_STRING_DESCRIPTORS] = {
+static ONE_DESCRIPTOR usbHIDString_Descriptor[N_STRING_DESCRIPTORS] = {
     {(uint8*)&usbHIDDescriptor_LangID,       USB_DESCRIPTOR_STRING_LEN(1)},
     {(uint8*)&usbHIDDescriptor_iManufacturer,USB_DESCRIPTOR_STRING_LEN(8)},
     {(uint8*)&usbHIDDescriptor_iProduct,     USB_DESCRIPTOR_STRING_LEN(5)},
@@ -692,11 +692,11 @@ static RESULT usbGetInterfaceSetting(uint8 interface, uint8 alt_setting) {
 }
 
 static uint8* usbGetDeviceDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Device_Descriptor);
+    return Standard_GetDescriptorData(length, &usbHIDDevice_Descriptor);
 }
 
 static uint8* usbGetConfigDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Config_Descriptor);
+    return Standard_GetDescriptorData(length, &usbHIDConfig_Descriptor);
 }
 
 static uint8* usbGetStringDescriptor(uint16 length) {
@@ -705,7 +705,7 @@ static uint8* usbGetStringDescriptor(uint16 length) {
     if (wValue0 > N_STRING_DESCRIPTORS) {
         return NULL;
     }
-    return Standard_GetDescriptorData(length, &String_Descriptor[wValue0]);
+    return Standard_GetDescriptorData(length, &usbHIDString_Descriptor[wValue0]);
 }
 
 /*
@@ -730,7 +730,7 @@ static uint8* HID_GetReportDescriptor(uint16 Length){
 
 static uint8* HID_GetHIDDescriptor(uint16 Length)
 {
-  return Standard_GetDescriptorData(Length, &Config_Descriptor);
+  return Standard_GetDescriptorData(Length, &usbHIDConfig_Descriptor);
 }
 
 static void usbSetConfiguration(void) {
