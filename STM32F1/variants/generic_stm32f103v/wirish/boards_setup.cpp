@@ -88,7 +88,7 @@ namespace wirish {
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_OUTPUT_PP);
 			gpio_write_bit(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit,0);
 			
-			for(volatile unsigned int i=0;i<256;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
+			for(volatile unsigned int i=0;i<512;i++);// Only small delay seems to be needed, and USB pins will get configured in Serial.begin
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
 #endif	
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility

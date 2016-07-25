@@ -1,0 +1,19 @@
+The communication protocol used by ST bootloader is documented in following ST
+application notes, depending on communication port.
+
+In current version of stm32flash are supported only UART and I2C ports.
+
+* AN3154: CAN protocol used in the STM32 bootloader
+  http://www.st.com/web/en/resource/technical/document/application_note/CD00264321.pdf
+
+* AN3155: USART protocol used in the STM32(TM) bootloader
+  http://www.st.com/web/en/resource/technical/document/application_note/CD00264342.pdf
+
+* AN4221: I2C protocol used in the STM32 bootloader
+  http://www.st.com/web/en/resource/technical/document/application_note/DM00072315.pdf
+
+* AN4286: SPI protocol used in the STM32 bootloader
+  http://www.st.com/web/en/resource/technical/document/application_note/DM00081379.pdf
+
+Boot mode selection for STM32 is documented in ST application note AN2606, available in ST website:
+  http://www.st.com/web/en/resource/technical/document/application_note/CD00167594.pdf

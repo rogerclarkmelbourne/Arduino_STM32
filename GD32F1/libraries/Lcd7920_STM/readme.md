@@ -1,1 +1,0 @@
-This library has been provided by Matthias (@madias from the Arduino forum)

@@ -121,7 +121,7 @@
  * line may be shared with another timer. For example, the timer 1
  * update interrupt shares an IRQ line with the timer 10 interrupt on
  * STM32F1 (XL-density), STM32F2, and STM32F4. */
-static __always_inline void dispatch_single_irq(timer_dev *dev,
+static inline __always_inline void dispatch_single_irq(timer_dev *dev,
                                                 timer_interrupt_id iid,
                                                 uint32 irq_mask) {
     timer_bas_reg_map *regs = (dev->regs).bas;
@@ -145,15 +145,15 @@ static __always_inline void dispatch_single_irq(timer_dev *dev,
         }                                                               \
     } while (0)
 
-static __always_inline void dispatch_adv_brk(timer_dev *dev) {
+static inline __always_inline void dispatch_adv_brk(timer_dev *dev) {
     dispatch_single_irq(dev, TIMER_BREAK_INTERRUPT, TIMER_SR_BIF);
 }
 
-static __always_inline void dispatch_adv_up(timer_dev *dev) {
+static inline __always_inline void dispatch_adv_up(timer_dev *dev) {
     dispatch_single_irq(dev, TIMER_UPDATE_INTERRUPT, TIMER_SR_UIF);
 }
 
-static __always_inline void dispatch_adv_trg_com(timer_dev *dev) {
+static inline __always_inline void dispatch_adv_trg_com(timer_dev *dev) {
     timer_adv_reg_map *regs = (dev->regs).adv;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -168,7 +168,7 @@ static __always_inline void dispatch_adv_trg_com(timer_dev *dev) {
     regs->SR &= ~handled;
 }
 
-static __always_inline void dispatch_adv_cc(timer_dev *dev) {
+static inline __always_inline void dispatch_adv_cc(timer_dev *dev) {
     timer_adv_reg_map *regs = (dev->regs).adv;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -182,7 +182,7 @@ static __always_inline void dispatch_adv_cc(timer_dev *dev) {
     regs->SR &= ~handled;
 }
 
-static __always_inline void dispatch_general(timer_dev *dev) {
+static inline __always_inline void dispatch_general(timer_dev *dev) {
     timer_gen_reg_map *regs = (dev->regs).gen;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -200,7 +200,7 @@ static __always_inline void dispatch_general(timer_dev *dev) {
 
 /* On F1 (XL-density), F2, and F4, TIM9 and TIM12 are restricted
  * general-purpose timers with update, CC1, CC2, and TRG interrupts. */
-static __always_inline void dispatch_tim_9_12(timer_dev *dev) {
+static inline __always_inline void dispatch_tim_9_12(timer_dev *dev) {
     timer_gen_reg_map *regs = (dev->regs).gen;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -216,7 +216,7 @@ static __always_inline void dispatch_tim_9_12(timer_dev *dev) {
 
 /* On F1 (XL-density), F2, and F4, timers 10, 11, 13, and 14 are
  * restricted general-purpose timers with update and CC1 interrupts. */
-static __always_inline void dispatch_tim_10_11_13_14(timer_dev *dev) {
+static inline __always_inline void dispatch_tim_10_11_13_14(timer_dev *dev) {
     timer_gen_reg_map *regs = (dev->regs).gen;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -228,7 +228,7 @@ static __always_inline void dispatch_tim_10_11_13_14(timer_dev *dev) {
     regs->SR &= ~handled;
 }
 
-static __always_inline void dispatch_basic(timer_dev *dev) {
+static inline __always_inline void dispatch_basic(timer_dev *dev) {
     dispatch_single_irq(dev, TIMER_UPDATE_INTERRUPT, TIMER_SR_UIF);
 }
 

@@ -30,13 +30,13 @@ void setup() {
   Ethernet.begin(mac);
 
   Serial.print("localIP: ");
-  Serial.println(Ethernet.localIP());
+  Serial.println(Ethernet.localIP().toString());
   Serial.print("subnetMask: ");
-  Serial.println(Ethernet.subnetMask());
+  Serial.println(Ethernet.subnetMask().toString());
   Serial.print("gatewayIP: ");
-  Serial.println(Ethernet.gatewayIP());
+  Serial.println(Ethernet.gatewayIP().toString());
   Serial.print("dnsServerIP: ");
-  Serial.println(Ethernet.dnsServerIP());
+  Serial.println(Ethernet.dnsServerIP().toString());
 
   next = 0;
 }

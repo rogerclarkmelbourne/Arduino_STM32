@@ -57,6 +57,7 @@ static byte selectPin;
 
 void Enc28J60Network::init(uint8_t* macaddr)
 {
+  uint32 timeout = 0;
   MemoryPool::init(); // 1 byte in between RX_STOP_INIT and pool to allow prepending of controlbyte
   // initialize I/O
   // ss as output:
@@ -100,8 +101,12 @@ void Enc28J60Network::init(uint8_t* macaddr)
 #ifdef ENC28J60DEBUG
   Serial.println("ENC28J60::initialize / before readOp(ENC28J60_READ_CTRL_REG, ESTAT)");
 #endif
-  while (!readOp(ENC28J60_READ_CTRL_REG, ESTAT) & ESTAT_CLKRDY)
-      ;
+  while (!readOp(ENC28J60_READ_CTRL_REG, ESTAT) & ESTAT_CLKRDY) {
+    if (++timeout > 100000) {
+      Serial.println("ENC28J60::initialize TIMEOUT !!!\r\n");
+      return;
+    }
+  }
 #ifdef ENC28J60DEBUG
   Serial.println("ENC28J60::initialize / after readOp(ENC28J60_READ_CTRL_REG, ESTAT)");
 #endif

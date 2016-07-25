@@ -210,7 +210,7 @@ void __irq_usb_lp_can_rx0(void) {
 
 #if (USB_ISR_MSK & USB_ISTR_WKUP)
     if (istr & USB_ISTR_WKUP & USBLIB->irq_mask) {
-        USB_BASE->ISTR = ~USB_ISTR_WKUP;
+        USB_BASE->ISTR = ~(USB_ISTR_WKUP | USB_ISTR_SUSP);
         usb_resume(RESUME_EXTERNAL);
     }
 #endif
@@ -225,7 +225,7 @@ void __irq_usb_lp_can_rx0(void) {
             usb_resume(RESUME_LATER);
         }
         /* clear of the ISTR bit must be done after setting of CNTR_FSUSP */
-        USB_BASE->ISTR = ~USB_ISTR_SUSP;
+        USB_BASE->ISTR = ~(USB_ISTR_WKUP | USB_ISTR_SUSP);
     }
 #endif
 
