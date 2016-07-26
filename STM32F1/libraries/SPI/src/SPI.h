@@ -194,6 +194,8 @@ public:
 	void beginTransaction(uint8_t pin, SPISettings settings);
 	void endTransaction(void);
 
+	void beginTransactionSlave(SPISettings settings);
+
 	void setClockDivider(uint32_t clockDivider);
 	void setBitOrder(BitOrder bitOrder);	
 	void setDataMode(uint8_t dataMode);		
@@ -258,6 +260,7 @@ public:
      * @return Next unread byte.
      */
     uint8 transfer(uint8 data) const;
+    uint16_t transfer(uint16_t data) const;
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.

@@ -156,13 +156,9 @@ void SPIClass::begin(void) {
 }
 
 void SPIClass::beginSlave(void) {
-    if (_currentSetting->dataMode >= 4) {
-        ASSERT(0);
-        return;
-    }
-    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE);
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 0);
+    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE);
 	#ifdef SPI_DEBUG
 	Serial.print("spi_slave_enable("); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
@@ -236,13 +232,11 @@ SPI Mode 	CPOL 	CPHA 	Shift SCK-edge 	Capture SCK-edge
 On the STM32 it appears to be
 
 bit 1 - CPOL : Clock polarity
-
     (This bit should not be changed when communication is ongoing)
     0 : CLK to 0 when idle
     1 : CLK to 1 when idle
  
 bit 0 - CPHA : Clock phase
-
     (This bit should not be changed when communication is ongoing)
     0 : The first clock transition is the first data capture edge
     1 : The second clock transition is the first data capture edge
@@ -257,7 +251,6 @@ If someone finds this is not the case or sees a logic error with this let me kno
 	_currentSetting->spi_d->regs->CR1 = cr1 | (dataMode & (SPI_CR1_CPOL|SPI_CR1_CPHA));
 }
 
-
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
 	#ifdef SPI_DEBUG
@@ -271,6 +264,17 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 	setDataSize(settings.dataSize);
 	setClockDivider(determine_baud_rate(_currentSetting->spi_d, settings.clock));
 	begin();
+}
+
+void SPIClass::beginTransactionSlave(SPISettings settings)
+{
+	#ifdef SPI_DEBUG
+	Serial.println(F("SPIClass::beginTransactionSlave"));
+	#endif
+	setBitOrder(settings.bitOrder);
+	setDataMode(settings.dataMode);
+	setDataSize(settings.dataSize);
+	beginSlave();
 }
 
 void SPIClass::endTransaction(void)
@@ -354,6 +358,15 @@ void SPIClass::write(const uint8 *data, uint32 length) {
 	if (spi_is_rx_nonempty(_currentSetting->spi_d)) {
 		uint8_t b = spi_rx_reg(_currentSetting->spi_d);
 	}
+}
+
+uint16_t SPIClass::transfer(uint16_t wr_data) const {
+	spi_tx_reg(_currentSetting->spi_d, wr_data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
+	while (spi_is_rx_nonempty(_currentSetting->spi_d) == 0); // "4. Wait until RXNE=1 ..."
+	uint16_t rd_data = spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
+//	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
+//	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+	return rd_data;
 }
 
 uint8 SPIClass::transfer(uint8 byte) const {
