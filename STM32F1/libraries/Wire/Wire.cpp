@@ -190,5 +190,5 @@ TwoWire::~TwoWire() {
 }
 
 // Declare the instance that the users of the library can use
-//TwoWire Wire(SCL, SDA, SOFT_STANDARD);
-TwoWire Wire(PB6, PB7, SOFT_STANDARD);
+TwoWire Wire(SCL, SDA, SOFT_STANDARD);
+//TwoWire Wire(PB6, PB7, SOFT_STANDARD);
