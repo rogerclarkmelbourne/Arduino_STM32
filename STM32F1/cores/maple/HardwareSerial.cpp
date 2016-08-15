@@ -117,23 +117,25 @@ static void disable_timer_if_necessary(timer_dev *dev, uint8 ch) {
 #warning "Unsupported STM32 series; timer conflicts are possible"
 #endif
 
+/*
 void HardwareSerial::begin(uint32 baud) 
 {
-    beginNew(baud);
+    begin(baud, SERIAL_8N1);
 }
 
+void HardwareSerial::begin(uint32 baud, uint8_t config) 
+{
+    begin(baud, config, SERIAL_RX_BUFFER_SIZE, SERIAL_TX_BUFFER_SIZE);
+}
+*/
 /*
  * Roger Clark.
  * Note. The config parameter is not currently used. This is a work in progress.  
  * Code needs to be written to set the config of the hardware serial control register in question.
  *
 */
-void HardwareSerial::begin(uint32 baud, uint8_t config) 
-{
-    beginNew(baud, SERIAL_RX_BUFFER_SIZE, SERIAL_TX_BUFFER_SIZE, config);
-}
 
-void HardwareSerial::beginNew(uint32 baud, uint16 tx_buf_size, uint16 rx_buf_size, uint8_t config)
+void HardwareSerial::begin(uint32 baud, uint16 tx_buf_size, uint16 rx_buf_size, uint8_t config)
 {
  //   ASSERT(baud <= this->usart_device->max_baud);// Roger Clark. Assert doesn't do anything useful, we may as well save the space in flash and ram etc
 
