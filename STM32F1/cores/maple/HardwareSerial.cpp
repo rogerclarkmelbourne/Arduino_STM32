@@ -162,10 +162,11 @@ void HardwareSerial::end(void) {
  */
 
 int HardwareSerial::read(void) {
-    // Block until a byte becomes available, to save user confusion.
-    while (!this->available())
-        ;
-    return usart_getc(this->usart_device);
+	if(usart_data_available(usart_device) > 0) {
+		return usart_getc(usart_device);
+	} else {
+		return -1;
+	}
 }
 
 int HardwareSerial::available(void) {

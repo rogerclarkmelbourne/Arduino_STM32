@@ -79,7 +79,7 @@ mapleRET6.upload.protocol=maple_dfu
 mapleRET6.upload.maximum_size=262144
 mapleRET6.upload.use_1200bps_touch=false
 mapleRET6.upload.file_type=bin
-mapleRET6.upload.ram.maximum_size=492152
+mapleRET6.upload.ram.maximum_size=49152
 mapleRET6.upload.flash.maximum_size=262144
 mapleRET6.upload.usbID=1EAF:0003
 mapleRET6.upload.altID=1
@@ -354,7 +354,7 @@ genericSTM32F103V.build.error_led_pin=6
 genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_size=262144
-genericSTM32F103V.menu.device_variant.STM32F103VC.upload.ram.maximum_size=492152
+genericSTM32F103V.menu.device_variant.STM32F103VC.upload.ram.maximum_size=49152
 genericSTM32F103V.menu.device_variant.STM32F103VC.upload.flash.maximum_size=262144
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.ldscript=ld/stm32f103vc.ld
 
@@ -413,7 +413,7 @@ genericSTM32F103Z.upload.auto_reset=true
 genericSTM32F103Z.menu.device_variant.STM32F103ZC=STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.cpu_flags=-DMCU_STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.maximum_size=262144
-genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.ram.maximum_size=492152
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.ram.maximum_size=49152
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.flash.maximum_size=262144
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.ldscript=ld/stm32f103zc.ld
 
