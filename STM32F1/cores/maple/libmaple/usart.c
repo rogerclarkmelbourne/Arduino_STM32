@@ -124,6 +124,7 @@ uint32 usart_tx(usart_dev *dev, const uint8 *buf, uint32 len) {
     if (rb_full_count(dev->wb) > 0) {
         regs->CR1 |= USART_CR1_TXEIE;
     }
+    
     return txed;
 }
 

@@ -125,7 +125,7 @@ static void disable_timer_if_necessary(timer_dev *dev, uint8 ch) {
 */
 void HardwareSerial::begin(uint32 baud, uint8_t config) 
 {
-    beginNew(baud, SERIAL_TX_BUFFER_SIZE, SERIAL_RX_BUFFER_SIZE, config);
+    beginNew(baud, SERIAL_RX_BUFFER_SIZE, SERIAL_TX_BUFFER_SIZE, config);
 }
 
 void HardwareSerial::beginNew(uint32 baud, uint16 tx_buf_size, uint16 rx_buf_size, uint8_t config)
