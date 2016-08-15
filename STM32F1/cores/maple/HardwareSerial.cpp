@@ -117,17 +117,10 @@ static void disable_timer_if_necessary(timer_dev *dev, uint8 ch) {
 #warning "Unsupported STM32 series; timer conflicts are possible"
 #endif
 
-/*
 void HardwareSerial::begin(uint32 baud) 
 {
-    begin(baud, SERIAL_8N1);
+	begin(baud,SERIAL_8N1);
 }
-
-void HardwareSerial::begin(uint32 baud, uint8_t config) 
-{
-    begin(baud, config, SERIAL_RX_BUFFER_SIZE, SERIAL_TX_BUFFER_SIZE);
-}
-*/
 /*
  * Roger Clark.
  * Note. The config parameter is not currently used. This is a work in progress.  
@@ -135,7 +128,7 @@ void HardwareSerial::begin(uint32 baud, uint8_t config)
  *
 */
 
-void HardwareSerial::begin(uint32 baud, uint16 tx_buf_size, uint16 rx_buf_size, uint8_t config)
+void HardwareSerial::begin(uint32 baud, uint8_t config) 
 {
  //   ASSERT(baud <= this->usart_device->max_baud);// Roger Clark. Assert doesn't do anything useful, we may as well save the space in flash and ram etc
 
@@ -148,10 +141,7 @@ void HardwareSerial::begin(uint32 baud, uint16 tx_buf_size, uint16 rx_buf_size, 
 
     disable_timer_if_necessary(txi->timer_device, txi->timer_channel);
 
-    rx_buf_size = rx_buf_size < 16 ? 16 : rx_buf_size; // min RX buf size = 16
-    tx_buf_size = tx_buf_size == 0 ? 1 : tx_buf_size; // min TX buf size = 1
-    
-    usart_init_new(this->usart_device, rx_buf_size, tx_buf_size);
+    usart_init(this->usart_device);
     usart_config_gpios_async(this->usart_device,
                              rxi->gpio_device, rxi->gpio_bit,
                              txi->gpio_device, txi->gpio_bit,
@@ -194,23 +184,15 @@ int HardwareSerial::availableForWrite(void)
  * so just return 1, meaning that 1 char can be written
  * This will be slower than a ring buffer implementation, but it should at least work !
  */
-  return !(rb_is_full(this->usart_device->wb));
+  return 1;
 }
 
 size_t HardwareSerial::write(unsigned char ch) {
 
     usart_putc(this->usart_device, ch);
-    return 1;
+	return 1;
 }
 
 void HardwareSerial::flush(void) {
     usart_reset_rx(this->usart_device);
-}
-
-void HardwareSerial::enableBlockingTx(void) {
-    usart_enabableBlockingTX(this->usart_device);
-}
-
-void HardwareSerial::disableBlockingTx(void) {
-    usart_disabableBlockingTX(this->usart_device);
 }
