@@ -43,6 +43,7 @@ static inline __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, u
      *
      * See table 198 (sec 27.4, p809) in STM document RM0008 rev 15.
      * We enable RXNEIE. */
+    int16 val;
     if ((regs->CR1 & USART_CR1_RXNEIE) && (regs->SR & USART_SR_RXNE)) {
 #ifdef USART_SAFE_INSERT
         /* If the buffer is full and the user defines USART_SAFE_INSERT,

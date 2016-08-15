@@ -40,8 +40,8 @@
  * Devices
  */
 
-static ring_buffer usart1_rb;
-static ring_buffer usart1_wb;
+static ring_buffer usart1_rb = {0};
+static ring_buffer usart1_wb = {0};
 static usart_dev usart1 = {
     .regs     = USART1_BASE,
     .rb       = &usart1_rb,
@@ -53,8 +53,8 @@ static usart_dev usart1 = {
 /** USART1 device */
 usart_dev *USART1 = &usart1;
 
-static ring_buffer usart2_rb;
-static ring_buffer usart2_wb;
+static ring_buffer usart2_rb = {0};
+static ring_buffer usart2_wb = {0};
 static usart_dev usart2 = {
     .regs     = USART2_BASE,
     .rb       = &usart2_rb,
@@ -66,8 +66,8 @@ static usart_dev usart2 = {
 /** USART2 device */
 usart_dev *USART2 = &usart2;
 
-static ring_buffer usart3_rb;
-static ring_buffer usart3_wb;
+static ring_buffer usart3_rb = {0};
+static ring_buffer usart3_wb = {0};
 static usart_dev usart3 = {
     .regs     = USART3_BASE,
     .rb       = &usart3_rb,
@@ -80,8 +80,8 @@ static usart_dev usart3 = {
 usart_dev *USART3 = &usart3;
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-static ring_buffer uart4_rb;
-static ring_buffer uart4_wb;
+static ring_buffer uart4_rb = {0};
+static ring_buffer uart4_wb = {0};
 static usart_dev uart4 = {
     .regs     = UART4_BASE,
     .rb       = &uart4_rb,
@@ -93,8 +93,8 @@ static usart_dev uart4 = {
 /** UART4 device */
 usart_dev *UART4 = &uart4;
 
-static ring_buffer uart5_rb;
-static ring_buffer uart5_wb;
+static ring_buffer uart5_rb = {0};
+static ring_buffer uart5_wb = {0};
 static usart_dev uart5 = {
     .regs     = UART5_BASE,
     .rb       = &uart5_rb,
