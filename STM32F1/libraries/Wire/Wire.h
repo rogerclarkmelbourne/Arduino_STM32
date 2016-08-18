@@ -47,8 +47,8 @@
  * On the Maple, let the default pins be in the same location as the Arduino
  * pins
  */
-#define SDA 19
-#define SCL 20
+#define SDA PB7
+#define SCL PB6
 
 #define SOFT_STANDARD 27
 #define SOFT_FAST 0
