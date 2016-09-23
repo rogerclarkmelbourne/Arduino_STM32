@@ -44,7 +44,7 @@
  *
  * @param dev ADC peripheral to initialize
  */
-void adc_init(const adc_dev *dev) {
+void adc_init(adc_dev *dev) {
     rcc_clk_enable(dev->clk_id);
     rcc_reset_dev(dev->clk_id);
 }
@@ -55,7 +55,7 @@ void adc_init(const adc_dev *dev) {
  * @param event Event used to trigger the start of conversion.
  * @see adc_extsel_event
  */
-void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
+void adc_set_extsel(adc_dev *dev, adc_extsel_event event) {
     uint32 cr2 = dev->regs->CR2;
     cr2 &= ~ADC_CR2_EXTSEL;
     cr2 |= event;
@@ -71,7 +71,7 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
  * @param smp_rate sample rate to set
  * @see adc_smp_rate
  */
-void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
+void adc_set_sample_rate(adc_dev *dev, adc_smp_rate smp_rate) {
     uint32 adc_smpr1_val = 0, adc_smpr2_val = 0;
     int i;
 
@@ -95,7 +95,7 @@ void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
  * @param channel channel to convert
  * @return conversion result
  */
-uint16 adc_read(const adc_dev *dev, uint8 channel) {
+uint16 adc_read(adc_dev *dev, uint8 channel) {
     adc_reg_map *regs = dev->regs;
 
     adc_set_reg_seqlen(dev, 1);

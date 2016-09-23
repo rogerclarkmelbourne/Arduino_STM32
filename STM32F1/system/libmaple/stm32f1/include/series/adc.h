@@ -43,12 +43,12 @@
  * Devices
  */
 extern adc_dev adc1;
-extern const struct adc_dev *ADC1;
+extern struct adc_dev *ADC1;
 extern adc_dev adc2;
-extern const struct adc_dev *ADC2;
+extern struct adc_dev *ADC2;
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
 extern adc_dev adc3;
-extern const struct adc_dev *ADC3;
+extern struct adc_dev *ADC3;
 #endif
 
 /*
@@ -87,8 +87,24 @@ extern const struct adc_dev *ADC3;
 #define ADC_CR2_DMA                     (1U << ADC_CR2_DMA_BIT)
 #define ADC_CR2_ALIGN                   (1U << ADC_CR2_ALIGN_BIT)
 #define ADC_CR2_JEXTSEL                 0x7000
+#define ADC_CR2_JEXTSEL_TIM1_TRGO       (0x0 << 12)
+#define ADC_CR2_JEXTSEL_TIM1_CC4        (0x1 << 12)
+#define ADC_CR2_JEXTSEL_TIM2_TRGO       (0x2 << 12)
+#define ADC_CR2_JEXTSEL_TIM2_CC1        (0x3 << 12)
+#define ADC_CR2_JEXTSEL_TIM3_CC4        (0x4 << 12)
+#define ADC_CR2_JEXTSEL_TIM4_TRGO       (0x5 << 12)
+#define ADC_CR2_JEXTSEL_EXTI15          (0x6 << 12)
+#define ADC_CR2_JEXTSEL_JSWSTART        (0x7 << 12)
 #define ADC_CR2_JEXTTRIG                (1U << ADC_CR2_JEXTTRIG_BIT)
 #define ADC_CR2_EXTSEL                  0xE0000
+#define ADC_CR2_EXTSEL_TIM1_CC1         (0x0 << 17)
+#define ADC_CR2_EXTSEL_TIM1_CC2         (0x1 << 17)
+#define ADC_CR2_EXTSEL_TIM1_CC3         (0x2 << 17)
+#define ADC_CR2_EXTSEL_TIM2_CC2         (0x3 << 17)
+#define ADC_CR2_EXTSEL_TIM3_TRGO        (0x4 << 17)
+#define ADC_CR2_EXTSEL_TIM4_CC4         (0x5 << 17)
+#define ADC_CR2_EXTSEL_EXTI11           (0x6 << 17)
+#define ADC_CR2_EXTSEL_SWSTART          (0x7 << 17)
 #define ADC_CR2_EXTTRIG                 (1U << ADC_CR2_EXTTRIG_BIT)
 #define ADC_CR2_JSWSTART                (1U << ADC_CR2_JSWSTART_BIT)
 #define ADC_CR2_SWSTART                 (1U << ADC_CR2_SWSTART_BIT)
@@ -237,7 +253,7 @@ typedef enum adc_prescaler {
  * Routines
  */
 
-void adc_calibrate(const adc_dev *dev);
+void adc_calibrate(adc_dev *dev);
 
 /**
  * @brief Set external trigger conversion mode event for regular channels
@@ -248,7 +264,7 @@ void adc_calibrate(const adc_dev *dev);
  * @param enable If 1, conversion on external events is enabled; if 0,
  *               disabled.
  */
-static inline void adc_set_exttrig(const adc_dev *dev, uint8 enable) {
+static inline void adc_set_exttrig(adc_dev *dev, uint8 enable) {
     *bb_perip(&dev->regs->CR2, ADC_CR2_EXTTRIG_BIT) = !!enable;
 }
 
