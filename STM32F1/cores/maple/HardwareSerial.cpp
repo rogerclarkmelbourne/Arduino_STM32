@@ -195,4 +195,5 @@ size_t HardwareSerial::write(unsigned char ch) {
 
 void HardwareSerial::flush(void) {
     usart_reset_rx(this->usart_device);
+    usart_reset_tx(this->usart_device);
 }
