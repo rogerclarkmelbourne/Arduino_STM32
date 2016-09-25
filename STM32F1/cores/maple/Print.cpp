@@ -60,6 +60,7 @@ size_t Print::write(const void *buffer, uint32 size) {
     uint8 *ch = (uint8*)buffer;
     while (size--) {
         write(*ch++);
+        n++;
     }
 	return n;
 }
