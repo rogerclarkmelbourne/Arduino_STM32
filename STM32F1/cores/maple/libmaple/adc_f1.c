@@ -61,7 +61,7 @@ adc_dev adc3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3,
     .handlers = {[3]=0}, //added by bubulindo. EOC, JEOC, AWD
-    .irq_num = NVIC_ADC_3,//added by bubulindo. 
+    .irq_num = NVIC_ADC3,//added by bubulindo. 
 };
 /** ADC3 device. */
 adc_dev *ADC3 = &adc3;
