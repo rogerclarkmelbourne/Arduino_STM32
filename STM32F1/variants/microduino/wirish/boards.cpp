@@ -179,7 +179,7 @@ nvic_init((uint32)VECT_TAB_ADDR, 0);
 */
 }
 
-static void adc_default_config(const adc_dev *dev) {
+static void adc_default_config(adc_dev *dev) {
     adc_enable_single_swstart(dev);
     adc_set_sample_rate(dev, wirish::priv::w_adc_smp);
 }

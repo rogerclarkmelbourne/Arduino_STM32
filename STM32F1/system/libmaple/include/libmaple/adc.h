@@ -42,6 +42,7 @@ extern "C"{
 #include <libmaple/libmaple.h>
 #include <libmaple/bitband.h>
 #include <libmaple/rcc.h>
+#include <libmaple/nvic.h>
 /* We include the series header below, after defining the register map
  * and device structs. */
 
@@ -73,11 +74,29 @@ typedef struct adc_reg_map {
     __io uint32 DR;             ///< Regular data register
 } adc_reg_map;
 
+
 /** ADC device type. */
 typedef struct adc_dev {
-    adc_reg_map *regs; /**< Register map */
-    rcc_clk_id clk_id; /**< RCC clock information */
+    adc_reg_map *regs;      /**< Register map */
+    rcc_clk_id clk_id;      /**< RCC clock information */
+    nvic_irq_num irq_num;   /* Added by bubulindo */
+    voidFuncPtr handlers[]; /* Added by bubulindo EOC, JEOC, AWD Interrupts*/
 } adc_dev;
+
+
+//Added by bubulindo - Interrupt ID's for ADC
+typedef enum adc_interrupt_id {
+    ADC_EOC,     /**< Update interrupt. */
+    ADC_AWD ,        /**< Capture/compare 1 interrupt. */
+    ADC_JEOC,
+    //ADC_JSTRT,
+    //ADC_STRT,        /**Analog WatchDog interrupt */
+} adc_interrupt_id;
+
+//Added by bubulindo
+void adc_enable_irq(adc_dev* dev, uint8 interrupt);
+void adc_attach_interrupt(adc_dev *dev, uint8 interrupt, voidFuncPtr handler);
+
 
 /* Pull in the series header (which may need the above struct
  * definitions).
@@ -244,10 +263,10 @@ typedef struct adc_dev {
  * Routines
  */
 
-void adc_init(const adc_dev *dev);
-void adc_set_extsel(const adc_dev *dev, adc_extsel_event event);
-void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate);
-uint16 adc_read(const adc_dev *dev, uint8 channel);
+void adc_init(adc_dev *dev);
+void adc_set_extsel(adc_dev *dev, adc_extsel_event event);
+void adc_set_sample_rate(adc_dev *dev, adc_smp_rate smp_rate);
+uint16 adc_read(adc_dev *dev, uint8 channel);
 
 /**
  * @brief Set the ADC prescaler.
@@ -260,7 +279,7 @@ extern void adc_set_prescaler(adc_prescaler pre);
  * @brief Call a function on all ADC devices.
  * @param fn Function to call on each ADC device.
  */
-extern void adc_foreach(void (*fn)(const adc_dev*));
+extern void adc_foreach(void (*fn)(adc_dev*));
 
 struct gpio_dev;
 /**
@@ -270,7 +289,7 @@ struct gpio_dev;
  * @param gdev GPIO device to configure.
  * @param bit Bit on gdev to configure for ADC conversion.
  */
-extern void adc_config_gpio(const struct adc_dev *dev,
+extern void adc_config_gpio(struct adc_dev *dev,
                             struct gpio_dev *gdev,
                             uint8 bit);
 
@@ -284,7 +303,7 @@ extern void adc_config_gpio(const struct adc_dev *dev,
  * @param dev Device to enable.
  * @see adc_read()
  */
-extern void adc_enable_single_swstart(const adc_dev* dev);
+extern void adc_enable_single_swstart(adc_dev* dev);
 
 /**
  * @brief Set the regular channel sequence length.
@@ -295,7 +314,7 @@ extern void adc_enable_single_swstart(const adc_dev* dev);
  * @param dev ADC device.
  * @param length Regular channel sequence length, from 1 to 16.
  */
-static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length) {
+static inline void adc_set_reg_seqlen(adc_dev *dev, uint8 length) {
     uint32 tmp = dev->regs->SQR1;
     tmp &= ~ADC_SQR1_L;
     tmp |= (length - 1) << 20;
@@ -306,7 +325,7 @@ static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length) {
  * @brief Enable an adc peripheral
  * @param dev ADC device to enable
  */
-static inline void adc_enable(const adc_dev *dev) {
+static inline void adc_enable(adc_dev *dev) {
     *bb_perip(&dev->regs->CR2, ADC_CR2_ADON_BIT) = 1;
 }
 
@@ -314,7 +333,7 @@ static inline void adc_enable(const adc_dev *dev) {
  * @brief Disable an ADC peripheral
  * @param dev ADC device to disable
  */
-static inline void adc_disable(const adc_dev *dev) {
+static inline void adc_disable(adc_dev *dev) {
     *bb_perip(&dev->regs->CR2, ADC_CR2_ADON_BIT) = 0;
 }
 

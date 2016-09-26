@@ -38,7 +38,7 @@
  * to INPUT_ANALOG. That's faster, but it does require some extra work
  * on the user's part. Not too much, we think ;). */
 uint16 analogRead(uint8 pin) {
-    const adc_dev *dev = PIN_MAP[pin].adc_device;
+    adc_dev *dev = PIN_MAP[pin].adc_device;
     if (dev == NULL) {
         return 0;
     }

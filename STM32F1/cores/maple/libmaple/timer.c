@@ -38,6 +38,8 @@
 static void disable_channel(timer_dev *dev, uint8 channel);
 static void pwm_mode(timer_dev *dev, uint8 channel);
 static void output_compare_mode(timer_dev *dev, uint8 channel);
+static void encoder_mode(timer_dev *dev, uint8 channel) ;//CARLOS
+
 
 static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
 
@@ -230,6 +232,10 @@ void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode) {
     case TIMER_OUTPUT_COMPARE:
         output_compare_mode(dev, channel);
         break;
+    //added by CARLOS. 
+    case TIMER_ENCODER: 
+        encoder_mode(dev, channel); //find a way to pass all the needed stuff on the 8bit var
+        break;
     }
 }
 
@@ -293,6 +299,13 @@ void timer_detach_interrupt(timer_dev *dev, uint8 interrupt) {
     dev->handlers[interrupt] = NULL;
 }
 
+//CARLOS 
+uint8 get_direction(timer_dev *dev){
+    return *bb_perip(&(dev->regs).gen->CR1, TIMER_CR1_DIR_BIT);
+}
+
+
+
 /*
  * Utilities
  */
@@ -312,6 +325,31 @@ static void output_compare_mode(timer_dev *dev, uint8 channel) {
     timer_oc_set_mode(dev, channel, TIMER_OC_MODE_ACTIVE_ON_MATCH, 0);
     timer_cc_enable(dev, channel);
 }
+
+//added by CARLOS.
+static void encoder_mode(timer_dev *dev, uint8 channel) {
+    
+    //prescaler. 
+    //(dev->regs).gen->PSC = 1;
+
+    //map inputs. 
+    (dev->regs).gen->CCMR1 = TIMER_CCMR1_CC1S_INPUT_TI1 | TIMER_CCMR1_CC2S_INPUT_TI2 | TIMER_CCMR1_IC2F | TIMER_CCMR1_IC1F ;
+
+    (dev->regs).gen->SMCR = TIMER_SMCR_SMS_ENCODER3; //choose encoder 3, counting on both edges. 
+
+    //polarity
+    //(dev->regs).gen->CCER = TIMER_CCER_CC1P; //to invert the counting, only one of the inputs should be inverted.  
+
+    //set the interval used by the encoder.
+    //timer_set_reload(dev, 1000);
+
+//    (dev->regs).gen->CR1  |=TIMER_CR1_UDIS_BIT;
+
+    //run timer
+    timer_resume(dev);
+}
+
+
 
 static void enable_adv_irq(timer_dev *dev, timer_interrupt_id id);
 static void enable_bas_gen_irq(timer_dev *dev);

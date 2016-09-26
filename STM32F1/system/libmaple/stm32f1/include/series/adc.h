@@ -43,12 +43,12 @@
  * Devices
  */
 extern adc_dev adc1;
-extern const struct adc_dev *ADC1;
+extern struct adc_dev *ADC1;
 extern adc_dev adc2;
-extern const struct adc_dev *ADC2;
+extern struct adc_dev *ADC2;
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
 extern adc_dev adc3;
-extern const struct adc_dev *ADC3;
+extern struct adc_dev *ADC3;
 #endif
 
 /*
@@ -253,7 +253,7 @@ typedef enum adc_prescaler {
  * Routines
  */
 
-void adc_calibrate(const adc_dev *dev);
+void adc_calibrate(adc_dev *dev);
 
 /**
  * @brief Set external trigger conversion mode event for regular channels
@@ -264,7 +264,7 @@ void adc_calibrate(const adc_dev *dev);
  * @param enable If 1, conversion on external events is enabled; if 0,
  *               disabled.
  */
-static inline void adc_set_exttrig(const adc_dev *dev, uint8 enable) {
+static inline void adc_set_exttrig(adc_dev *dev, uint8 enable) {
     *bb_perip(&dev->regs->CR2, ADC_CR2_EXTTRIG_BIT) = !!enable;
 }
 
