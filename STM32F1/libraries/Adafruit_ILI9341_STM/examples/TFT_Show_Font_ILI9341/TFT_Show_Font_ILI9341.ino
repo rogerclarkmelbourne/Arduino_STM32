@@ -46,7 +46,7 @@ byte state = 0;
 unsigned int colour = red << 11;
 
 void setup(void) {
-  tft.init();
+  tft.begin();
   tft.setRotation(1);
 }
 
