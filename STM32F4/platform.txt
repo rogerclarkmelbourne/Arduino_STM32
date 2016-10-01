@@ -102,11 +102,10 @@ recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 # Upload using Maple bootloader over DFU
 tools.maple_upload.cmd=maple_upload
 tools.maple_upload.cmd.windows=maple_upload.bat
-#tools.maple_upload.cmd.linux=
 tools.maple_upload.path={runtime.hardware.path}/tools/win
 tools.maple_upload.path.macosx={runtime.hardware.path}/tools/macosx
 tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux
-
+tools.maple_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.maple_upload.upload.params.verbose=-d
 tools.maple_upload.upload.params.quiet=
 tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin" {upload.dfuse_addr}
@@ -116,9 +115,11 @@ tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altI
 
 tools.serial_upload.cmd=serial_upload
 tools.serial_upload.cmd.windows=serial_upload.bat
-#tools.serial_upload.cmd.linux=
+tools.serial_upload.cmd.macosx=serial_upload
 tools.serial_upload.path={runtime.hardware.path}/tools/win
-
+tools.serial_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.serial_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.serial_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.serial_upload.upload.params.verbose=-d
 tools.serial_upload.upload.params.quiet=
 tools.serial_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
@@ -127,9 +128,12 @@ tools.serial_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.alt
 
 tools.stlink.cmd=stlink_upload
 tools.stlink.cmd.windows=stlink_upload.bat
-#tools.stlink.cmd.linux=stlink_upload
-tools.stlink.path={runtime.hardware.path}/tools/win
+tools.stlink_upload.path.windows={runtime.hardware.path}/tools/win
+tools.stlink_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.stlink_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.stlink_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.stlink.path.linux={runtime.hardware.path}/tools/linux/
+tools.stlink.path.macosx={runtime.hardware.path}/tools/macosx/
 tools.stlink.upload.params.verbose=-d
 tools.stlink.upload.params.quiet=
 tools.stlink.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
