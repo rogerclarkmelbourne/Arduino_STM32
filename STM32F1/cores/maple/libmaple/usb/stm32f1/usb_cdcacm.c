@@ -393,15 +393,13 @@ void usb_cdcacm_putc(char ch) {
         ;
 }
 
-/* This function is non-blocking.
+/* This function is blocking.
  *
  * It copies data from a usercode buffer into the USB peripheral TX
  * buffer, and returns the number of bytes copied. */
 uint32 usb_cdcacm_tx(const uint8* buf, uint32 len) {
     /* Last transmission hasn't finished, so abort. */
-    if (usb_cdcacm_is_transmitting()) {
-        return 0;
-    }
+    while ( usb_cdcacm_is_transmitting()>0 ) ; // wait for end of transmission
 
     /* We can only put USB_CDCACM_TX_EPSIZE bytes in the buffer. */
     if (len > USB_CDCACM_TX_EPSIZE) {
@@ -451,7 +449,7 @@ uint32 usb_cdcacm_rx(uint8* buf, uint32 len) {
 
     /* If all bytes have been read, re-enable the RX endpoint, which
      * was set to NAK when the current batch of bytes was received. */
-    if (n_unread_bytes <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) {
+    if (n_unread_bytes <=0) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
     }
@@ -567,7 +565,7 @@ static void vcomDataRxCb(void) {
 
 	n_unread_bytes += ep_rx_size;
 
-    if (n_unread_bytes <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) {
+    if ( n_unread_bytes<=0 ) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
     }
