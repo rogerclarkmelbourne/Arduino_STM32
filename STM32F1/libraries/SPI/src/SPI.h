@@ -260,7 +260,7 @@ public:
      * @return Next unread byte.
      */
     uint8 transfer(uint8 data) const;
-    uint16_t transfer(uint16_t data) const;
+    uint16_t transfer16(uint16_t data) const;
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
