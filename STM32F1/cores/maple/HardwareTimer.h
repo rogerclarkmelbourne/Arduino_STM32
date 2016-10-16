@@ -38,6 +38,10 @@
 /** Timer mode. */
 typedef timer_mode TimerMode;
 
+//CARLOS
+//defines for the ENCODER mode.
+
+
 /**
  * @brief Interface to one of the 16-bit timer peripherals.
  */
@@ -204,6 +208,23 @@ public:
      * @see HardwareTimer::setOverflow()
      */
     void refresh(void);
+
+//CARLOS.
+/*
+    added these functions to make sense for the encoder mode. 
+*/
+//direction of movement. (to be better described). 
+    uint8 getDirection();
+    
+//set if the encoder will count edges on one, which or both channels. 
+    void setEdgeCounting(uint32 counting);
+    uint8 getEdgeCounting(); //not sure if needed. 
+
+//set the polarity of counting... not sure how interesting this is.. 
+    void setPolarity();
+    
+//add the filtering definition for the input channel.
+    
 
     /* Escape hatch */
 
