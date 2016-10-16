@@ -1,0 +1,7 @@
+#!/bin/bash
+echo loadbin "$1" , 0x8000000 > "$1".jlink
+echo r >> "$1".jlink
+echo q >> "$1".jlink
+
+/opt/SEGGER/JLink_V610e/JLinkExe -device STM32F103C8 -if SWD -speed auto -CommanderScript "$1".jlink
+

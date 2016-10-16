@@ -211,6 +211,11 @@ genericSTM32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+
+genericSTM32F103C.menu.upload_method.jlinkMethod=JLink
+genericSTM32F103C.menu.upload_method.jlinkMethod.upload.protocol=jlink
+genericSTM32F103C.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
+
 ########################### Generic STM32F103R ###########################
 
 genericSTM32F103R.name=Generic STM32F103R series
