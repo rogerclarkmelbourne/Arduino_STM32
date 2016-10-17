@@ -360,7 +360,7 @@ void SPIClass::write(const uint8 *data, uint32 length) {
 	}
 }
 
-uint16_t SPIClass::transfer(uint16_t wr_data) const {
+uint16_t SPIClass::transfer16(uint16_t wr_data) const {
 	spi_tx_reg(_currentSetting->spi_d, wr_data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
 	while (spi_is_rx_nonempty(_currentSetting->spi_d) == 0); // "4. Wait until RXNE=1 ..."
 	uint16_t rd_data = spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
