@@ -158,13 +158,13 @@ uint32 USBSerial::read(uint8 * buf, uint32 len) {
 
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
-    int8 b;
+    uint8 b;
 	/*
 	    this->read(&b, 1);
     return b;
 	*/
 	
-	if (usb_cdcacm_rx((uint8*)&b, 1)==0)
+	if (usb_cdcacm_rx(&b, 1)==0)
 	{
 		return -1;
 	}
