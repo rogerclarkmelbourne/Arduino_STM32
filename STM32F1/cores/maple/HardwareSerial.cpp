@@ -197,3 +197,13 @@ void HardwareSerial::flush(void) {
     usart_reset_rx(this->usart_device);
     usart_reset_tx(this->usart_device);
 }
+
+/*
+* Wait for the end of actual transmission
+*
+*/
+void HardwareSerial::waitDataToBeSent(void)
+{
+    //Not this will be cleared only after a read from SR and then write to DR (Therefore after this operation, it will still be set)
+    while(!(this->usart_device->regs->SR & USART_SR_TC));
+}
