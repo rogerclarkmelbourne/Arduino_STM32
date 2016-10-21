@@ -53,7 +53,7 @@ public:
 
     virtual int available(void);// Changed to virtual
 
-    uint32 read(void *buf, uint32 len);
+    uint32 read(uint8 * buf, uint32 len);
    // uint8  read(void);
 
 	// Roger Clark. added functions to support Arduino 1.0 API

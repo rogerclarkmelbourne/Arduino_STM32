@@ -349,8 +349,8 @@ static inline void usb_clear_status_out(uint8 ep) {
 void usb_copy_to_pma(const uint8 *buf, uint16 len, uint16 pma_offset);
 void usb_copy_from_pma(uint8 *buf, uint16 len, uint16 pma_offset);
 
-static inline void* usb_pma_ptr(uint32 offset) {
-    return (void*)(USB_PMA_BASE + 2 * offset);
+static inline uint32 * usb_pma_ptr(uint32 offset) {
+    return (uint32*)(USB_PMA_BASE + 2 * offset);
 }
 
 /*
