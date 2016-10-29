@@ -53,7 +53,7 @@ MIT license, all text above must be included in any redistribution
  #include <avr/pgmspace.h>
  #include <limits.h>
  #include <libmaple/dma.h>
- #include "pins_arduino.h"
+// #include "pins_arduino.h"
  #include "wiring_private.h"
  #include <SPI.h>
 #endif

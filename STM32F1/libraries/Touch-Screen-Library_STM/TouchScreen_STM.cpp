@@ -5,7 +5,7 @@
 
 // Ported to STM32 by Jaret Burkett https://github.com/jaretburkett
 
-#include "pins_arduino.h"
+//#include "pins_arduino.h"
 #include "wiring_private.h"
 #ifdef __AVR
   #include <avr/pgmspace.h>
