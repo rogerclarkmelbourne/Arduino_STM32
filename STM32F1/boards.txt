@@ -464,7 +464,7 @@ genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE
 
 ###################### HYTiny STM32F103T ########################################
 
-hytiny-stm32f103t.name=HYTiny STM32F103T series
+hytiny-stm32f103t.name=HYTiny STM32F103TB
 hytiny-stm32f103t.vid.0=0x1EAF
 hytiny-stm32f103t.pid.0=0x0004
 hytiny-stm32f103t.build.variant=hytiny_stm32f103t
@@ -475,21 +475,13 @@ hytiny-stm32f103t.upload.use_1200bps_touch=false
 hytiny-stm32f103t.upload.file_type=bin
 hytiny-stm32f103t.upload.auto_reset=true
 
-## STM32F103C8 -------------------------
-hytiny-stm32f103t.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
-hytiny-stm32f103t.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8
-hytiny-stm32f103t.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
-hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.maximum_size=65536
-hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20480
-hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.flash.maximum_size=65536
 
-## STM32F103CB -------------------------
-hytiny-stm32f103t.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Flash)
-hytiny-stm32f103t.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB
-hytiny-stm32f103t.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
-hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.maximum_size=131072
-hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20480
-hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.flash.maximum_size=131072
+hytiny-stm32f103t.build.cpu_flags=-DMCU_STM32F103CB
+hytiny-stm32f103t.build.ldscript=ld/jtag.ld
+hytiny-stm32f103t.upload.maximum_size=131072
+hytiny-stm32f103t.upload.ram.maximum_size=20480
+hytiny-stm32f103t.upload.flash.maximum_size=131072
+
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
