@@ -462,6 +462,68 @@ genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+###################### HYTiny STM32F103T ########################################
+
+hytiny-stm32f103t.name=HYTiny STM32F103T series
+hytiny-stm32f103t.vid.0=0x1EAF
+hytiny-stm32f103t.pid.0=0x0004
+hytiny-stm32f103t.build.variant=hytiny_stm32f103t
+hytiny-stm32f103t.build.vect=VECT_TAB_ADDR=0x8000000
+hytiny-stm32f103t.build.core=maple
+hytiny-stm32f103t.build.board=HYTINY_STM32F103T
+hytiny-stm32f103t.upload.use_1200bps_touch=false
+hytiny-stm32f103t.upload.file_type=bin
+hytiny-stm32f103t.upload.auto_reset=true
+
+## STM32F103C8 -------------------------
+hytiny-stm32f103t.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
+hytiny-stm32f103t.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8
+hytiny-stm32f103t.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
+hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.maximum_size=65536
+hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20480
+hytiny-stm32f103t.menu.device_variant.STM32F103C8.upload.flash.maximum_size=65536
+
+## STM32F103CB -------------------------
+hytiny-stm32f103t.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Flash)
+hytiny-stm32f103t.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB
+hytiny-stm32f103t.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
+hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.maximum_size=131072
+hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20480
+hytiny-stm32f103t.menu.device_variant.STM32F103CB.upload.flash.maximum_size=131072
+
+#---------------------------- UPLOAD METHODS ---------------------------
+
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB 
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_20.ld
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+hytiny-stm32f103t.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+hytiny-stm32f103t.menu.upload_method.serialMethod=Serial
+hytiny-stm32f103t.menu.upload_method.serialMethod.upload.protocol=maple_serial
+hytiny-stm32f103t.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+
+hytiny-stm32f103t.menu.upload_method.STLinkMethod=STLink
+hytiny-stm32f103t.menu.upload_method.STLinkMethod.upload.protocol=STLink
+hytiny-stm32f103t.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+hytiny-stm32f103t.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+hytiny-stm32f103t.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+hytiny-stm32f103t.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+hytiny-stm32f103t.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+hytiny-stm32f103t.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+
+hytiny-stm32f103t.menu.upload_method.jlinkMethod=JLink
+hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.protocol=jlink
+hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
+hytiny-stm32f103t.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
+
+
 ###################### Generic GD32F103C  ########################################
 
 genericGD32F103C.name=Generic GD32F103C series
