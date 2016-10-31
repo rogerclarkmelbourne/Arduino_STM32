@@ -93,6 +93,7 @@ const struct rcc_dev_info rcc_dev_table[] = {
     [RCC_TIMER13] = { .clk_domain = APB1, .line_num = 7 },
     [RCC_TIMER14] = { .clk_domain = APB1, .line_num = 8 },
 #endif
+	[RCC_CAN]	= { .clk_domain = APB1, .line_num = 25 },	//! JMD after X893
 };
 
 __deprecated
