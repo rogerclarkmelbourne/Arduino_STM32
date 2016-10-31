@@ -183,9 +183,24 @@ static void usb_resume(RESUME_STATE eResumeSetVal) {
     }
 }
 
+// JMD : default ISRs of CAN, to be overridden if HardwareCAN library is used in sketch
+void __attribute__((weak)) USB_HP_CAN_TX_IRQHandler(void) 
+{ ; }      // Dummy ISR
+
+void __irq_usb_hp_can_tx(void)
+{
+  USB_HP_CAN_TX_IRQHandler () ;
+}
+
+uint8 __attribute__((weak)) CAN_RX0_IRQ_Handler(void)
+{ return 0 ; }      // Dummy ISR 
+
 #define SUSPEND_ENABLED 1
 void __irq_usb_lp_can_rx0(void) {
     uint16 istr = USB_BASE->ISTR;
+
+	if (CAN_RX0_IRQ_Handler())			//! JMD : Call to CAN ISR, returns 1 CAN is active
+		return;							//! JMD
 
     /* Use USB_ISR_MSK to only include code for bits we care about. */
 
