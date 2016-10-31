@@ -68,6 +68,7 @@
 
 static void vcomDataTxCb(void);
 static void vcomDataRxCb(void);
+uint32 usb_cdcacm_peek_ex_noint(uint8* buf, uint32 offset, uint32 len);
 static uint8* vcomGetSetLineCoding(uint16);
 
 static void usbInit(void);
@@ -440,16 +441,29 @@ uint16 usb_cdcacm_get_pending(void) {
  * Copies up to len bytes from our private data buffer (*NOT* the PMA)
  * into buf and deq's the FIFO. */
 uint32 usb_cdcacm_rx(uint8* buf, uint32 len) {
+	uint8 reenable=0;
+
+	/* Disable usb interrupt to prevent a race condition on the vcomBufferRx FIFO. */
+	nvic_irq_disable(NVIC_USB_LP_CAN_RX0);
+
     /* Copy bytes to buffer. */
-    uint32 n_copied = usb_cdcacm_peek(buf, len);
+	uint32 n_copied = usb_cdcacm_peek_ex_noint(buf, 0, len);
+
+	/* If the read caused enough room to be free in the FIFO,
+	 * the RX endpoint can be reenabled. */
+	if((n_unread_bytes > (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) &&
+		((n_unread_bytes-n_copied) <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)))
+		reenable=1;
 
     /* Mark bytes as read. */
     n_unread_bytes -= n_copied;
     rx_offset = (rx_offset + n_copied) % CDC_SERIAL_BUFFER_SIZE;
 
-    /* If all bytes have been read, re-enable the RX endpoint, which
-     * was set to NAK when the current batch of bytes was received. */
-    if (n_unread_bytes == 0) {
+	nvic_irq_enable(NVIC_USB_LP_CAN_RX0);
+
+    /* If room for it, re-enable the RX endpoint, which was set to NAK,
+     * if the FIFO was too full to contain a full usb data packet. */
+	if(reenable!=0) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
     }
@@ -457,26 +471,27 @@ uint32 usb_cdcacm_rx(uint8* buf, uint32 len) {
     return n_copied;
 }
 
-/* Nonblocking byte lookahead.
- *
- * Looks at unread bytes without marking them as read. */
 uint32 usb_cdcacm_peek(uint8* buf, uint32 len) {
-    int i;
-    uint32 head = rx_offset;
-
-    if (len > n_unread_bytes) {
-        len = n_unread_bytes;
-    }
-
-    for (i = 0; i < len; i++) {
-        buf[i] = vcomBufferRx[head];
-        head = (head + 1) % CDC_SERIAL_BUFFER_SIZE;
-    }
-
-    return len;
+	return usb_cdcacm_peek_ex(buf, 0, len);
 }
 
 uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len) {
+	uint32 result_len=0;
+	/* Disable usb interrupt to prevent a race condition on the vcomBufferRx FIFO. */
+	nvic_irq_disable(NVIC_USB_LP_CAN_RX0);
+
+	result_len=usb_cdcacm_peek_ex_noint(buf, 0, len);
+
+	nvic_irq_enable(NVIC_USB_LP_CAN_RX0);
+
+    return result_len;
+}
+
+/* Nonblocking byte lookahead.
+ *
+ * Looks at unread bytes without marking them as read.
+ * Must be called with NVIC_USB_LP_CAN_RX0 interrupt disabled. */
+uint32 usb_cdcacm_peek_ex_noint(uint8* buf, uint32 offset, uint32 len) {
     int i;
     uint32 head = (rx_offset + offset) % CDC_SERIAL_BUFFER_SIZE;
 
@@ -492,10 +507,11 @@ uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len) {
     return len;
 }
 
+
 /* Roger Clark. Added. for Arduino 1.0 API support of Serial.peek() */
-int usb_cdcacm_peek_char() 
+int usb_cdcacm_peek_char()
 {
-    if (n_unread_bytes == 0) 
+    if (n_unread_bytes == 0)
 	{
 		return -1;
     }
@@ -544,6 +560,8 @@ static void vcomDataTxCb(void) {
     transmitting = 0;
 }
 
+/* NB. vcomDataRxCb() is called in a interrupt context, beware of race
+ * conditions. */
 static void vcomDataRxCb(void) {
 	uint32 ep_rx_size;
 	uint32 tail = (rx_offset + n_unread_bytes) % CDC_SERIAL_BUFFER_SIZE;
@@ -565,7 +583,7 @@ static void vcomDataRxCb(void) {
 
 	n_unread_bytes += ep_rx_size;
 
-    if ( n_unread_bytes == 0 ) {
+    if (n_unread_bytes <= (CDC_SERIAL_BUFFER_SIZE - USB_CDCACM_RX_EPSIZE)) {
         usb_set_ep_rx_count(USB_CDCACM_RX_ENDP, USB_CDCACM_RX_EPSIZE);
         usb_set_ep_rx_stat(USB_CDCACM_RX_ENDP, USB_EP_STAT_RX_VALID);
     }
