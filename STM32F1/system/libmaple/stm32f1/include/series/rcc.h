@@ -439,6 +439,7 @@ typedef enum rcc_clk_id {
     RCC_UART4,
     RCC_UART5,
     RCC_USB,
+	RCC_CAN,	//! JMD after X893
 } rcc_clk_id;
 
 /**
