@@ -146,10 +146,10 @@ int USBSerial::available(void) {
 
 int USBSerial::peek(void)
 {
-    uint8 b;
-	if (usb_cdcacm_peek(&b, 1)==1)
+
+	if (usb_cdcacm_peek(&b_, 1)==1)
 	{
-		return b;
+		return b_;
 	}
 	else
 	{
@@ -160,10 +160,10 @@ int USBSerial::peek(void)
 void USBSerial::flush(void)
 {
 /*Roger Clark. Rather slow method. Need to improve this */
-    uint8 b;
+
 	while(usb_cdcacm_data_available())
 	{
-		this->read(&b, 1);
+		this->read(&b_, 1);
 	}
     return;
 }
@@ -183,19 +183,19 @@ uint32 USBSerial::read(void *buf, uint32 len) {
 
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
-    uint8 b;
+
 	/*
 	    this->read(&b, 1);
     return b;
 	*/
 	
-	if (usb_cdcacm_rx(&b, 1)==0)
+	if (usb_cdcacm_rx(&b_, 1)==0)
 	{
 		return -1;
 	}
 	else
 	{
-		return b;
+		return b_;
 	}
 }
 
