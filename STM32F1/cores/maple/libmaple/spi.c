@@ -84,7 +84,7 @@ void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags) {
 }
 
 /**
- * @brief Blocking SPI transmit.
+ * @brief Nonblocking SPI transmit.
  * @param dev SPI port to use for transmission
  * @param buf Buffer to transmit.  The sizeof buf's elements are
  *            inferred from dev's data frame format (i.e., are
@@ -95,8 +95,7 @@ void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags) {
 uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len) {
     uint32 txed = 0;
     uint8 byte_frame = spi_dff(dev) == SPI_DFF_8_BIT;
-    while ( txed < len ) {
-		while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
+    while (spi_is_tx_empty(dev) && (txed < len)) {
         if (byte_frame) {
             dev->regs->DR = ((const uint8*)buf)[txed++];
         } else {
@@ -163,6 +162,5 @@ static void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
 	spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
 	if ( (dev->regs->CR1&MASK)!=(cr1_config&MASK) )	spi_peripheral_disable(dev);
 	dev->regs->CR1 = cr1_config;
-	//spi_rx_dma_enable(dev);
 	spi_peripheral_enable(dev);
 }

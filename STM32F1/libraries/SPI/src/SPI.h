@@ -249,7 +249,7 @@ public:
      * @param buffer Bytes to transmit.
      * @param length Number of bytes in buffer to transmit.
      */
-    void write(const void * buffer, uint32 length);
+    void write(const uint8 *buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
@@ -264,7 +264,6 @@ public:
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
-	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
      *
      * This function transmits and receives to buffers.
      *
@@ -272,18 +271,30 @@ public:
      * @param receiveBuf buffer Bytes to save received data. 
      * @param length Number of bytes in buffer to transmit.
 	 */
-	uint8 dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length);
+	uint8 dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length);
 
 	/**
-     * @brief Sets up a DMA Transmit for SPI 8 or 16 bit transfer mode.
-	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
+     * @brief Sets up a DMA Transmit for bytes.
      *
-     * This function only transmits and does not care about the RX fifo.
+     * This function transmits and does not care about the RX fifo.
+     *
+     * @param transmitBuf buffer Bytes to transmit,
+     * @param length Number of bytes in buffer to transmit.
+	 * @param minc Set to use Memory Increment mode, clear to use Circular mode.
+     */
+	uint8 dmaSend(uint8 *transmitBuf, uint16 length, bool minc = 1);
+	
+	/**
+     * @brief Sets up a DMA Transmit for half words.
+	 * SPI PERFIPHERAL MUST BE SET TO 16 BIT MODE BEFORE
+     *
+     * This function transmits and does not care about the RX fifo.
      *
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
+     * @param minc Set to use Memory Increment mode (default if blank), clear to use Circular mode.
      */
-	uint8 dmaSend(void * transmitBuf, uint16 length);
+	uint8 dmaSend(uint16 *transmitBuf, uint16 length, bool minc = 1);
 
     /*
      * Pin accessors
