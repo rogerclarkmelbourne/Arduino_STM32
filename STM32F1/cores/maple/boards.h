@@ -168,7 +168,7 @@ bool boardUsesPin(uint8 pin);
  * @brief Feature test: nonzero iff the board has SerialUSB.
  */
  //Roger Clark. Change so that BOARD_HAVE_SERIALUSB is always true, so that it can be controller by -DSERIAL_USB
-#define BOARD_HAVE_SERIALUSB 0
+#define BOARD_HAVE_SERIALUSB 1
 
 /*(defined(BOARD_USB_DISC_DEV) && defined(BOARD_USB_DISC_BIT))*/
 
