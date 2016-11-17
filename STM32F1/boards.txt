@@ -580,3 +580,34 @@ genericGD32F103C.menu.cpu_speed.speed_96mhz.build.f_cpu=96000000L
 
 genericGD32F103C.menu.cpu_speed.speed_72mhz=72Mhz (compatibility)
 genericGD32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+########################### STM32VLD to FLASH ###########################
+
+STM32VLD.name=STM32VLD to FLASH
+#STM32VLD.vid.0=0x1EAF
+#STM32VLD.pid.0=0x0004
+
+STM32VLD.build.vect=VECT_TAB_ADDR=0x8000000
+STM32VLD.build.core=maple
+STM32VLD.build.board=STM32VLD
+STM32VLD.build.variant=STM32VLD
+STM32VLD.build.ldscript=ld/jtag.ld
+
+STM32VLD.build.family=cortex-m3
+STM32VLD.build.f_cpu=24000000L
+STM32VLD.upload.use_1200bps_touch=false
+STM32VLD.upload.file_type=bin
+STM32VLD.upload.auto_reset=true
+STM32VLD.upload.params.quiet=no
+
+STM32VLD.build.cpu_flags=-DMCU_STM32F100RB
+##---------------------------- UPLOAD METHODS ---------------------------
+
+
+STM32VLD.menu.upload_method.STLinkMethod=STLink
+STM32VLD.menu.upload_method.STLinkMethod.upload.protocol=STLink
+STM32VLD.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+STM32VLD.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG  
+
+
+################################################################################
