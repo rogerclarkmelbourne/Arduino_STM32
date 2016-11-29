@@ -182,7 +182,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
 ////////////////////////////////////////////////////////////////////////////////
 // disable tone on specified pin, if any
 void noTone(uint32_t pin){
-    tone(pin,-1);  // it's all handled in tone()
+   tone(pin,-1,0);  // it's all handled in tone()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
