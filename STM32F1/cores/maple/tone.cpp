@@ -34,12 +34,13 @@ HardwareTimer TTimer1(1), TTimer2(2), TTimer3(3), TTimer4(4);
 #ifdef STM32_HIGH_DENSITY
 HardwareTimer TTimer5(5), TTimer6(6), TTimer7(7), TTimer8(8);
 #endif
-HardwareTimer *TTimer[4] {
-   &TTimer1,&TTimer2,&TTimer3,&TTimer4
+
 #ifdef STM32_HIGH_DENSITY
-  ,&TTimer5,&TTimer6,&TTimer7,&TTimer8
+	HardwareTimer *TTimer[8] { &TTimer1,&TTimer2,&TTimer3,&TTimer4,&TTimer5,&TTimer6,&TTimer7,&TTimer8 };
+#else
+	HardwareTimer *TTimer[4] { &TTimer1,&TTimer2,&TTimer3,&TTimer4 };
 #endif
-   };
+
 
 uint8_t tone_force_channel = 0;                 // forced timer channel
 uint8_t tone_force_ntimer = 0;                  // forced timer
