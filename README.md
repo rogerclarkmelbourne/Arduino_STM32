@@ -9,7 +9,7 @@ Use of these files is at your own risk.
 
 
 ##Summary:  
-This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.6.4 and 1.6.5, and 1.6.9  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
+This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.6.13 or 1.6.12 (some older versions may also work)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
 
 ***PRIMARY SUPPORT FORUM: http://www.stm32duino.com/***
 
