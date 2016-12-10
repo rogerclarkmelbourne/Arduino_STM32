@@ -160,7 +160,7 @@ void SPIClass::begin(void) {
 void SPIClass::beginSlave(void) {
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 0);
-    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE);
+    uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_RX_ONLY);
 	#ifdef SPI_DEBUG
 	Serial.print("spi_slave_enable("); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
 	#endif
@@ -306,10 +306,10 @@ void SPIClass::endTransaction(void)
  * I/O
  */
 
-uint8 SPIClass::read(void)
+uint16 SPIClass::read(void)
 {
 	while ( spi_is_rx_nonempty(_currentSetting->spi_d)==0 ) ;
-	return (uint8)spi_rx_reg(_currentSetting->spi_d);
+	return (uint16)spi_rx_reg(_currentSetting->spi_d);
 }
 
 void SPIClass::read(uint8 *buf, uint32 len)
@@ -321,7 +321,7 @@ void SPIClass::read(uint8 *buf, uint32 len)
     while ( rxed < len) {
 		regs->DR = 0x00FF; // " write the data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
         while ( (regs->SR & SPI_SR_RXNE)==0 ) ; // wait till data is available in the Rx register
-        buf[rxed++] = (uint8)(regs->DR); // read and store the received byte
+        *buf++ = (regs->DR); // read and store the received byte
     }
 }
 
@@ -332,9 +332,19 @@ void SPIClass::write(uint16 data)
 	 * by taking the Tx code from transfer(byte)
 	 * This almost doubles the speed of this function.
 	 */
-	spi_tx_reg(_currentSetting->spi_d, data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
-	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	spi_tx_reg(_currentSetting->spi_d, data); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+}
+
+void SPIClass::write(uint16 data, uint32 n)
+{
+	// Added by stevstrong: Repeatedly send same data by the specified number of times
+	spi_reg_map * regs = _currentSetting->spi_d->regs;
+	while ( (n--)>0 ) {
+		regs->DR = data; // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
+        while ( (regs->SR & SPI_SR_TXE)==0 ) ; // wait till Tx empty
+	}
+	while ( (regs->SR & SPI_SR_BSY) != 0); // wait until BSY=0 before returning 
 }
 
 void SPIClass::write(const void *data, uint32 length)
@@ -346,18 +356,18 @@ void SPIClass::write(const void *data, uint32 length)
 	uint16 b = spi_rx_reg(_currentSetting->spi_d); // dummy read, needed, don't remove!
 }
 
-uint16_t SPIClass::transfer16(uint16_t wr_data) const {
-	spi_tx_reg(_currentSetting->spi_d, wr_data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
-	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
-	return (uint16)spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
-}
-
 uint8 SPIClass::transfer(uint8 byte) const {
 	spi_tx_reg(_currentSetting->spi_d, byte); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
 	return (uint8)spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
+}
+
+uint16_t SPIClass::transfer16(uint16_t wr_data) const {
+	spi_tx_reg(_currentSetting->spi_d, wr_data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
+	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
+	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+	return (uint16)spi_rx_reg(_currentSetting->spi_d); // "... and read the last received data."
 }
 
 /*  Roger Clark and Victor Perez, 2015
@@ -419,10 +429,10 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 *	Still in progress.
 *	2016 - stevstrong - reworked to automatically detect bit size from SPI setting
 */
-uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length)
+uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc)
 {
 	if (length == 0) return 0;
-	uint32 flags = (DMA_MINC_MODE | DMA_FROM_MEM | DMA_TRNS_CMPLT);
+	uint32 flags = ( (DMA_MINC_MODE*minc) | DMA_FROM_MEM | DMA_TRNS_CMPLT);
 	uint8 b = 0;
 //	dma1_ch3_Active=true;
     dma_init(_currentSetting->spiDmaDev);
@@ -438,7 +448,7 @@ uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length)
 
 //    while (dma1_ch3_Active);
     uint32_t m = millis();
-	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel) & 0x2)==0) {//Avoid interrupts and just loop waiting for the flag to be set.
+	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel) & DMA_ISR_TCIF1)==0) {//Avoid interrupts and just loop waiting for the flag to be set.
 		if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
 	dma_clear_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);

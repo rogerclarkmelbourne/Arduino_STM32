@@ -93,16 +93,21 @@ void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags) {
  * @return Number of elements transmitted.
  */
 uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len) {
-    uint32 txed = 0;
-    uint8 byte_frame = spi_dff(dev) == SPI_DFF_8_BIT;
-    while ( txed < len ) {
-		while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
-        if (byte_frame) {
-            dev->regs->DR = ((const uint8*)buf)[txed++];
-        } else {
-            dev->regs->DR = ((const uint16*)buf)[txed++];
-        }
-    }
+    uint32 txed = len;
+	spi_reg_map *regs = dev->regs;
+    if ( spi_dff(dev) == SPI_DFF_8_BIT ) {
+		const uint8 * dp8 = (const uint8*)buf;
+		while ( len-- ) {
+			while ( (regs->SR & SPI_SR_TXE)==0 ) ; //while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
+			regs->DR = *dp8++;
+		}
+    } else {
+		const uint16 * dp16 = (const uint16*)buf;
+		while ( len-- ) {
+			while ( (regs->SR & SPI_SR_TXE)==0 ) ; //while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
+			regs->DR = *dp16++;
+		}
+	}
     return txed;
 }
 
@@ -163,6 +168,5 @@ static void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
 	spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
 	if ( (dev->regs->CR1&MASK)!=(cr1_config&MASK) )	spi_peripheral_disable(dev);
 	dev->regs->CR1 = cr1_config;
-	//spi_rx_dma_enable(dev);
 	spi_peripheral_enable(dev);
 }

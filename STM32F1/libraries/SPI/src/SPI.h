@@ -115,6 +115,13 @@ public:
 			init_MightInline(clock, bitOrder, dataMode, dataSize);
 		}
 	}
+	SPISettings(uint32_t clock) {
+		if (__builtin_constant_p(clock)) {
+			init_AlwaysInline(clock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+		} else {
+			init_MightInline(clock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+		}
+	}
 	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT); }
 private:
 	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode, uint32_t dataSize) {
@@ -216,38 +223,38 @@ public:
      */
 
     /**
-     * @brief Return the next unread byte.
+     * @brief Return the next unread byte/word.
      *
-     * If there is no unread byte waiting, this function will block
+     * If there is no unread byte/word waiting, this function will block
      * until one is received.
      */
-    uint8 read(void);
+    uint16 read(void);
 
     /**
      * @brief Read length bytes, storing them into buffer.
      * @param buffer Buffer to store received bytes into.
-     * @param length Number of bytes to store in buffer.  This
+     * @param length Number of bytes to store in buffer. This
      *               function will block until the desired number of
      *               bytes have been read.
      */
     void read(uint8 *buffer, uint32 length);
 
     /**
-     * @brief Transmit a byte.
-     * @param data Byte to transmit.
-     */
-//    void write(uint8 data);
-
-    /**
-     * @brief Transmit a half word.
+     * @brief Transmit one byte/word.
      * @param data to transmit.
      */
     void write(uint16 data);	
 	
     /**
-     * @brief Transmit multiple bytes.
-     * @param buffer Bytes to transmit.
-     * @param length Number of bytes in buffer to transmit.
+     * @brief Transmit one byte/word a specified number of times.
+     * @param data to transmit.
+     */
+    void write(uint16 data, uint32 n);	
+	
+    /**
+     * @brief Transmit multiple bytes/words.
+     * @param buffer Bytes/words to transmit.
+     * @param length Number of bytes/words in buffer to transmit.
      */
     void write(const void * buffer, uint32 length);
 
@@ -283,7 +290,7 @@ public:
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
      */
-	uint8 dmaSend(void * transmitBuf, uint16 length);
+	uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
 
     /*
      * Pin accessors
