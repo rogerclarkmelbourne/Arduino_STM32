@@ -76,6 +76,7 @@
 #include <stdint.h>
 
 #include <WCharacter.h>
+#include <tone.h>
 
 typedef unsigned int word;
 // typedef uint16 word;// definition from Arduino website, now appears to be incorrect for 32 bit devices

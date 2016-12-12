@@ -11,13 +11,6 @@
 #include "Arduino.h"
 #include <HardwareTimer.h>
 
-// define default timer and channel
-#ifndef TONE_TIMER
-#define TONE_TIMER 4
-#endif
-#ifndef TONE_CHANNEL
-#define TONE_CHANNEL 4
-#endif
 
 #define PinTimer(pin) (PIN_MAP[pin].timer_device->clk_id-RCC_TIMER1+1)
 #define PinChannel(pin) (PIN_MAP[pin].timer_channel)
@@ -30,22 +23,37 @@
 #define USE_BSRR
 
 // construct static timer array (
-HardwareTimer TTimer1(1), TTimer2(2), TTimer3(3), TTimer4(4);
-#ifdef STM32_HIGH_DENSITY
-HardwareTimer TTimer5(5), TTimer6(6), TTimer7(7), TTimer8(8);
-#endif
+
 
 #ifdef STM32_HIGH_DENSITY
-	HardwareTimer *TTimer[8] { &TTimer1,&TTimer2,&TTimer3,&TTimer4,&TTimer5,&TTimer6,&TTimer7,&TTimer8 };
+// define default timer and channel
+	#ifndef TONE_TIMER
+	#define TONE_TIMER 8
+	#endif
+	#ifndef TONE_CHANNEL
+	#define TONE_CHANNEL 8
+	#endif
+
+	HardwareTimer TTimer1(1), TTimer2(2), TTimer3(3), TTimer4(4),TTimer5(5), TTimer6(6), TTimer7(7), TTimer8(8);
+	HardwareTimer *TTimer[8] =  { &TTimer1,&TTimer2,&TTimer3,&TTimer4,&TTimer5,&TTimer6,&TTimer7,&TTimer8 };
 #else
-	HardwareTimer *TTimer[4] { &TTimer1,&TTimer2,&TTimer3,&TTimer4 };
+	// define default timer and channel
+	#ifndef TONE_TIMER
+	#define TONE_TIMER 4
+	#endif
+	#ifndef TONE_CHANNEL
+	#define TONE_CHANNEL 4
+	#endif
+
+	HardwareTimer TTimer1(1), TTimer2(2), TTimer3(3), TTimer4(4);
+	HardwareTimer *TTimer[4] =  { &TTimer1,&TTimer2,&TTimer3,&TTimer4 };
 #endif
 
 
 uint8_t tone_force_channel = 0;                 // forced timer channel
 uint8_t tone_force_ntimer = 0;                  // forced timer
 
-HardwareTimer *tone_timer = TTimer[TONE_TIMER]; // timer used to generate frequency
+HardwareTimer *tone_timer;// = TTimer[TONE_TIMER-1]; // timer used to generate frequency
 uint8_t tone_channel = TONE_CHANNEL;            // timer channel used to generate frequency
 uint8_t tone_ntimer = TONE_TIMER;               // timer used to generate frequency
 
@@ -138,7 +146,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
 
    tone_timer->pause();
 
-   if(freq > 0 || duration >0 ){
+   if(freq > 0 && duration >0 ){
       uint32_t count = 18000000/freq;       // timer counts per half wave
       tone_ncount = tone_n = (count>>16)+1; // number of 16-bit count chunk
       tone_tcount = count/tone_ncount;      // size of count chunk
@@ -183,7 +191,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
 ////////////////////////////////////////////////////////////////////////////////
 // disable tone on specified pin, if any
 void noTone(uint32_t pin){
-   tone(pin,-1,0);  // it's all handled in tone()
+   tone(pin,0,0);  // it's all handled in tone()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
