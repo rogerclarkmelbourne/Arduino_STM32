@@ -44,6 +44,18 @@ struct can_speed_info {
 #define CAN_CLOCK	(36000000UL / 18UL)
 
 static const struct can_speed_info can_speed_table[] = {
+	[CAN_SPEED_33]		= { .btr = (
+		(( 4-1) << CAN_BTR_SJW_POS) |
+		((12-1) << CAN_BTR_TS1_POS) |
+		(( 5-1) << CAN_BTR_TS2_POS) |
+		(CAN_CLOCK / 33000UL - 1)
+		)},
+	[CAN_SPEED_95]		= { .btr = (
+		(( 4-1) << CAN_BTR_SJW_POS) |
+		((12-1) << CAN_BTR_TS1_POS) |
+		(( 5-1) << CAN_BTR_TS2_POS) |
+		(CAN_CLOCK / 95000UL - 1)
+		)},
 	[CAN_SPEED_125]		= { .btr = (
 		(( 4-1) << CAN_BTR_SJW_POS) |
 		((12-1) << CAN_BTR_TS1_POS) |

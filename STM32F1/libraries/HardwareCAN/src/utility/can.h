@@ -168,6 +168,8 @@ typedef enum CAN_TX_MBX
 #define CAN_MODE_SILENT_LOOPBACK	(CAN_BTR_LBKM | CAN_BTR_SILM)	/* loopback combined with silent mode */
 
 enum CAN_SPEED {
+	CAN_SPEED_33,
+	CAN_SPEED_95,
 	CAN_SPEED_125,
 	CAN_SPEED_250,
 	CAN_SPEED_500,
