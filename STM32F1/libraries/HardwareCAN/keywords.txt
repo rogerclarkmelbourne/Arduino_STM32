@@ -1,0 +1,40 @@
+#######################################
+# Syntax Coloring Map For HardwareCAN
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+HardwareCAN 	KEYWORD1
+CanMsg 			KEYWORD1
+CAN_TX_MBX 		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+release 		KEYWORD2	CAN_Release
+send 			KEYWORD2	CAN_Send
+read 			KEYWORD2	CAN_Read
+recv 			KEYWORD2	CAN_Recieve
+set_pool_mode 	KEYWORD2	CAN_Set_Pool_Mode
+set_irq_mode 	KEYWORD2	CAN_Set_IRQ_Mode
+fifo_ready 		KEYWORD2	CAN_Fifo_Ready
+filter 			KEYWORD2	CAN_Filter
+free 			KEYWORD2	CAN_Free
+available		KEYWORD2	CAN_Available
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+CAN_GPIO_PD0_PD1 	LITERAL1
+CAN_GPIO_PB8_PB9 	LITERAL1
+CAN_FIFO0 			LITERAL1
+CAN_FIFO1 			LITERAL1
+CAN_SPEED_125 		LITERAL1
+CAN_SPEED_250 		LITERAL1
+CAN_SPEED_500 		LITERAL1
+CAN_SPEED_1000 		LITERAL1
+CAN1_BASE 			LITERAL1
+CAN2_BASE 			LITERAL1
+CAN_ID_STD			LITERAL1
+CAN_RTR_DATA		LITERAL1
