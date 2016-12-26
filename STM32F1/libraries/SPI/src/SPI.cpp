@@ -214,8 +214,10 @@ void SPIClass::setBitOrder(BitOrder bitOrder)
 void SPIClass::setDataSize(uint32 datasize)
 {
 	_currentSetting->dataSize = datasize;
-	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_DFF); 
-	_currentSetting->spi_d->regs->CR1 = cr1 | (datasize & SPI_CR1_DFF);
+	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_DFF);
+	uint8 en = spi_is_enabled(_currentSetting->spi_d);
+	spi_peripheral_disable(_currentSetting->spi_d);
+	_currentSetting->spi_d->regs->CR1 = cr1 | (datasize & SPI_CR1_DFF) | en;
 }
 
 void SPIClass::setDataMode(uint8_t dataMode)
@@ -316,12 +318,11 @@ void SPIClass::read(uint8 *buf, uint32 len)
 {
 	spi_reg_map * regs = _currentSetting->spi_d->regs;
 	uint8 b = (regs->DR); // clear the RX buffer in case a byte is waiting on it.
-    uint32 rxed = 0;
 	// start sequence
-    while ( rxed < len) {
+    while ( (len--)>0) {
 		regs->DR = 0x00FF; // " write the data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
         while ( (regs->SR & SPI_SR_RXNE)==0 ) ; // wait till data is available in the Rx register
-        *buf++ = (regs->DR); // read and store the received byte
+        *buf++ = (uint8)(regs->DR); // read and store the received byte
     }
 }
 
@@ -333,6 +334,7 @@ void SPIClass::write(uint16 data)
 	 * This almost doubles the speed of this function.
 	 */
 	spi_tx_reg(_currentSetting->spi_d, data); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
+	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 }
 
@@ -387,7 +389,7 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 
 	// RX
 	spi_rx_dma_enable(_currentSetting->spi_d);
-	dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_8BIT) ? DMA_SIZE_8BITS : DMA_SIZE_16BITS;
+	dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_16BIT) ? DMA_SIZE_16BITS : DMA_SIZE_8BITS;
 	dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                      receiveBuf, dma_bit_size, (DMA_MINC_MODE | DMA_TRNS_CMPLT));// receive buffer DMA
 	dma_set_num_transfers(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, length);
@@ -408,7 +410,7 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 	dma_enable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);// enable transmit
 	
     uint32_t m = millis();
-	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel) & 0x2)==0) {//Avoid interrupts and just loop waiting for the flag to be set.
+	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel) & DMA_ISR_TCIF1)==0) {//Avoid interrupts and just loop waiting for the flag to be set.
 		if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
 	dma_clear_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
@@ -434,13 +436,10 @@ uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc)
 	if (length == 0) return 0;
 	uint32 flags = ( (DMA_MINC_MODE*minc) | DMA_FROM_MEM | DMA_TRNS_CMPLT);
 	uint8 b = 0;
-//	dma1_ch3_Active=true;
     dma_init(_currentSetting->spiDmaDev);
-//	dma_attach_interrupt(DMA1, DMA_CH3, &SPIClass::DMA1_CH3_Event);
-
 	// TX
 	spi_tx_dma_enable(_currentSetting->spi_d);	
-	dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_8BIT) ? DMA_SIZE_8BITS : DMA_SIZE_16BITS;
+	dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_16BIT) ? DMA_SIZE_16BITS : DMA_SIZE_8BITS;
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                        transmitBuf, dma_bit_size, flags);// Transmit buffer DMA 
 	dma_set_num_transfers(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, length);
