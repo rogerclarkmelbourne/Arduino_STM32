@@ -126,9 +126,7 @@ size_t Print::print(double n, int digits) {
 
 size_t Print::print(const __FlashStringHelper *ifsh)
 {
-  size_t n = print(ifsh);
-  n += println();
-  return n;
+  return print(reinterpret_cast<const char *>(ifsh));
 }
 
 size_t Print::print(const Printable& x)

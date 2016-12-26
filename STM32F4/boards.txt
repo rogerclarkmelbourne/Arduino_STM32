@@ -3,7 +3,7 @@
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
 
-discovery_f407.upload.tool=stlink
+discovery_f407.upload.tool=stlink_upload
 discovery_f407.upload.protocol=stlink
 
 #discovery_f407.upload.use_1200bps_touch=false

@@ -19,7 +19,7 @@ void setup_temperature_sensor() {
 //    temperature sensor from power down mode.  Do this first 'cause according to
 //    the Datasheet section 5.3.21 it takes from 4 to 10 uS to power up the sensor.
 
-  regs->CR2 |= ADC_CR2_TSEREFE;
+  regs->CR2 |= ADC_CR2_TSVREFE;
 
 // 2. Select a sample time of 17.1 μs
 // set channel 16 sample time to 239.5 cycles

@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2012 LeafLabs, LLC.
+ * Copyright (c) 2011 LeafLabs, LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,39 +24,34 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include "wirish.h"
+/*
+ * This file is a modified version of a file obtained from
+ * CodeSourcery Inc. (now part of Mentor Graphics Corp.), in which the
+ * following text appeared:
+ *
+ * The authors hereby grant permission to use, copy, modify, distribute,
+ * and license this software and its documentation for any purpose, provided
+ * that existing copyright notices are retained in all copies and that this
+ * notice is included verbatim in any distributions. No written agreement,
+ * license, or royalty fee is required for any of the authorized uses.
+ * Modifications to this software may be copyrighted by their authors
+ * and need not follow the licensing terms described here, provided that
+ * the new terms are clearly indicated on the first page of each file where
+ * they apply.
+ */
 
-void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 value) {
-    digitalWrite(clockPin, LOW);
-    for (int i = 0; i < 8; i++) {
-        int bit = bitOrder == LSBFIRST ? i : (7 - i);
-        digitalWrite(dataPin, (value >> bit) & 0x1);
-		gpio_toggle_bit(PIN_MAP[clockPin].gpio_device, PIN_MAP[clockPin].gpio_bit);// togglePin(clockPin);
-		gpio_toggle_bit(PIN_MAP[clockPin].gpio_device, PIN_MAP[clockPin].gpio_bit);// togglePin(clockPin);  
-    }
-}
+        .text
+        .code 16
+        .thumb_func
 
-uint32_t shiftIn( uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder )
-{
-  uint8_t value = 0 ;
-  uint8_t i ;
-
-  
-  for ( i=0 ; i < 8 ; ++i )
-  {
-    digitalWrite( ulClockPin, HIGH ) ;
-
-    if ( ulBitOrder == LSBFIRST )
-    {
-      value |= digitalRead( ulDataPin ) << i ;
-    }
-    else
-    {
-      value |= digitalRead( ulDataPin ) << (7 - i) ;
-    }
-
-    digitalWrite( ulClockPin, LOW ) ;
-  }
-
-  return value ;
-}
+        .globl __start__
+        .type __start__, %function
+__start__:
+        .fnstart
+        ldr r1,=__msp_init
+        mov sp,r1
+        ldr r1,=start_c
+        bx r1
+        .pool
+        .cantunwind
+        .fnend
