@@ -38,6 +38,14 @@ mapleMini.menu.bootloader_version.bootloader20.upload.flash.maximum_size=122880
 mapleMini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
 mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 
+#-- CPU Clock frequency
+mapleMini.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+
 ##############################################################
 maple.name=Maple (Rev 3)
 
@@ -216,6 +224,13 @@ genericSTM32F103C.menu.upload_method.jlinkMethod=JLink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.protocol=jlink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 genericSTM32F103C.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
+
+#-- CPU Clock frequency
+genericSTM32F103C.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103C.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103C.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
 ########################### Generic STM32F103R ###########################
 
