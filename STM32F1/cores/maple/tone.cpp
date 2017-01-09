@@ -147,7 +147,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
    tone_timer->pause();
 
    if(freq > 0 && duration >0 ){
-      uint32_t count = 18000000/freq;       // timer counts per half wave
+      uint32_t count = (F_CPU/4)/freq;       // timer counts per half wave
       tone_ncount = tone_n = (count>>16)+1; // number of 16-bit count chunk
       tone_tcount = count/tone_ncount;      // size of count chunk
       if(duration > 0) // number of half waves to be generated
