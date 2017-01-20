@@ -31,7 +31,7 @@
 
 #include "SPI.h"
 
-#define SPI_DEBUG
+//#define SPI_DEBUG
 
 #include <libmaple/timer.h>
 #include <libmaple/util.h>
