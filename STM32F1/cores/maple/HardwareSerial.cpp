@@ -141,11 +141,11 @@ void HardwareSerial::begin(uint32 baud, uint8_t config)
 
     disable_timer_if_necessary(txi->timer_device, txi->timer_channel);
 
+    usart_init(this->usart_device);
     usart_config_gpios_async(this->usart_device,
                              rxi->gpio_device, rxi->gpio_bit,
                              txi->gpio_device, txi->gpio_bit,
                              config);
-    usart_init(this->usart_device);
     usart_set_baud_rate(this->usart_device, USART_USE_PCLK, baud);
     usart_enable(this->usart_device);
 }
@@ -159,10 +159,11 @@ void HardwareSerial::end(void) {
  */
 
 int HardwareSerial::read(void) {
-    // Block until a byte becomes available, to save user confusion.
-    while (!this->available())
-        ;
-    return usart_getc(this->usart_device);
+	if(usart_data_available(usart_device) > 0) {
+		return usart_getc(usart_device);
+	} else {
+		return -1;
+	}
 }
 
 int HardwareSerial::available(void) {
@@ -194,4 +195,5 @@ size_t HardwareSerial::write(unsigned char ch) {
 
 void HardwareSerial::flush(void) {
     usart_reset_rx(this->usart_device);
+    usart_reset_tx(this->usart_device);
 }

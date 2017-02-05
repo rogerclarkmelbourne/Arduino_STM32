@@ -59,7 +59,7 @@ public:
 	String(const char *cstr = "");
 	String(const String &str);
 	String(const __FlashStringHelper *str);
-	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+       #if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
 	String(String &&rval);
 	String(StringSumHelper &&rval);
 	#endif
@@ -86,7 +86,7 @@ public:
 	String & operator = (const String &rhs);
 	String & operator = (const char *cstr);
 	String & operator = (const __FlashStringHelper *str);
-	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+       #if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
 	String & operator = (String &&rval);
 	String & operator = (StringSumHelper &&rval);
 	#endif
@@ -161,6 +161,10 @@ public:
 	void toCharArray(char *buf, unsigned int bufsize, unsigned int index=0) const
 		{getBytes((unsigned char *)buf, bufsize, index);}
 	const char * c_str() const { return buffer; }
+	char* begin() { return buffer; }
+	char* end() { return buffer + length(); }
+	const char* begin() const { return c_str(); }
+	const char* end() const { return c_str() + length(); }
 
 	// search
 	int indexOf( char ch ) const;
@@ -200,7 +204,7 @@ protected:
 	// copy and move
 	String & copy(const char *cstr, unsigned int length);
 	String & copy(const __FlashStringHelper *pstr, unsigned int length);
-	#ifdef __GXX_EXPERIMENTAL_CXX0X__
+       #if __cplusplus >= 201103L || defined(__GXX_EXPERIMENTAL_CXX0X__)
 	void move(String &rhs);
 	#endif
 };

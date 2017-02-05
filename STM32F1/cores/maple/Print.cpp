@@ -60,6 +60,7 @@ size_t Print::write(const void *buffer, uint32 size) {
     uint8 *ch = (uint8*)buffer;
     while (size--) {
         write(*ch++);
+        n++;
     }
 	return n;
 }
@@ -121,6 +122,16 @@ size_t c=0;
 
 size_t Print::print(double n, int digits) {
     return printFloat(n, digits);
+}
+
+size_t Print::print(const __FlashStringHelper *ifsh)
+{
+  return print(reinterpret_cast<const char *>(ifsh));
+}
+
+size_t Print::print(const Printable& x)
+{
+  return x.printTo(*this);
 }
 
 size_t Print::println(void) 
@@ -195,6 +206,20 @@ size_t Print::println(double n, int digits) {
     size_t s = print(n, digits);
     s += println();
 	return s;
+}
+
+size_t Print::println(const __FlashStringHelper *ifsh)
+{
+  size_t n = print(ifsh);
+  n += println();
+  return n;
+}
+
+size_t Print::println(const Printable& x)
+{
+  size_t n = print(x);
+  n += println();
+  return n;
 }
 
 #ifdef SUPPORTS_PRINTF

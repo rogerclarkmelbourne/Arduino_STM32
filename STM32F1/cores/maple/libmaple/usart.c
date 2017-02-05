@@ -40,6 +40,7 @@
  */
 void usart_init(usart_dev *dev) {
     rb_init(dev->rb, USART_RX_BUF_SIZE, dev->rx_buf);
+    rb_init(dev->wb, USART_TX_BUF_SIZE, dev->tx_buf);
     rcc_clk_enable(dev->clk_id);
     nvic_irq_enable(dev->irq_num);
 }
@@ -69,6 +70,8 @@ void usart_disable(usart_dev *dev) {
     /* FIXME this misbehaves (on F1) if you try to use PWM on TX afterwards */
     usart_reg_map *regs = dev->regs;
 
+    while(!rb_is_empty(dev->wb))
+        ; // wait for TX completed
     /* TC bit must be high before disabling the USART */
     while((regs->CR1 & USART_CR1_UE) && !(regs->SR & USART_SR_TC))
         ;
@@ -78,6 +81,7 @@ void usart_disable(usart_dev *dev) {
 
     /* Clean up buffer */
     usart_reset_rx(dev);
+    usart_reset_tx(dev);
 }
 
 /**
@@ -90,8 +94,19 @@ void usart_disable(usart_dev *dev) {
 uint32 usart_tx(usart_dev *dev, const uint8 *buf, uint32 len) {
     usart_reg_map *regs = dev->regs;
     uint32 txed = 0;
-    while ((regs->SR & USART_SR_TXE) && (txed < len)) {
+    while (rb_is_empty(dev->wb) && (regs->SR & USART_SR_TXE) && (txed < len)) {
         regs->DR = buf[txed++];
+    }
+    regs->CR1 &= ~((uint32)USART_CR1_TXEIE); // disable TXEIE while populating the buffer
+    while (txed < len) {
+        if (rb_safe_insert(dev->wb, buf[txed])) {
+            txed++;
+        }
+        else
+            break;
+    }
+    if (!rb_is_empty(dev->wb)) {
+        regs->CR1 |= USART_CR1_TXEIE;
     }
     return txed;
 }

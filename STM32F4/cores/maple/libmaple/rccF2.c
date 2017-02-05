@@ -74,7 +74,7 @@ static const struct rcc_dev_info rcc_dev_table[] = {
     [RCC_SPI2]    = { .clk_domain = APB1, .line_num = 14 }, //unchanged
     [RCC_DMA1]    = { .clk_domain = AHB1, .line_num = 21 }, //*
     [RCC_PWR]     = { .clk_domain = APB1, .line_num = 28},  //unchanged
-//    [RCC_BKP]     = { .clk_domain = AHB1, .line_num = 18},  //*
+    [RCC_BKP]     = { .clk_domain = AHB1, .line_num = 18},  //*
     [RCC_I2C1]    = { .clk_domain = APB1, .line_num = 21 }, //unchanged
     [RCC_I2C2]    = { .clk_domain = APB1, .line_num = 22 }, //unchanged
     [RCC_CRC]     = { .clk_domain = AHB1, .line_num = 12},  //*

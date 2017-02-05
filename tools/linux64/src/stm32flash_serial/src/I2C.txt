@@ -1,0 +1,94 @@
+About I2C back-end communication in stm32flash
+==========================================================================
+
+Starting from version v0.4, beside the serial communication port,
+stm32flash adds support for I2C port to talk with STM32 bootloader.
+
+The current I2C back-end supports only the API provided by Linux kernel
+driver "i2c-dev", so only I2C controllers with Linux kernel driver can be
+used.
+In Linux source code, most of the drivers for I2C and SMBUS controllers
+are in
+	./drivers/i2c/busses/
+Only I2C is supported by STM32 bootloader, so check the section below
+about SMBUS.
+No I2C support for Windows is available in stm32flash v0.4.
+
+Thanks to the new modular back-end, stm32flash can be easily extended to
+support new back-ends and API. Check HOWTO file in stm32flash source code
+for details.
+
+In the market there are several USB-to-I2C dongles; most of them are not
+supported by kernel drivers. Manufacturer provide proprietary userspace
+libraries using not standardized API.
+These API and dongles could be supported in feature versions.
+
+There are currently 3 versions of STM32 bootloader for I2C communications:
+- v1.0 using I2C clock stretching synchronization between host and STM32;
+- v1.1 superset of v1.0, adds non stretching commands;
+- v1.2 superset of v1.1, adds CRC command and compatibility with i2cdetect.
+Details in ST application note AN2606.
+All the bootloaders above are tested and working with stm32flash.
+
+
+SMBUS controllers
+==========================================================================
+
+Almost 50% of the drivers in Linux source code folder
+	./drivers/i2c/busses/
+are for controllers that "only" support SMBUS protocol. They can NOT
+operate with STM32 bootloader.
+To identify if your controller supports I2C, use command:
+	i2cdetect -F n
+where "n" is the number of the I2C interface (e.g. n=3 for "/dev/i2c-3").
+Controllers that supports I2C will report
+	I2C yes
+Controller that support both I2C and SMBUS are ok.
+
+If you are interested on details about SMBUS protocol, you can download
+the current specs from
+	http://smbus.org/specs/smbus20.pdf
+and you can read the files in Linux source code
+	./Documentation/i2c/i2c-protocol
+	./Documentation/i2c/smbus-protocol
+
+
+About bootloader v1.0
+==========================================================================
+
+Version v1.0 can have issues with some I2C controllers due to use of clock
+stretching during commands that require long operations, like flash erase
+and programming.
+
+Clock stretching is a technique to synchronize host and I2C device. When
+I2C device wants to force a delay in the communication, it push "low" the
+I2C clock; the I2C controller detects it and waits until I2C clock returns
+"high".
+Most I2C controllers set a "timeout" for clock stretching, ranging from
+few milli-seconds to seconds depending on specific HW or SW driver.
+
+It is possible that the timeout in your I2C controller is smaller than the
+delay required for flash erase or programming. In this case the I2C
+controller will timeout and report error to stm32flash.
+There is no possibility for stm32flash to retry, so it can only signal the
+error and exit.
+
+To by-pass the issue with bootloader v1.0 you can modify the kernel driver
+of your I2C controller. Not an easy job, since every controller has its own
+way to handle the timeout.
+
+In my case I'm using the I2C controller integrated in the VGA port of my
+laptop HP EliteBook 8460p. I built the 0.25$ VGA-to-I2C adapter reported in
+	http://www.paintyourdragon.com/?p=43
+To change the timeout of the I2C controller I had to modify the kernel file
+	drivers/gpu/drm/radeon/radeon_i2c.c
+line 969
+- i2c->bit.timeout = usecs_to_jiffies(2200);      /* from VESA */
++ i2c->bit.timeout = msecs_to_jiffies(5000);      /* 5s for STM32 */
+and recompile it.
+Then
+	$> modprobe i2c-dev
+	$> chmod 666 /dev/i2c-7
+	#> stm32flash -a 0x39 /dev/i2c-7
+
+2014-09-16 Antonio Borneo

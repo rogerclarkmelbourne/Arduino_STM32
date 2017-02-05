@@ -103,7 +103,11 @@ void Adafruit_ILI9341_STM::writedata(uint8_t c) {
 #ifdef SPI_HAS_TRANSACTION
 static inline void spi_begin(void) __attribute__((always_inline));
 static inline void spi_begin(void) {
+#ifdef __STM32F1__
+  SPI.beginTransaction(SPISettings(36000000, MSBFIRST, SPI_MODE0));
+#else
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+#endif
 }
 static inline void spi_end(void) __attribute__((always_inline));
 static inline void spi_end(void) {
@@ -762,7 +766,7 @@ uint8_t Adafruit_ILI9341_STM::readcommand8(uint8_t c, uint8_t index) {
   digitalWrite(_cs, HIGH);
 
   digitalWrite(_dc, LOW);
-  digitalWrite(_sclk, LOW);
+  //if(hwSPI) digitalWrite(_sclk, LOW);
   digitalWrite(_cs, LOW);
   spiwrite(c);
 

@@ -385,21 +385,15 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
 #endif
 
 		if(nssi) {
-		    spi_gpio_cfg(as_master,
-                 nssi->gpio_device,
-                 nssi->gpio_bit,
-                 scki->gpio_device,
-                 scki->gpio_bit,
-                 misoi->gpio_bit,
-                 mosii->gpio_bit);
+                    spi_config_gpios(dev, as_master, nssi->gpio_device, nssi->gpio_bit,
+                                                     scki->gpio_device, scki->gpio_bit, 
+                                                     misoi->gpio_device, misoi->gpio_bit,
+                                                     mosii->gpio_device, mosii->gpio_bit);
 		} else {
-		    spi_gpio_cfg(as_master,
-                 NULL,
-                 -1,
-                 scki->gpio_device,
-                 scki->gpio_bit,
-                 misoi->gpio_bit,
-                 mosii->gpio_bit);
+                    spi_config_gpios(dev, as_master, NULL, -1,
+                                                     scki->gpio_device, scki->gpio_bit, 
+                                                     misoi->gpio_device, misoi->gpio_bit,
+                                                     mosii->gpio_device, mosii->gpio_bit);
 		}
 }
 

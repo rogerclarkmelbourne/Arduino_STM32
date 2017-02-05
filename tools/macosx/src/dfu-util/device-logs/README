@@ -1,0 +1,77 @@
+Device:
+-------
+qi-hardware-atusb:
+- Qi Hardware ben-wpan
+- DFU implementation:
+  http://projects.qi-hardware.com/index.php/p/ben-wpan/source/tree/master/atusb/fw/usb
+- Tester: Stefan Schmidt
+
+openpcd:
+- OpenPCD RFID reader
+- DFU implementation: SAM7DFU
+  http://www.openpcd.org/Sam7dfu, git://git.gnumonks.org/openpcd.git
+- Tester: Stefan Schmidt
+
+simtrace:
+- Sysmocom SimTrace
+- DFU implementation: SAM7DFU
+  http://www.openpcd.org/Sam7dfu, git://git.gnumonks.org/openpcd.git
+- Tester: Stefan Schmidt
+
+openmoko-freerunner:
+- Openmoko Freerunner
+- DFU implementation: Old U-Boot
+  http://git.openmoko.org/?p=u-boot.git;a=shortlog;h=refs/heads/mokopatches
+- Tester: Stefan Schmidt
+
+openmoko-neo1973:
+- Openmoko Neo1073
+- DFU implementation: Old U-Boot
+  http://git.openmoko.org/?p=u-boot.git;a=shortlog;h=refs/heads/mokopatches
+- Tester: Stefan Schmidt
+
+tdk-bluetooth:
+- TDK Corp. Bluetooth Adapter
+- DFU implementation: closed soure
+- Only upload has been tested
+- Tester: Stefan Schmidt
+
+stm32f107:
+- STM32 microcontrollers with built-in (ROM) DFU loader
+- DFU implementation: Closed source but probably similar to the one
+  in their USB device libraries. Some relevant application notes:
+  http://www.st.com -> AN3156 and AN2606
+- Tested by Uwe Bonnes
+
+stm32f4discovery:
+- STM32 microcontroller board with built-in (ROM) DFU loader
+- DFU implementation: Closed source, probably similar to stm32f107.
+- Tested by Joe Rothweiler
+
+dso-nano:
+- DSO Nano pocket oscilloscope
+- DFU implementation: Based on ST Microelectronics USB FS Library 1.0
+  http://dsonano.googlecode.com/files/DS0201_OpenSource.rar
+- Tester: Tormod Volden
+
+opc-20:
+- Custom devices based on STM32F1xx
+- DFU implementation: ST Microelectronics USB FS Device Library 3.1.0
+  http://www.st.com -> um0424.zip
+- Tester: Tormod Volden
+
+lpc-link, lpclink2:
+- NXP LPCXpresso debug adapters
+- Proprietary DFU implementation, uses special download files with
+  LPC prefix and encoding of the target firmware code
+- Tested by Uwe Bonnes
+
+Adding the lsusb output and a download log of your device here helps
+us to avoid regressions for hardware we cannot test while working on
+the code. To extract the lsusb output use this command:
+sudo lsusb -v -d $USBID > $DEVICE.lsusb
+Prepare a description snippet as above, and send it to us. A log
+(copy-paste of the command window) of a firmware download is also
+nice, please use the double verbose option -v -v and include the
+command line in the log file.
+ 

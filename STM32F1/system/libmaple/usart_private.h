@@ -37,13 +37,13 @@
 #include <libmaple/ring_buffer.h>
 #include <libmaple/usart.h>
 
-static __always_inline void usart_irq(ring_buffer *rb, usart_reg_map *regs) {
-    /* We can get RXNE and ORE interrupts here. Only RXNE signifies
-     * availability of a byte in DR.
+static inline __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, usart_reg_map *regs) {
+    /* Handling RXNEIE and TXEIE interrupts. 
+     * RXNE signifies availability of a byte in DR.
      *
      * See table 198 (sec 27.4, p809) in STM document RM0008 rev 15.
      * We enable RXNEIE. */
-    if (regs->SR & USART_SR_RXNE) {
+    if ((regs->CR1 & USART_CR1_RXNEIE) && (regs->SR & USART_SR_RXNE)) {
 #ifdef USART_SAFE_INSERT
         /* If the buffer is full and the user defines USART_SAFE_INSERT,
          * ignore new bytes. */
@@ -52,6 +52,13 @@ static __always_inline void usart_irq(ring_buffer *rb, usart_reg_map *regs) {
         /* By default, push bytes around in the ring buffer. */
         rb_push_insert(rb, (uint8)regs->DR);
 #endif
+    }
+    /* TXE signifies readiness to send a byte to DR. */
+    if ((regs->CR1 & USART_CR1_TXEIE) && (regs->SR & USART_SR_TXE)) {
+        if (!rb_is_empty(wb))
+            regs->DR=rb_remove(wb);
+        else
+            regs->CR1 &= ~((uint32)USART_CR1_TXEIE); // disable TXEIE
     }
 }
 

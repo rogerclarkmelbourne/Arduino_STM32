@@ -538,8 +538,8 @@ must be 48MHz. These bits can’t be reset if the USB clock is enabled.
 typedef enum rcc_usb_divider {
     RCC_USB_SYSCLK_DIV_1 = 0x1 << 22,
     RCC_USB_SYSCLK_DIV_1_5 = 0x0 << 22,
-//GD32 only    RCC_USB_SYSCLK_DIV_2 = 0x3 << 22,
-//GD32 only    RCC_USB_SYSCLK_DIV_2_5 = 0x2 << 22,
+    RCC_USB_SYSCLK_DIV_2 = 0x3 << 22,
+    RCC_USB_SYSCLK_DIV_2_5 = 0x2 << 22,
 } rcc_usb_divider;
 
 

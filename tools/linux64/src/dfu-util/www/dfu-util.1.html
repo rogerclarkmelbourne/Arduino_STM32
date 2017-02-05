@@ -1,0 +1,411 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><HEAD><TITLE>Man page of DFU-UTIL</TITLE>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+</HEAD><BODY>
+<H1>DFU-UTIL(1)</H1>
+
+<A NAME="lbAB">&nbsp;</A>
+<H2>NAME</H2>
+
+dfu-util - Device firmware update (DFU) USB programmer
+<A NAME="lbAC">&nbsp;</A>
+<H2>SYNOPSIS</H2>
+
+
+<DL COMPACT>
+<DT>
+<B>dfu-util</B>
+
+<B>-l </B>
+
+[<B>-v</B>]
+
+[<B>-d</B>
+
+<I>vid:pid</I>[,<I>vid:pid</I>]]
+
+[<B>-p</B>
+
+<I>path</I>]
+
+[<B>-c</B>
+
+<I>configuration</I>]
+
+[<B>-i</B>
+
+<I>interface</I>]
+
+[<B>-a</B>
+
+<I>alt-intf</I>]
+
+[<B>-S</B>
+
+<I>serial</I>[,<I>serial</I>]]
+
+
+<DT>
+<B>dfu-util</B>
+
+[<B>-v</B>]
+
+[<B>-d</B>
+
+<I>vid:pid</I>[,<I>vid:pid</I>]]
+
+[<B>-p</B>
+
+<I>path</I>]
+
+[<B>-c</B>
+
+<I>configuration</I>]
+
+[<B>-i</B>
+
+<I>interface</I>]
+
+[<B>-a</B>
+
+<I>alt-intf</I>]
+
+[<B>-S</B>
+
+<I>serial</I>[,<I>serial</I>]]
+
+[<B>-t</B>
+
+<I>size</I>]
+
+[<B>-Z</B>
+
+<I>size</I>]
+
+[<B>-s</B>
+
+<I>address</I>]
+
+[<B>-R</B>]
+
+[<B>-D</B>|<B>-U</B>
+
+<I>file</I>]
+
+
+<DT>
+<B>dfu-util</B>
+
+[<B>-hV</B>]
+
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<H2>DESCRIPTION</H2>
+
+<B>dfu-util</B>
+
+is a program that implements the host (computer) side of the USB DFU
+(Universal Serial Bus Device Firmware Upgrade) protocol.
+<P>
+dfu-util communicates with devices that implement the device side of the
+USB DFU protocol, and is often used to upgrade the firmware of such
+devices.
+<A NAME="lbAE">&nbsp;</A>
+<H2>OPTIONS</H2>
+
+<DL COMPACT>
+<DT><B>-l, --list</B>
+
+<DD>
+List the currently attached DFU capable USB devices.
+<DT><B>-d, --device</B> [<I>Run-Time VENDOR</I>]:[<I>Run-Time PRODUCT</I>][,[<I>DFU Mode VENDOR</I>]:[<I>DFU Mode PRODUCT</I>]]
+
+<DD>
+<DL COMPACT><DT><DD>
+Specify run-time and/or DFU mode vendor and/or product IDs of the DFU device
+to work with. <B>VENDOR</B> and <B>PRODUCT</B> are hexadecimal numbers (no prefix
+needed), &quot;*&quot; (match any), or &quot;-&quot; (match nothing). By default, any DFU capable
+device in either run-time or DFU mode will be considered.
+<P>
+If you only have one standards-compliant DFU device attached to your computer,
+this parameter is optional. However, as soon as you have multiple DFU devices
+connected, dfu-util will detect this and abort, asking you to specify which
+device to use.
+<P>
+If only run-time IDs are specified (e.g. &quot;<B>--device 1457:51ab</B>&quot;), then in
+addition to the specified run-time IDs, any DFU mode devices will also be
+considered. This is beneficial to allow a DFU capable device to be found
+again after a switch to DFU mode, since the vendor and/or product ID of a
+device usually changes in DFU mode.
+<P>
+If only DFU mode IDs are specified (e.g. &quot;<B>--device ,951:26</B>&quot;), then all
+run-time devices will be ignored, making it easy to target a specific device in
+DFU mode.
+<P>
+If both run-time and DFU mode IDs are specified (e.g. &quot;<B>--device
+1457:51ab,:2bc</B>&quot;), then unspecified DFU mode components will use the run-time
+value specified.
+<P>
+Examples:
+<DL COMPACT>
+<DT><B>--device 1457:51ab,951:26</B>
+
+<DD>
+<BR>
+
+Work with a device in run-time mode with
+vendor ID 0x1457 and product ID 0x51ab, or in DFU mode with vendor ID 0x0951
+and product ID 0x0026
+<P>
+<DT><B>--device 1457:51ab,:2bc</B>
+
+<DD>
+<BR>
+
+Work with a device in run-time mode with vendor ID 0x1457 and product ID
+0x51ab, or in DFU mode with vendor ID 0x1457 and product ID 0x02bc
+<P>
+<DT><B>--device 1457:51ab</B>
+
+<DD>
+<BR>
+
+Work with a device in run-time mode with vendor ID 0x1457 and product ID
+0x51ab, or in DFU mode with any vendor and product ID
+<P>
+<DT><B>--device ,951:26</B>
+
+<DD>
+<BR>
+
+Work with a device in DFU mode with vendor ID 0x0951 and product ID 0x0026
+<P>
+<DT><B>--device *,-</B>
+
+<DD>
+<BR>
+
+Work with any device in run-time mode, and ignore any device in DFU mode
+<P>
+<DT><B>--device ,</B>
+
+<DD>
+<BR>
+
+Ignore any device in run-time mode, and Work with any device in DFU mode
+</DL>
+</DL>
+
+<DT><B>-p, --path</B> BUS-PORT. ... .PORT
+
+<DD>
+Specify the path to the DFU device.
+<DT><B>-c, --cfg</B> CONFIG-NR
+
+<DD>
+Specify the configuration of the DFU device. Note that this is only used for matching, the configuration is not set by dfu-util.
+<DT><B>-i, --intf</B> INTF-NR
+
+<DD>
+Specify the DFU interface number.
+<DT><B>-a, --alt</B> ALT
+
+<DD>
+Specify the altsetting of the DFU interface by name or by number.
+<DT><B>-S, --serial</B> [<I>Run-Time SERIAL</I>][,[<I>DFU Mode SERIAL</I>]]
+
+<DD>
+Specify the run-time and DFU mode serial numbers used to further restrict
+device matches.  If multiple, identical DFU devices are simultaneously
+connected to a system then vendor and product ID will be insufficient for
+targeting a single device.  In this situation, it may be possible to use this
+parameter to specify a serial number which also must match.
+<P>
+If only a single serial number is specified, then the same serial number is
+used in both run-time and DFU mode. An empty serial number will match any
+serial number in the corresponding mode.
+<DT><B>-t, --transfer-size  SIZE</B>
+
+<DD>
+Specify the number of bytes per USB transfer. The optimal value is
+usually determined automatically so this option is rarely useful. If
+you need to use this option for a device, please report it as a bug.
+<DT><B>-Z, --upload-size  SIZE</B>
+
+<DD>
+Specify the expected upload size, in bytes.
+<DT><B>-U, --upload</B> FILE
+
+<DD>
+Read firmware from device into
+<B>FILE</B>.
+
+<DT><B>-D, --download</B> FILE
+
+<DD>
+Write firmware from
+<B>FILE</B>
+
+into device.
+<DT><B>-R, --reset</B>
+
+<DD>
+Issue USB reset signalling after upload or download has finished.
+<DT><B>-s, --dfuse-address</B> address
+
+<DD>
+Specify target address for raw binary download/upload on DfuSe devices. Do
+<B>not</B>
+
+use this for downloading DfuSe (.dfu) files. Modifiers can be added
+to the address, separated by a colon, to perform special DfuSE commands such
+as &quot;leave&quot; DFU mode, &quot;unprotect&quot; and &quot;mass-erase&quot; flash memory.
+<DT><B>-v, --verbose</B>
+
+<DD>
+Print more information about dfu-util's operation. A second
+<B>-v</B>
+
+will turn on verbose logging of USB requests. Repeat this option to further
+increase verbosity.
+<DT><B>-h, --help</B>
+
+<DD>
+Show a help text and exit.
+<DT><B>-V, --version</B>
+
+<DD>
+Show version information and exit.
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<H2>EXAMPLES</H2>
+
+<A NAME="lbAG">&nbsp;</A>
+<H3>Using dfu-util in the OpenMoko project</H3>
+
+(with the Neo1973 hardware)
+<P>
+
+Flashing the rootfs:
+<BR>
+
+<B>  $ dfu-util -a rootfs -R -D /path/to/openmoko-devel-image.jffs2</B>
+
+<P>
+
+Flashing the kernel:
+<BR>
+
+<B>  $ dfu-util -a kernel -R -D /path/to/uImage</B>
+
+<P>
+
+Flashing the bootloader:
+<BR>
+
+<B>  $ dfu-util -a u-boot -R -D /path/to/u-boot.bin</B>
+
+<P>
+
+Copying a kernel into RAM:
+<BR>
+
+<B>  $ dfu-util -a 0 -R -D /path/to/uImage</B>
+
+<P>
+Once this has finished, the kernel will be available at the default load
+address of 0x32000000 in Neo1973 RAM.
+<B>Note:</B>
+
+You cannot transfer more than 2MB of data into RAM using this method.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<H3>Using dfu-util with a DfuSe device</H3>
+
+<P>
+
+Flashing a
+<B>.dfu</B>
+
+(special DfuSe format) file to the device:
+<BR>
+
+<B>  $ dfu-util -a 0 -D /path/to/dfuse-image.dfu</B>
+
+<P>
+
+Reading out 1 KB of flash starting at address 0x8000000:
+<BR>
+
+<B>  $ dfu-util -a 0 -s 0x08000000:1024 -U newfile.bin</B>
+
+<P>
+
+Flashing a binary file to address 0x8004000 of device memory and
+ask the device to leave DFU mode:
+<BR>
+
+<B>  $ dfu-util -a 0 -s 0x08004000:leave -D /path/to/image.bin</B>
+
+
+<A NAME="lbAI">&nbsp;</A>
+<H2>BUGS</H2>
+
+Please report any bugs to the dfu-util mailing list at
+<B><A HREF="mailto:dfu-util@lists.gnumonks.org">dfu-util@lists.gnumonks.org</A></B>.
+
+Please use the
+<I>--verbose</I> option (repeated as necessary) to provide more
+
+information in your bug report.
+<A NAME="lbAJ">&nbsp;</A>
+<H2>SEE ALSO</H2>
+
+The dfu-util home page is
+<B><A HREF="http://dfu-util.gnumonks.org">http://dfu-util.gnumonks.org</A></B>
+
+<A NAME="lbAK">&nbsp;</A>
+<H2>HISTORY</H2>
+
+dfu-util was originally written for the OpenMoko project by
+Weston Schmidt &lt;<A HREF="mailto:weston_schmidt@yahoo.com">weston_schmidt@yahoo.com</A>&gt; and 
+Harald Welte &lt;<A HREF="mailto:hwelte@hmw-consulting.de">hwelte@hmw-consulting.de</A>&gt;. Over time, nearly complete
+support of DFU 1.0, DFU 1.1 and DfuSe (&quot;1.1a&quot;) has been added.
+<A NAME="lbAL">&nbsp;</A>
+<H2>LICENCE</H2>
+
+<B>dfu-util</B>
+
+is covered by the GNU General Public License (GPL), version 2 or later.
+<A NAME="lbAM">&nbsp;</A>
+<H2>COPYRIGHT</H2>
+
+This manual page was originally written by Uwe Hermann &lt;<A HREF="mailto:uwe@hermann-uwe.de">uwe@hermann-uwe.de</A>&gt;,
+and is now part of the dfu-util project.
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">EXAMPLES</A><DD>
+<DL>
+<DT><A HREF="#lbAG">Using dfu-util in the OpenMoko project</A><DD>
+<DT><A HREF="#lbAH">Using dfu-util with a DfuSe device</A><DD>
+</DL>
+<DT><A HREF="#lbAI">BUGS</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO</A><DD>
+<DT><A HREF="#lbAK">HISTORY</A><DD>
+<DT><A HREF="#lbAL">LICENCE</A><DD>
+<DT><A HREF="#lbAM">COPYRIGHT</A><DD>
+</DL>
+<HR>
+This document was created by man2html,
+using the doc/dfu-util.1 manual page from dfu-util 0.8.<BR>
+Time: 14:40:57 GMT, September 13, 2014
+</BODY>
+</HTML>
