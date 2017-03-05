@@ -128,6 +128,7 @@ static void setup_clocks(void) {
 
     // Configure AHBx, APBx, etc. prescalers and the main PLL.
     wirish::priv::board_setup_clock_prescalers();
+#if F_CPU > 8000000
     rcc_configure_pll(&wirish::priv::w_board_pll_cfg);
 
     // Enable the PLL, and wait until it's ready.
@@ -137,6 +138,7 @@ static void setup_clocks(void) {
 
     // Finally, switch to the now-ready PLL as the main clock source.
     rcc_switch_sysclk(RCC_CLKSRC_PLL);
+#endif
 }
 
 /*

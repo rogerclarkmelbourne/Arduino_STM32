@@ -232,6 +232,12 @@ genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103C.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103C.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
+genericSTM32F103C.menu.cpu_speed.speed_16mhz=16Mhz (Slow HSE 2x)
+genericSTM32F103C.menu.cpu_speed.speed_16mhz.build.f_cpu=16000000L
+
+genericSTM32F103C.menu.cpu_speed.speed_8mhz=8Mhz (Slow HSI)
+genericSTM32F103C.menu.cpu_speed.speed_8mhz.build.f_cpu=8000000L
+
 ########################### Generic STM32F103R ###########################
 
 genericSTM32F103R.name=Generic STM32F103R series
