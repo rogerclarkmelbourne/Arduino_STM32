@@ -107,7 +107,9 @@ size_t n = 0;
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
 size_t n = 0;
-    if (!this->isConnected() || !buf) {
+// Roger Clark. 
+// Remove checking of isConnected for ZUMspot
+    if (!buf) {
         return 0;
     }
 
