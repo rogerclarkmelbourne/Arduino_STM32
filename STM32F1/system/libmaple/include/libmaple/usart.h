@@ -448,6 +448,8 @@ static inline void usart_disable_all(void) {
 static inline void usart_putc(usart_dev* dev, uint8 byte) {
     while (!usart_tx(dev, &byte, 1))
         ;
+    while (!rb_is_empty(dev->wb))
+        ;
 }
 
 /**

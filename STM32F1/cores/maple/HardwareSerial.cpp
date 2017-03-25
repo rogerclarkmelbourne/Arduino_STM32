@@ -194,7 +194,11 @@ size_t HardwareSerial::write(unsigned char ch) {
 }
 
 void HardwareSerial::flush(void) {
-    // Arduino waits for output to drain, we have nothing to do... -- Tom Vijlbrief
+    // Ring buffer is not used, nothing to do...
+
     //usart_reset_rx(this->usart_device);
     //usart_reset_tx(this->usart_device);
+
+    //while (!rb_is_empty(this->usart_device->wb))
+        //;
 }
