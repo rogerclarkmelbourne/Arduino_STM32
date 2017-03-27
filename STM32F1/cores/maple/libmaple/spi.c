@@ -68,6 +68,7 @@ void spi_master_enable(spi_dev *dev,
     spi_reconfigure(dev, baud | flags | SPI_CR1_MSTR | mode);
 }
 
+
 /**
  * @brief Configure and enable a SPI device as a bus slave.
  *
@@ -157,8 +158,9 @@ void spi_rx_dma_disable(spi_dev *dev) {
  */
 
 static void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
-    spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
-    spi_peripheral_disable(dev);
-    dev->regs->CR1 = cr1_config;
-    spi_peripheral_enable(dev);
+#define MASK (SPI_CR1_CRCEN|SPI_CR1_DFF)
+	spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
+	if ( (dev->regs->CR1&MASK)!=(cr1_config&MASK) )	spi_peripheral_disable(dev);
+	dev->regs->CR1 = cr1_config;
+	spi_peripheral_enable(dev);
 }

@@ -100,44 +100,23 @@ size_t n = 0;
 
 size_t USBSerial::write(const char *str) {
 size_t n = 0;
-    this->write(str, strlen(str));
+    this->write((const uint8*)str, strlen(str));
 	return n;
 }
 
-size_t USBSerial::write(const void *buf, uint32 len) {
+size_t USBSerial::write(const uint8 *buf, uint32 len)
+{
 size_t n = 0;
     if (!this->isConnected() || !buf) {
         return 0;
     }
 
     uint32 txed = 0;
-    uint32 old_txed = 0;
-    uint32 start = millis();
-
-    uint32 sent = 0;
-
-    while (txed < len && (millis() - start < USB_TIMEOUT)) {
-        sent = usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
-        txed += sent;
-        if (old_txed != txed) {
-            start = millis();
-        }
-        old_txed = txed;
+    while (txed < len) {
+        txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
     }
 
-
-#if 0
-// this code leads to a serious performance drop and appears to be
-// unnecessary - everything seems to work fine without, -jcw, 2015-11-05
-// see http://stm32duino.com/posting.php?mode=quote&f=3&p=7746
-	if (sent == USB_CDCACM_TX_EPSIZE) {
-	while (usb_cdcacm_is_transmitting() != 0) {
-	}
-	/* flush out to avoid having the pc wait for more data */
-	usb_cdcacm_tx(NULL, 0);
-	}
-#endif
-		return n;
+	return n;
 }
 
 int USBSerial::available(void) {
@@ -168,14 +147,10 @@ void USBSerial::flush(void)
     return;
 }
 
-uint32 USBSerial::read(void *buf, uint32 len) {
-    if (!buf) {
-        return 0;
-    }
-
+uint32 USBSerial::read(uint8 * buf, uint32 len) {
     uint32 rxed = 0;
     while (rxed < len) {
-        rxed += usb_cdcacm_rx((uint8*)buf + rxed, len - rxed);
+        rxed += usb_cdcacm_rx(buf + rxed, len - rxed);
     }
 
     return rxed;

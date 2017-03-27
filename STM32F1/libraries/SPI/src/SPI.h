@@ -96,28 +96,40 @@
 #define SPI_MODE2 SPI_MODE_2
 #define SPI_MODE3 SPI_MODE_3
 
+#define DATA_SIZE_8BIT SPI_CR1_DFF_8_BIT
+#define DATA_SIZE_16BIT SPI_CR1_DFF_16_BIT
+
 class SPISettings {
 public:
 	SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
 		if (__builtin_constant_p(clock)) {
-			init_AlwaysInline(clock, bitOrder, dataMode);
+			init_AlwaysInline(clock, bitOrder, dataMode, DATA_SIZE_8BIT);
 		} else {
-			init_MightInline(clock, bitOrder, dataMode);
+			init_MightInline(clock, bitOrder, dataMode, DATA_SIZE_8BIT);
 		}
 	}
-	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0); }
-private:
-	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) {
-		init_AlwaysInline(clock, bitOrder, dataMode);
+	SPISettings(uint32_t clock, BitOrder bitOrder, uint8_t dataMode, uint32_t dataSize) {
+		if (__builtin_constant_p(clock)) {
+			init_AlwaysInline(clock, bitOrder, dataMode, dataSize);
+		} else {
+			init_MightInline(clock, bitOrder, dataMode, dataSize);
+		}
 	}
-	void init_AlwaysInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode) __attribute__((__always_inline__)) {
+	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT); }
+private:
+	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode, uint32_t dataSize) {
+		init_AlwaysInline(clock, bitOrder, dataMode, dataSize);
+	}
+	void init_AlwaysInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode, uint32_t dataSize) __attribute__((__always_inline__)) {
 		this->clock = clock;
 		this->bitOrder = bitOrder;
 		this->dataMode = dataMode;
+		this->dataSize = dataSize;
 	}
 	uint32_t clock;
 	BitOrder bitOrder;
 	uint8_t dataMode;
+	uint32_t dataSize;
 	
 	spi_dev *spi_d;
 	uint8_t _SSPin;
@@ -181,6 +193,8 @@ public:
 	void beginTransaction(SPISettings settings) { beginTransaction(BOARD_SPI_DEFAULT_SS, settings); }
 	void beginTransaction(uint8_t pin, SPISettings settings);
 	void endTransaction(void);
+
+	void beginTransactionSlave(SPISettings settings);
 
 	void setClockDivider(uint32_t clockDivider);
 	void setBitOrder(BitOrder bitOrder);	
@@ -246,6 +260,7 @@ public:
      * @return Next unread byte.
      */
     uint8 transfer(uint8 data) const;
+    uint16_t transfer16(uint16_t data) const;
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
