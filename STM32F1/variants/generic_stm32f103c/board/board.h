@@ -59,8 +59,8 @@
 #define BOARD_SPI2_SCK_PIN        PB13
 
 #define BOARD_NR_GPIO_PINS        35
-#define BOARD_NR_PWM_PINS         12
-#define BOARD_NR_ADC_PINS          9
+#define BOARD_NR_PWM_PINS         13
+#define BOARD_NR_ADC_PINS         10
 #define BOARD_NR_USED_PINS         4
 
 

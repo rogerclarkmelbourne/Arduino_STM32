@@ -98,11 +98,11 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 };
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
-    PB0, PA7, PA6, PA3, PA2, PA1, PA0, PB7, PB6, PA10, PA9, PA8
+    PB1, PB0, PA7, PA6, PA3, PA2, PA1, PA0, PB7, PB6, PA10, PA9, PA8
 };
 
 extern const uint8 boardADCPins[BOARD_NR_ADC_PINS] __FLASH__ = {
-    PB0, PA7, PA6 , PA5 , PA4 , PA3 , PA2 , PA1 , PA0 
+    PB1, PB0, PA7, PA6 , PA5 , PA4 , PA3 , PA2 , PA1 , PA0 
 };
 
 // Note. These defines are not really used by generic boards. They are for  Maple Serial USB
