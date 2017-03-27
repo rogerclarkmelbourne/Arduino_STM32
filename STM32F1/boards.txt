@@ -121,8 +121,6 @@ microduino32_flash.build.variant_system_lib=libmaple.a
 microduino32_flash.build.vect=VECT_TAB_ADDR=0x8005000
 microduino32_flash.build.density=STM32_MEDIUM_DENSITY
 # FIXME!
-microduino32_flash.build.error_led_port=GPIOB
-microduino32_flash.build.error_led_pin=1
 microduino32_flash.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 
 ##############################################################
@@ -149,8 +147,6 @@ nucleo_f103rb.build.variant=nucleo_f103rb
 nucleo_f103rb.build.variant_system_lib=libmaple.a
 nucleo_f103rb.build.vect=VECT_TAB_FLASH
 nucleo_f103rb.build.density=STM32_MEDIUM_DENSITY
-nucleo_f103rb.build.error_led_port=GPIOB
-nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 nucleo_f103rb.build.vect=VECT_TAB_ADDR=0x8000000
 
@@ -371,8 +367,7 @@ genericSTM32F103V.upload.use_1200bps_touch=false
 genericSTM32F103V.upload.file_type=bin
 genericSTM32F103V.upload.auto_reset=true
 
-genericSTM32F103V.build.error_led_port=GPIOE
-genericSTM32F103V.build.error_led_pin=6
+genericSTM32F103V.build.error_led=-DERROR_LED_PORT=GPIOE -DERROR_LED_PIN=6
 
 genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC
