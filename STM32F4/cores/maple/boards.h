@@ -140,6 +140,8 @@ bool boardUsesPin(uint8 pin);
 #include "aeroquad32mini.h"
 #elif defined(BOARD_discovery_f4)
 #include "discovery_f4.h"
+#elif defined(BOARD_black_f4)
+#include "black_f4.h"
 #elif defined(BOARD_freeflight)
 #include "freeflight.h"
 #else

@@ -92,7 +92,7 @@ void HardwareSerial::begin(uint32 baud) {
 
     const stm32_pin_info *txi = &PIN_MAP[tx_pin];
     const stm32_pin_info *rxi = &PIN_MAP[rx_pin];
-#ifdef STM32F2
+#ifdef STM32F4
 	// int af = 7<<8;
     if (usart_device == UART4 || usart_device == UART5) {
         gpio_set_af_mode(txi->gpio_device, txi->gpio_bit, 8);

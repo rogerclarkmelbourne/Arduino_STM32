@@ -29,7 +29,7 @@
  */
 
 #include "wirish.h"
-#include "io.h"
+
 
 void pinMode(uint8 pin, WiringPinMode mode) {
     gpio_pin_mode outputMode;
@@ -111,21 +111,21 @@ void togglePin(uint8 pin) {
 
 #define BUTTON_DEBOUNCE_DELAY 1
 
-uint8 isButtonPressed() {
-    if (digitalRead(BOARD_BUTTON_PIN)) {
+uint8 isButtonPressed(uint8_t button) {
+    if (digitalRead(button)) {
         delay(BUTTON_DEBOUNCE_DELAY);
-        while (digitalRead(BOARD_BUTTON_PIN))
+        while (digitalRead(button))
             ;
         return true;
     }
     return false;
 }
 
-uint8 waitForButtonPress(uint32 timeout) {
+uint8 waitForButtonPress(uint8_t button, uint32 timeout) {
     uint32 start = millis();
     uint32 time;
     if (timeout == 0) {
-        while (!isButtonPressed())
+        while (!isButtonPressed(button))
             ;
         return true;
     }
@@ -136,6 +136,6 @@ uint8 waitForButtonPress(uint32 timeout) {
             time - start > timeout) {
             return false;
         }
-    } while (!isButtonPressed());
+    } while (!isButtonPressed(button));
     return true;
 }

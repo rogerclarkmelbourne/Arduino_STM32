@@ -48,6 +48,20 @@
  * @brief Stores STM32-specific information related to a given Maple pin.
  * @see PIN_MAP
  */
+#ifdef BOARD_black_f4
+// restructure members to build consecutive pairs
+typedef struct stm32_pin_info {
+    gpio_dev *gpio_device;      /**< Maple pin's GPIO device */
+    uint8 gpio_bit;             /**< Pin's GPIO port bit. */
+    timer_dev *timer_device;    /**< Pin's timer device, if any. */
+    uint8 timer_channel;        /**< Timer channel, or 0 if none. */
+    const adc_dev *adc_device;  /**< ADC device, if any. */
+    uint8 adc_channel;          /**< Pin ADC channel, or ADCx if none. */
+    uint8 filler;
+} stm32_pin_info;
+
+#else
+
 typedef struct stm32_pin_info {
     gpio_dev *gpio_device;      /**< Maple pin's GPIO device */
     timer_dev *timer_device;    /**< Pin's timer device, if any. */
@@ -58,6 +72,7 @@ typedef struct stm32_pin_info {
     uint8 filler;
 } stm32_pin_info;
 
+#endif
 /**
  * Variable attribute, instructs the linker to place the marked
  * variable in Flash instead of RAM. */

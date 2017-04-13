@@ -74,7 +74,7 @@ const adc_dev *ADC3 = &adc3;
  */
 void adc_init(const adc_dev *dev) {
     rcc_clk_enable(dev->clk_id);
-#ifdef STM32F2
+#ifdef STM32F4
     if(dev->clk_id == RCC_ADC1) {
     	rcc_reset_dev(dev->clk_id);
     }
@@ -136,7 +136,9 @@ void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
  * @brief Calibrate an ADC peripheral
  * @param dev adc device
  */
-void adc_calibrate(const adc_dev *dev) {
+void adc_calibrate(const adc_dev *dev)
+{
+/*
 #ifndef STM32F2
     __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
     __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
@@ -149,6 +151,7 @@ void adc_calibrate(const adc_dev *dev) {
     while (*cal_bit)
         ;
 #endif
+*/
 }
 
 /**
@@ -171,8 +174,8 @@ uint16 adc_read(const adc_dev *dev, uint8 channel) {
     return (uint16)(regs->DR & ADC_DR_DATA);
 }
 
-void setupADC_F2() {
-#ifdef STM32F2
+void setupADC_F4(void)
+{
 		  uint32 tmpreg1 = 0;
 
 		  tmpreg1 = ADC_COMMON->CCR;
@@ -196,5 +199,4 @@ void setupADC_F2() {
 
 		  /* Write to ADC CCR */
 		  ADC_COMMON->CCR = tmpreg1;
-#endif
 }

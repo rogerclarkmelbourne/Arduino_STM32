@@ -3,7 +3,7 @@
 #include "usbd_desc.h"
 #include "usb.h"
 #include <gpio.h>
-#include <rccF2.h>
+#include <rccF4.h>
 #include <usbd_cdc_vcp.h>
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;

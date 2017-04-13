@@ -41,9 +41,7 @@
 #include "adc.h"
 #include "timer.h"
 #include "usb.h"
-#ifdef STM32F2
-//#include "usbF4.h"
-#endif
+
 
 static void setupFlash(void);
 static void setupClocks(void);
@@ -59,7 +57,7 @@ void init(void) {
 	systick_init(SYSTICK_RELOAD_VAL);
 	gpio_init_all();
 
-#ifdef STM32F2
+#ifdef STM32F4
 	rcc_clk_enable(RCC_SYSCFG);
 #else
     afio_init();
@@ -84,11 +82,13 @@ bool boardUsesPin(uint8 pin) {
 }
 
 static void setupFlash(void) {
+/*
 #ifndef STM32F2
 	// for F2 and F4 CPUs this is done in SetupClock...(), e.g. in SetupClock168MHz()
     flash_enable_prefetch();
     flash_set_latency(FLASH_WAIT_STATE_2);
 #endif
+*/
 }
 
 /*
@@ -121,8 +121,8 @@ static void setupNVIC() {
 static void adcDefaultConfig(const adc_dev* dev);
 
 static void setupADC() {
-#ifdef STM32F2
-	setupADC_F2();
+#ifdef STM32F4
+	setupADC_F4();
 #else
 	rcc_set_prescaler(RCC_PRESCALER_ADC, RCC_ADCPRE_PCLK_DIV_6);
 #endif
