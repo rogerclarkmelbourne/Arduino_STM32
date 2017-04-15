@@ -25,14 +25,14 @@
  *****************************************************************************/
 
 /**
- * @file   black_f4.cpp
+ * @file   generic_f407v.cpp
  * @author ala42
- * @brief  black_f4 board file.
+ * @brief  generic_f407v board file.
  */
 
-#ifdef BOARD_black_f4
+#ifdef BOARD_generic_f407v
 
-#include "black_f4.h"
+#include "generic_f407v.h"
 
 //#include "fsmc.h"
 #include "gpio.h"

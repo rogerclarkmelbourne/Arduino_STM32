@@ -67,7 +67,7 @@ void init(void) {
     setupADC();
     setupTimers();
 
-    //setupUSB();
+    setupUSB();
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes

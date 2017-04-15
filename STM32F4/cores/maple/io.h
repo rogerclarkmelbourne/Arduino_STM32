@@ -180,7 +180,7 @@ static inline void toggleLED() {
  * accomplished portably over all LeafLabs boards by calling
  * pinMode(BOARD_BUTTON_PIN, INPUT).
  *
- * @param button - one of available on-board buttons (up to 3 for black F4)
+ * @param button - one of available on-board buttons (up to 3 for generic F4)
  *
  * @see pinMode()
  */
@@ -198,7 +198,7 @@ uint8 isButtonPressed(uint8_t button);
  * button is pressed.  If timeout_millis is left out (or 0), wait
  * forever.
  *
- * @param button - one of available on-board buttons (up to 3 for black F4)
+ * @param button - one of available on-board buttons (up to 3 for generic F4)
  *
  * @return true, if the button was pressed; false, if the timeout was
  * reached.

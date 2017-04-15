@@ -48,7 +48,7 @@
  * @brief Stores STM32-specific information related to a given Maple pin.
  * @see PIN_MAP
  */
-#ifdef BOARD_black_f4
+#ifdef BOARD_generic_f407v
 // restructure members to build consecutive pairs
 typedef struct stm32_pin_info {
     gpio_dev *gpio_device;      /**< Maple pin's GPIO device */

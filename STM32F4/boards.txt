@@ -30,32 +30,32 @@ discovery_f407.build.error_led_pin=14
 discovery_f407.build.board=STM32DiscoveryF407
 
 ##############################################################
-black_f407vet6.name=STM32 Black F407VET6
+generic_f407v.name=Generic STM32F407V series
 
-black_f407vet6.upload.tool=stlink_upload
-black_f407vet6.upload.protocol=stlink
+generic_f407v.upload.tool=stlink_upload
+generic_f407v.upload.protocol=stlink
 
-black_f407vet6.upload.file_type=bin
-black_f407vet6.upload.ram.maximum_size=65535
-black_f407vet6.upload.flash.maximum_size=514288
-black_f407vet6.upload.maximum_size=514288
+generic_f407v.upload.file_type=bin
+generic_f407v.upload.ram.maximum_size=131072
+generic_f407v.upload.flash.maximum_size=514288
+generic_f407v.upload.maximum_size=514288
 
-#black_f407vet6.upload.usbID=0483:3748
-#black_f407vet6.upload.altID=1
-#black_f407vet6.upload.auto_reset=true
+#generic_f407v.upload.usbID=0483:3748
+#generic_f407v.upload.altID=1
+#generic_f407v.upload.auto_reset=true
 
-black_f407vet6.build.mcu=cortex-m4
-black_f407vet6.build.f_cpu=168000000L
-black_f407vet6.build.core=maple
-black_f407vet6.build.extra_flags=-mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_black_f4
-black_f407vet6.build.ldscript=ld/jtag.ld
-black_f407vet6.build.variant=black_f407vet6
-black_f407vet6.build.variant_system_lib=lib_f407.a
-black_f407vet6.build.vect=VECT_TAB_BASE
-black_f407vet6.build.density=STM32_HIGH_DENSITY
-black_f407vet6.build.error_led_port=GPIOA
-black_f407vet6.build.error_led_pin=7
-black_f407vet6.build.board=STM32BlackF407VET6
+generic_f407v.build.mcu=cortex-m4
+generic_f407v.build.f_cpu=168000000L
+generic_f407v.build.core=maple
+generic_f407v.build.extra_flags=-mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_generic_f407v
+generic_f407v.build.ldscript=ld/jtag.ld
+generic_f407v.build.variant=generic_f407v
+generic_f407v.build.variant_system_lib=lib_f407.a
+generic_f407v.build.vect=VECT_TAB_BASE
+generic_f407v.build.density=STM32_HIGH_DENSITY
+generic_f407v.build.error_led_port=GPIOA
+generic_f407v.build.error_led_pin=7
+generic_f407v.build.board=STM32GenericF407VET6
 
 ##############################################################
 stm32f4stamp.name=STM32F4Stamp F405

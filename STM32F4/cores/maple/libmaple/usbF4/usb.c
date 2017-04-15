@@ -11,8 +11,8 @@ USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
 
 void setupUSB (void) {
-    #define USB_DISC_DEV         GPIOD
-    #define USB_DISC_PIN         11
+    #define USB_DISC_DEV         GPIOA
+    #define USB_DISC_PIN         12
 
 	gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_OD); // ala42
 #ifdef USB_DISC_OD
