@@ -49,8 +49,6 @@ public:
     void begin(unsigned long, uint8_t);
     void end(void);
 
-    operator bool() { return true; } // Roger Clark. This is needed because in cardinfo.ino it does if (!Serial) . It seems to be a work around for the Leonardo that we needed to implement just to be compliant with the API
-
     virtual int available(void);// Changed to virtual
 
     uint32 read(uint8 * buf, uint32 len);
@@ -69,8 +67,20 @@ public:
 
     uint8 getRTS();
     uint8 getDTR();
-    uint8 isConnected();
     uint8 pending();
+	
+    /* SukkoPera: This is the Arduino way to check if an USB CDC serial
+     * connection is open.
+     
+     * Used for instance in cardinfo.ino.
+     */
+    operator bool();
+	
+    /* Old libmaple way to check for serial connection.
+     *
+     * Deprecated, use the above.
+     */
+    uint8 isConnected() { return (bool) *this; }
 };
 
 #ifdef SERIAL_USB 
