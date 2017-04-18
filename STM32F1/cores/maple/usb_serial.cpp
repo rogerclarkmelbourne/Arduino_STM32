@@ -178,16 +178,16 @@ uint8 USBSerial::pending(void) {
     return usb_cdcacm_get_pending();
 }
 
-uint8 USBSerial::isConnected(void) {
-    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
-}
-
 uint8 USBSerial::getDTR(void) {
     return usb_cdcacm_get_dtr();
 }
 
 uint8 USBSerial::getRTS(void) {
     return usb_cdcacm_get_rts();
+}
+
+uint8 USBSerial::operator bool() {
+    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
 #if BOARD_HAVE_SERIALUSB
