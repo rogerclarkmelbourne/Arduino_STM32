@@ -44,19 +44,19 @@ public:
 
     void begin(void);
 
-	// Roger Clark. Added dummy function so that existing Arduino sketches which specify baud rate will compile.
-	void begin(unsigned long);
-	void begin(unsigned long, uint8_t);
+    // Roger Clark. Added dummy function so that existing Arduino sketches which specify baud rate will compile.
+    void begin(unsigned long);
+    void begin(unsigned long, uint8_t);
     void end(void);
 
-	operator bool() { return true; } // Roger Clark. This is needed because in cardinfo.ino it does if (!Serial) . It seems to be a work around for the Leonardo that we needed to implement just to be compliant with the API
+    operator bool() { return true; } // Roger Clark. This is needed because in cardinfo.ino it does if (!Serial) . It seems to be a work around for the Leonardo that we needed to implement just to be compliant with the API
 
     virtual int available(void);// Changed to virtual
 
     uint32 read(uint8 * buf, uint32 len);
-   // uint8  read(void);
+    // uint8  read(void);
 
-	// Roger Clark. added functions to support Arduino 1.0 API
+    // Roger Clark. added functions to support Arduino 1.0 API
     virtual int peek(void);
     virtual int read(void);
     int availableForWrite(void);
@@ -74,8 +74,7 @@ public:
 };
 
 #ifdef SERIAL_USB 
-	extern USBSerial Serial;
+    extern USBSerial Serial;
 #endif
 
 #endif
-
