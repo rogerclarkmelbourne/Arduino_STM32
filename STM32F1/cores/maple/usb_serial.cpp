@@ -186,7 +186,7 @@ uint8 USBSerial::getRTS(void) {
     return usb_cdcacm_get_rts();
 }
 
-uint8 USBSerial::operator bool() {
+USBSerial::operator bool() {
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
