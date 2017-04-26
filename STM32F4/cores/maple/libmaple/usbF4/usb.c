@@ -5,23 +5,22 @@
 #include <gpio.h>
 #include <rccF4.h>
 #include <usbd_cdc_vcp.h>
+#include <boards.h>
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
 
 
-void setupUSB (void) {
-    #define USB_DISC_DEV         GPIOA
-    #define USB_DISC_PIN         12
-
-	gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_OD); // ala42
+void setupUSB (void)
+{
+	gpio_set_mode(BOARD_USB_DP_PIN, GPIO_OUTPUT_OD); // ala42
 #ifdef USB_DISC_OD
   //gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_OD); // ala42
 #else
   //gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_PP); // ala42 for active pull-up on disconnect pin
 #endif
 
-  gpio_write_bit(USB_DISC_DEV, USB_DISC_PIN,0); // ala42
+  gpio_clear_pin(BOARD_USB_DP_PIN); // ala42
   delay_us(200000);
 
   /* setup the apb1 clock for USB */
@@ -29,7 +28,7 @@ void setupUSB (void) {
   //pRCC->APB1ENR |= RCC_APB1ENR_USBEN;
 
   /* initialize the usb application */
-  gpio_write_bit(USB_DISC_DEV, USB_DISC_PIN, 1); // ala42 // presents us to the host
+  gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
             &USR_desc,

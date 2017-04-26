@@ -33,6 +33,9 @@
 #ifndef _LIBMAPLE_TYPES_H_
 #define _LIBMAPLE_TYPES_H_
 
+#include <inttypes.h>
+#include <stdbool.h>
+
 typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;

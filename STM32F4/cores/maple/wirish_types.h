@@ -30,13 +30,13 @@
  * @brief  Wirish library type definitions.
  */
 
-#include "libmaple_types.h"
-#include "gpio.h"
-#include "timer.h"
-#include "adc.h"
-
 #ifndef _WIRISH_TYPES_H_
 #define _WIRISH_TYPES_H_
+
+#include "libmaple_types.h"
+#include "gpio_def.h"
+#include "timer.h"
+#include "adc.h"
 
 /**
  * Invalid stm32_pin_info adc_channel value.
@@ -73,6 +73,7 @@ typedef struct stm32_pin_info {
 } stm32_pin_info;
 
 #endif
+
 /**
  * Variable attribute, instructs the linker to place the marked
  * variable in Flash instead of RAM. */

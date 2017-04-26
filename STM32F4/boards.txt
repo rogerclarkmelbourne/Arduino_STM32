@@ -1,5 +1,7 @@
 # 
 
+menu.usb_cfg=USB configuration
+
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
 
@@ -56,6 +58,15 @@ generic_f407v.build.density=STM32_HIGH_DENSITY
 generic_f407v.build.error_led_port=GPIOA
 generic_f407v.build.error_led_pin=7
 generic_f407v.build.board=STM32GenericF407VET6
+
+generic_f407v.menu.usb_cfg.usb_nc=USB inactive
+generic_f407v.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
+
+generic_f407v.menu.usb_cfg.usb_serial=USB serial (CDC)
+generic_f407v.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
+
+generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
+generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
 ##############################################################
 stm32f4stamp.name=STM32F4Stamp F405

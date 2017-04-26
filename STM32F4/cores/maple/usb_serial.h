@@ -33,6 +33,8 @@
 
 #include "Stream.h"
 
+#ifdef SERIAL_USB
+
 /**
  * @brief Virtual serial terminal.
  */
@@ -65,6 +67,9 @@ public:
 };
 
 extern USBSerial SerialUSB;
+
+#endif
+
 
 #endif
 

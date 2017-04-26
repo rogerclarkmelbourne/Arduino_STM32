@@ -72,7 +72,7 @@ void pinMode(uint8 pin, WiringPinMode mode) {
         return;
     }
 
-    gpio_set_mode(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, outputMode);
+    gpio_set_mode(pin, outputMode);
 
     if (PIN_MAP[pin].timer_device != NULL) {
         /* Enable/disable timer channels if we're switching into or
@@ -84,29 +84,32 @@ void pinMode(uint8 pin, WiringPinMode mode) {
 }
 
 
-uint32 digitalRead(uint8 pin) {
+uint32 digitalRead(uint8 pin)
+{
     if (pin >= BOARD_NR_GPIO_PINS) {
         return 0;
     }
 
-    return gpio_read_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit) ?
+    return gpio_read_pin(pin) ?
         HIGH : LOW;
 }
 
-void digitalWrite(uint8 pin, uint8 val) {
+void digitalWrite(uint8 pin, uint8 val)
+{
     if (pin >= BOARD_NR_GPIO_PINS) {
         return;
     }
 
-    gpio_write_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit, val);
+    gpio_write_pin(pin, val);
 }
 
-void togglePin(uint8 pin) {
+void togglePin(uint8 pin)
+{
     if (pin >= BOARD_NR_GPIO_PINS) {
         return;
     }
 
-    gpio_toggle_bit(PIN_MAP[pin].gpio_device, PIN_MAP[pin].gpio_bit);
+    gpio_toggle_pin(pin);
 }
 
 #define BUTTON_DEBOUNCE_DELAY 1

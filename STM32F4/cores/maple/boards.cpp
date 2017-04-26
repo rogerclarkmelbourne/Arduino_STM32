@@ -41,6 +41,7 @@
 #include "adc.h"
 #include "timer.h"
 #include "usb.h"
+#include "usb_serial.h"
 
 
 static void setupFlash(void);
@@ -67,7 +68,10 @@ void init(void) {
     setupADC();
     setupTimers();
 
+#ifdef SERIAL_USB
     setupUSB();
+    SerialUSB.begin();
+#endif
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes

@@ -62,17 +62,6 @@ extern struct spi_dev *SPI2;
 extern struct spi_dev *SPI3;
 #endif
 
-/*
- * Routines
- */
-
-/* spi_gpio_cfg(): Backwards compatibility shim to spi_config_gpios() */
-struct gpio_dev;
-extern void spi_config_gpios(struct spi_dev*, uint8,
-                             struct gpio_dev*, uint8,
-                             struct gpio_dev*, uint8, 
-                             struct gpio_dev*, uint8, 
-                             struct gpio_dev*, uint8); 
 
 #ifdef __cplusplus
 }

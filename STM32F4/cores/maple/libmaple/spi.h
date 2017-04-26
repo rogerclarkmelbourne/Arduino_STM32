@@ -230,14 +230,10 @@ struct gpio_dev;
  */
 extern void spi_config_gpios(spi_dev *dev,
                              uint8 as_master,
-                             struct gpio_dev *nss_dev,
-                             uint8 nss_bit,
-                             struct gpio_dev *sck_dev,
-                             uint8 sck_bit,
-                             struct gpio_dev *miso_dev,
-                             uint8 miso_bit,
-                             struct gpio_dev *mosi_dev,
-                             uint8 mosi_bit);
+                             uint8 nss_pin,
+                             uint8 sck_pin,
+                             uint8 miso_pin,
+                             uint8 mosi_pin);
 
 /**
  * @brief SPI mode configuration.

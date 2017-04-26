@@ -24,7 +24,7 @@
  * SOFTWARE.
  *****************************************************************************/
 
- #ifdef STM32F4
+#ifdef STM32F4
  
 /**
  * @file gpio.c
@@ -79,6 +79,7 @@ gpio_dev gpioe = {
 /** GPIO port E device. */
 gpio_dev* const GPIOE = &gpioe;
 
+ #if 0 // not available on LQFP 100 package
 gpio_dev gpiof = {
     .regs      = GPIOF_BASE,
     .clk_id    = RCC_GPIOF,
@@ -94,6 +95,7 @@ gpio_dev gpiog = {
 };
 /** GPIO port G device. */
 gpio_dev* const GPIOG = &gpiog;
+ #endif // not available on LQFP 100 package
 #endif
 
 /*
@@ -122,9 +124,11 @@ void gpio_init_all(void) {
     gpio_init(GPIOD);
 
 #ifdef STM32_HIGH_DENSITY
-    gpio_init(GPIOE);
-    gpio_init(GPIOF);
-    gpio_init(GPIOG);
+	gpio_init(GPIOE);
+  #if 0 // not available on LQFP 100 package
+	gpio_init(GPIOF);
+	gpio_init(GPIOG);
+  #endif // not available on LQFP 100 package
 #endif
 
 #ifdef ARDUINO_STM32F4_NETDUINO2PLUS
@@ -148,8 +152,9 @@ void gpio_init_all(void) {
  * @param mode General purpose or alternate function mode to set the pin to.
  * @see gpio_pin_mode
  */
-void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
-    gpio_reg_map *regs = dev->regs;
+void gpio_set_mode(uint8_t io_pin, gpio_pin_mode mode) {
+    gpio_reg_map *regs = (PIN_MAP[io_pin].gpio_device)->regs;
+	uint8_t pin = PIN_MAP[io_pin].gpio_bit;
 
 	//regs->AFR[pin/8] = (regs->AFR[pin/8] & ~(15 << (4*(pin&7)))) | (((mode >> 8) & 15) << (4*(pin&7)));
 	//gpio_set_af_mode(dev, pin, mode>>8);
@@ -168,10 +173,11 @@ void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
  * @param mode alternate function mode to set the pin to.
  * @see gpio_pin_mode
  */
-void gpio_set_af_mode(gpio_dev *dev, uint8 pin, int mode) {
-    gpio_reg_map *regs = dev->regs;
+void gpio_set_af_mode(uint8_t io_pin, int mode) {
+    gpio_reg_map *regs = (PIN_MAP[io_pin].gpio_device)->regs;
+	uint8_t pin = PIN_MAP[io_pin].gpio_bit;
 
-	regs->AFR[pin/8] = (regs->AFR[pin/8] & ~(15 << (4*(pin&7)))) | (((mode >> 0) & 15) << (4*(pin&7)));
+	regs->AFR[pin>>3] = (regs->AFR[pin>>3] & ~(15 << (4*(pin&7)))) | (((mode >> 0) & 15) << (4*(pin&7)));
 }
 
 /*
