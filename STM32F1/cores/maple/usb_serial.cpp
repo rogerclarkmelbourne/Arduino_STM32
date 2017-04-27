@@ -211,7 +211,7 @@ enum reset_state_t {
 
 static reset_state_t reset_state = DTR_UNSET;
 
-static void ifaceSetupHook(unsigned hook, void *requestvp) {
+static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestvp) {
     uint8 request = *(uint8*)requestvp;
 
     // Ignore requests we're not interested in.
@@ -265,7 +265,7 @@ static void wait_reset(void) {
 #define STACK_TOP 0x20000800
 #define EXC_RETURN 0xFFFFFFF9
 #define DEFAULT_CPSR 0x61000000
-static void rxHook(unsigned hook, void *ignored) {
+static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attribute__((unused))) {
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {

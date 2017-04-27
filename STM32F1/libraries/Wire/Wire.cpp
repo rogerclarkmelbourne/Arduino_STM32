@@ -173,7 +173,7 @@ TwoWire::TwoWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
     this->sda_pin=sda;
 }
 
-void TwoWire::begin(uint8 self_addr) {
+void TwoWire::begin(uint8 self_addr __attribute__((unused))) {
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
