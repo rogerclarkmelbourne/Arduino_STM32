@@ -32,8 +32,8 @@ uint32_t pulseIn( uint32_t pin, uint32_t state __attribute__((unused)), uint32_t
    // pulse width measuring loop and achieve finer resolution.  calling
    // digitalRead() instead yields much coarser resolution.
  
-   gpio_dev *dev=PIN_MAP[pin].gpio_device;
-   uint32_t bit = (1U << PIN_MAP[pin].gpio_bit);
+	gpio_dev *dev=PIN_MAP[pin].gpio_device;
+	uint32_t bit = (1U << PIN_MAP[pin].gpio_bit);
    
 
    uint32_t width = 0; // keep initialization out of time critical area
