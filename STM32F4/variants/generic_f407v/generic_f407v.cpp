@@ -35,40 +35,11 @@
 #include "generic_f407v.h"
 
 //#include "fsmc.h"
-#include "gpio.h"
-#include "rcc.h"
-#include "timer.h"
+#include <libmaple/gpio.h>
+#include <libmaple/rcc.h>
+#include <libmaple/timer.h>
 
-#include "wirish_types.h"
-
-// Pins reserved for the on-board hardware
-#define USB_DM_PIN		BOARD_USB_DM_PIN // PA11
-#define USB_DP_PIN		BOARD_USB_DP_PIN // PA12
-
-#define FLASH_CS_PIN	PB0
-#define FLASH_CLK_PIN	BOARD_SPI3_SCK_PIN	// PB3
-#define FLASH_DO_PIN	BOARD_SPI3_MISO_PIN	// PB4
-#define FLASH_DI_PIN	BOARD_SPI3_MOSI_PIN	// PB5
-
-#define NRF24_CLK_PIN	BOARD_SPI3_SCK_PIN	// PB3
-#define NRF24_DO_PIN	BOARD_SPI3_MISO_PIN	// PB4
-#define NRF24_DI_PIN	BOARD_SPI3_MOSI_PIN	// PB5
-#define NRF24_CE_PIN	PB6
-#define NRF24_CS_PIN	PB7
-#define NRF24_IRQ_PIN	PB8
-
-// SD card, SDIO mode
-#define SD_DAT0         BOARD_SDIO_D0	// PC8
-#define SD_DAT1         BOARD_SDIO_D1	// PC9
-#define SD_DAT2         BOARD_SDIO_D2	// PC10
-#define SD_DAT3         BOARD_SDIO_D3	// PC11
-#define SD_CLK          BOARD_SDIO_CK	// PC12
-#define SD_CMD          BOARD_SDIO_CMD	// PD2
-// SD card, SPI mode, only usable with software SPI
-#define SD_DI           BOARD_SDIO_CMD	// PD2
-#define SD_DO           BOARD_SDIO_D0	// PC8
-#define SD_CS           BOARD_SDIO_D3	// PC11
-#define SD_SCLK         BOARD_SDIO_CK	// PC12
+#include <wirish_types.h>
 
 //static void initSRAMChip(void);
 /*****************************************************************************/

@@ -159,10 +159,10 @@ void gpio_set_mode(uint8_t io_pin, gpio_pin_mode mode) {
 	//regs->AFR[pin/8] = (regs->AFR[pin/8] & ~(15 << (4*(pin&7)))) | (((mode >> 8) & 15) << (4*(pin&7)));
 	//gpio_set_af_mode(dev, pin, mode>>8);
 
-    regs->MODER      = (regs->MODER      & ~( 3 << (2*pin)))     | (((mode >> 0) & 3)  << (2*pin));
-    regs->PUPDR      = (regs->PUPDR      & ~( 3 << (2*pin)))     | (((mode >> 2) & 3)  << (2*pin));
-    regs->OSPEEDR    = (regs->OSPEEDR    & ~( 3 << (2*pin)))     | (((mode >> 4) & 3)  << (2*pin));
-    regs->OTYPER     = (regs->OTYPER     & ~( 1 << (1*pin)))     | (((mode >> 6) & 1)  << (1*pin));
+    regs->MODER      = (regs->MODER      & ~( 3 << (pin<<1)))     | (((mode >> 0) & 3)  << (pin<<1));
+    regs->PUPDR      = (regs->PUPDR      & ~( 3 << (pin<<1)))     | (((mode >> 2) & 3)  << (pin<<1));
+    regs->OSPEEDR    = (regs->OSPEEDR    & ~( 3 << (pin<<1)))     | (((mode >> 4) & 3)  << (pin<<1));
+    regs->OTYPER     = (regs->OTYPER     & ~( 1 << (pin<<1)))     | (((mode >> 6) & 1)  << (pin<<1));
 }
 
 /**
@@ -177,7 +177,7 @@ void gpio_set_af_mode(uint8_t io_pin, int mode) {
     gpio_reg_map *regs = (PIN_MAP[io_pin].gpio_device)->regs;
 	uint8_t pin = PIN_MAP[io_pin].gpio_bit;
 
-	regs->AFR[pin>>3] = (regs->AFR[pin>>3] & ~(15 << (4*(pin&7)))) | (((mode >> 0) & 15) << (4*(pin&7)));
+	regs->AFR[pin>>3] = (regs->AFR[pin>>3] & ~(15 << ((pin&7)<<2))) | (((mode >> 0) & 15) << ((pin&7)<<2));
 }
 
 /*

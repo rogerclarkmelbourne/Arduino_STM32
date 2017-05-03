@@ -33,10 +33,9 @@
 #ifndef _WIRISH_TYPES_H_
 #define _WIRISH_TYPES_H_
 
-#include "libmaple_types.h"
-#include "gpio_def.h"
-#include "timer.h"
-#include "adc.h"
+#include <libmaple/gpio_def.h>
+#include <libmaple/timer.h>
+#include <libmaple/adc.h>
 
 /**
  * Invalid stm32_pin_info adc_channel value.

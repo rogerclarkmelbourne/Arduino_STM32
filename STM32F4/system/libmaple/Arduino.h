@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2010 LeafLabs, LLC.
+ * Copyright (c) 2010 LeafLabs LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,12 +24,23 @@
  * SOFTWARE.
  *****************************************************************************/
 
-/* Note: Use of this header file is deprecated.  Use bit_constants.h
-   instead. */
+#ifndef _WIRISH_ARDUINO_H_
+#define _WIRISH_ARDUINO_H_
 
-#ifndef _BITS_H_
-#define _BITS_H_
+//#warning Include Arduino.h from system\libmaple
 
-#include "bit_constants.h"
+#include "wirish.h"
+
+void setup();
+void loop();
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
+void yield(void);
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#include "variant.h"
 
 #endif

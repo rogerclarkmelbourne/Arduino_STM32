@@ -32,8 +32,8 @@
  * bjoern@cs.stanford.edu 12/30/2008
  */
 
-#ifndef udp_h
-#define udp_h
+#ifndef _UDP_H_
+#define _UDP_H_
 
 #include <Stream.h>
 #include <IPAddress.h>

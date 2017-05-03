@@ -39,10 +39,8 @@
 #ifndef _BOARDS_H_
 #define _BOARDS_H_
 
-#include "libmaple.h"
-#include "timer.h"
-
-#include "wirish_types.h"
+#include <wirish_types.h>
+#include <stdbool.h>
 
 /* Set of all possible pin names; not all boards have all these (note
  * that we use the Dx convention since all of the Maple's pins are
@@ -150,5 +148,13 @@ extern bool boardUsesPin(uint8 pin);
 
 #define CLOCK_SPEED_MHZ                 CYCLES_PER_MICROSECOND
 #define CLOCK_SPEED_HZ                  (CLOCK_SPEED_MHZ * 1000000UL)
+
+#ifndef SYSTICK_RELOAD_VAL
+#define SYSTICK_RELOAD_VAL              (1000 * CYCLES_PER_MICROSECOND - 1)
+#endif
+
+#ifndef BOARD_BUTTON_PRESSED_LEVEL
+#define BOARD_BUTTON_PRESSED_LEVEL      HIGH
+#endif
 
 #endif

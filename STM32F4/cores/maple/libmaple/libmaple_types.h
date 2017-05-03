@@ -34,7 +34,6 @@
 #define _LIBMAPLE_TYPES_H_
 
 #include <inttypes.h>
-#include <stdbool.h>
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -49,6 +48,7 @@ typedef long long int64;
 typedef void (*voidFuncPtr)(void);
 
 #define __io volatile
+#define __IO volatile
 #ifndef __attr_flash
   #define __attr_flash __attribute__((section (".USER_FLASH")))
 #endif

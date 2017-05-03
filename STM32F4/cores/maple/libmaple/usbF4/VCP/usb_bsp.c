@@ -21,13 +21,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_bsp.h"
+#include <STM32_USB_OTG_Driver\inc\usb_bsp.h>
 #include "usbd_conf.h"
-#include <gpio.h>
+#include <libmaple/gpio.h>
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 #define OTG_FS_IRQn 67
 //typedef unsigned char uint8_t;
-#include <misc.h>
+#include "misc.h"
 
 //#include "stm32f4_discovery.h"
 

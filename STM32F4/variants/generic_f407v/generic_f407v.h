@@ -47,6 +47,8 @@
 
 #define SYSTICK_RELOAD_VAL      (CYCLES_PER_MICROSECOND*1000-1)
 
+/*****************************************************************************/
+// Board pin definitions
 #define BOARD_USB_DM_PIN		PA11
 #define BOARD_USB_DP_PIN		PA12
 
@@ -92,10 +94,10 @@
 #define BOARD_SPI3_MISO_PIN     PB4  //Port2Pin('B', 4)
 #define BOARD_SPI3_MOSI_PIN     PB5  //Port2Pin('B', 5)
 /* overlap with the SDIO interface for SD card
-#define BOARD_SPI3A_NSS_PIN     Port2Pin('A', 4)
-#define BOARD_SPI3A_SCK_PIN     Port2Pin('C',10)
-#define BOARD_SPI3A_MISO_PIN    Port2Pin('C',11)
-#define BOARD_SPI3A_MOSI_PIN    Port2Pin('C',12)
+#define BOARD_SPI3A_NSS_PIN     PA4  //Port2Pin('A', 4)
+#define BOARD_SPI3A_SCK_PIN     PC10 //Port2Pin('C',10)
+#define BOARD_SPI3A_MISO_PIN    PC11 //Port2Pin('C',11)
+#define BOARD_SPI3A_MOSI_PIN    PC12 //Port2Pin('C',12)
 */
 #define BOARD_SDIO_D0           PC8  //Port2Pin('C', 8)
 #define BOARD_SDIO_D1           PC9  //Port2Pin('C', 9)
@@ -114,6 +116,37 @@
 #define BOARD_JTDO_PIN          PB3  //Port2Pin('B', 3)
 #define BOARD_NJTRST_PIN        PB4  //Port2Pin('B', 4)
 
+/*****************************************************************************/
+// Pins reserved for the on-board hardware
+#define USB_DM_PIN		BOARD_USB_DM_PIN // PA11
+#define USB_DP_PIN		BOARD_USB_DP_PIN // PA12
+
+#define FLASH_CS_PIN	PB0
+#define FLASH_CLK_PIN	BOARD_SPI3_SCK_PIN	// PB3
+#define FLASH_DO_PIN	BOARD_SPI3_MISO_PIN	// PB4
+#define FLASH_DI_PIN	BOARD_SPI3_MOSI_PIN	// PB5
+
+#define NRF24_CLK_PIN	BOARD_SPI3_SCK_PIN	// PB3
+#define NRF24_DO_PIN	BOARD_SPI3_MISO_PIN	// PB4
+#define NRF24_DI_PIN	BOARD_SPI3_MOSI_PIN	// PB5
+#define NRF24_CE_PIN	PB6
+#define NRF24_CS_PIN	PB7
+#define NRF24_IRQ_PIN	PB8
+
+// SD card, SDIO mode
+#define SD_DAT0         BOARD_SDIO_D0	// PC8
+#define SD_DAT1         BOARD_SDIO_D1	// PC9
+#define SD_DAT2         BOARD_SDIO_D2	// PC10
+#define SD_DAT3         BOARD_SDIO_D3	// PC11
+#define SD_CLK          BOARD_SDIO_CK	// PC12
+#define SD_CMD          BOARD_SDIO_CMD	// PD2
+// SD card, SPI mode, only usable with software SPI
+#define SD_DI           BOARD_SDIO_CMD	// PD2
+#define SD_DO           BOARD_SDIO_D0	// PC8
+#define SD_CS           BOARD_SDIO_D3	// PC11
+#define SD_SCLK         BOARD_SDIO_CK	// PC12
+
+/*****************************************************************************/
 
 enum {
 PA0,PA1,PA2,PA3,PA4,PA5,PA6,PA7,PA8,PA9,PA10,PA11,PA12,PA13,PA14,PA15,

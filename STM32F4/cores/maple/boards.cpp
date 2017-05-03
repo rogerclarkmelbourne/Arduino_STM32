@@ -33,13 +33,13 @@
  */
 #include "boards.h"
 
-#include "flash.h"
-#include "rcc.h"
-#include "nvic.h"
-#include "systick.h"
-#include "gpio.h"
-#include "adc.h"
-#include "timer.h"
+#include <libmaple/flash.h>
+#include <libmaple/rcc.h>
+#include <libmaple/nvic.h>
+#include <libmaple/systick.h>
+#include <libmaple/gpio.h>
+#include <libmaple/adc.h>
+#include <libmaple/timer.h>
 #include "usb.h"
 #include "usb_serial.h"
 

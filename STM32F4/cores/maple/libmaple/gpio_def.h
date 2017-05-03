@@ -36,7 +36,6 @@
 
 #include "libmaple.h"
 #include "rcc.h"
-#include "wirish_types.h"
 
 #ifdef __cplusplus
 extern "C"{

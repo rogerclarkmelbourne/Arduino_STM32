@@ -58,9 +58,10 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_cdc_core.h"
-#include "usbd_desc.h"
-#include "usbd_req.h"
+#include <VCP\usb_conf.h>
+#include <STM32_USB_Device_Library\Class\cdc\inc\usbd_cdc_core.h>
+#include <VCP\usbd_desc.h>
+#include <STM32_USB_Device_Library\Core\inc\usbd_req.h>
 
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY

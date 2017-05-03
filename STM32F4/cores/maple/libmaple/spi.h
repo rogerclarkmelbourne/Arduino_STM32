@@ -219,13 +219,9 @@ struct gpio_dev;
  *
  * @param dev SPI device
  * @param as_master If true, configure as bus master; otherwise, as slave.
- * @param nss_dev NSS pin's GPIO device
  * @param nss_bit NSS pin's GPIO bit on nss_dev
- * @param sck_dev SCK pin's GPIO device
  * @param sck_bit SCK pin's GPIO bit on comm_dev
- * @param miso_dev MISO pin's GPIO device
  * @param miso_bit MISO pin's GPIO bit on comm_dev
- * @param mosi_dev MOSI pin's GPIO device
  * @param mosi_bit MOSI pin's GPIO bit on comm_dev
  */
 extern void spi_config_gpios(spi_dev *dev,
@@ -308,7 +304,7 @@ void spi_slave_enable(spi_dev *dev,
                       spi_mode mode,
                       uint32 flags);
 
-uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len);
+void spi_tx(spi_dev *dev, void *buf, uint32 len);
 
 /**
  * @brief Call a function on each SPI port
