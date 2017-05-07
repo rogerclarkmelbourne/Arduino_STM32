@@ -24,8 +24,6 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#ifdef STM32F4
- 
 /**
  * @file gpio.c
  * @brief GPIO initialization routine
@@ -38,64 +36,57 @@
  * GPIO devices
  */
 
-gpio_dev gpioa = {
+/** GPIO port A device. */
+const gpio_dev GPIOA = {
     .regs      = GPIOA_BASE,
     .clk_id    = RCC_GPIOA,
     .exti_port = AFIO_EXTI_PA,
 };
-/** GPIO port A device. */
-gpio_dev* const GPIOA = &gpioa;
 
-gpio_dev gpiob = {
+/** GPIO port B device. */
+const gpio_dev GPIOB = {
     .regs      = GPIOB_BASE,
     .clk_id    = RCC_GPIOB,
     .exti_port = AFIO_EXTI_PB,
 };
-/** GPIO port B device. */
-gpio_dev* const GPIOB = &gpiob;
 
-gpio_dev gpioc = {
+/** GPIO port C device. */
+const gpio_dev GPIOC = {
     .regs      = GPIOC_BASE,
     .clk_id    = RCC_GPIOC,
     .exti_port = AFIO_EXTI_PC,
 };
-/** GPIO port C device. */
-gpio_dev* const GPIOC = &gpioc;
 
-gpio_dev gpiod = {
+/** GPIO port D device. */
+const gpio_dev GPIOD = {
     .regs      = GPIOD_BASE,
     .clk_id    = RCC_GPIOD,
     .exti_port = AFIO_EXTI_PD,
 };
-/** GPIO port D device. */
-gpio_dev* const GPIOD = &gpiod;
 
 #ifdef STM32_HIGH_DENSITY
-gpio_dev gpioe = {
+/** GPIO port E device. */
+const gpio_dev GPIOE = {
     .regs      = GPIOE_BASE,
     .clk_id    = RCC_GPIOE,
     .exti_port = AFIO_EXTI_PE,
 };
-/** GPIO port E device. */
-gpio_dev* const GPIOE = &gpioe;
 
  #if 0 // not available on LQFP 100 package
-gpio_dev gpiof = {
+/** GPIO port F device. */
+const gpio_dev GPIOF = {
     .regs      = GPIOF_BASE,
     .clk_id    = RCC_GPIOF,
     .exti_port = AFIO_EXTI_PF,
 };
-/** GPIO port F device. */
-gpio_dev* const GPIOF = &gpiof;
 
-gpio_dev gpiog = {
+/** GPIO port G device. */
+const gpio_dev GPIOG = {
     .regs      = GPIOG_BASE,
     .clk_id    = RCC_GPIOG,
     .exti_port = AFIO_EXTI_PG,
 };
-/** GPIO port G device. */
-gpio_dev* const GPIOG = &gpiog;
- #endif // not available on LQFP 100 package
+#endif
 #endif
 
 /*
@@ -109,7 +100,7 @@ gpio_dev* const GPIOG = &gpiog;
  *
  * @param dev GPIO device to initialize.
  */
-void gpio_init(gpio_dev *dev) {
+void gpio_init(const gpio_dev *dev) {
     rcc_clk_enable(dev->clk_id);
     rcc_reset_dev(dev->clk_id);
 }
@@ -118,13 +109,13 @@ void gpio_init(gpio_dev *dev) {
  * Initialize and reset all available GPIO devices.
  */
 void gpio_init_all(void) {
-    gpio_init(GPIOA);
-    gpio_init(GPIOB);
-    gpio_init(GPIOC);
-    gpio_init(GPIOD);
+    gpio_init(&GPIOA);
+    gpio_init(&GPIOB);
+    gpio_init(&GPIOC);
+    gpio_init(&GPIOD);
 
 #ifdef STM32_HIGH_DENSITY
-	gpio_init(GPIOE);
+	gpio_init(&GPIOE);
   #if 0 // not available on LQFP 100 package
 	gpio_init(GPIOF);
 	gpio_init(GPIOG);
@@ -154,7 +145,7 @@ void gpio_init_all(void) {
  */
 void gpio_set_mode(uint8_t io_pin, gpio_pin_mode mode) {
     gpio_reg_map *regs = (PIN_MAP[io_pin].gpio_device)->regs;
-	uint8_t pin = PIN_MAP[io_pin].gpio_bit;
+	uint8_t pin = io_pin&0x0f;
 
 	//regs->AFR[pin/8] = (regs->AFR[pin/8] & ~(15 << (4*(pin&7)))) | (((mode >> 8) & 15) << (4*(pin&7)));
 	//gpio_set_af_mode(dev, pin, mode>>8);
@@ -175,7 +166,7 @@ void gpio_set_mode(uint8_t io_pin, gpio_pin_mode mode) {
  */
 void gpio_set_af_mode(uint8_t io_pin, int mode) {
     gpio_reg_map *regs = (PIN_MAP[io_pin].gpio_device)->regs;
-	uint8_t pin = PIN_MAP[io_pin].gpio_bit;
+	uint8_t pin = io_pin&0x0F;
 
 	regs->AFR[pin>>3] = (regs->AFR[pin>>3] & ~(15 << ((pin&7)<<2))) | (((mode >> 0) & 15) << ((pin&7)<<2));
 }
@@ -225,6 +216,4 @@ void afio_remap(afio_remap_peripheral remapping) {
         AFIO_BASE->MAPR |= remapping;
     }
 }
-#endif
-
 #endif

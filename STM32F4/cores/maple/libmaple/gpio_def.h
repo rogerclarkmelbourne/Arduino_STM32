@@ -89,17 +89,12 @@ typedef struct gpio_dev {
     afio_exti_port exti_port; /**< AFIO external interrupt port value */
 } gpio_dev;
 
-extern gpio_dev gpioa;
-extern gpio_dev* const GPIOA;
-extern gpio_dev gpiob;
-extern gpio_dev* const GPIOB;
-extern gpio_dev gpioc;
-extern gpio_dev* const GPIOC;
-extern gpio_dev gpiod;
-extern gpio_dev* const GPIOD;
+extern const gpio_dev GPIOA;
+extern const gpio_dev GPIOB;
+extern const gpio_dev GPIOC;
+extern const gpio_dev GPIOD;
 #ifdef STM32_HIGH_DENSITY
-extern gpio_dev gpioe;
-extern gpio_dev* const GPIOE;
+extern const gpio_dev GPIOE;
  #if 0 // not available on LQFP 100 package
 extern gpio_dev gpiof;
 extern gpio_dev* const GPIOF;

@@ -82,10 +82,10 @@ typedef struct adc_dev {
     rcc_clk_id clk_id; /**< RCC clock information */
 } adc_dev;
 
-extern const adc_dev *ADC1;
-extern const adc_dev *ADC2;
+extern const adc_dev ADC1;
+extern const adc_dev ADC2;
 #ifdef STM32_HIGH_DENSITY
-extern const adc_dev *ADC3;
+extern const adc_dev ADC3;
 #endif
 
 /*

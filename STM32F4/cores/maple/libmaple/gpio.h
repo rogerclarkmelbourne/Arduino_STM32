@@ -46,7 +46,7 @@ extern "C"{
  * @brief Get a GPIO port's corresponding afio_exti_port.
  * @param dev GPIO device whose afio_exti_port to return.
  */
-static inline afio_exti_port gpio_exti_port(gpio_dev *dev) {
+static inline afio_exti_port gpio_exti_port(const gpio_dev *dev) {
     return dev->exti_port;
 }
 
@@ -61,18 +61,18 @@ static inline afio_exti_port gpio_exti_port(gpio_dev *dev) {
  */
 static inline void gpio_write_pin(uint8_t pin, uint8 val) {
     if (val) {
-        (PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(PIN_MAP[pin].gpio_bit);
+        (PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
     } else {
-        (PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(PIN_MAP[pin].gpio_bit);
+        (PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
     }
 }
 
 static inline void gpio_set_pin(uint8_t pin) {
-	(PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(PIN_MAP[pin].gpio_bit);
+	(PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
 }
 
 static inline void gpio_clear_pin(uint8_t pin) {
-	(PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(PIN_MAP[pin].gpio_bit);
+	(PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
 }
 
 /**
@@ -85,7 +85,7 @@ static inline void gpio_clear_pin(uint8_t pin) {
  * @return True if the pin is set, false otherwise.
  */
 static inline uint32 gpio_read_pin(uint8_t pin) {
-    return (PIN_MAP[pin].gpio_device)->regs->IDR & BIT(PIN_MAP[pin].gpio_bit);
+    return (PIN_MAP[pin].gpio_device)->regs->IDR & BIT(pin&0x0F);
 }
 
 /**
@@ -94,14 +94,14 @@ static inline uint32 gpio_read_pin(uint8_t pin) {
  * @param pin Pin on dev to toggle.
  */
 static inline void gpio_toggle_pin(uint8_t pin) {
-    (PIN_MAP[pin].gpio_device)->regs->ODR = (PIN_MAP[pin].gpio_device)->regs->ODR ^ BIT(PIN_MAP[pin].gpio_bit);
+    (PIN_MAP[pin].gpio_device)->regs->ODR = (PIN_MAP[pin].gpio_device)->regs->ODR ^ BIT(pin&0x0F);
 }
 
 /*
  * GPIO Convenience routines
  */
 
-extern void gpio_init(gpio_dev *dev);
+extern void gpio_init(const gpio_dev *dev);
 extern void gpio_init_all(void);
 extern void gpio_set_mode(uint8_t pin, gpio_pin_mode mode);
 extern void gpio_set_af_mode(uint8_t pin, int mode);

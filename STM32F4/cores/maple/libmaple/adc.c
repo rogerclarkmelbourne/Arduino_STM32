@@ -41,27 +41,24 @@
 #include "rcc.h"
 #include "adc.h"
 
-static adc_dev adc1 = {
+/** ADC1 device. */
+const adc_dev ADC1 = {
     .regs   = ADC1_BASE,
     .clk_id = RCC_ADC1
 };
-/** ADC1 device. */
-const adc_dev *ADC1 = &adc1;
 
-static adc_dev adc2 = {
+/** ADC2 device. */
+const adc_dev ADC2 = {
     .regs   = ADC2_BASE,
     .clk_id = RCC_ADC2
 };
-/** ADC2 device. */
-const adc_dev *ADC2 = &adc2;
 
 #ifdef STM32_HIGH_DENSITY
-adc_dev adc3 = {
+/** ADC3 device. */
+const adc_dev ADC3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3
 };
-/** ADC3 device. */
-const adc_dev *ADC3 = &adc3;
 #endif
 
 /**
@@ -101,10 +98,10 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
  * @param fn Function to call on each ADC device.
  */
 void adc_foreach(void (*fn)(const adc_dev*)) {
-    fn(ADC1);
-    fn(ADC2);
+    fn(&ADC1);
+    fn(&ADC2);
 #ifdef STM32_HIGH_DENSITY
-    fn(ADC3);
+    fn(&ADC3);
 #endif
 }
 

@@ -397,5 +397,4 @@ private:
 };
 
 
-extern SPIClass SPI;//(1);// dummy params
 #endif

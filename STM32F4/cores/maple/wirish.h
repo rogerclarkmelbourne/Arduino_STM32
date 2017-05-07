@@ -58,7 +58,6 @@
   #define false 0x0
 #endif
 
-
 #define lowByte(w)                     ((w) & 0xFF)
 #define highByte(w)                    (((w) >> 8) & 0xFF)
 #define bitRead(value, bit)            (((value) >> (bit)) & 0x01)

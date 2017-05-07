@@ -134,7 +134,7 @@ uint8 USBSerial::pending(void) {
     return usbGetPending();
 }
 
-uint8 USBSerial::isConnected(void) {
+USBSerial::operator bool() {
     return usbIsConnected() && usbIsConfigured();
 }
 

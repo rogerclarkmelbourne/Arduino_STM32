@@ -213,7 +213,6 @@ typedef struct spi_dev {
 
 void spi_init(spi_dev *dev);
 
-struct gpio_dev;
 /**
  * @brief Configure GPIO bit modes for use as a SPI port's pins.
  *
