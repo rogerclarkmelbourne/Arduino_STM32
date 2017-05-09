@@ -321,14 +321,32 @@ uint16 SPIClass::read(void)
 
 void SPIClass::read(uint8 *buf, uint32 len)
 {
-	spi_rx_reg(_currentSetting->spi_d); // clear the RX buffer in case a byte is waiting on it.
+	if ( len == 0 ) return;
+	spi_rx_reg(_currentSetting->spi_d);		// clear the RX buffer in case a byte is waiting on it.
 	spi_reg_map * regs = _currentSetting->spi_d->regs;
+#if 1
+	// start sequence: write byte 0
+	regs->DR = 0x00FF;						// write the first byte
+	// main loop
+	while ( (--len) ) {
+		while( !(regs->SR & SPI_SR_TXE) );		// wait for TXE flag
+		noInterrupts();							// go atomic level - avoid interrupts to surely get the previously received data
+		regs->DR = 0x00FF;						// write the next data item to be transmitted into the SPI_DR register. This clears the TXE flag.
+		while ( !(regs->SR & SPI_SR_RXNE) );	// wait till data is available in the DR register
+		*buf++ = (uint8)(regs->DR);				// read and store the received byte. This clears the RXNE flag.
+		interrupts();							// let systick do its job
+	}
+	// read remaining last byte
+	while ( !(regs->SR & SPI_SR_RXNE) );	// wait till data is available in the Rx register
+	*buf++ = (uint8)(regs->DR);				// read and store the received byte
+#else
 	// start sequence
 	while ( (len--)>0) {
 		regs->DR = 0x00FF; // " write the data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
 		while ( (regs->SR & SPI_SR_RXNE)==0 ) ; // wait till data is available in the Rx register
 		*buf++ = (uint8)(regs->DR); // read and store the received byte
-    }
+	}
+#endif
 }
 
 void SPIClass::write(uint16 data)
@@ -339,7 +357,6 @@ void SPIClass::write(uint16 data)
 	 * This almost doubles the speed of this function.
 	 */
 	spi_tx_reg(_currentSetting->spi_d, data); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
-//return;
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 }
