@@ -80,7 +80,7 @@ public:
      *
      * Deprecated, use the above.
      */
-    uint8 isConnected() { return (bool) *this; }
+    uint8 isConnected() __attribute__((deprecated("Use !Serial instead"))) { return (bool) *this; }
 };
 
 #ifdef SERIAL_USB 
