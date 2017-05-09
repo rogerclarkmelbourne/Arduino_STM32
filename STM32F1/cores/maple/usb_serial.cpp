@@ -107,7 +107,7 @@ size_t n = 0;
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
 size_t n = 0;
-    if (!this->isConnected() || !buf) {
+    if (!(bool) *this || !buf) {
         return 0;
     }
 
