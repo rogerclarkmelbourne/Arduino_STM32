@@ -42,7 +42,6 @@
 #include <libmaple/dma.h>
 #include <wirish.h>
 
-#define SPI_DMA
 
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()
@@ -368,28 +367,12 @@ public:
     uint8 recv(void);
 	
 private:
-/*
-	static inline void DMA1_CH3_Event() {
-		dma1_ch3_Active = 0;
-//		dma_disable(DMA1, DMA_CH3);
-//		dma_disable(DMA1, DMA_CH2);
-		
-		// To Do. Need to wait for 
-	}
-*/	
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
 	
 	void updateSettings(void);
-	/*
-	spi_dev *spi_d;
-	uint8_t _SSPin;
-	uint32_t clockDivider;
-	uint8_t dataMode;
-	BitOrder bitOrder;
-	*/
 };
 
-extern SPIClass SPI;
+extern SPIClass SPI; // needed bx SdFat(EX) lib
 
 #endif
