@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2010 Perry Hung.
+ * Copyright (c) 2011 LeafLabs, LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,13 +24,34 @@
  * SOFTWARE.
  *****************************************************************************/
 
-/**
- * @file gpio.c
- * @brief GPIO initialization routine
+/*
+ * This file is a modified version of a file obtained from
+ * CodeSourcery Inc. (now part of Mentor Graphics Corp.), in which the
+ * following text appeared:
+ *
+ * The authors hereby grant permission to use, copy, modify, distribute,
+ * and license this software and its documentation for any purpose, provided
+ * that existing copyright notices are retained in all copies and that this
+ * notice is included verbatim in any distributions. No written agreement,
+ * license, or royalty fee is required for any of the authorized uses.
+ * Modifications to this software may be copyrighted by their authors
+ * and need not follow the licensing terms described here, provided that
+ * the new terms are clearly indicated on the first page of each file where
+ * they apply.
  */
 
-// #ifdef STM32F2
-// #include "gpioF2.c"
-// #else
-// #include "gpioF1.c"
-// #endif
+        .text
+        .code 16
+        .thumb_func
+
+        .globl __start__
+        .type __start__, %function
+__start__:
+        .fnstart
+        ldr r1,=__msp_init
+        mov sp,r1
+        ldr r1,=start_c
+        bx r1
+        .pool
+        .cantunwind
+        .fnend

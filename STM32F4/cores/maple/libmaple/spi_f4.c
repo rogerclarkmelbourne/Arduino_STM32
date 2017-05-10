@@ -56,25 +56,21 @@ spi_dev *SPI3 = &spi3;
 
 void spi_config_gpios(spi_dev *ignored,
                       uint8 as_master,
-                      gpio_dev *nss_dev,
-                      uint8 nss_bit,
-                      gpio_dev *sck_dev,
-                      uint8 sck_bit,
-                      gpio_dev *miso_dev,
-                      uint8 miso_bit,
-                      gpio_dev *mosi_dev,
-                      uint8 mosi_bit) {
+                      uint8 nss_pin,
+                      uint8 sck_pin,
+                      uint8 miso_pin,
+                      uint8 mosi_pin) {
     if (as_master) {
 //        gpio_set_mode(nss_dev, nss_bit, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(sck_dev, sck_bit, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(sck_pin, GPIO_AF_OUTPUT_PP);
 //        gpio_set_mode(comm_dev, miso_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(miso_dev, miso_bit, GPIO_AF_INPUT_PD);		
-        gpio_set_mode(mosi_dev, mosi_bit, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(miso_pin, GPIO_AF_INPUT_PD);		
+        gpio_set_mode(mosi_pin, GPIO_AF_OUTPUT_PP);
     } else {
-        gpio_set_mode(nss_dev, nss_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(sck_dev, sck_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(miso_dev, miso_bit, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(mosi_dev, mosi_bit, GPIO_INPUT_FLOATING);
+        gpio_set_mode(nss_pin, GPIO_INPUT_FLOATING);
+        gpio_set_mode(sck_pin, GPIO_INPUT_FLOATING);
+        gpio_set_mode(miso_pin, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(mosi_pin, GPIO_INPUT_FLOATING);
     }
 }
 

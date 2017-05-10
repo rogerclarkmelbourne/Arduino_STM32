@@ -29,8 +29,8 @@
  * @brief Includes <math.h>; provides Arduino-compatible math routines.
  */
 
-#ifndef _WIRING_MATH_H_
-#define _WIRING_MATH_H_
+#ifndef _WIRISH_MATH_H_
+#define _WIRISH_MATH_H_
 
 #include <math.h>
 

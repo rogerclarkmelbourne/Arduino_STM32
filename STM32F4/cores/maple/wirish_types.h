@@ -30,13 +30,12 @@
  * @brief  Wirish library type definitions.
  */
 
-#include "libmaple_types.h"
-#include "gpio.h"
-#include "timer.h"
-#include "adc.h"
-
 #ifndef _WIRISH_TYPES_H_
 #define _WIRISH_TYPES_H_
+
+#include <libmaple/gpio_def.h>
+#include <libmaple/timer.h>
+#include <libmaple/adc.h>
 
 /**
  * Invalid stm32_pin_info adc_channel value.
@@ -48,6 +47,18 @@
  * @brief Stores STM32-specific information related to a given Maple pin.
  * @see PIN_MAP
  */
+#ifdef BOARD_generic_f407v
+// restructure members to build consecutive pairs
+typedef struct stm32_pin_info {
+    const gpio_dev * gpio_device;      /**< Maple pin's GPIO device */
+    timer_dev * timer_device;    /**< Pin's timer device, if any. */
+    uint8 timer_channel;        /**< Timer channel, or 0 if none. */
+    uint8 adc_channel;          /**< Pin ADC channel, or ADCx if none. */
+    const adc_dev *adc_device;  /**< ADC device, if any. */
+} stm32_pin_info;
+
+#else
+
 typedef struct stm32_pin_info {
     gpio_dev *gpio_device;      /**< Maple pin's GPIO device */
     timer_dev *timer_device;    /**< Pin's timer device, if any. */
@@ -57,6 +68,8 @@ typedef struct stm32_pin_info {
     uint8 adc_channel;          /**< Pin ADC channel, or ADCx if none. */
     uint8 filler;
 } stm32_pin_info;
+
+#endif
 
 /**
  * Variable attribute, instructs the linker to place the marked

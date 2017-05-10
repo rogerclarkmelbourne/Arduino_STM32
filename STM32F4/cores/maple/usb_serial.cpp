@@ -33,6 +33,8 @@
 #include "wirish.h"
 #include "usb.h"
 
+#ifdef SERIAL_USB
+
 #define USB_TIMEOUT 50
 
 USBSerial::USBSerial(void) {
@@ -132,7 +134,7 @@ uint8 USBSerial::pending(void) {
     return usbGetPending();
 }
 
-uint8 USBSerial::isConnected(void) {
+USBSerial::operator bool() {
     return usbIsConnected() && usbIsConfigured();
 }
 
@@ -153,3 +155,5 @@ void USBSerial::disableBlockingTx(void) {
 }
 
 USBSerial SerialUSB;
+
+#endif

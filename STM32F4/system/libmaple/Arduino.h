@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2010 Perry Hung.
+ * Copyright (c) 2010 LeafLabs LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -24,14 +24,23 @@
  * SOFTWARE.
  *****************************************************************************/
 
-/**
- * @file rcc.c
- * @brief Implements pretty much only the basic clock setup on the
- *        stm32, clock enable/disable and peripheral reset commands.
- */
+#ifndef _WIRISH_ARDUINO_H_
+#define _WIRISH_ARDUINO_H_
 
-// #ifdef STM32F2
-// #include "rccF2.c"
-// #else
-// #include "rccF1.c"
-// #endif
+//#warning Include Arduino.h from system\libmaple
+
+#include "wirish.h"
+
+void setup();
+void loop();
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
+void yield(void);
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+#include "variant.h"
+
+#endif
