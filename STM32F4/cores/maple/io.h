@@ -218,5 +218,7 @@ uint8 waitForButtonPress(uint32 timeout_millis=0);
  */
 void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 value);
 
+uint32 shiftIn( uint32 ulDataPin, uint32 ulClockPin, uint32 ulBitOrder );
+
 #endif
 
