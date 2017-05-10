@@ -56,7 +56,7 @@ extern "C"{
  * Devices
  */
 
-struct dma_reg_map;
+//struct dma_reg_map;
 
 /* Encapsulates state related to user interrupt handlers. You
  * shouldn't touch these directly; use dma_attach_interrupt() and
@@ -82,16 +82,6 @@ struct dma_reg_map;
  *
  * @see dma_tube
  */
-typedef enum dma_channel {
-    DMA_CH0 = 0,                /**< Channel 0 */
-    DMA_CH1 = 1,                /**< Channel 1 */
-    DMA_CH2 = 2,                /**< Channel 2 */
-    DMA_CH3 = 3,                /**< Channel 3 */
-    DMA_CH4 = 4,                /**< Channel 4 */
-    DMA_CH5 = 5,                /**< Channel 5 */
-    DMA_CH6 = 6,                /**< Channel 6 */
-    DMA_CH7 = 7,                /**< Channel 7 */
-} dma_channel;
 
 /**
  * @brief Source and destination transfer sizes.

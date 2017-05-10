@@ -42,6 +42,8 @@
 #include <libmaple/dma.h>
 #include <wirish.h>
 
+#define SPI_DMA
+
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()
 //   - endTransaction()
@@ -135,11 +137,12 @@ private:
 	uint32_t dataSize;
 	
 	spi_dev *spi_d;
-	//uint8_t _SSPin;
 	uint32_t clockDivider;
+
 #ifdef SPI_DMA
-	dma_channel spiRxDmaChannel, spiTxDmaChannel;
 	dma_dev* spiDmaDev;
+	dma_channel spiDmaChannel;
+	dma_stream spiRxDmaStream, spiTxDmaStream;
 #endif
 
 	friend class SPIClass;
@@ -396,5 +399,6 @@ private:
 	*/
 };
 
+extern SPIClass SPI;
 
 #endif
