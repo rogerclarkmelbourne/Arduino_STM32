@@ -24,7 +24,12 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include "wirish.h"
+#ifndef _WPROGRAM_H_
+#define _WPROGRAM_H_
+
+#include <wirish.h>
 
 void setup();
 void loop();
+
+#endif

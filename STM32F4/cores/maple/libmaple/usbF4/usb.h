@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "usb_conf.h"
+#include <VCP\usb_conf.h>
 
 typedef enum _RESULT
 {

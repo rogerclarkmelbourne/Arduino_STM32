@@ -255,7 +255,7 @@ typedef struct {
 
 void systemHardReset(void) {
     SCB_TypeDef* rSCB = (SCB_TypeDef *) SCB_BASE;
-    typedef void (*funcPtr)(void);
+    //typedef void (*funcPtr)(void); // not used
 
     /* Reset */
     rSCB->AIRCR = (u32)AIRCR_RESET_REQ;

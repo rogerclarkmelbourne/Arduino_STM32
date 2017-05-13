@@ -24,10 +24,10 @@
  * SOFTWARE.
  *****************************************************************************/
 
- #ifdef STM32F2
+#ifdef STM32F4
  
 /**
- * @file dmaF2.c
+ * @file dmaF4.c
  * @brief Direct Memory Access peripheral support
  */
 
@@ -117,33 +117,16 @@ void dma_detach_interrupt(dma_dev *dev, dma_stream stream) {
     dev->handlers[stream].handler = NULL;
 }
 
+const uint8 dma_isr_bits_shift[] = { 0, 6, 16, 22};
+
+uint8 dma_get_isr_bits(dma_dev *dev, dma_stream stream) {
+	if ( stream&0xFC )	return ((dev->regs->HISR)>>dma_isr_bits_shift[stream&0x03]) & 0x3d;
+	else				return ((dev->regs->LISR)>>dma_isr_bits_shift[stream&0x03]) & 0x3d;
+}
+
 void dma_clear_isr_bits(dma_dev *dev, dma_stream stream) {
-    switch (stream) {
-    case 0:
-        dev->regs->LIFCR|=0x0000003d;
-        break;
-    case 1:
-        dev->regs->LIFCR|=0x00000f40;
-        break;
-    case 2:
-        dev->regs->LIFCR|=0x003d0000;
-        break;
-    case 3:
-        dev->regs->LIFCR|=0x0f400000;
-        break;
-    case 4:
-        dev->regs->HIFCR|=0x0000003d;
-        break;
-    case 5:
-        dev->regs->HIFCR|=0x00000f40;
-        break;
-    case 6:
-        dev->regs->HIFCR|=0x003d0000;
-        break;
-    case 7:
-        dev->regs->HIFCR|=0x0f400000;
-        break;
-    }
+	if ( stream&0xFC )	dev->regs->HIFCR = (uint32)0x0000003d << dma_isr_bits_shift[stream&0x03];
+	else				dev->regs->LIFCR = (uint32)0x0000003d << dma_isr_bits_shift[stream&0x03];
 }
 
 /*

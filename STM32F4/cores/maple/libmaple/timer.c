@@ -44,7 +44,7 @@
 /* Update only. */
 #define NR_BAS_HANDLERS                 1
 
-static timer_dev timer1 = {
+timer_dev timer1 = {
     .regs         = { .adv = TIMER1_BASE },
     .clk_id       = RCC_TIMER1,
     .type         = TIMER_ADVANCED,
@@ -53,7 +53,7 @@ static timer_dev timer1 = {
 /** Timer 1 device (advanced) */
 timer_dev *TIMER1 = &timer1;
 
-static timer_dev timer2 = {
+timer_dev timer2 = {
     .regs         = { .gen = TIMER2_BASE },
     .clk_id       = RCC_TIMER2,
     .type         = TIMER_GENERAL,
@@ -62,7 +62,7 @@ static timer_dev timer2 = {
 /** Timer 2 device (general-purpose) */
 timer_dev *TIMER2 = &timer2;
 
-static timer_dev timer3 = {
+timer_dev timer3 = {
     .regs         = { .gen = TIMER3_BASE },
     .clk_id       = RCC_TIMER3,
     .type         = TIMER_GENERAL,
@@ -71,7 +71,7 @@ static timer_dev timer3 = {
 /** Timer 3 device (general-purpose) */
 timer_dev *TIMER3 = &timer3;
 
-static timer_dev timer4 = {
+timer_dev timer4 = {
     .regs         = { .gen = TIMER4_BASE },
     .clk_id       = RCC_TIMER4,
     .type         = TIMER_GENERAL,
@@ -81,7 +81,7 @@ static timer_dev timer4 = {
 timer_dev *TIMER4 = &timer4;
 
 #ifdef STM32_HIGH_DENSITY
-static timer_dev timer5 = {
+timer_dev timer5 = {
     .regs         = { .gen = TIMER5_BASE },
     .clk_id       = RCC_TIMER5,
     .type         = TIMER_GENERAL,
@@ -90,7 +90,7 @@ static timer_dev timer5 = {
 /** Timer 5 device (general-purpose) */
 timer_dev *TIMER5 = &timer5;
 
-static timer_dev timer6 = {
+timer_dev timer6 = {
     .regs         = { .bas = TIMER6_BASE },
     .clk_id       = RCC_TIMER6,
     .type         = TIMER_BASIC,
@@ -99,7 +99,7 @@ static timer_dev timer6 = {
 /** Timer 6 device (basic) */
 timer_dev *TIMER6 = &timer6;
 
-static timer_dev timer7 = {
+timer_dev timer7 = {
     .regs         = { .bas = TIMER7_BASE },
     .clk_id       = RCC_TIMER7,
     .type         = TIMER_BASIC,
@@ -108,7 +108,7 @@ static timer_dev timer7 = {
 /** Timer 7 device (basic) */
 timer_dev *TIMER7 = &timer7;
 
-static timer_dev timer8 = {
+timer_dev timer8 = {
     .regs         = { .adv = TIMER8_BASE },
     .clk_id       = RCC_TIMER8,
     .type         = TIMER_ADVANCED,

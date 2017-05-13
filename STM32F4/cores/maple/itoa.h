@@ -16,8 +16,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _ITOA_
-#define _ITOA_
+#ifndef _ITOA_H_
+#define _ITOA_H_
 
 #ifdef __cplusplus
 extern "C"{

@@ -33,6 +33,8 @@
 
 #include "Stream.h"
 
+#ifdef SERIAL_USB
+
 /**
  * @brief Virtual serial terminal.
  */
@@ -57,7 +59,8 @@ public:
 
     uint8 getRTS();
     uint8 getDTR();
-    uint8 isConnected();
+	operator bool();
+	uint8 isConnected() { return (bool) *this; }
     uint8 pending();
 
     void enableBlockingTx(void);
@@ -65,6 +68,14 @@ public:
 };
 
 extern USBSerial SerialUSB;
+#define Serial SerialUSB
 
-#endif
+#else //  _USB_SERIAL_H_
+
+#define Serial Serial1
+
+#endif //  SERIAL_USB
+
+
+#endif //  _USB_SERIAL_H_
 

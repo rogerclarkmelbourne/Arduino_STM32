@@ -52,11 +52,7 @@ typedef struct exti_reg_map {
 } exti_reg_map;
 
 /** EXTI register map base pointer */
-#ifdef STM32F2
 #define EXTI_BASE                       ((struct exti_reg_map*)0x40013C00)
-#else
-#define EXTI_BASE                       ((struct exti_reg_map*)0x40010400)
-#endif
 
 /** External interrupt trigger mode */
 typedef enum exti_trigger_mode {
