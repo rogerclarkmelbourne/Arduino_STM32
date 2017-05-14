@@ -94,7 +94,7 @@ uint32 digitalRead(uint8 pin)
         HIGH : LOW;
 }
 
-void digitalWrite(uint8 pin, uint8 val)
+void digitalWrite(uint8 pin, uint16 val)
 {
     if (pin >= BOARD_NR_GPIO_PINS) {
         return;

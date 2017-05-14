@@ -59,7 +59,7 @@ static inline afio_exti_port gpio_exti_port(const gpio_dev *dev) {
  * @param pin Pin on to set or reset
  * @param val If true, set the pin.  If false, reset the pin.
  */
-static inline void gpio_write_pin(uint8_t pin, uint8 val) {
+static inline void gpio_write_pin(uint8_t pin, uint16 val) {
     if (val) {
         (PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
     } else {
