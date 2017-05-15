@@ -39,6 +39,7 @@ static void disable_channel(timer_dev *dev, uint8 channel);
 static void pwm_mode(timer_dev *dev, uint8 channel);
 static void output_compare_mode(timer_dev *dev, uint8 channel);
 static void encoder_mode(timer_dev *dev, uint8 channel) ;//CARLOS
+static void pwm_center_aligned_mode(timer_dev *dev, uint8 channel); //ERVILHA
 
 
 static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
@@ -236,6 +237,10 @@ void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode) {
     case TIMER_ENCODER: 
         encoder_mode(dev, channel); //find a way to pass all the needed stuff on the 8bit var
         break;
+    //added by ERVILHA.
+    case TIMER_PWM_CENTER_ALIGNED:
+        pwm_center_aligned_mode(dev, channel);
+        break;
     }
 }
 
@@ -349,7 +354,17 @@ static void encoder_mode(timer_dev *dev, uint8 channel) {
     timer_resume(dev);
 }
 
-
+//added by ERVILHA.
+static void pwm_center_aligned_mode(timer_dev *dev, uint8 channel) {
+    // set PWM mode
+    pwm_mode(dev, channel);
+    // disable again
+    timer_disable_irq(dev, channel);
+    // set CMS Pins on TIMx_CR1 register to TIMER_CR1_CKD_CMS_CENTER2
+    (dev->regs).bas->CR1 |= TIMER_CR1_CKD_CMS_CENTER2;
+    // enable
+    timer_cc_enable(dev, channel);
+}
 
 static void enable_adv_irq(timer_dev *dev, timer_interrupt_id id);
 static void enable_bas_gen_irq(timer_dev *dev);
