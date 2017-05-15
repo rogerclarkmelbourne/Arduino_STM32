@@ -82,41 +82,41 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 	/* Top header */
 
-	{ &gpioa, &TIMER2, &ADC1, 3, 4, 3 }, /* D0/PA3 */
-	{ &gpioa, &TIMER2, &ADC1, 2, 3, 2 }, /* D1/PA2 */
-	{ &gpioa, &TIMER2, &ADC1, 0, 1, 0 }, /* D2/PA0 */
-	{ &gpioa, &TIMER2, &ADC1, 1, 2, 1 }, /* D3/PA1 */
+	{ &gpioa, TIMER2, ADC1, 3, 4, 3 }, /* D0/PA3 */
+	{ &gpioa, TIMER2, ADC1, 2, 3, 2 }, /* D1/PA2 */
+	{ &gpioa, TIMER2, ADC1, 0, 1, 0 }, /* D2/PA0 */
+	{ &gpioa, TIMER2, ADC1, 1, 2, 1 }, /* D3/PA1 */
 	{ &gpiob, NULL, NULL, 5, 0, ADCx }, /* D4/PB5 */
-	{ &gpiob, &TIMER4, NULL, 6, 1, ADCx }, /* D5/PB6 */
-	{ &gpioa, &TIMER1, NULL, 8, 1, ADCx }, /* D6/PA8 */
-	{ &gpioa, &TIMER1, NULL, 9, 2, ADCx }, /* D7/PA9 */
-	{ &gpioa, &TIMER1, NULL, 10, 3, ADCx }, /* D8/PA10 */
-	{ &gpiob, &TIMER4, NULL, 7, 2, ADCx }, /* D9/PB7 */
-	{ &gpioa, NULL, &ADC1, 4, 0, 4 }, /* D10/PA4 */
-	{ &gpioa, &TIMER3, &ADC1, 7, 2, 7 }, /* D11/PA7 */
-	{ &gpioa, &TIMER3, &ADC1, 6, 1, 6 }, /* D12/PA6 */
-	{ &gpioa, NULL, &ADC1, 5, 0, 5 }, /* D13/PA5 (LED) */
-	{ &gpiob, &TIMER4, NULL, 8, 3, ADCx }, /* D14/PB8 */
+	{ &gpiob, TIMER4, NULL, 6, 1, ADCx }, /* D5/PB6 */
+	{ &gpioa, TIMER1, NULL, 8, 1, ADCx }, /* D6/PA8 */
+	{ &gpioa, TIMER1, NULL, 9, 2, ADCx }, /* D7/PA9 */
+	{ &gpioa, TIMER1, NULL, 10, 3, ADCx }, /* D8/PA10 */
+	{ &gpiob, TIMER4, NULL, 7, 2, ADCx }, /* D9/PB7 */
+	{ &gpioa, NULL, ADC1, 4, 0, 4 }, /* D10/PA4 */
+	{ &gpioa, TIMER3, ADC1, 7, 2, 7 }, /* D11/PA7 */
+	{ &gpioa, TIMER3, ADC1, 6, 1, 6 }, /* D12/PA6 */
+	{ &gpioa, NULL, ADC1, 5, 0, 5 }, /* D13/PA5 (LED) */
+	{ &gpiob, TIMER4, NULL, 8, 3, ADCx }, /* D14/PB8 */
 
 	/* Little header */
 
-	{ &gpioc, NULL, &ADC1, 0, 0, 10 }, /* D15/PC0 */
-	{ &gpioc, NULL, &ADC1, 1, 0, 11 }, /* D16/PC1 */
-	{ &gpioc, NULL, &ADC1, 2, 0, 12 }, /* D17/PC2 */
-	{ &gpioc, NULL, &ADC1, 3, 0, 13 }, /* D18/PC3 */
-	{ &gpioc, NULL, &ADC1, 4, 0, 14 }, /* D19/PC4 */
-	{ &gpioc, NULL, &ADC1, 5, 0, 15 }, /* D20/PC5 */
+	{ &gpioc, NULL, ADC1, 0, 0, 10 }, /* D15/PC0 */
+	{ &gpioc, NULL, ADC1, 1, 0, 11 }, /* D16/PC1 */
+	{ &gpioc, NULL, ADC1, 2, 0, 12 }, /* D17/PC2 */
+	{ &gpioc, NULL, ADC1, 3, 0, 13 }, /* D18/PC3 */
+	{ &gpioc, NULL, ADC1, 4, 0, 14 }, /* D19/PC4 */
+	{ &gpioc, NULL, ADC1, 5, 0, 15 }, /* D20/PC5 */
 
 	/* External header */
 
 	{ &gpioc, NULL, NULL, 13, 0, ADCx }, /* D21/PC13 */
 	{ &gpioc, NULL, NULL, 14, 0, ADCx }, /* D22/PC14 */
 	{ &gpioc, NULL, NULL, 15, 0, ADCx }, /* D23/PC15 */
-	{ &gpiob, &TIMER4, NULL, 9, 4, ADCx }, /* D24/PB9 */
+	{ &gpiob, TIMER4, NULL, 9, 4, ADCx }, /* D24/PB9 */
 	{ &gpiod, NULL, NULL, 2, 0, ADCx }, /* D25/PD2 */
 	{ &gpioc, NULL, NULL, 10, 0, ADCx }, /* D26/PC10 */
-	{ &gpiob, &TIMER3, &ADC1, 0, 3, 8 }, /* D27/PB0 */
-	{ &gpiob, &TIMER3, &ADC1, 1, 4, 9 }, /* D28/PB1 */
+	{ &gpiob, TIMER3, ADC1, 0, 3, 8 }, /* D27/PB0 */
+	{ &gpiob, TIMER3, ADC1, 1, 4, 9 }, /* D28/PB1 */
 	{ &gpiob, NULL, NULL, 10, 0, ADCx }, /* D29/PB10 */
 	{ &gpiob, NULL, NULL, 11, 0, ADCx }, /* D30/PB11 */
 	{ &gpiob, NULL, NULL, 12, 0, ADCx }, /* D31/PB12 */
