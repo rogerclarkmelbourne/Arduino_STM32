@@ -72,41 +72,41 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
 
-    PMAP_ROW(&gpioa,   3, &timer2,  4, &adc1,    3), /* D0/PA3 */
-    PMAP_ROW(&gpioa,   2, &timer2,  3, &adc1,    2), /* D1/PA2 */
-    PMAP_ROW(&gpioa,   0, &timer2,  1, &adc1,    0), /* D2/PA0 */
-    PMAP_ROW(&gpioa,   1, &timer2,  2, &adc1,    1), /* D3/PA1 */
+    PMAP_ROW(&gpioa,   3, &TIMER2,  4, &ADC1,    3), /* D0/PA3 */
+    PMAP_ROW(&gpioa,   2, &TIMER2,  3, &ADC1,    2), /* D1/PA2 */
+    PMAP_ROW(&gpioa,   0, &TIMER2,  1, &ADC1,    0), /* D2/PA0 */
+    PMAP_ROW(&gpioa,   1, &TIMER2,  2, &ADC1,    1), /* D3/PA1 */
     PMAP_ROW(&gpiob,   5,   NULL,  0, NULL, ADCx), /* D4/PB5 */
-    PMAP_ROW(&gpiob,   6, &timer4,  1, NULL, ADCx), /* D5/PB6 */
-    PMAP_ROW(&gpioa,   8, &timer1,  1, NULL, ADCx), /* D6/PA8 */
-    PMAP_ROW(&gpioa,   9, &timer1,  2, NULL, ADCx), /* D7/PA9 */
-    PMAP_ROW(&gpioa,  10, &timer1,  3, NULL, ADCx), /* D8/PA10 */
-    PMAP_ROW(&gpiob,   7, &timer4,  2, NULL, ADCx), /* D9/PB7 */
-    PMAP_ROW(&gpioa,   4,   NULL,  0, &adc1,    4), /* D10/PA4 */
-    PMAP_ROW(&gpioa,   7, &timer3,  2, &adc1,    7), /* D11/PA7 */
-    PMAP_ROW(&gpioa,   6, &timer3,  1, &adc1,    6), /* D12/PA6 */
-    PMAP_ROW(&gpioa,   5,   NULL,  0, &adc1,    5), /* D13/PA5 (LED) */
-    PMAP_ROW(&gpiob,   8, &timer4,  3, NULL, ADCx), /* D14/PB8 */
+    PMAP_ROW(&gpiob,   6, &TIMER4,  1, NULL, ADCx), /* D5/PB6 */
+    PMAP_ROW(&gpioa,   8, &TIMER1,  1, NULL, ADCx), /* D6/PA8 */
+    PMAP_ROW(&gpioa,   9, &TIMER1,  2, NULL, ADCx), /* D7/PA9 */
+    PMAP_ROW(&gpioa,  10, &TIMER1,  3, NULL, ADCx), /* D8/PA10 */
+    PMAP_ROW(&gpiob,   7, &TIMER4,  2, NULL, ADCx), /* D9/PB7 */
+    PMAP_ROW(&gpioa,   4,   NULL,  0, &ADC1,    4), /* D10/PA4 */
+    PMAP_ROW(&gpioa,   7, &TIMER3,  2, &ADC1,    7), /* D11/PA7 */
+    PMAP_ROW(&gpioa,   6, &TIMER3,  1, &ADC1,    6), /* D12/PA6 */
+    PMAP_ROW(&gpioa,   5,   NULL,  0, &ADC1,    5), /* D13/PA5 (LED) */
+    PMAP_ROW(&gpiob,   8, &TIMER4,  3, NULL, ADCx), /* D14/PB8 */
 
     /* Little header */
 
-    PMAP_ROW(&gpioc,   0,   NULL,  0, &adc1,   10), /* D15/PC0 */
-    PMAP_ROW(&gpioc,   1,   NULL,  0, &adc1,   11), /* D16/PC1 */
-    PMAP_ROW(&gpioc,   2,   NULL,  0, &adc1,   12), /* D17/PC2 */
-    PMAP_ROW(&gpioc,   3,   NULL,  0, &adc1,   13), /* D18/PC3 */
-    PMAP_ROW(&gpioc,   4,   NULL,  0, &adc1,   14), /* D19/PC4 */
-    PMAP_ROW(&gpioc,   5,   NULL,  0, &adc1,   15), /* D20/PC5 */
+    PMAP_ROW(&gpioc,   0,   NULL,  0, &ADC1,   10), /* D15/PC0 */
+    PMAP_ROW(&gpioc,   1,   NULL,  0, &ADC1,   11), /* D16/PC1 */
+    PMAP_ROW(&gpioc,   2,   NULL,  0, &ADC1,   12), /* D17/PC2 */
+    PMAP_ROW(&gpioc,   3,   NULL,  0, &ADC1,   13), /* D18/PC3 */
+    PMAP_ROW(&gpioc,   4,   NULL,  0, &ADC1,   14), /* D19/PC4 */
+    PMAP_ROW(&gpioc,   5,   NULL,  0, &ADC1,   15), /* D20/PC5 */
 
     /* External header */
 
     PMAP_ROW(&gpioc,  13,   NULL,  0, NULL, ADCx), /* D21/PC13 */
     PMAP_ROW(&gpioc,  14,   NULL,  0, NULL, ADCx), /* D22/PC14 */
     PMAP_ROW(&gpioc,  15,   NULL,  0, NULL, ADCx), /* D23/PC15 */
-    PMAP_ROW(&gpiob,   9, &timer4,  4, NULL, ADCx), /* D24/PB9 */
+    PMAP_ROW(&gpiob,   9, &TIMER4,  4, NULL, ADCx), /* D24/PB9 */
     PMAP_ROW(&gpiod,   2,   NULL,  0, NULL, ADCx), /* D25/PD2 */
     PMAP_ROW(&gpioc,  10,   NULL,  0, NULL, ADCx), /* D26/PC10 */
-    PMAP_ROW(&gpiob,   0, &timer3,  3, &adc1,    8), /* D27/PB0 */
-    PMAP_ROW(&gpiob,   1, &timer3,  4, &adc1,    9), /* D28/PB1 */
+    PMAP_ROW(&gpiob,   0, &TIMER3,  3, &ADC1,    8), /* D27/PB0 */
+    PMAP_ROW(&gpiob,   1, &TIMER3,  4, &ADC1,    9), /* D28/PB1 */
     PMAP_ROW(&gpiob,  10,   NULL,  0, NULL, ADCx), /* D29/PB10 */
     PMAP_ROW(&gpiob,  11,   NULL,  0, NULL, ADCx), /* D30/PB11 */
     PMAP_ROW(&gpiob,  12,   NULL,  0, NULL, ADCx), /* D31/PB12 */

@@ -54,32 +54,32 @@ void boardInit(void) {
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 
-    {&gpioa, &timer1, NULL, 10, 3, ADCx}, /* D0(RxD0)/PA10 */
-    {&gpioa, &timer1, NULL,  9, 2, ADCx}, /* D1(TxD1)/PA9 */
+    {&gpioa, &TIMER1, NULL, 10, 3, ADCx}, /* D0(RxD0)/PA10 */
+    {&gpioa, &TIMER1, NULL,  9, 2, ADCx}, /* D1(TxD1)/PA9 */
     {&gpiob,   NULL, NULL, 11, 0, ADCx}, /* D2/PB11 */
     {&gpiob,   NULL, NULL, 10, 0, ADCx}, /* D3/PB10 */
-    {&gpioa, &timer1, NULL,  8, 1, ADCx}, /* D4/PA8 */
+    {&gpioa, &TIMER1, NULL,  8, 1, ADCx}, /* D4/PA8 */
     {&gpioa,   NULL, NULL, 13, 0, ADCx}, /* D5/PA13 */
     {&gpioa,   NULL, NULL, 14, 0, ADCx}, /* D6/PA14 */
     {&gpioa,   NULL, NULL, 15, 0, ADCx}, /* D7/PA15 */
     {&gpiob,   NULL, NULL,  3, 0, ADCx}, /* D8/PB3 */
     {&gpiob,   NULL, NULL,  4, 0, ADCx}, /* D9/PB4 */
-    {&gpioa,   NULL, &adc1,  4, 0,    4}, /* D10/PA4 */
-    {&gpioa, &timer3, &adc1,  7, 2,    7}, /* D11/PA7 */
-    {&gpioa, &timer3, &adc1,  6, 1,    6}, /* D12/PA6 */
-    {&gpioa,   NULL, &adc1,  5, 0,    5}, /* D13/PA5 */
+    {&gpioa,   NULL, &ADC1,  4, 0,    4}, /* D10/PA4 */
+    {&gpioa, &TIMER3, &ADC1,  7, 2,    7}, /* D11/PA7 */
+    {&gpioa, &TIMER3, &ADC1,  6, 1,    6}, /* D12/PA6 */
+    {&gpioa,   NULL, &ADC1,  5, 0,    5}, /* D13/PA5 */
 
-    {&gpioa, &timer2, &adc1,  0, 1,    0}, /* D14(A0)/PA0 */
-    {&gpioa, &timer2, &adc1,  1, 2,    1}, /* D15(A1)/PA1 */
-    {&gpioa, &timer2, &adc1,  2, 3,    2}, /* D16(A2)/PA2 */
-    {&gpioa, &timer2, &adc1,  3, 4,    3}, /* D17(A3)/PA3 */
-    {&gpiob, &timer4, NULL,  7, 2, ADCx}, /* D18(A4)/PB7 */
-    {&gpiob, &timer4, NULL,  6, 1, ADCx}, /* D19(A5)/PB6 */
-    {&gpiob, &timer3, &adc1,  0, 3,    8}, /* D20(A6)/PB0 */
-    {&gpiob, &timer3, &adc1,  1, 4,    9}, /* D21(A7)/PB1 */
+    {&gpioa, &TIMER2, &ADC1,  0, 1,    0}, /* D14(A0)/PA0 */
+    {&gpioa, &TIMER2, &ADC1,  1, 2,    1}, /* D15(A1)/PA1 */
+    {&gpioa, &TIMER2, &ADC1,  2, 3,    2}, /* D16(A2)/PA2 */
+    {&gpioa, &TIMER2, &ADC1,  3, 4,    3}, /* D17(A3)/PA3 */
+    {&gpiob, &TIMER4, NULL,  7, 2, ADCx}, /* D18(A4)/PB7 */
+    {&gpiob, &TIMER4, NULL,  6, 1, ADCx}, /* D19(A5)/PB6 */
+    {&gpiob, &TIMER3, &ADC1,  0, 3,    8}, /* D20(A6)/PB0 */
+    {&gpiob, &TIMER3, &ADC1,  1, 4,    9}, /* D21(A7)/PB1 */
 
     {&gpioa,   NULL, NULL, 12, 0, ADCx}, /* D22/PA12/USB D+ */
-    {&gpioa, &timer1, NULL, 11, 4, ADCx}, /* D23/PA11/USB D- */
+    {&gpioa, &TIMER1, NULL, 11, 4, ADCx}, /* D23/PA11/USB D- */
 
     // FIXME: find out which pin is the button, if any
     {&gpiob,   NULL, NULL,  8, 0, ADCx}, /* D24/PB8??/Button */
