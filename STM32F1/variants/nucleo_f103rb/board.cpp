@@ -86,8 +86,8 @@ rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSI_DIV_2, &pll_data};
 // - Timer channel (1 to 4, for PWM), or 0 if none
 // - ADC device, or NULL if none
 // - ADC channel, or ADCx if none
-// gpioX, PINbit, TIMER/NULL, timerch/0, ADC1/NULL, adcsub/0
-// gpioX, TIMER/NULL, ADC1/NULL, PINbit, timerch/0, adcsub/0
+// gpioX, PINbit, TIMER/NULL, timerch/0, &adc1/NULL, adcsub/0
+// gpioX, TIMER/NULL, &adc1/NULL, PINbit, timerch/0, adcsub/0
 //       0    1    2      3    4     5
 //       0    3    1      4    2     5
 
@@ -96,58 +96,58 @@ rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSI_DIV_2, &pll_data};
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Arduino-like header, right connectors */
-    {&gpioa, NULL,   ADC1,   3,  0,    3}, /*  D0/PA3 */
-    {&gpioa, NULL,   ADC1,   2,  0,    2}, /*  D1/PA2 */
-    {&gpioa, TIMER1, NULL,  10,  3, ADCx}, /*  D2/PA10 */
-    {&gpiob, TIMER2, NULL,   3,  2, ADCx}, /*  D3/PB3  */
-    {&gpiob, TIMER3, NULL,   5,  2, ADCx}, /*  D4/PB5 */
-    {&gpiob, TIMER3, NULL,   4,  1, ADCx}, /*  D5/PB4  */
-    {&gpiob, TIMER2, NULL,  10,  3, ADCx}, /*  D6/PB10 */
-    {&gpioa, TIMER1, NULL,   8,  1, ADCx}, /*  D7/PA8 */
+    {&gpioa, NULL,   &adc1,   3,  0,    3}, /*  D0/PA3 */
+    {&gpioa, NULL,   &adc1,   2,  0,    2}, /*  D1/PA2 */
+    {&gpioa, &timer1, NULL,  10,  3, ADCx}, /*  D2/PA10 */
+    {&gpiob, &timer2, NULL,   3,  2, ADCx}, /*  D3/PB3  */
+    {&gpiob, &timer3, NULL,   5,  2, ADCx}, /*  D4/PB5 */
+    {&gpiob, &timer3, NULL,   4,  1, ADCx}, /*  D5/PB4  */
+    {&gpiob, &timer2, NULL,  10,  3, ADCx}, /*  D6/PB10 */
+    {&gpioa, &timer1, NULL,   8,  1, ADCx}, /*  D7/PA8 */
                    
-    {&gpioa, TIMER1, NULL,   9,  2, ADCx}, /*  D8/PA9  */
+    {&gpioa, &timer1, NULL,   9,  2, ADCx}, /*  D8/PA9  */
     {&gpioc, NULL,   NULL,   7,  0, ADCx}, /*  D9/PC7  */
-    {&gpiob, TIMER4, NULL,   6,  1, ADCx}, /*  D10/PB6 */
-    {&gpioa, NULL,   ADC1,   7,  0,    7}, /*  D11/PA7 */
-    {&gpioa, NULL,   ADC1,   6,  0, 	  6}, /*  D12/PA6 */
+    {&gpiob, &timer4, NULL,   6,  1, ADCx}, /*  D10/PB6 */
+    {&gpioa, NULL,   &adc1,   7,  0,    7}, /*  D11/PA7 */
+    {&gpioa, NULL,   &adc1,   6,  0, 	  6}, /*  D12/PA6 */
     {&gpioa, NULL,   NULL,   5,  0, ADCx}, /*  D13/PA5 LED - no &adc12_IN5 !*/
-    {&gpiob, TIMER4, NULL,   9,  4, ADCx}, /*  D14/PB9 */
-    {&gpiob, TIMER4, NULL,   8,  3, ADCx}, /*  D15/PB8 */
+    {&gpiob, &timer4, NULL,   9,  4, ADCx}, /*  D14/PB9 */
+    {&gpiob, &timer4, NULL,   8,  3, ADCx}, /*  D15/PB8 */
                    
-    {&gpioa, NULL,   ADC1,   0,  0,    0}, /*  D16/A0/PA0 */
-    {&gpioa, NULL,   ADC1,   1,  0,    1}, /*  D17/A1/PA1 */
-    {&gpioa, NULL,   ADC1,   4,  0,    4}, /*  D18/A2/PA4 */
-    {&gpiob, TIMER3, ADC1,   0,  3,    8}, /*  D19/A3/PB0 */
-    {&gpioc, NULL,   ADC1,   1,  0,   11}, /*  D20/A4/PC1 */
-    {&gpioc, NULL,   ADC1,   0,  0,   10}, /*  D21/A5/PC0 */
+    {&gpioa, NULL,   &adc1,   0,  0,    0}, /*  D16/A0/PA0 */
+    {&gpioa, NULL,   &adc1,   1,  0,    1}, /*  D17/A1/PA1 */
+    {&gpioa, NULL,   &adc1,   4,  0,    4}, /*  D18/A2/PA4 */
+    {&gpiob, &timer3, &adc1,   0,  3,    8}, /*  D19/A3/PB0 */
+    {&gpioc, NULL,   &adc1,   1,  0,   11}, /*  D20/A4/PC1 */
+    {&gpioc, NULL,   &adc1,   0,  0,   10}, /*  D21/A5/PC0 */
                    
     {&gpioc, NULL,   NULL,  10,  0, ADCx}, /*  D22/PC10 */
 	{&gpioc, NULL,   NULL,  12,  0, ADCx}, /*  D23/PC12 */
-    {&gpiob, TIMER4, NULL,   7,  2, ADCx}, /*  D24/PB7 */
+    {&gpiob, &timer4, NULL,   7,  2, ADCx}, /*  D24/PB7 */
     {&gpioc, NULL,   NULL,  13,  0, ADCx}, /*  D25/PC13 USER BLUE BUTTON */
     {&gpioc, NULL,   NULL,  14,  0, ADCx}, /*  D26/PC14 */
     {&gpioc, NULL,   NULL,  15,  0, ADCx}, /*  D27/PC15 */
-    {&gpioc, NULL,   ADC1,   2,  0,   12}, /*  D28/PC2 */
-    {&gpioc, NULL,   ADC1,   3,  0,   13}, /*  D29/PC3 */
+    {&gpioc, NULL,   &adc1,   2,  0,   12}, /*  D28/PC2 */
+    {&gpioc, NULL,   &adc1,   3,  0,   13}, /*  D29/PC3 */
     {&gpioc, NULL,   NULL,  11,  0, ADCx}, /*  D30/PC11 */
     {&gpiod, NULL,   NULL,   2,  0, ADCx}, /*  D31/PD2 */
     {&gpioc, NULL,   NULL,   9,  0, ADCx}, /*  D32/PC9 */
     {&gpioc, NULL,   NULL,   8,  0, ADCx}, /*  D33/PC8 */
     {&gpioc, NULL,   NULL,   6,  0, ADCx}, /*  D34/PC6 */
-    {&gpioc, NULL,   ADC1,   5,  0,   15}, /*  D35/PC5 */
+    {&gpioc, NULL,   &adc1,   5,  0,   15}, /*  D35/PC5 */
     {&gpioa, NULL,   NULL,  12,  0, ADCx}, /*  D36/PA12 */
-    {&gpioa, TIMER1, NULL,  11,  4, ADCx}, /*  D37/PA11 */
+    {&gpioa, &timer1, NULL,  11,  4, ADCx}, /*  D37/PA11 */
     {&gpiob, NULL,   NULL,  12,  0, ADCx}, /*  D38/PB12 */
-    {&gpiob, TIMER2, NULL,  11,  4, ADCx}, /*  D39/PB11 PWM-not working?*/
+    {&gpiob, &timer2, NULL,  11,  4, ADCx}, /*  D39/PB11 PWM-not working?*/
     {&gpiob, NULL,   NULL,  2,   0, ADCx}, /*  D40/PB2 BOOT1 !!*/
-    {&gpiob, TIMER3, ADC1,   1,  4,    9}, /*  D41/PB1 */
+    {&gpiob, &timer3, &adc1,   1,  4,    9}, /*  D41/PB1 */
     {&gpiob, NULL,   NULL,  15,  0, ADCx}, /*  D42/PB15 */
     {&gpiob, NULL,   NULL,  14,  0, ADCx}, /*  D43/PB14 */
     {&gpiob, NULL,   NULL,  13,  0, ADCx}, /*  D44/PB13 */
-    {&gpioc, NULL,   ADC1,   4,  0,   14}, /*  D45/PC4 */
+    {&gpioc, NULL,   &adc1,   4,  0,   14}, /*  D45/PC4 */
   //  PMAP_ROW(&gpioa,  13,   NULL,  0, NULL, ADCx), /* D41/PA13 do not use*/
    // PMAP_ROW(&gpioa,  14,   NULL,  0, NULL, ADCx), /* D42/PA14  do not use*/
-   // PMAP_ROW(&gpioa,  15,   TIMER2,  1, NULL, ADCx), /* D43/PA15 do not use*/
+   // PMAP_ROW(&gpioa,  15,   &timer2,  1, NULL, ADCx), /* D43/PA15 do not use*/
 };
 
 // Array of pins you can use for pwmWrite(). Keep it in Flash because

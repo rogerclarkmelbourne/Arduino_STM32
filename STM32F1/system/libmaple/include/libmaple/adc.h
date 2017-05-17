@@ -80,7 +80,7 @@ typedef struct adc_dev {
     adc_reg_map *regs;      /**< Register map */
     rcc_clk_id clk_id;      /**< RCC clock information */
     nvic_irq_num irq_num;   /* Added by bubulindo */
-    voidFuncPtr handlers[]; /* Added by bubulindo EOC, JEOC, AWD Interrupts*/
+    voidFuncPtr * handlers; /* Added by bubulindo EOC, JEOC, AWD Interrupts*/
 } adc_dev;
 
 

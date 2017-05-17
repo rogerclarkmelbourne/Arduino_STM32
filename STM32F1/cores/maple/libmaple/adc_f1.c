@@ -40,10 +40,12 @@
  * Devices
  */
 
+
+voidFuncPtr adc1_handlers[] = {[0 ... 2]=0}; //added by bubulindo. EOC, JEOC, AWD
 adc_dev adc1 = {
     .regs   = ADC1_BASE,
     .clk_id = RCC_ADC1,
-    .handlers = {[3]=0}, //added by bubulindo. EOC, JEOC, AWD
+    .handlers = adc1_handlers, 
     .irq_num = NVIC_ADC_1_2,
 };
 /** ADC1 device. */
@@ -57,10 +59,11 @@ adc_dev adc2 = {
 adc_dev *ADC2 = &adc2;
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+voidFuncPtr adc3_handlers[] = {[0 ... 2]=0}; //added by bubulindo. EOC, JEOC, AWD
 adc_dev adc3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3,
-    .handlers = {[3]=0}, //added by bubulindo. EOC, JEOC, AWD
+    .handlers = adc3_handlers,
     .irq_num = NVIC_ADC3,//added by bubulindo. 
 };
 /** ADC3 device. */
