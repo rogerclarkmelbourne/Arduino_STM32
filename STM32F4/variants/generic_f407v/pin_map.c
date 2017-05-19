@@ -56,7 +56,7 @@ extern timer_dev timer8;
 
 /*
 typedef struct stm32_pin_info {
-    gpio_dev *gpio_device;      // Maple pin's GPIO device
+    const gpio_dev * gpio_device;      // Maple pin's GPIO device
     timer_dev *timer_device;    // Pin's timer device, if any.
     uint8 timer_channel;        // Timer channel, or 0 if none.
     uint8 adc_channel;          // Pin ADC channel, or ADCx if none.

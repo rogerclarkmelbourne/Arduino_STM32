@@ -87,7 +87,7 @@
 #define BOARD_SPI2A_NSS_PIN     PB9  //Port2Pin('B', 9)
 #define BOARD_SPI2A_SCK_PIN     PB10 //Port2Pin('B',10)
 #define BOARD_SPI2A_MISO_PIN    PC2  //Port2Pin('C', 2)
-#define BOARD_SPI2A_MOSI_PIN    pc3  //Port2Pin('C', 3)
+#define BOARD_SPI2A_MOSI_PIN    PC3  //Port2Pin('C', 3)
 
 #define BOARD_SPI3_NSS_PIN      PA15 //Port2Pin('A',15)
 #define BOARD_SPI3_SCK_PIN      PB3  //Port2Pin('B', 3)
