@@ -60,10 +60,12 @@ static inline afio_exti_port gpio_exti_port(const gpio_dev *dev) {
  * @param val If true, set the pin.  If false, reset the pin.
  */
 static inline void gpio_write_pin(uint8_t pin, uint16 val) {
+	uint16_t bit = BIT(pin&0x0F);
+	gpio_reg_map *regs = (PIN_MAP[pin].gpio_device)->regs;
     if (val) {
-        (PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
+        regs->BSRRL = bit;
     } else {
-        (PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
+        regs->BSRRH = bit;
     }
 }
 
@@ -71,8 +73,16 @@ static inline void gpio_set_pin(uint8_t pin) {
 	(PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
 }
 
+static inline void gpio_set_dev_bit(const gpio_dev * dev, uint8_t bit) {
+	dev->regs->BSRRL = BIT(bit);
+}
+
 static inline void gpio_clear_pin(uint8_t pin) {
 	(PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
+}
+
+static inline void gpio_clear_dev_bit(const gpio_dev * dev, uint8_t bit) {
+	dev->regs->BSRRH = BIT(bit);
 }
 
 /**
