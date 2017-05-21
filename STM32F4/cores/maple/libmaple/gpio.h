@@ -69,20 +69,20 @@ static inline void gpio_write_pin(uint8_t pin, uint16 val) {
     }
 }
 
-static inline void gpio_set_pin(uint8_t pin) {
-	(PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
-}
-
 static inline void gpio_set_dev_bit(const gpio_dev * dev, uint8_t bit) {
 	dev->regs->BSRRL = BIT(bit);
 }
 
-static inline void gpio_clear_pin(uint8_t pin) {
-	(PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
-}
-
 static inline void gpio_clear_dev_bit(const gpio_dev * dev, uint8_t bit) {
 	dev->regs->BSRRH = BIT(bit);
+}
+
+static inline void gpio_set_pin(uint8_t pin) {
+	gpio_set_dev_bit(PIN_MAP[pin].gpio_device, (pin&0x0F));
+}
+
+static inline void gpio_clear_pin(uint8_t pin) {
+	gpio_clear_dev_bit(PIN_MAP[pin].gpio_device, (pin&0x0F));
 }
 
 /**
