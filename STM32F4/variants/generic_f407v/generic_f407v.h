@@ -87,7 +87,7 @@
 #define BOARD_SPI2A_NSS_PIN     PB9  //Port2Pin('B', 9)
 #define BOARD_SPI2A_SCK_PIN     PB10 //Port2Pin('B',10)
 #define BOARD_SPI2A_MISO_PIN    PC2  //Port2Pin('C', 2)
-#define BOARD_SPI2A_MOSI_PIN    pc3  //Port2Pin('C', 3)
+#define BOARD_SPI2A_MOSI_PIN    PC3  //Port2Pin('C', 3)
 
 #define BOARD_SPI3_NSS_PIN      PA15 //Port2Pin('A',15)
 #define BOARD_SPI3_SCK_PIN      PB3  //Port2Pin('B', 3)
@@ -105,6 +105,35 @@
 #define BOARD_SDIO_D3           PC11 //Port2Pin('C',11)
 #define BOARD_SDIO_CK           PC12 //Port2Pin('C',12)
 #define BOARD_SDIO_CMD          PD2  //Port2Pin('D', 2)
+
+#define FSMC_NOE			PD4
+#define FSMC_NWE			PD5
+#define FSMC_NE1			PD7
+#define FSMC_A18			PD13
+#define FSMC_A17			PD12
+#define FSMC_A16			PD11
+#define FSMC_D0				PD14
+#define FSMC_D1				PD15
+#define FSMC_D2				PD0
+#define FSMC_D3				PD1
+#define FSMC_D4				PE7
+#define FSMC_D5				PE8
+#define FSMC_D6				PE9
+#define FSMC_D7				PE10
+#define FSMC_D8				PE11
+#define FSMC_D9				PE12
+#define FSMC_D10			PE13
+#define FSMC_D11			PE14
+#define FSMC_D12			PE15
+#define FSMC_D13			PD8
+#define FSMC_D14			PD9
+#define FSMC_D15			PD10
+
+#define BOARD_T_CS			BOARD_SPI2_NSS_PIN
+#define BOARD_T_SCK			BOARD_SPI2_SCK_PIN
+#define BOARD_T_MISO		BOARD_SPI2_MISO_PIN
+#define BOARD_T_MOSI		BOARD_SPI2_MOSI_PIN
+#define BOARD_T_PEN			PC5
 
 #define BOARD_NR_GPIO_PINS      80
 #define BOARD_NR_PWM_PINS       22
