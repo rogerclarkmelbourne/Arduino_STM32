@@ -102,7 +102,7 @@ typedef struct fsmc_reg_map {
 typedef struct fsmc_nor_psram_reg_map {
     __io uint32 BCR;            /**< Chip-select control register */
     __io uint32 BTR;            /**< Chip-select timing register */
-    const uint32 RESERVED[64];  /**< Reserved */
+    const uint32 RESERVED[63];  /**< Reserved */
     __io uint32 BWTR;           /**< Write timing register */
 } fsmc_nor_psram_reg_map;
 
