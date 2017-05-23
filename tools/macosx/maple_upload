@@ -50,4 +50,13 @@ if [ ! -x ${DFU_UTIL} ]; then
     exit 2
 fi
 
+echo ${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R ${dfuse_addr} -R
 ${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R ${dfuse_addr} -R
+
+# take a breath waiting for restarting the target device //hanyazou 
+echo -n wait for ${dummy_port_fullpath}...
+while [ ! -c ${dummy_port_fullpath} ]; do
+    sleep 0.1
+done
+sleep 0.3
+echo done.
