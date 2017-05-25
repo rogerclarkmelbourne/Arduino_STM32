@@ -522,6 +522,28 @@ uint16 EEPROMClass::write(uint16 Address, uint16 Data)
 }
 
 /**
+  * @brief  Writes/upadtes variable data in EEPROM.
+            The value is written only if differs from the one already saved at the same address.
+  * @param  VirtAddress: Variable virtual address
+  * @param  Data: 16 bit data to be written
+  * @retval Success or error status:
+  *			- EEPROM_SAME_VALUE: If new Data matches existing EEPROM Data
+  *			- FLASH_COMPLETE: on success
+  *			- EEPROM_BAD_ADDRESS: if address = 0xFFFF
+  *			- EEPROM_PAGE_FULL: if valid page is full
+  *			- EEPROM_NO_VALID_PAGE: if no valid page was found
+  *			- EEPROM_OUT_SIZE: if no empty EEPROM variables
+  *			- Flash error code: on write Flash error
+  */
+uint16 EEPROMClass::update(uint16 Address, uint16 Data)
+{
+	if (read(Address) == Data)
+		return EEPROM_SAME_VALUE;
+	else
+	    return write(Address, Data);
+}
+
+/**
   * @brief  Return number of variable
   * @retval Number of variables
   */

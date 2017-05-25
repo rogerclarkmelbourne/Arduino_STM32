@@ -54,7 +54,7 @@ typedef struct ring_buffer {
     volatile uint8 *buf; /**< Buffer items are stored into */
     volatile uint16 head;         /**< Index of the next item to remove */
     volatile uint16 tail;         /**< Index where the next item will get inserted */
-    uint16 size;         /**< Buffer capacity minus one */
+    volatile uint16 size;         /**< Buffer capacity minus one */
 } ring_buffer;
 
 /**
