@@ -1250,7 +1250,7 @@ void vTaskCleanUpResources( void ) PRIVILEGED_FUNCTION;
  * Sets the pointer to the current TCB to the TCB of the highest priority task
  * that is ready to run.
  */
-void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION;
+void vTaskSwitchContext( void ) PRIVILEGED_FUNCTION  __attribute__((used));
 
 /*
  * Return the handle of the calling task.

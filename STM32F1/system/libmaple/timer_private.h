@@ -57,43 +57,30 @@
  * [0] = update. */
 #define NR_BAS_HANDLERS                 1
 
-/* For declaring advanced timers. */
-#define ADVANCED_TIMER(num)                                             \
-    {                                                                   \
-        .regs = { .adv = TIMER##num##_BASE },                           \
-        .clk_id = RCC_TIMER##num,                                       \
-        .type = TIMER_ADVANCED,                                         \
-        .handlers = { [NR_ADV_HANDLERS - 1] = 0 },                      \
+#define DEFINE_TIMER_INT(var, num, reg_map, timer_type, num_handlers)       \
+    voidFuncPtr var##_handlers[] = { [0 ... num_handlers - 1] = 0 };        \
+    timer_dev var =                                                         \
+    {                                                                       \
+        .regs = { .reg_map = TIMER##num##_BASE },                           \
+        .clk_id = RCC_TIMER##num,                                           \
+        .type = timer_type,                                                 \
+        .handlers = var##_handlers,                                         \
     }
 
+
+/* For declaring advanced timers. */
+#define DEFINE_ADVANCED_TIMER(var, num) DEFINE_TIMER_INT(var, num, adv, TIMER_ADVANCED, NR_ADV_HANDLERS)
+
 /* For declaring full-featured general purpose timers. */
-#define GENERAL_TIMER(num)                                              \
-    {                                                                   \
-        .regs = { .gen = TIMER##num##_BASE },                           \
-        .clk_id = RCC_TIMER##num,                                       \
-        .type = TIMER_GENERAL,                                          \
-        .handlers = { [NR_GEN_HANDLERS - 1] = 0 },                      \
-    }
+#define DEFINE_GENERAL_TIMER(var, num) DEFINE_TIMER_INT(var, num , gen, TIMER_GENERAL, NR_GEN_HANDLERS)
 
 /* For declaring general purpose timers with limited interrupt
  * capability (e.g. timers 9 through 14 on STM32F2 and XL-density
  * STM32F1). */
-#define RESTRICTED_GENERAL_TIMER(num, max_dier_bit)                     \
-    {                                                                   \
-        .regs = { .gen = TIMER##num##_BASE },                           \
-        .clk_id = RCC_TIMER##num,                                       \
-        .type = TIMER_GENERAL,                                          \
-        .handlers = { [max_dier_bit] = 0 },                             \
-    }
+#define DEFINE_RESTRICTED_GENERAL_TIMER(var, num, max_dier_bit) DEFINE_TIMER_INT(var, num, gen, TIMER_GENERAL, max_dier_bit + 1)
 
 /* For declaring basic timers (e.g. TIM6 and TIM7). */
-#define BASIC_TIMER(num)                                                \
-    {                                                                   \
-        .regs = { .bas = TIMER##num##_BASE },                           \
-        .clk_id = RCC_TIMER##num,                                       \
-        .type = TIMER_BASIC,                                            \
-        .handlers = { [NR_BAS_HANDLERS - 1] = 0 },                      \
-    }
+#define DEFINE_BASIC_TIMER(var, num) DEFINE_TIMER_INT(var, num, bas, TIMER_BASIC, NR_BAS_HANDLERS)
 
 /*
  * IRQ handlers

@@ -127,7 +127,7 @@ typedef struct timer_dev {
     timer_reg_map regs;         /**< Register map */
     rcc_clk_id clk_id;          /**< RCC clock information */
     timer_type type;            /**< Timer's type */
-    voidFuncPtr handlers[];     /**<
+    voidFuncPtr * handlers;     /**<
                                  * Don't touch these. Use these instead:
                                  * @see timer_attach_interrupt()
                                  * @see timer_detach_interrupt() */
