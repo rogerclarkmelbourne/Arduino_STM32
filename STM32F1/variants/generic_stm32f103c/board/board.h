@@ -36,8 +36,8 @@
 #ifndef _BOARD_GENERIC_STM32F103C_H_
 #define _BOARD_GENERIC_STM32F103C_H_
 
-#define CYCLES_PER_MICROSECOND      (F_CPU / 1000000U)
-#define SYSTICK_RELOAD_VAL          (F_CPU/1000) - 1 /* takes a cycle to reload */
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
+#define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 #define BOARD_NR_USARTS           3
 #define BOARD_USART1_TX_PIN       PA9
