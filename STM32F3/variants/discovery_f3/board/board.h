@@ -38,8 +38,8 @@
 
 #include <libmaple/stm32.h>
 
-#define CYCLES_PER_MICROSECOND    72
-#define SYSTICK_RELOAD_VAL     71999 /* takes a cycle to reload */
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
+#define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 enum {
 		PC13, PC14, PC15,

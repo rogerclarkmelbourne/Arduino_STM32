@@ -38,7 +38,8 @@
 
 
 
-#define CYCLES_PER_MICROSECOND    24
+//#define CYCLES_PER_MICROSECOND    24
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 //#define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 #define SYSTICK_RELOAD_VAL      23999  /* takes a cycle to reload */
 
