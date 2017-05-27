@@ -67,6 +67,13 @@
 
 /* DFU interface */
 #define DFU_IFF_DFU             0x0001  /* DFU Mode, (not Runtime) */
+#define DFU_IFF_VENDOR          0x0100
+#define DFU_IFF_PRODUCT         0x0200
+#define DFU_IFF_CONFIG          0x0400
+#define DFU_IFF_IFACE           0x0800
+#define DFU_IFF_ALT             0x1000
+#define DFU_IFF_DEVNUM          0x2000
+#define DFU_IFF_PATH            0x4000
 
 /* This is based off of DFU_GETSTATUS
  *
@@ -84,39 +91,37 @@ struct dfu_status {
 };
 
 struct dfu_if {
-    struct usb_dfu_func_descriptor func_dfu;
-    uint16_t quirks;
-    uint16_t busnum;
-    uint16_t devnum;
     uint16_t vendor;
     uint16_t product;
     uint16_t bcdDevice;
     uint8_t configuration;
     uint8_t interface;
     uint8_t altsetting;
-    uint8_t flags;
-    uint8_t bMaxPacketSize0;
-    char *alt_name;
-    char *serial_name;
+    unsigned char *alt_name;
+    int bus;
+    uint8_t devnum;
+    const char *path;
+    unsigned int flags;
+    unsigned int count;
     libusb_device *dev;
     libusb_device_handle *dev_handle;
-    struct dfu_if *next;
 };
 
+void dfu_init( const int timeout );
+void dfu_debug( const int level );
 int dfu_detach( libusb_device_handle *device,
                 const unsigned short interface,
                 const unsigned short timeout );
 int dfu_download( libusb_device_handle *device,
                   const unsigned short interface,
                   const unsigned short length,
-                  const unsigned short transaction,
                   unsigned char* data );
 int dfu_upload( libusb_device_handle *device,
                 const unsigned short interface,
                 const unsigned short length,
-                const unsigned short transaction,
                 unsigned char* data );
-int dfu_get_status( struct dfu_if *dif,
+int dfu_get_status( libusb_device_handle *device,
+                    const unsigned short interface,
                     struct dfu_status *status );
 int dfu_clear_status( libusb_device_handle *device,
                       const unsigned short interface );
@@ -124,10 +129,11 @@ int dfu_get_state( libusb_device_handle *device,
                    const unsigned short interface );
 int dfu_abort( libusb_device_handle *device,
                const unsigned short interface );
-int dfu_abort_to_idle( struct dfu_if *dif);
 
 const char *dfu_state_to_string( int state );
 
 const char *dfu_status_to_string( int status );
+
+int debug;
 
 #endif /* DFU_H */

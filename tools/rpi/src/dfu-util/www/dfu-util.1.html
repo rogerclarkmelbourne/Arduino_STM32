@@ -13,8 +13,6 @@ dfu-util - Device firmware update (DFU) USB programmer
 <H2>SYNOPSIS</H2>
 
 
-<DL COMPACT>
-<DT>
 <B>dfu-util</B>
 
 <B>-l </B>
@@ -23,15 +21,11 @@ dfu-util - Device firmware update (DFU) USB programmer
 
 [<B>-d</B>
 
-<I>vid:pid</I>[,<I>vid:pid</I>]]
+<I>vid:pid</I>]
 
 [<B>-p</B>
 
 <I>path</I>]
-
-[<B>-c</B>
-
-<I>configuration</I>]
 
 [<B>-i</B>
 
@@ -41,27 +35,20 @@ dfu-util - Device firmware update (DFU) USB programmer
 
 <I>alt-intf</I>]
 
-[<B>-S</B>
-
-<I>serial</I>[,<I>serial</I>]]
+<BR>
 
 
-<DT>
 <B>dfu-util</B>
 
 [<B>-v</B>]
 
 [<B>-d</B>
 
-<I>vid:pid</I>[,<I>vid:pid</I>]]
+<I>pid:vid</I>]
 
 [<B>-p</B>
 
 <I>path</I>]
-
-[<B>-c</B>
-
-<I>configuration</I>]
 
 [<B>-i</B>
 
@@ -71,15 +58,7 @@ dfu-util - Device firmware update (DFU) USB programmer
 
 <I>alt-intf</I>]
 
-[<B>-S</B>
-
-<I>serial</I>[,<I>serial</I>]]
-
 [<B>-t</B>
-
-<I>size</I>]
-
-[<B>-Z</B>
 
 <I>size</I>]
 
@@ -94,12 +73,12 @@ dfu-util - Device firmware update (DFU) USB programmer
 <I>file</I>]
 
 
-<DT>
+<BR>
+
 <B>dfu-util</B>
 
 [<B>-hV</B>]
 
-</DL>
 <A NAME="lbAD">&nbsp;</A>
 <H2>DESCRIPTION</H2>
 
@@ -119,84 +98,25 @@ devices.
 
 <DD>
 List the currently attached DFU capable USB devices.
-<DT><B>-d, --device</B> [<I>Run-Time VENDOR</I>]:[<I>Run-Time PRODUCT</I>][,[<I>DFU Mode VENDOR</I>]:[<I>DFU Mode PRODUCT</I>]]
+<DT><B>-d, --device</B> [<I>VENDOR</I>]:[<I>PRODUCT</I>]
 
 <DD>
-<DL COMPACT><DT><DD>
-Specify run-time and/or DFU mode vendor and/or product IDs of the DFU device
-to work with. <B>VENDOR</B> and <B>PRODUCT</B> are hexadecimal numbers (no prefix
-needed), &quot;*&quot; (match any), or &quot;-&quot; (match nothing). By default, any DFU capable
-device in either run-time or DFU mode will be considered.
+Specify vendor and/or product ID of the DFU device. Both
+<B>VENDOR</B>
+
+and
+<B>PRODUCT</B>
+
+are hexadecimal numbers (no prefix needed).
+Example:
+<P>
+<B>  $ dfu-util --device 1457:51ab</B>
+
 <P>
 If you only have one standards-compliant DFU device attached to your computer,
-this parameter is optional. However, as soon as you have multiple DFU devices
-connected, dfu-util will detect this and abort, asking you to specify which
-device to use.
-<P>
-If only run-time IDs are specified (e.g. &quot;<B>--device 1457:51ab</B>&quot;), then in
-addition to the specified run-time IDs, any DFU mode devices will also be
-considered. This is beneficial to allow a DFU capable device to be found
-again after a switch to DFU mode, since the vendor and/or product ID of a
-device usually changes in DFU mode.
-<P>
-If only DFU mode IDs are specified (e.g. &quot;<B>--device ,951:26</B>&quot;), then all
-run-time devices will be ignored, making it easy to target a specific device in
-DFU mode.
-<P>
-If both run-time and DFU mode IDs are specified (e.g. &quot;<B>--device
-1457:51ab,:2bc</B>&quot;), then unspecified DFU mode components will use the run-time
-value specified.
-<P>
-Examples:
-<DL COMPACT>
-<DT><B>--device 1457:51ab,951:26</B>
-
-<DD>
-<BR>
-
-Work with a device in run-time mode with
-vendor ID 0x1457 and product ID 0x51ab, or in DFU mode with vendor ID 0x0951
-and product ID 0x0026
-<P>
-<DT><B>--device 1457:51ab,:2bc</B>
-
-<DD>
-<BR>
-
-Work with a device in run-time mode with vendor ID 0x1457 and product ID
-0x51ab, or in DFU mode with vendor ID 0x1457 and product ID 0x02bc
-<P>
-<DT><B>--device 1457:51ab</B>
-
-<DD>
-<BR>
-
-Work with a device in run-time mode with vendor ID 0x1457 and product ID
-0x51ab, or in DFU mode with any vendor and product ID
-<P>
-<DT><B>--device ,951:26</B>
-
-<DD>
-<BR>
-
-Work with a device in DFU mode with vendor ID 0x0951 and product ID 0x0026
-<P>
-<DT><B>--device *,-</B>
-
-<DD>
-<BR>
-
-Work with any device in run-time mode, and ignore any device in DFU mode
-<P>
-<DT><B>--device ,</B>
-
-<DD>
-<BR>
-
-Ignore any device in run-time mode, and Work with any device in DFU mode
-</DL>
-</DL>
-
+this is optional. However, as soon as you have multiple DFU devices connected,
+dfu-util will detect this and abort, asking you to specify which device
+to use.
 <DT><B>-p, --path</B> BUS-PORT. ... .PORT
 
 <DD>
@@ -213,28 +133,12 @@ Specify the DFU interface number.
 
 <DD>
 Specify the altsetting of the DFU interface by name or by number.
-<DT><B>-S, --serial</B> [<I>Run-Time SERIAL</I>][,[<I>DFU Mode SERIAL</I>]]
-
-<DD>
-Specify the run-time and DFU mode serial numbers used to further restrict
-device matches.  If multiple, identical DFU devices are simultaneously
-connected to a system then vendor and product ID will be insufficient for
-targeting a single device.  In this situation, it may be possible to use this
-parameter to specify a serial number which also must match.
-<P>
-If only a single serial number is specified, then the same serial number is
-used in both run-time and DFU mode. An empty serial number will match any
-serial number in the corresponding mode.
 <DT><B>-t, --transfer-size  SIZE</B>
 
 <DD>
 Specify the number of bytes per USB transfer. The optimal value is
 usually determined automatically so this option is rarely useful. If
 you need to use this option for a device, please report it as a bug.
-<DT><B>-Z, --upload-size  SIZE</B>
-
-<DD>
-Specify the expected upload size, in bytes.
 <DT><B>-U, --upload</B> FILE
 
 <DD>
@@ -395,7 +299,7 @@ and is now part of the dfu-util project.
 <DT><A HREF="#lbAF">EXAMPLES</A><DD>
 <DL>
 <DT><A HREF="#lbAG">Using dfu-util in the OpenMoko project</A><DD>
-<DT><A HREF="#lbAH">Using dfu-util with a DfuSe device</A><DD>
+<DT><A HREF="#lbAH">Using dfu-util with a DfuSe device:</A><DD>
 </DL>
 <DT><A HREF="#lbAI">BUGS</A><DD>
 <DT><A HREF="#lbAJ">SEE ALSO</A><DD>
@@ -405,7 +309,7 @@ and is now part of the dfu-util project.
 </DL>
 <HR>
 This document was created by man2html,
-using the doc/dfu-util.1 manual page from dfu-util 0.8.<BR>
-Time: 14:40:57 GMT, September 13, 2014
+using the doc/dfu-util.1 manual page.<BR>
+Time: 13:12:08 GMT, September 23, 2012
 </BODY>
 </HTML>

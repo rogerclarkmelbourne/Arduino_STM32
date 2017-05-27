@@ -6,31 +6,31 @@ qi-hardware-atusb:
   http://projects.qi-hardware.com/index.php/p/ben-wpan/source/tree/master/atusb/fw/usb
 - Tester: Stefan Schmidt
 
-openpcd:
+openpcd.log:
 - OpenPCD RFID reader
 - DFU implementation: SAM7DFU
   http://www.openpcd.org/Sam7dfu, git://git.gnumonks.org/openpcd.git
 - Tester: Stefan Schmidt
 
-simtrace:
+simtrace.log
 - Sysmocom SimTrace
 - DFU implementation: SAM7DFU
   http://www.openpcd.org/Sam7dfu, git://git.gnumonks.org/openpcd.git
 - Tester: Stefan Schmidt
 
-openmoko-freerunner:
+openmoko-freerunner.log:
 - Openmoko Freerunner
 - DFU implementation: Old U-Boot
   http://git.openmoko.org/?p=u-boot.git;a=shortlog;h=refs/heads/mokopatches
 - Tester: Stefan Schmidt
 
-openmoko-neo1973:
+openmoko-neo1973.log:
 - Openmoko Neo1073
 - DFU implementation: Old U-Boot
   http://git.openmoko.org/?p=u-boot.git;a=shortlog;h=refs/heads/mokopatches
 - Tester: Stefan Schmidt
 
-tdk-bluetooth:
+tdk-bluetooth.log:
 - TDK Corp. Bluetooth Adapter
 - DFU implementation: closed soure
 - Only upload has been tested
@@ -60,18 +60,8 @@ opc-20:
   http://www.st.com -> um0424.zip
 - Tester: Tormod Volden
 
-lpc-link, lpclink2:
-- NXP LPCXpresso debug adapters
-- Proprietary DFU implementation, uses special download files with
-  LPC prefix and encoding of the target firmware code
-- Tested by Uwe Bonnes
 
-Adding the lsusb output and a download log of your device here helps
-us to avoid regressions for hardware we cannot test while working on
-the code. To extract the lsusb output use this command:
-sudo lsusb -v -d $USBID > $DEVICE.lsusb
-Prepare a description snippet as above, and send it to us. A log
-(copy-paste of the command window) of a firmware download is also
-nice, please use the double verbose option -v -v and include the
-command line in the log file.
- 
+Adding a log of your device here helps us to avoid regressions for
+hardware we cannot test while working on the code. To prepare a log
+please run 'sudo lsusb -v -d $USBIDS > $DEVICE.log', prepare a description
+snippet as above, and send it to us.

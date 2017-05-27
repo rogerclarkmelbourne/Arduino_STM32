@@ -1,11 +1,8 @@
-/*
- * DfuSe specific functions
- * 
- * This implements the ST Microsystems DFU extensions (DfuSe)
+/* This implements the ST Microsystems DFU extensions (DfuSe)
  * as per the DfuSe 1.1a specification (ST documents AN3156, AN2606)
  * The DfuSe file format is described in ST document UM0391.
  *
- * Copyright 2010-2014 Tormod Volden <debian.tormod@gmail.com>
+ * (C) 2010-2012 Tormod Volden <debian.tormod@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +34,7 @@
 #define DFU_TIMEOUT 5000
 
 extern int verbose;
-static unsigned int last_erased_page = 1; /* non-aligned value, won't match */
+static unsigned int last_erased = 0;
 static struct memsegment *mem_layout;
 static unsigned int dfuse_address = 0;
 static unsigned int dfuse_length = 0;
@@ -67,7 +64,9 @@ void dfuse_parse_options(const char *options)
 		if (end == endword) {
 			dfuse_address = number;
 		} else {
-			errx(EX_IOERR, "Invalid dfuse address: %s", options);
+			fprintf(stderr, "Error: Invalid dfuse address: "
+				"%s\n", options);
+			exit(2);
 		}
 		options = endword;
 	}
@@ -107,7 +106,9 @@ void dfuse_parse_options(const char *options)
 		if (end == endword) {
 			dfuse_length = number;
 		} else {
-			errx(EX_IOERR, "Invalid dfuse modifier: %s", options);
+			fprintf(stderr, "Error: Invalid dfuse modifier: "
+				"%s\n", options);
+			exit(2);
 		}
 		options = endword;
 	}
@@ -130,7 +131,7 @@ int dfuse_upload(struct dfu_if *dif, const unsigned short length,
 		 /* wLength       */	 length,
 					 DFU_TIMEOUT);
 	if (status < 0) {
-		errx(EX_IOERR, "%s: libusb_control_msg returned %d",
+		fprintf(stderr, "%s: libusb_control_msg returned %d\n",
 			__FUNCTION__, status);
 	}
 	return status;
@@ -153,24 +154,20 @@ int dfuse_download(struct dfu_if *dif, const unsigned short length,
 		 /* wLength       */	 length,
 					 DFU_TIMEOUT);
 	if (status < 0) {
-		errx(EX_IOERR, "%s: libusb_control_transfer returned %d",
+		fprintf(stderr, "%s: libusb_control_transfer returned %d\n",
 			__FUNCTION__, status);
 	}
 	return status;
 }
 
 /* DfuSe only commands */
-/* Leaves the device in dfuDNLOAD-IDLE state */
 int dfuse_special_command(struct dfu_if *dif, unsigned int address,
 			  enum dfuse_command command)
 {
-	const char* dfuse_command_name[] = { "SET_ADDRESS" , "ERASE_PAGE",
-					     "MASS_ERASE", "READ_UNPROTECT"};
 	unsigned char buf[5];
 	int length;
 	int ret;
 	struct dfu_status dst;
-	int firstpoll = 1;
 
 	if (command == ERASE_PAGE) {
 		struct memsegment *segment;
@@ -178,8 +175,10 @@ int dfuse_special_command(struct dfu_if *dif, unsigned int address,
 
 		segment = find_segment(mem_layout, address);
 		if (!segment || !(segment->memtype & DFUSE_ERASABLE)) {
-			errx(EX_IOERR, "Page at 0x%08x can not be erased",
+			fprintf(stderr,
+				"Error: Page at 0x%08x can not be erased\n",
 				address);
+			exit(1);
 		}
 		page_size = segment->pagesize;
 		if (verbose > 1)
@@ -188,7 +187,7 @@ int dfuse_special_command(struct dfu_if *dif, unsigned int address,
 			       address & ~(page_size - 1));
 		buf[0] = 0x41;	/* Erase command */
 		length = 5;
-		last_erased_page = address & ~(page_size - 1);
+		last_erased = address;
 	} else if (command == SET_ADDRESS) {
 		if (verbose > 2)
 			printf("  Setting address pointer to 0x%08x\n",
@@ -202,7 +201,9 @@ int dfuse_special_command(struct dfu_if *dif, unsigned int address,
 		buf[0] = 0x92;
 		length = 1;
 	} else {
-		errx(EX_IOERR, "Non-supported special command %d", command);
+		fprintf(stderr, "Error: Non-supported special command %d\n",
+			command);
+		exit(1);
 	}
 	buf[1] = address & 0xff;
 	buf[2] = (address >> 8) & 0xff;
@@ -211,37 +212,145 @@ int dfuse_special_command(struct dfu_if *dif, unsigned int address,
 
 	ret = dfuse_download(dif, length, buf, 0);
 	if (ret < 0) {
-		errx(EX_IOERR, "Error during special command \"%s\" download",
-			dfuse_command_name[command]);
+		fprintf(stderr, "Error during special command download\n");
+		exit(1);
 	}
-	do {
-		ret = dfu_get_status(dif, &dst);
-		if (ret < 0) {
-			errx(EX_IOERR, "Error during special command \"%s\" get_status",
-			     dfuse_command_name[command]);
-		}
-		if (firstpoll) {
-			firstpoll = 0;
-			if (dst.bState != DFU_STATE_dfuDNBUSY) {
-				printf("state(%u) = %s, status(%u) = %s\n", dst.bState,
-				       dfu_state_to_string(dst.bState), dst.bStatus,
-				       dfu_status_to_string(dst.bStatus));
-				errx(EX_IOERR, "Wrong state after command \"%s\" download",
-				     dfuse_command_name[command]);
-			}
-		}
-		/* wait while command is executed */
-		if (verbose)
-			printf("   Poll timeout %i ms\n", dst.bwPollTimeout);
-		milli_sleep(dst.bwPollTimeout);
-		if (command == READ_UNPROTECT)
-			return ret;
-	} while (dst.bState == DFU_STATE_dfuDNBUSY);
+	ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
+	if (ret < 0) {
+		fprintf(stderr, "Error during special command get_status\n");
+		exit(1);
+	}
+	if (dst.bState != DFU_STATE_dfuDNBUSY) {
+		fprintf(stderr, "Error: Wrong state after command download\n");
+		exit(1);
+	}
+	/* wait while command is executed */
+	if (verbose)
+		printf("   Poll timeout %i ms\n", dst.bwPollTimeout);
+	milli_sleep(dst.bwPollTimeout);
 
-	if (dst.bStatus != DFU_STATUS_OK) {
-		errx(EX_IOERR, "%s not correctly executed",
-			dfuse_command_name[command]);
+	if (command == READ_UNPROTECT)
+		return ret;
+
+	ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
+	if (ret < 0) {
+		fprintf(stderr, "Error during second get_status\n");
+		printf("state(%u) = %s, status(%u) = %s\n", dst.bState,
+		       dfu_state_to_string(dst.bState), dst.bStatus,
+		       dfu_status_to_string(dst.bStatus));
+		exit(1);
 	}
+	if (dst.bStatus != DFU_STATUS_OK) {
+		fprintf(stderr, "Error: Command not correctly executed\n");
+		exit(1);
+	}
+	milli_sleep(dst.bwPollTimeout);
+
+	ret = dfu_abort(dif->dev_handle, dif->interface);
+	if (ret < 0) {
+		fprintf(stderr, "Error sending dfu abort request\n");
+		exit(1);
+	}
+	ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
+	if (ret < 0) {
+		fprintf(stderr, "Error during abort get_status\n");
+		exit(1);
+	}
+	if (dst.bState != DFU_STATE_dfuIDLE) {
+		fprintf(stderr, "Error: Failed to enter idle state on abort\n");
+		exit(1);
+	}
+	milli_sleep(dst.bwPollTimeout);
+	return ret;
+}
+
+int dfuse_do_upload(struct dfu_if *dif, int xfer_size, struct dfu_file file,
+		    const char *dfuse_options)
+{
+	int total_bytes = 0;
+	int upload_limit = 0;
+	unsigned char *buf;
+	int transaction;
+	int ret;
+
+	buf = malloc(xfer_size);
+	if (!buf)
+		return -ENOMEM;
+
+	if (dfuse_options)
+		dfuse_parse_options(dfuse_options);
+	if (dfuse_length)
+		upload_limit = dfuse_length;
+	if (dfuse_address) {
+		struct memsegment *segment;
+
+		mem_layout = parse_memory_layout((char *)dif->alt_name);
+		if (!mem_layout) {
+			fprintf(stderr,
+				"Error: Failed to parse memory layout\n");
+			exit(1);
+		}
+		segment = find_segment(mem_layout, dfuse_address);
+		if (!dfuse_force &&
+		    (!segment || !(segment->memtype & DFUSE_READABLE))) {
+			fprintf(stderr,
+				"Error: Page at 0x%08x is not readable\n",
+				dfuse_address);
+			exit(1);
+		}
+		if (!upload_limit) {
+			upload_limit = segment->end - dfuse_address + 1;
+			printf("Limiting upload to end of memory segment, "
+			       "%i bytes\n", upload_limit);
+		}
+		dfuse_special_command(dif, dfuse_address, SET_ADDRESS);
+	} else {
+		/* Boot loader decides the start address, unknown to us */
+		/* Use a short length to lower risk of running out of bounds */
+		if (!upload_limit)
+			upload_limit = 0x4000;
+		printf("Limiting default upload to %i bytes\n", upload_limit);
+	}
+
+	printf("bytes_per_hash=%u\n", xfer_size);
+	printf("Starting upload: [");
+	fflush(stdout);
+
+	transaction = 2;
+	while (1) {
+		int rc, write_rc;
+
+		/* last chunk can be smaller than original xfer_size */
+		if (upload_limit - total_bytes < xfer_size)
+			xfer_size = upload_limit - total_bytes;
+		rc = dfuse_upload(dif, xfer_size, buf, transaction++);
+		if (rc < 0) {
+			ret = rc;
+			goto out_free;
+		}
+		write_rc = fwrite(buf, 1, rc, file.filep);
+		if (write_rc < rc) {
+			fprintf(stderr, "Short file write: %s\n",
+				strerror(errno));
+			ret = -1;
+			goto out_free;
+		}
+		total_bytes += rc;
+		if (rc < xfer_size || total_bytes >= upload_limit) {
+			/* last block, return successfully */
+			ret = total_bytes;
+			break;
+		}
+		putchar('#');
+		fflush(stdout);
+	}
+
+	printf("] finished!\n");
+	fflush(stdout);
+
+ out_free:
+	free(buf);
+
 	return ret;
 }
 
@@ -254,15 +363,15 @@ int dfuse_dnload_chunk(struct dfu_if *dif, unsigned char *data, int size,
 
 	ret = dfuse_download(dif, size, size ? data : NULL, transaction);
 	if (ret < 0) {
-		errx(EX_IOERR, "Error during download");
+		fprintf(stderr, "Error during download\n");
 		return ret;
 	}
 	bytes_sent = ret;
 
 	do {
-		ret = dfu_get_status(dif, &dst);
+		ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
 		if (ret < 0) {
-			errx(EX_IOERR, "Error during download get_status");
+			fprintf(stderr, "Error during download get_status\n");
 			return ret;
 		}
 		milli_sleep(dst.bwPollTimeout);
@@ -283,92 +392,6 @@ int dfuse_dnload_chunk(struct dfu_if *dif, unsigned char *data, int size,
 	return bytes_sent;
 }
 
-int dfuse_do_upload(struct dfu_if *dif, int xfer_size, int fd,
-		    const char *dfuse_options)
-{
-	int total_bytes = 0;
-	int upload_limit = 0;
-	unsigned char *buf;
-	int transaction;
-	int ret;
-
-	buf = dfu_malloc(xfer_size);
-
-	if (dfuse_options)
-		dfuse_parse_options(dfuse_options);
-	if (dfuse_length)
-		upload_limit = dfuse_length;
-	if (dfuse_address) {
-		struct memsegment *segment;
-
-		mem_layout = parse_memory_layout((char *)dif->alt_name);
-		if (!mem_layout)
-			errx(EX_IOERR, "Failed to parse memory layout");
-
-		segment = find_segment(mem_layout, dfuse_address);
-		if (!dfuse_force &&
-		    (!segment || !(segment->memtype & DFUSE_READABLE)))
-			errx(EX_IOERR, "Page at 0x%08x is not readable",
-				dfuse_address);
-
-		if (!upload_limit) {
-			upload_limit = segment->end - dfuse_address + 1;
-			printf("Limiting upload to end of memory segment, "
-			       "%i bytes\n", upload_limit);
-		}
-		dfuse_special_command(dif, dfuse_address, SET_ADDRESS);
-		dfu_abort_to_idle(dif);
-	} else {
-		/* Boot loader decides the start address, unknown to us */
-		/* Use a short length to lower risk of running out of bounds */
-		if (!upload_limit)
-			upload_limit = 0x4000;
-		printf("Limiting default upload to %i bytes\n", upload_limit);
-	}
-
-	dfu_progress_bar("Upload", 0, 1);
-
-	transaction = 2;
-	while (1) {
-		int rc;
-
-		/* last chunk can be smaller than original xfer_size */
-		if (upload_limit - total_bytes < xfer_size)
-			xfer_size = upload_limit - total_bytes;
-		rc = dfuse_upload(dif, xfer_size, buf, transaction++);
-		if (rc < 0) {
-			ret = rc;
-			goto out_free;
-		}
-
-		dfu_file_write_crc(fd, 0, buf, rc);
-		total_bytes += rc;
-
-		if (total_bytes < 0)
-			errx(EX_SOFTWARE, "Received too many bytes");
-
-		if (rc < xfer_size || total_bytes >= upload_limit) {
-			/* last block, return successfully */
-			ret = total_bytes;
-			break;
-		}
-		dfu_progress_bar("Upload", total_bytes, upload_limit);
-	}
-
-	dfu_progress_bar("Upload", total_bytes, total_bytes);
-
-	dfu_abort_to_idle(dif);
-	if (dfuse_leave) {
-		dfuse_special_command(dif, dfuse_address, SET_ADDRESS);
-		dfuse_dnload_chunk(dif, NULL, 0, 2); /* Zero-size */
-	}
-
- out_free:
-	free(buf);
-
-	return ret;
-}
-
 /* Writes an element of any size to the device, taking care of page erases */
 /* returns 0 on success, otherwise -EINVAL */
 int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
@@ -383,13 +406,12 @@ int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
 	segment =
 	    find_segment(mem_layout, dwElementAddress + dwElementSize - 1);
 	if (!segment || !(segment->memtype & DFUSE_WRITEABLE)) {
-		errx(EX_IOERR, "Last page at 0x%08x is not writeable",
+		fprintf(stderr, "Error: Last page at 0x%08x is not writeable\n",
 			dwElementAddress + dwElementSize - 1);
+		exit(1);
 	}
 
-	dfu_progress_bar("Download", 0, 1);
-
-	for (p = 0; p < (int)dwElementSize; p += xfer_size) {
+	for (p = 0; p < dwElementSize; p += xfer_size) {
 		int page_size;
 		unsigned int erase_address;
 		unsigned int address = dwElementAddress + p;
@@ -397,13 +419,15 @@ int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
 
 		segment = find_segment(mem_layout, address);
 		if (!segment || !(segment->memtype & DFUSE_WRITEABLE)) {
-			errx(EX_IOERR, "Page at 0x%08x is not writeable",
+			fprintf(stderr,
+				"Error: Page at 0x%08x is not writeable\n",
 				address);
+			exit(1);
 		}
 		page_size = segment->pagesize;
 
 		/* check if this is the last chunk */
-		if (p + chunk_size > (int)dwElementSize)
+		if (p + chunk_size > dwElementSize)
 			chunk_size = dwElementSize - p;
 
 		/* Erase only for flash memory downloads */
@@ -413,13 +437,13 @@ int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
 			     erase_address < address + chunk_size;
 			     erase_address += page_size)
 				if ((erase_address & ~(page_size - 1)) !=
-				    last_erased_page)
+				    (last_erased & ~(page_size - 1)))
 					dfuse_special_command(dif,
 							      erase_address,
 							      ERASE_PAGE);
 
 			if (((address + chunk_size - 1) & ~(page_size - 1)) !=
-			    last_erased_page) {
+			    (last_erased & ~(page_size - 1))) {
 				if (verbose > 2)
 					printf(" Chunk extends into next page,"
 					       " erase it as well\n");
@@ -435,7 +459,8 @@ int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
 			       p, address, address + chunk_size - 1,
 			       chunk_size);
 		} else {
-			dfu_progress_bar("Download", p, dwElementSize);
+			printf(".");
+			fflush(stdout);
 		}
 		
 		dfuse_special_command(dif, address, SET_ADDRESS);
@@ -443,66 +468,68 @@ int dfuse_dnload_element(struct dfu_if *dif, unsigned int dwElementAddress,
 		/* transaction = 2 for no address offset */
 		ret = dfuse_dnload_chunk(dif, data + p, chunk_size, 2);
 		if (ret != chunk_size) {
-			errx(EX_IOERR, "Failed to write whole chunk: "
-				"%i of %i bytes", ret, chunk_size);
+			fprintf(stderr, "Failed to write whole chunk: "
+				"%i of %i bytes\n", ret, chunk_size);
 			return -EINVAL;
 		}
 	}
 	if (!verbose)
-		dfu_progress_bar("Download", dwElementSize, dwElementSize);
+		printf("\n"); /* terminate line of dots */
 	return 0;
-}
-
-static void
-dfuse_memcpy(unsigned char *dst, unsigned char **src, int *rem, int size)
-{
-	if (size > *rem) {
-		errx(EX_IOERR, "Corrupt DfuSe file: "
-		    "Cannot read %d bytes from %d bytes", size, *rem);
-	}
-	if (dst != NULL)
-		memcpy(dst, *src, size);
-	(*src) += size;
-	(*rem) -= size;
 }
 
 /* Download raw binary file to DfuSe device */
 int dfuse_do_bin_dnload(struct dfu_if *dif, int xfer_size,
-			struct dfu_file *file, unsigned int start_address)
+			struct dfu_file file, unsigned int start_address)
 {
 	unsigned int dwElementAddress;
 	unsigned int dwElementSize;
 	unsigned char *data;
+	int read_bytes = 0;
 	int ret;
 
 	dwElementAddress = start_address;
-	dwElementSize = file->size.total -
-	    file->size.suffix - file->size.prefix;
-
+	dwElementSize = file.size;
 	printf("Downloading to address = 0x%08x, size = %i\n",
 	       dwElementAddress, dwElementSize);
 
-	data = file->firmware + file->size.prefix;
+	data = malloc(dwElementSize);
+	if (!data) {
+		fprintf(stderr, "Could not allocate data buffer\n");
+		return -ENOMEM;
+	}
+	ret = fread(data, 1, dwElementSize, file.filep);
+	read_bytes += ret;
+	if (ret < dwElementSize) {
+		fprintf(stderr, "Could not read data\n");
+		ret = -EINVAL;
+		goto out_free;
+	}
 
 	ret = dfuse_dnload_element(dif, dwElementAddress, dwElementSize, data,
 				   xfer_size);
 	if (ret != 0)
 		goto out_free;
 
+	if (read_bytes != file.size) {
+		fprintf(stderr, "Warning: Read %i bytes, file size %li\n",
+			read_bytes, file.size);
+	}
 	printf("File downloaded successfully\n");
-	ret = dwElementSize;
+	ret = read_bytes;
 
  out_free:
+	free(data);
 	return ret;
 }
 
 /* Parse a DfuSe file and download contents to device */
 int dfuse_do_dfuse_dnload(struct dfu_if *dif, int xfer_size,
-			  struct dfu_file *file)
+			  struct dfu_file file)
 {
-	uint8_t dfuprefix[11];
-	uint8_t targetprefix[274];
-	uint8_t elementheader[8];
+	char dfuprefix[11];
+	char targetprefix[274];
+	char elementheader[8];
 	int image;
 	int element;
 	int bTargets;
@@ -510,28 +537,29 @@ int dfuse_do_dfuse_dnload(struct dfu_if *dif, int xfer_size,
 	int dwNbElements;
 	unsigned int dwElementAddress;
 	unsigned int dwElementSize;
-	uint8_t *data;
+	unsigned char *data;
+	int read_bytes = 0;
 	int ret;
-	int rem;
-	int bFirstAddressSaved = 0;
 
-	rem = file->size.total - file->size.prefix - file->size.suffix;
-	data = file->firmware + file->size.prefix;
+	/* Must be larger than a minimal DfuSe header and suffix */
+	if (file.size <= sizeof(dfuprefix) + file.suffixlen +
+	    sizeof(targetprefix) + sizeof(elementheader)) {
+		fprintf(stderr, "File too small for a DfuSe file\n");
+		return -EINVAL;
+	}
 
-        /* Must be larger than a minimal DfuSe header and suffix */
-	if (rem < (int)(sizeof(dfuprefix) +
-	    sizeof(targetprefix) + sizeof(elementheader))) {
-		errx(EX_SOFTWARE, "File too small for a DfuSe file");
-        }
-
-	dfuse_memcpy(dfuprefix, &data, &rem, sizeof(dfuprefix));
-
-	if (strncmp((char *)dfuprefix, "DfuSe", 5)) {
-		errx(EX_IOERR, "No valid DfuSe signature");
+	ret = fread(dfuprefix, 1, sizeof(dfuprefix), file.filep);
+	if (ret < (int)sizeof(dfuprefix)) {
+		fprintf(stderr, "Could not read DfuSe header\n");
+		return -EIO;
+	}
+	read_bytes = ret;
+	if (strncmp(dfuprefix, "DfuSe", 5)) {
+		fprintf(stderr, "No valid DfuSe signature\n");
 		return -EINVAL;
 	}
 	if (dfuprefix[5] != 0x01) {
-		errx(EX_IOERR, "DFU format revision %i not supported",
+		fprintf(stderr, "DFU format revision %i not supported\n",
 			dfuprefix[5]);
 		return -EINVAL;
 	}
@@ -540,9 +568,14 @@ int dfuse_do_dfuse_dnload(struct dfu_if *dif, int xfer_size,
 
 	for (image = 1; image <= bTargets; image++) {
 		printf("parsing DFU image %i\n", image);
-		dfuse_memcpy(targetprefix, &data, &rem, sizeof(targetprefix));
-		if (strncmp((char *)targetprefix, "Target", 6)) {
-			errx(EX_IOERR, "No valid target signature");
+		ret = fread(targetprefix, 1, sizeof(targetprefix), file.filep);
+		read_bytes += ret;
+		if (ret < sizeof(targetprefix)) {
+			fprintf(stderr, "Could not read DFU header\n");
+			return -EIO;
+		}
+		if (strncmp(targetprefix, "Target", 6)) {
+			fprintf(stderr, "No valid target signature\n");
 			return -EINVAL;
 		}
 		bAlternateSetting = targetprefix[6];
@@ -558,7 +591,14 @@ int dfuse_do_dfuse_dnload(struct dfu_if *dif, int xfer_size,
 			       " to download this image!\n");
 		for (element = 1; element <= dwNbElements; element++) {
 			printf("parsing element %i, ", element);
-			dfuse_memcpy(elementheader, &data, &rem, sizeof(elementheader));
+			ret = fread(elementheader, 1, sizeof(elementheader),
+				    file.filep);
+			read_bytes += ret;
+			if (ret < sizeof(elementheader)) {
+				fprintf(stderr,
+					"Could not read element header\n");
+				return -EINVAL;
+			}
 			dwElementAddress =
 			    quad2uint((unsigned char *)elementheader);
 			dwElementSize =
@@ -566,38 +606,64 @@ int dfuse_do_dfuse_dnload(struct dfu_if *dif, int xfer_size,
 			printf("address = 0x%08x, ", dwElementAddress);
 			printf("size = %i\n", dwElementSize);
 
-			if (!bFirstAddressSaved) {
-				bFirstAddressSaved = 1;
-				dfuse_address = dwElementAddress;
-			}
 			/* sanity check */
-			if ((int)dwElementSize > rem)
-				errx(EX_SOFTWARE, "File too small for element size");
-
-			if (bAlternateSetting == dif->altsetting) {
-				ret = dfuse_dnload_element(dif, dwElementAddress,
-				    dwElementSize, data, xfer_size);
-			} else {
-				ret = 0;
+			if (read_bytes + dwElementSize + file.suffixlen >
+			    file.size) {
+				fprintf(stderr,
+					"File too small for element size\n");
+				return -EINVAL;
+			}
+			data = malloc(dwElementSize);
+			if (!data) {
+				fprintf(stderr,
+					"Could not allocate data buffer\n");
+				return -ENOMEM;
+			}
+			ret = fread(data, 1, dwElementSize, file.filep);
+			read_bytes += ret;
+			if (ret < dwElementSize) {
+				fprintf(stderr, "Could not read data\n");
+				free(data);
+				return -EIO;
 			}
 
-			/* advance read pointer */
-			dfuse_memcpy(NULL, &data, &rem, dwElementSize);
-
+			if (bAlternateSetting == dif->altsetting)
+				ret =
+				    dfuse_dnload_element(dif, dwElementAddress,
+							 dwElementSize, data,
+							 xfer_size);
+			else
+				ret = 0;
+			free(data);
 			if (ret != 0)
 				return ret;
 		}
 	}
 
-	if (rem != 0)
-		warnx("%d bytes leftover", rem);
+	/* Just for book-keeping, read through the whole file */
+	data = malloc(file.suffixlen);
+	if (!data) {
+		fprintf(stderr, "Could not allocate data buffer for suffix\n");
+		return -ENOMEM;
+	}
+	ret = fread(data, 1, file.suffixlen, file.filep);
+	free(data);
+	if (ret < file.suffixlen) {
+		fprintf(stderr, "Could not read through suffix\n");
+		return -EIO;
+	}
+	read_bytes += ret;
+
+	if (read_bytes != file.size) {
+		fprintf(stderr, "Warning: Read %i bytes, file size %li\n",
+			read_bytes, file.size);
+	}
 
 	printf("done parsing DfuSe file\n");
-
-	return 0;
+	return read_bytes;
 }
 
-int dfuse_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file,
+int dfuse_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file file,
 		    const char *dfuse_options)
 {
 	int ret;
@@ -606,13 +672,15 @@ int dfuse_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file,
 		dfuse_parse_options(dfuse_options);
 	mem_layout = parse_memory_layout((char *)dif->alt_name);
 	if (!mem_layout) {
-		errx(EX_IOERR, "Failed to parse memory layout");
+		fprintf(stderr, "Error: Failed to parse memory layout\n");
+		exit(1);
 	}
 	if (dfuse_unprotect) {
 		if (!dfuse_force) {
-			errx(EX_IOERR, "The read unprotect command "
-				"will erase the flash memory"
+			fprintf(stderr, "Error: The read unprotect command "
+				"will erase the flash memory\n"
 				"and can only be used with force\n");
+			exit(1);
 		}
 		dfuse_special_command(dif, 0, READ_UNPROTECT);
 		printf("Device disconnects, erases flash and resets now\n");
@@ -620,33 +688,43 @@ int dfuse_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file,
 	}
 	if (dfuse_mass_erase) {
 		if (!dfuse_force) {
-			errx(EX_IOERR, "The mass erase command "
-				"can only be used with force");
+			fprintf(stderr, "Error: The mass erase command "
+				"can only be used with force\n");
+			exit(1);
 		}
 		printf("Performing mass erase, this can take a moment\n");
 		dfuse_special_command(dif, 0, MASS_ERASE);
 	}
 	if (dfuse_address) {
-		if (file->bcdDFU == 0x11a) {
-			errx(EX_IOERR, "This is a DfuSe file, not "
-				"meant for raw download");
+		if (file.bcdDFU == 0x11a) {
+			fprintf(stderr, "Error: This is a DfuSe file, not "
+				"meant for raw download\n");
+			return -EINVAL;
 		}
 		ret = dfuse_do_bin_dnload(dif, xfer_size, file, dfuse_address);
 	} else {
-		if (file->bcdDFU != 0x11a) {
-			warnx("Only DfuSe file version 1.1a is supported");
-			errx(EX_IOERR, "(for raw binary download, use the "
-			     "--dfuse-address option)");
+		if (file.bcdDFU != 0x11a) {
+			fprintf(stderr, "Error: Only DfuSe file version 1.1a "
+				"is supported\n");
+			fprintf(stderr, "(for raw binary download, use the "
+				"--dfuse-address option)\n");
+			return -EINVAL;
 		}
 		ret = dfuse_do_dfuse_dnload(dif, xfer_size, file);
 	}
 	free_segment_list(mem_layout);
 
-	dfu_abort_to_idle(dif);
-
 	if (dfuse_leave) {
-		dfuse_special_command(dif, dfuse_address, SET_ADDRESS);
+		int ret2;
+		struct dfu_status dst;
+
 		dfuse_dnload_chunk(dif, NULL, 0, 2); /* Zero-size */
+		ret2 = dfu_get_status(dif->dev_handle, dif->interface, &dst);
+		if (ret2 < 0)
+			fprintf(stderr, "Error during download get_status\n");
+		if (verbose)
+			printf("bState = %i and bStatus = %i\n",
+			       dst.bState, dst.bStatus);
 	}
 	return ret;
 }

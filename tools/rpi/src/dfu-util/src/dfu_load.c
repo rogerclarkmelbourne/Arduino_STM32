@@ -1,15 +1,10 @@
-/*
- * DFU transfer routines
- *
- * This is supposed to be a general DFU implementation, as specified in the
- * USB DFU 1.0 and 1.1 specification.
+/* This is supposed to be a "real" DFU implementation, just as specified in the
+ * USB DFU 1.0 Spec.  Not overloaded like the Atmel one...
  *
  * The code was originally intended to interface with a USB device running the
  * "sam7dfu" firmware (see http://www.openpcd.org/) on an AT91SAM7 processor.
  *
- * Copyright 2007-2008 Harald Welte <laforge@gnumonks.org>
- * Copyright 2013 Hans Petter Selasky <hps@bitfrost.no>
- * Copyright 2014 Tormod Volden <debian.tormod@gmail.com>
+ * (C) 2007-2008 by Harald Welte <laforge@gnumonks.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +25,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-
 #include <libusb.h>
 
 #include "portable.h"
@@ -40,96 +34,108 @@
 #include "dfu_load.h"
 #include "quirks.h"
 
-int dfuload_do_upload(struct dfu_if *dif, int xfer_size,
-    int expected_size, int fd)
+extern int verbose;
+
+int dfuload_do_upload(struct dfu_if *dif, int xfer_size, struct dfu_file file)
 {
 	int total_bytes = 0;
-	unsigned short transaction = 0;
 	unsigned char *buf;
 	int ret;
 
-	buf = dfu_malloc(xfer_size);
+	buf = malloc(xfer_size);
+	if (!buf)
+		return -ENOMEM;
 
+	printf("bytes_per_hash=%u\n", xfer_size);
 	printf("Copying data from DFU device to PC\n");
-	dfu_progress_bar("Upload", 0, 1);
+	printf("Starting upload: [");
+	fflush(stdout);
 
 	while (1) {
-		int rc;
-		rc = dfu_upload(dif->dev_handle, dif->interface,
-		    xfer_size, transaction++, buf);
+		int rc, write_rc;
+		rc = dfu_upload(dif->dev_handle, dif->interface, xfer_size, buf);
 		if (rc < 0) {
-			warnx("Error during upload");
 			ret = rc;
 			goto out_free;
 		}
-
-		dfu_file_write_crc(fd, 0, buf, rc);
+		write_rc = fwrite(buf, 1, rc, file.filep);
+		if (write_rc < rc) {
+			fprintf(stderr, "Short file write: %s\n",
+				strerror(errno));
+			ret = total_bytes;
+			goto out_free;
+		}
 		total_bytes += rc;
-
-		if (total_bytes < 0)
-			errx(EX_SOFTWARE, "Received too many bytes (wraparound)");
-
 		if (rc < xfer_size) {
 			/* last block, return */
 			ret = total_bytes;
 			break;
 		}
-		dfu_progress_bar("Upload", total_bytes, expected_size);
+		putchar('#');
+		fflush(stdout);
 	}
 	ret = 0;
 
+	printf("] finished!\n");
+	fflush(stdout);
+
 out_free:
-	dfu_progress_bar("Upload", total_bytes, total_bytes);
-	if (total_bytes == 0)
-		printf("\nFailed.\n");
 	free(buf);
 	if (verbose)
 		printf("Received a total of %i bytes\n", total_bytes);
-	if (expected_size != 0 && total_bytes != expected_size)
-		errx(EX_SOFTWARE, "Unexpected number of bytes uploaded from device");
+
 	return ret;
 }
 
-int dfuload_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file)
+#define PROGRESS_BAR_WIDTH 50
+
+int dfuload_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file file)
 {
-	int bytes_sent;
-	int expected_size;
+	int bytes_sent = 0;
+	unsigned int bytes_per_hash, hashes = 0;
 	unsigned char *buf;
-	unsigned short transaction = 0;
 	struct dfu_status dst;
 	int ret;
 
+	buf = malloc(xfer_size);
+	if (!buf)
+		return -ENOMEM;
+
+	bytes_per_hash = (file.size - file.suffixlen) / PROGRESS_BAR_WIDTH;
+	if (bytes_per_hash == 0)
+		bytes_per_hash = 1;
+	printf("bytes_per_hash=%u\n", bytes_per_hash);
+
 	printf("Copying data from PC to DFU device\n");
-
-	buf = file->firmware;
-	expected_size = file->size.total - file->size.suffix;
-	bytes_sent = 0;
-
-	dfu_progress_bar("Download", 0, 1);
-	while (bytes_sent < expected_size) {
+	printf("Starting download: [");
+	fflush(stdout);
+	while (bytes_sent < file.size - file.suffixlen) {
+		int hashes_todo;
 		int bytes_left;
 		int chunk_size;
 
-		bytes_left = expected_size - bytes_sent;
+		bytes_left = file.size - file.suffixlen - bytes_sent;
 		if (bytes_left < xfer_size)
 			chunk_size = bytes_left;
 		else
 			chunk_size = xfer_size;
-
-		ret = dfu_download(dif->dev_handle, dif->interface,
-		    chunk_size, transaction++, chunk_size ? buf : NULL);
+		ret = fread(buf, 1, chunk_size, file.filep);
 		if (ret < 0) {
-			warnx("Error during download");
-			goto out;
+			perror(file.name);
+			goto out_free;
 		}
-		bytes_sent += chunk_size;
-		buf += chunk_size;
+		ret = dfu_download(dif->dev_handle, dif->interface, ret, ret ? buf : NULL);
+		if (ret < 0) {
+			fprintf(stderr, "Error during download\n");
+			goto out_free;
+		}
+		bytes_sent += ret;
 
 		do {
-			ret = dfu_get_status(dif, &dst);
+			ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
 			if (ret < 0) {
-				errx(EX_IOERR, "Error during download get_status");
-				goto out;
+				fprintf(stderr, "Error during download get_status\n");
+				goto out_free;
 			}
 
 			if (dst.bState == DFU_STATE_dfuDNLOAD_IDLE ||
@@ -137,7 +143,10 @@ int dfuload_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file)
 				break;
 
 			/* Wait while device executes flashing */
-			milli_sleep(dst.bwPollTimeout);
+			if (quirks & QUIRK_POLLTIMEOUT)
+				milli_sleep(DEFAULT_POLLTIMEOUT);
+			else
+				milli_sleep(dst.bwPollTimeout);
 
 		} while (1);
 		if (dst.bStatus != DFU_STATUS_OK) {
@@ -146,36 +155,40 @@ int dfuload_do_dnload(struct dfu_if *dif, int xfer_size, struct dfu_file *file)
 				dfu_state_to_string(dst.bState), dst.bStatus,
 				dfu_status_to_string(dst.bStatus));
 			ret = -1;
-			goto out;
+			goto out_free;
 		}
-		dfu_progress_bar("Download", bytes_sent, bytes_sent + bytes_left);
+
+		hashes_todo = (bytes_sent / bytes_per_hash) - hashes;
+		hashes += hashes_todo;
+		while (hashes_todo--)
+			putchar('#');
+		fflush(stdout);
 	}
 
 	/* send one zero sized download request to signalize end */
-	ret = dfu_download(dif->dev_handle, dif->interface,
-	    0, transaction, NULL);
+	ret = dfu_download(dif->dev_handle, dif->interface, 0, NULL);
 	if (ret < 0) {
-		errx(EX_IOERR, "Error sending completion packet");
-		goto out;
+		fprintf(stderr, "Error sending completion packet\n");
+		goto out_free;
 	}
 
-	dfu_progress_bar("Download", bytes_sent, bytes_sent);
-
+	printf("] finished!\n");
+	fflush(stdout);
 	if (verbose)
 		printf("Sent a total of %i bytes\n", bytes_sent);
 
 get_status:
 	/* Transition to MANIFEST_SYNC state */
-	ret = dfu_get_status(dif, &dst);
+	ret = dfu_get_status(dif->dev_handle, dif->interface, &dst);
 	if (ret < 0) {
-		warnx("unable to read DFU status after completion");
-		goto out;
+		fprintf(stderr, "unable to read DFU status\n");
+		goto out_free;
 	}
 	printf("state(%u) = %s, status(%u) = %s\n", dst.bState,
 		dfu_state_to_string(dst.bState), dst.bStatus,
 		dfu_status_to_string(dst.bStatus));
-
-	milli_sleep(dst.bwPollTimeout);
+	if (!(quirks & QUIRK_POLLTIMEOUT))
+		milli_sleep(dst.bwPollTimeout);
 
 	/* FIXME: deal correctly with ManifestationTolerant=0 / WillDetach bits */
 	switch (dst.bState) {
@@ -191,6 +204,15 @@ get_status:
 	}
 	printf("Done!\n");
 
-out:
+out_free:
+	free(buf);
+
 	return bytes_sent;
 }
+
+void dfuload_init()
+{
+    dfu_debug( debug );
+    dfu_init( 5000 );
+}
+

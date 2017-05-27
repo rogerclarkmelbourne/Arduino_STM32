@@ -3,41 +3,30 @@
 dfu-util \- Device firmware update (DFU) USB programmer
 .SH SYNOPSIS
 .\" Listing devices
-.HP
 .B dfu-util
 .B \-l 
 .RB [\| \-v \|]
 .RB [\| \-d
-.IR vid:pid [\|, vid:pid \|]\|]
+.IR vid:pid \|]
 .RB [\| \-p
 .IR path \|]
-.RB [\| \-c
-.IR configuration \|]
 .RB [\| \-i
 .IR interface \|]
 .RB [\| \-a
 .IR alt-intf \|]
-.RB [\| \-S
-.IR serial [\|, serial \|]\|]
+.br
 .\" Download to or upload from device
-.HP
 .B dfu-util
 .RB [\| \-v \|]
 .RB [\| \-d
-.IR vid:pid [\|, vid:pid \|]\|]
+.IR pid:vid \|]
 .RB [\| \-p
 .IR path \|]
-.RB [\| \-c
-.IR configuration \|]
 .RB [\| \-i
 .IR interface \|]
 .RB [\| \-a
 .IR alt-intf \|]
-.RB [\| \-S
-.IR serial [\|, serial \|]\|]
 .RB [\| \-t
-.IR size \|]
-.RB [\| \-Z
 .IR size \|]
 .RB [\| \-s
 .IR address \|]
@@ -45,7 +34,7 @@ dfu-util \- Device firmware update (DFU) USB programmer
 .RB [\| \-D \||\| \-U
 .IR file \|]
 .\" --help and --version
-.HP
+.br
 .B dfu-util
 .RB [\| \-hV \|]
 .SH DESCRIPTION
@@ -61,67 +50,20 @@ devices.
 .B "\-l, \-\-list"
 List the currently attached DFU capable USB devices.
 .TP
-.BR "\-d, \-\-device" " [\fIRun-Time VENDOR\fP]:[\fIRun-Time PRODUCT\fP][,[\fIDFU Mode VENDOR\fP]:[\fIDFU Mode PRODUCT\fP]]"
-.RS
-Specify run-time and/or DFU mode vendor and/or product IDs of the DFU device
-to work with. \fBVENDOR\fP and \fBPRODUCT\fP are hexadecimal numbers (no prefix
-needed), "*" (match any), or "-" (match nothing). By default, any DFU capable
-device in either run-time or DFU mode will be considered.
+.BR "\-d, \-\-device" " [\fIVENDOR\fP]:[\fIPRODUCT\fP]"
+Specify vendor and/or product ID of the DFU device. Both
+.B VENDOR
+and
+.B PRODUCT
+are hexadecimal numbers (no prefix needed).
+Example:
+.sp
+.B "  $ dfu-util --device 1457:51ab"
 .sp
 If you only have one standards-compliant DFU device attached to your computer,
-this parameter is optional. However, as soon as you have multiple DFU devices
-connected, dfu-util will detect this and abort, asking you to specify which
-device to use.
-.sp
-If only run-time IDs are specified (e.g. "\fB--device 1457:51ab\fP"), then in
-addition to the specified run-time IDs, any DFU mode devices will also be
-considered. This is beneficial to allow a DFU capable device to be found
-again after a switch to DFU mode, since the vendor and/or product ID of a
-device usually changes in DFU mode.
-.sp
-If only DFU mode IDs are specified (e.g. "\fB--device ,951:26\fP"), then all
-run-time devices will be ignored, making it easy to target a specific device in
-DFU mode.
-.sp
-If both run-time and DFU mode IDs are specified (e.g. "\fB--device
-1457:51ab,:2bc\fP"), then unspecified DFU mode components will use the run-time
-value specified.
-.sp
-Examples:
-.TP
-.B "--device 1457:51ab,951:26"
-.br
-Work with a device in run-time mode with
-vendor ID 0x1457 and product ID 0x51ab, or in DFU mode with vendor ID 0x0951
-and product ID 0x0026
-.sp
-.TP
-.B "--device 1457:51ab,:2bc"
-.br
-Work with a device in run-time mode with vendor ID 0x1457 and product ID
-0x51ab, or in DFU mode with vendor ID 0x1457 and product ID 0x02bc
-.sp
-.TP
-.B "--device 1457:51ab"
-.br
-Work with a device in run-time mode with vendor ID 0x1457 and product ID
-0x51ab, or in DFU mode with any vendor and product ID
-.sp
-.TP
-.B "--device ,951:26"
-.br
-Work with a device in DFU mode with vendor ID 0x0951 and product ID 0x0026
-.sp
-.TP
-.B "--device *,-"
-.br
-Work with any device in run-time mode, and ignore any device in DFU mode
-.sp
-.TP
-.B "--device ,"
-.br
-Ignore any device in run-time mode, and Work with any device in DFU mode
-.RE
+this is optional. However, as soon as you have multiple DFU devices connected,
+dfu-util will detect this and abort, asking you to specify which device
+to use.
 .TP
 .BR "\-p, \-\-path" " BUS-PORT. ... .PORT"
 Specify the path to the DFU device.
@@ -135,24 +77,10 @@ Specify the DFU interface number.
 .BR "\-a, \-\-alt" " ALT"
 Specify the altsetting of the DFU interface by name or by number.
 .TP
-.BR "\-S, \-\-serial" " [\fIRun-Time SERIAL\fP][,[\fIDFU Mode SERIAL\fP]]"
-Specify the run-time and DFU mode serial numbers used to further restrict
-device matches.  If multiple, identical DFU devices are simultaneously
-connected to a system then vendor and product ID will be insufficient for
-targeting a single device.  In this situation, it may be possible to use this
-parameter to specify a serial number which also must match.
-.sp
-If only a single serial number is specified, then the same serial number is
-used in both run-time and DFU mode. An empty serial number will match any
-serial number in the corresponding mode.
-.TP
 .B "\-t, \-\-transfer-size" " SIZE"
 Specify the number of bytes per USB transfer. The optimal value is
 usually determined automatically so this option is rarely useful. If
 you need to use this option for a device, please report it as a bug.
-.TP
-.B "\-Z, \-\-upload-size" " SIZE"
-Specify the expected upload size, in bytes.
 .TP
 .BR "\-U, \-\-upload" " FILE"
 Read firmware from device into
@@ -161,7 +89,7 @@ Read firmware from device into
 .BR "\-D, \-\-download" " FILE"
 Write firmware from
 .B FILE
-into device. When FILE is \-, the firmware is read from stdin.
+into device.
 .TP
 .B "\-R, \-\-reset"
 Issue USB reset signalling after upload or download has finished.

@@ -1,7 +1,5 @@
-/*
- *  Simple quirk system for dfu-util
- *
- *  Copyright 2010-2014 Tormod Volden
+/*  Simple quirk system for dfu-util
+ *  Copyright 2010 Tormod Volden
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,18 +19,14 @@
 #include <stdint.h>
 #include "quirks.h"
 
-uint16_t get_quirks(uint16_t vendor, uint16_t product, uint16_t bcdDevice)
+int quirks = 0;
+
+void set_quirks(uint16_t vendor, uint16_t product, uint16_t bcdDevice)
 {
-	uint16_t quirks = 0;
-
 	/* Device returns bogus bwPollTimeout values */
-	if ((vendor == VENDOR_OPENMOKO || vendor == VENDOR_FIC) &&
-	    product >= PRODUCT_FREERUNNER_FIRST &&
-	    product <= PRODUCT_FREERUNNER_LAST)
-		quirks |= QUIRK_POLLTIMEOUT;
-
-	if (vendor == VENDOR_VOTI &&
-	    product == PRODUCT_OPENPCD)
+	if (vendor == VENDOR_OPENMOKO ||
+	    vendor == VENDOR_FIC ||
+	    vendor == VENDOR_VOTI)
 		quirks |= QUIRK_POLLTIMEOUT;
 
 	/* Reports wrong DFU version in DFU descriptor */
@@ -40,17 +34,4 @@ uint16_t get_quirks(uint16_t vendor, uint16_t product, uint16_t bcdDevice)
 	    product == PRODUCT_MAPLE3 &&
 	    bcdDevice == 0x0200)
 		quirks |= QUIRK_FORCE_DFU11;
-
-	/* old devices(bcdDevice == 0) return bogus bwPollTimeout values */
-	if (vendor == VENDOR_SIEMENS &&
-	    (product == PRODUCT_PXM40 || product == PRODUCT_PXM50) &&
-	    bcdDevice == 0)
-		quirks |= QUIRK_POLLTIMEOUT;
-
-	/* M-Audio Transit returns bogus bwPollTimeout values */
-	if (vendor == VENDOR_MIDIMAN &&
-	    product == PRODUCT_TRANSIT)
-		quirks |= QUIRK_POLLTIMEOUT;
-
-	return (quirks);
 }

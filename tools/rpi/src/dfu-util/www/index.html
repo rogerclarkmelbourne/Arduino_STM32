@@ -18,15 +18,15 @@
     <h1>dfu-util - Device Firmware Upgrade Utilities</h1>
       <h2>Description</h2>
       <p>
-	dfu-util is a host side implementation of the <a
+	dfu-util is the host side implementation of the <a
 	href="http://www.usb.org/developers/devclass_docs/usbdfu10.pdf"
 	title="DFU revision 1.0"> DFU 1.0</a> and <a
 	href="http://www.usb.org/developers/devclass_docs/DFU_1.1.pdf"
 	title="DFU revision 1.1">DFU 1.1</a> specifications of the USB forum.
 
-	DFU is intended to download and upload firmware to/from devices connected
+	DFU is intended to download and upload firmware to devices connected
 	over USB. It ranges from small devices like micro-controller boards
-	to mobile phones. Using dfu-util you can download firmware to your
+	up to mobile phones. Using dfu-util you can download firmware to your
 	DFU-enabled device or upload firmware from it. dfu-util has been
 	tested with the Openmoko Neo1973 and Freerunner and many other devices.
 	</p>
@@ -39,43 +39,26 @@
 	<li><a href="http://wiki.openmoko.org/wiki/Neo_FreeRunner">Openmoko Freerunner</a></li>
 	<li><a href="http://leaflabs.com/Maple">Leaflabs Maple</a></li>
 	<li><a href="http://www.openpcd.org/">OpenPCD and OpenPICC</a></li>
-	<li><a href="http://downloads.qi-hardware.com/people/werner/wpan/web/">Qi Hardware ATUSB</a> (use dfu-util 0.7)</li>
+	<li><a href="http://downloads.qi-hardware.com/people/werner/wpan/web/">Qi Hardware ATUSB</a></li>
 	<li><a href="http://bb.osmocom.org/trac/wiki/SIMtrace">Osmocom SIMtrace</a></li>
-	<li>Many devices using the <a href="dfuse.html">DfuSe DFU extension</a> from ST, for instance:
-		<ul>
-		<li><a
-href="http://www.seeedstudio.com/depot/micro-digital-storage-oscilloscopedso-nano-p-512.html">DSO nano</a></li>
-		<li><a href="https://www.spark.io/">Spark Core</a></li>
-		<li>STM32F2/F3/F4 built-in bootloader</li>
-		<li>Some STR750-based devices, e.g. USB2CAN</li>
-		</ul></li>
+	<li><a
+href="http://www.seeedstudio.com/depot/micro-digital-storage-oscilloscopedso-nano-p-512.html">DSO nano</a> and other
+	devices using the <a href="dfuse.html">DfuSe DFU extension</a> from ST</li>
 	</ul>
 	<h2>Releases</h2>
 	<p>
 	Releases of the dfu-util software can be found in the <a
 	href="http://dfu-util.gnumonks.org/releases/" title="Releases">
 	releases</a> folder.
-	The current release is 0.8.
-	</p>
-	<p>
-	We offer binaries for Microsoft Windows and some other platforms.
+	The latest release tarball is <a
+	href="http://dfu-util.gnumonks.org/releases/dfu-util-0.7.tar.gz">dfu-util-0.7.tar.gz</a>.
+	From version 0.6 onwards we also offer binaries for Microsoft Windows.
 	dfu-util uses libusb 1.0 to access your device, so
 	on Windows you have to register the device with the WinUSB driver
-	(alternatively libusb-win32 or libusbK), please see the <a
+	(alternatively libusb-win32 or libusbK if libusbx 1.0.13 or later),
+	please see the <a
 	href="https://github.com/libusbx/libusbx/wiki/Windows-Backend">libusbx wiki</a>
 	for more details.
-	</p>
-	<p>
-	Mac OS X users can also get dfu-util from <a href="http://brew.sh/">Homebrew</a> with "brew install dfu-util" or from <a href="http://www.macports.org/">MacPorts</a>.
-	</p>
-	<p>
-	Most Linux distributions ship dfu-util in binary packages for those
-	who do not want to compile dfu-util from source.
-	On Debian, Ubuntu, Fedora and Gentoo you can install it through the
-	normal software package tools. For other distributions
-(namely OpenSuSe, Mandriva, and CentOS) Holger Freyther was kind enough to
-provide binary packages through the <a
-	href="https://build.opensuse.org/package/show?package=dfu-util&amp;project=home%3Azecke23">Open Build Service</a>.
 	</p>
 	<h2>Development</h2>
 	<p>
@@ -101,6 +84,16 @@ interface</a> or clone it with:
 	send an e-mail to our dedicated <a
 	href="https://lists.gnumonks.org/mailman/listinfo/dfu-util">
 mailing list for dfu-util</a>.
+	</p>
+	<h2>Binary Packages</h2>
+	<p>
+	Major Linux distributions already ship dfu-util for those who
+	not want to compile dfu-util from source.
+	On Debian, Ubuntu, Fedora and Gentoo you can install it through the
+	normal software package tools. For other distributions
+(namely OpenSuSe, Mandriva, and CentOS) Holger Freyther was kind enough to
+provide binary packages through the <a
+	href="https://build.opensuse.org/package/show?package=dfu-util&amp;project=home%3Azecke23">Open Build Service</a>.
 	</p>
 	<h2>People</h2>
 	<p>
