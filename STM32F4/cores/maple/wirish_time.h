@@ -32,9 +32,9 @@
 #ifndef __WIRISH_TIME_H_
 #define __WIRISH_TIME_H_
 
-#include "libmaple.h"
-#include "nvic.h"
-#include "systick.h"
+#include "libmaple/libmaple.h"
+#include "libmaple/nvic.h"
+#include "libmaple/systick.h"
 #include "boards.h"
 
 #define US_PER_MS               1000

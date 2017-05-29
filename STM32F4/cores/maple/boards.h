@@ -39,9 +39,9 @@
 #ifndef _BOARDS_H_
 #define _BOARDS_H_
 
-#include "libmaple.h"
-#include "gpio.h"
-#include "timer.h"
+#include "libmaple/libmaple.h"
+#include "libmaple/gpio.h"
+#include "libmaple/timer.h"
 
 #include "wirish_types.h"
 
