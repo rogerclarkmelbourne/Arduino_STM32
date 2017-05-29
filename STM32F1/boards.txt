@@ -142,8 +142,10 @@ nucleo_f103rb.upload.altID=1
 nucleo_f103rb.upload.auto_reset=true
 
 nucleo_f103rb.build.mcu=cortex-m3
-nucleo_f103rb.build.board=STM_NUCLEO_F103RB
+nucleo_f103rb.build.f_cpu=72000000L
+nucleo_f103rb.build.board=STM_NUCLEU_F103RB
 nucleo_f103rb.build.core=maple
+nucleo_f103rb.build.extra_flags=-DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
 nucleo_f103rb.build.ldscript=ld/jtag.ld
 nucleo_f103rb.build.variant=nucleo_f103rb
 nucleo_f103rb.build.variant_system_lib=libmaple.a
@@ -153,16 +155,6 @@ nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
 nucleo_f103rb.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
 nucleo_f103rb.build.vect=VECT_TAB_ADDR=0x8000000
-
-## internal oscillator (HSI), running at 64 MHz
-nucleo_f103rb.menu.device_variant.NucleoF103_HSI=Nucleo F103 @ 64 MHz
-nucleo_f103rb.menu.device_variant.NucleoF103_HSI.build.f_cpu=64000000L
-nucleo_f103rb.menu.device_variant.NucleoF103_HSI.build.extra_flags=-DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
-
-## external crystal (HSE), running at 72 MHz
-nucleo_f103rb.menu.device_variant.NucleoF103_HSE=Nucleo F103 @ 72 MHz w/ crystal
-nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.f_cpu=72000000L
-nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.extra_flags=-DNUCLEO_HSE_CRYSTAL -DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
 
 ###################### Generic STM32F103C ########################################
 
@@ -208,6 +200,8 @@ genericSTM32F103C.menu.upload_method.serialMethod=Serial
 genericSTM32F103C.menu.upload_method.serialMethod.upload.protocol=maple_serial
 genericSTM32F103C.menu.upload_method.serialMethod.upload.tool=serial_upload
 genericSTM32F103C.menu.upload_method.serialMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+
 
 genericSTM32F103C.menu.upload_method.STLinkMethod=STLink
 genericSTM32F103C.menu.upload_method.STLinkMethod.upload.protocol=STLink
@@ -302,6 +296,11 @@ genericSTM32F103R.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+genericSTM32F103R.menu.upload_method.serialMethod=OpenOCD
+genericSTM32F103R.menu.upload_method.serialMethod.upload.protocol=openocd_upload
+genericSTM32F103R.menu.upload_method.serialMethod.upload.tool=openocd_upload
+
 
 ###################### Generic STM32F103T ########################################
 
