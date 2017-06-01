@@ -257,6 +257,12 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 			gpio_set_mode(GPIOB, 8, GPIO_INPUT_FLOATING);
 			gpio_set_mode(GPIOB, 9, GPIO_AF_OUTPUT_PP);
 			break;
+		 case CAN_GPIO_PA11_PA12:
+			 rcc_clk_enable(RCC_GPIOA);
+			 afio_remap(AFIO_MAPR_CAN_REMAP_NONE);
+			 gpio_set_mode(GPIOA, 11, GPIO_INPUT_FLOATING);
+			 gpio_set_mode(GPIOA, 12, GPIO_AF_OUTPUT_PP);
+		 break;
 #if NR_GPIO_PORTS >= 4
 		case CAN_GPIO_PD0_PD1:
 			rcc_clk_enable(RCC_GPIOD);
