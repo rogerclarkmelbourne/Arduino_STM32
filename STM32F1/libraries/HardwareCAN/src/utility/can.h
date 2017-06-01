@@ -139,7 +139,8 @@ extern "C" {
 
 typedef enum CAN_GPIO_MAP {
 	CAN_GPIO_PB8_PB9,		/* RX to PB8, TX to PB9 */
-	CAN_GPIO_PD0_PD1		/* RX to PD0, TX to PD1 */
+	CAN_GPIO_PD0_PD1,		/* RX to PD0, TX to PD1 */
+	CAN_GPIO_PA11_PA12		/* RX to PA11, TX to PA12 */
 } CAN_GPIO_MAP;
 
 typedef enum CAN_STATUS
