@@ -57,6 +57,7 @@ public:
     void begin(uint32 baud);
     void end(void);
 
+	operator bool() { return true; } // This is needed because of "if (!Serial)"
     /* I/O */
     virtual int available(void);
     virtual int peek(void);
