@@ -103,7 +103,7 @@
 #define BOARD_SDIO_D1           PC9  //Port2Pin('C', 9)
 #define BOARD_SDIO_D2           PC10 //Port2Pin('C',10)
 #define BOARD_SDIO_D3           PC11 //Port2Pin('C',11)
-#define BOARD_SDIO_CK           PC12 //Port2Pin('C',12)
+#define BOARD_SDIO_CLK          PC12 //Port2Pin('C',12)
 #define BOARD_SDIO_CMD          PD2  //Port2Pin('D', 2)
 
 #define FSMC_NOE			PD4
