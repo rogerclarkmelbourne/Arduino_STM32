@@ -8,7 +8,7 @@ This library has been modified for the Maple Mini
 
 #include "Arduino.h"
 #include "Print.h"
-#include <Adafruit_GFX.h>
+#include <Adafruit_GFX_AS.h>
 #include <avr/pgmspace.h>
 
 #ifndef swap
