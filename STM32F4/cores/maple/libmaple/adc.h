@@ -166,7 +166,7 @@ extern const adc_dev *ADC3;
 #define ADC_CR2_ALIGN_BIT               11
 #define ADC_CR2_JEXTTRIG_BIT            15
 #define ADC_CR2_EXTTRIG_BIT             20
-#define ADC_CR2_TSEREFE_BIT             23
+#define ADC_CR2_TSVREFE_BIT             23
 #ifdef STM32F2
 #define ADC_CR2_JSWSTART_BIT            22
 #define ADC_CR2_SWSTART_BIT             30
@@ -191,7 +191,7 @@ extern const adc_dev *ADC3;
 #define ADC_CR2_EXTTRIG                 BIT(ADC_CR2_EXTTRIG_BIT)
 #define ADC_CR2_JSWSTART                BIT(ADC_CR2_JSWSTART_BIT)
 #define ADC_CR2_SWSTART                 BIT(ADC_CR2_SWSTART_BIT)
-#define ADC_CR2_TSEREFE                 BIT(ADC_CR2_TSEREFE_BIT)
+#define ADC_CR2_TSVREFE                 BIT(ADC_CR2_TSVREFE_BIT)
 
 /* Sample time register 1 */
 
