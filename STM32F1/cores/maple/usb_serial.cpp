@@ -55,6 +55,7 @@ static void ifaceSetupHook(unsigned, void*);
 
 #define USB_TIMEOUT 50
 
+bool USBSerial::_hasBegun = false;
 USBSerial::USBSerial(void) {
 #if !BOARD_HAVE_SERIALUSB
     ASSERT(0);
@@ -62,6 +63,9 @@ USBSerial::USBSerial(void) {
 }
 
 void USBSerial::begin(void) {
+    if (_hasBegun)
+        return;
+    _hasBegun = true;
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_enable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_RX, rxHook);
@@ -90,6 +94,7 @@ void USBSerial::end(void) {
     usb_cdcacm_disable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_remove_hooks(USB_CDCACM_HOOK_RX | USB_CDCACM_HOOK_IFACE_SETUP);
 #endif
+    _hasBegun = false;
 }
 
 size_t USBSerial::write(uint8 ch) {
