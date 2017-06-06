@@ -36,7 +36,7 @@ Adafruit_ILI9341_STM::Adafruit_ILI9341_STM(int8_t cs, int8_t dc, int8_t rst) : A
 }
 
 
-void Adafruit_ILI9341_STM::spiwrite(uint8_t c) {
+void Adafruit_ILI9341_STM::spiwrite(uint16_t c) {
 
   //Serial.print("0x"); Serial.print(c, HEX); Serial.print(", ");
 
@@ -178,10 +178,7 @@ void Adafruit_ILI9341_STM::begin(void) {
     SPI.setBitOrder(MSBFIRST);
     SPI.setDataMode(SPI_MODE0);
 #elif defined (__STM32F1__)
-    SPI.begin();
-    SPI.setClockDivider(SPI_CLOCK_DIV2);
-    SPI.setBitOrder(MSBFIRST);
-    SPI.setDataMode(SPI_MODE0);
+    SPI.beginTransaction(SPISettings(36000000));
 
 #elif defined (__arm__)
     SPI.begin();
@@ -335,6 +332,7 @@ void Adafruit_ILI9341_STM::begin(void) {
   if (hwSPI) spi_begin();
   writecommand(ILI9341_DISPON);    //Display on
   if (hwSPI) spi_end();
+  if (hwSPI) SPI.setDataSize(SPI_CR1_DFF);
 
 }
 
@@ -345,18 +343,14 @@ void Adafruit_ILI9341_STM::setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1,
   writecommand(ILI9341_CASET); // Column addr set
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
-  SPI.setDataSize (SPI_CR1_DFF);
   SPI.write(x0);
   SPI.write(x1);
-//  SPI.setDataSize (0);
   
   writecommand(ILI9341_PASET); // Row addr set
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
-//  SPI.setDataSize (SPI_CR1_DFF);
   SPI.write(y0);
   SPI.write(y1);
-  SPI.setDataSize (0);
 
   writecommand(ILI9341_RAMWR); // write to RAM
 
@@ -385,7 +379,6 @@ void Adafruit_ILI9341_STM::pushColor(uint16_t color) {
   //digitalWrite(_cs, LOW);
   *csport &= ~cspinmask;
 
-  spiwrite(color >> 8);
   spiwrite(color);
 
   *csport |= cspinmask;
@@ -403,7 +396,6 @@ void Adafruit_ILI9341_STM::drawPixel(int16_t x, int16_t y, uint16_t color) {
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
 
-  spiwrite(color >> 8);
   spiwrite(color);
 
   *csport |= cspinmask;
@@ -431,10 +423,8 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
   *csport &= ~cspinmask;
   
 #if defined (__STM32F1__)
-  SPI.setDataSize (SPI_CR1_DFF); // Set SPI 16bit mode
   lineBuffer[0] = color;
   SPI.dmaSend(lineBuffer, h, 0);
-  SPI.setDataSize (0);
  #else
   uint8_t hi = color >> 8, lo = color;
   while (h--) {
@@ -464,10 +454,8 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
   *csport &= ~cspinmask;
 
 #if defined (__STM32F1__)
-  SPI.setDataSize (SPI_CR1_DFF); // Set spi 16bit mode
   lineBuffer[0] = color;
   SPI.dmaSend(lineBuffer, w, 0);
-  SPI.setDataSize (0);
 #else
 	uint8_t hi = color >> 8, lo = color;
     while (w--) {
@@ -485,11 +473,9 @@ void Adafruit_ILI9341_STM::fillScreen(uint16_t color) {
   setAddrWindow(0, 0, _width - 1, _height - 1);
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
-  SPI.setDataSize (SPI_CR1_DFF); // Set spi 16bit mode
   lineBuffer[0] = color;
   SPI.dmaSend(lineBuffer, (65535), 0);
   SPI.dmaSend(lineBuffer, ((_width * _height) - 65535), 0);
-  SPI.setDataSize (0);
 
 #else
   fillRect(0, 0,  _width, _height, color);
@@ -515,7 +501,6 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   *dcport |=  dcpinmask;
   *csport &= ~cspinmask;
 #if defined (__STM32F1__)
-  SPI.setDataSize (SPI_CR1_DFF); // Set spi 16bit mode
   lineBuffer[0] = color;
   if (w*h <= 65535) {
   SPI.dmaSend(lineBuffer, (w*h), 0);
@@ -524,7 +509,6 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   SPI.dmaSend(lineBuffer, (65535), 0);
   SPI.dmaSend(lineBuffer, ((w*h) - 65535), 0);
   }
-  SPI.setDataSize (0);
 #else
   uint8_t hi = color >> 8, lo = color;
   for(y=h; y>0; y--) 
@@ -672,6 +656,7 @@ uint16_t Adafruit_ILI9341_STM::color565(uint8_t r, uint8_t g, uint8_t b) {
 void Adafruit_ILI9341_STM::setRotation(uint8_t m) {
 
   if (hwSPI) spi_begin();
+  if (hwSPI) SPI.setDataSize(0);
   writecommand(ILI9341_MADCTL);
   rotation = m % 4; // can't be higher than 3
   switch (rotation) {
@@ -696,6 +681,7 @@ void Adafruit_ILI9341_STM::setRotation(uint8_t m) {
       _height = ILI9341_TFTWIDTH;
       break;
   }
+  if (hwSPI) SPI.setDataSize(SPI_CR1_DFF);
   if (hwSPI) spi_end();
 }
 
