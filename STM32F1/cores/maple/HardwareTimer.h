@@ -132,19 +132,19 @@ public:
     void setCount(uint16 val);
 
     /**
-     * @brief Set the timer's period in microseconds.
+     * @brief Set the timer's period in Cycles.
      *
      * Configures the prescaler and overflow values to generate a timer
-     * reload with a period as close to the given number of
-     * microseconds as possible.
+     * reload with a period of given number of
+     * Cycles.
      *
-     * @param microseconds The desired period of the timer.  This must be
+     * @param Cycles The desired period of the timer.  This must be
      *                     greater than zero.
      * @return The new overflow value.
      */
-    uint16 setPeriod72(uint32 microseconds);
+    uint16 setCycles(uint32 Cycles);
     /**
-     * @brief Set the timer's period in microseconds/72.
+     * @brief Set the timer's period in microseconds.
      *
      * Configures the prescaler and overflow values to generate a timer
      * reload with a period as close to the given number of
