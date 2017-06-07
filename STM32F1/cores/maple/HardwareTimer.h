@@ -142,6 +142,18 @@ public:
      *                     greater than zero.
      * @return The new overflow value.
      */
+    uint16 setPeriod72(uint32 microseconds);
+    /**
+     * @brief Set the timer's period in microseconds/72.
+     *
+     * Configures the prescaler and overflow values to generate a timer
+     * reload with a period as close to the given number of
+     * microseconds as possible.
+     *
+     * @param microseconds The desired period of the timer.  This must be
+     *                     greater than zero.
+     * @return The new overflow value.
+     */
     uint16 setPeriod(uint32 microseconds);
 
     /**
