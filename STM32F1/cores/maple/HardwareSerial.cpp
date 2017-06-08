@@ -198,3 +198,13 @@ void HardwareSerial::flush(void) {
     while(!rb_is_empty(this->usart_device->wb)); // wait for TX buffer empty
     while(!((this->usart_device->regs->SR) & (1<<USART_SR_TC_BIT))); // wait for TC (Transmission Complete) flag set 
 }
+
+/*
+* Wait for the end of actual transmission
+*
+*/
+void HardwareSerial::waitDataToBeSent(void)
+{
+    //Not this will be cleared only after a read from SR and then write to DR (Therefore after this operation, it will still be set)
+    while(!(this->usart_device->regs->SR & USART_SR_TC));
+}
