@@ -556,8 +556,8 @@ typedef enum timer_mode {
     /** PWM output. */
     TIMER_PWM,
 
-    /* TIMER_PWM_CENTER_ALIGNED, TODO: Center-aligned PWM output mode. */
-
+    /* TIMER_PWM_CENTER_ALIGNED, Center-aligned PWM output mode. */
+    TIMER_PWM_CENTER_ALIGNED, // ERVILHA Change
     /**
      * The timer counts from 0 to its reload value repeatedly; every
      * time the counter value reaches one of the channel compare
