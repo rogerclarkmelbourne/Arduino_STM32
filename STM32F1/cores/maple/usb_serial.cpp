@@ -54,6 +54,9 @@ static void ifaceSetupHook(unsigned, void*);
  */
 
 #define USB_TIMEOUT 50
+#if BOARD_HAVE_SERIALUSB
+bool USBSerial::_hasBegun = false;
+#endif
 
 USBSerial::USBSerial(void) {
 #if !BOARD_HAVE_SERIALUSB
@@ -62,7 +65,12 @@ USBSerial::USBSerial(void) {
 }
 
 void USBSerial::begin(void) {
+	
 #if BOARD_HAVE_SERIALUSB
+    if (_hasBegun)
+        return;
+    _hasBegun = true;
+
     usb_cdcacm_enable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_RX, rxHook);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_IFACE_SETUP, ifaceSetupHook);
@@ -75,6 +83,7 @@ void USBSerial::begin(unsigned long ignoreBaud)
 volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
 
 	ignoreBaud=removeCompilerWarningsIgnoreBaud;
+	begin();
 }
 void USBSerial::begin(unsigned long ignoreBaud, uint8_t ignore)
 {
@@ -83,13 +92,16 @@ volatile uint8_t removeCompilerWarningsIgnore=ignore;
 
 	ignoreBaud=removeCompilerWarningsIgnoreBaud;
 	ignore=removeCompilerWarningsIgnore;
+	begin();
 }
 
 void USBSerial::end(void) {
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_disable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_remove_hooks(USB_CDCACM_HOOK_RX | USB_CDCACM_HOOK_IFACE_SETUP);
+	_hasBegun = false;
 #endif
+
 }
 
 size_t USBSerial::write(uint8 ch) {

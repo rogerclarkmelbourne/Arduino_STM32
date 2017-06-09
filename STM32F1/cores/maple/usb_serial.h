@@ -59,8 +59,8 @@ public:
     virtual int read(void);
     int availableForWrite(void);
     virtual void flush(void);
-	
-	
+
+
     size_t write(uint8);
     size_t write(const char *str);
     size_t write(const uint8*, uint32);
@@ -68,22 +68,25 @@ public:
     uint8 getRTS();
     uint8 getDTR();
     uint8 pending();
-	
+
     /* SukkoPera: This is the Arduino way to check if an USB CDC serial
      * connection is open.
-     
+
      * Used for instance in cardinfo.ino.
      */
     operator bool();
-	
+
     /* Old libmaple way to check for serial connection.
      *
      * Deprecated, use the above.
      */
     uint8 isConnected() __attribute__((deprecated("Use !Serial instead"))) { return (bool) *this; }
+
+protected:
+    static bool _hasBegun;
 };
 
-#ifdef SERIAL_USB 
+#ifdef SERIAL_USB
     extern USBSerial Serial;
 #endif
 

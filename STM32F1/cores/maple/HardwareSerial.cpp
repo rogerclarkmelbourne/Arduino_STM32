@@ -193,7 +193,8 @@ size_t HardwareSerial::write(unsigned char ch) {
 	return 1;
 }
 
+/* edogaldo: Waits for the transmission of outgoing serial data to complete (Arduino 1.0 api specs) */
 void HardwareSerial::flush(void) {
-    usart_reset_rx(this->usart_device);
-    usart_reset_tx(this->usart_device);
+    while(!rb_is_empty(this->usart_device->wb)); // wait for TX buffer empty
+    while(!((this->usart_device->regs->SR) & (1<<USART_SR_TC_BIT))); // wait for TC (Transmission Complete) flag set 
 }
