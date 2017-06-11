@@ -184,6 +184,18 @@ void TwoWire::begin(uint8 self_addr) {
     set_sda(HIGH);
 }
 
+void TwoWire::end()
+{
+	if (this->scl_pin)
+	{
+		pinMode(this->scl_pin, INPUT);
+	}
+	if (this->sda_pin)
+	{
+		pinMode(this->sda_pin, INPUT);
+	}
+}
+
 TwoWire::~TwoWire() {
     this->scl_pin=0;
     this->sda_pin=0;
