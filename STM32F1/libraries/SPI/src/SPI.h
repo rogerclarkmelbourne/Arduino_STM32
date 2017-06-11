@@ -291,7 +291,7 @@ public:
      * @param length Number of bytes in buffer to transmit.
      */
 	uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
-
+	uint8 dmaSendAsync(void * transmitBuf, uint16 length, bool minc = 1);
     /*
      * Pin accessors
      */
