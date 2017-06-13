@@ -59,6 +59,11 @@ public:
      * passed flags
      */
     HardWire(uint8, uint8 = 0);
+	
+	/*
+	 * Shuts down (disables) the hardware I2C
+	 */
+	void end();
 
     /*
      * Disables the I2C device and remove the device address.

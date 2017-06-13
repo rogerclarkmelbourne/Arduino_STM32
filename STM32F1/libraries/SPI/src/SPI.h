@@ -115,6 +115,13 @@ public:
 			init_MightInline(clock, bitOrder, dataMode, dataSize);
 		}
 	}
+	SPISettings(uint32_t clock) {
+		if (__builtin_constant_p(clock)) {
+			init_AlwaysInline(clock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+		} else {
+			init_MightInline(clock, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT);
+		}
+	}
 	SPISettings() { init_AlwaysInline(4000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT); }
 private:
 	void init_MightInline(uint32_t clock, BitOrder bitOrder, uint8_t dataMode, uint32_t dataSize) {
@@ -216,40 +223,40 @@ public:
      */
 
     /**
-     * @brief Return the next unread byte.
+     * @brief Return the next unread byte/word.
      *
-     * If there is no unread byte waiting, this function will block
+     * If there is no unread byte/word waiting, this function will block
      * until one is received.
      */
-    uint8 read(void);
+    uint16 read(void);
 
     /**
      * @brief Read length bytes, storing them into buffer.
      * @param buffer Buffer to store received bytes into.
-     * @param length Number of bytes to store in buffer.  This
+     * @param length Number of bytes to store in buffer. This
      *               function will block until the desired number of
      *               bytes have been read.
      */
     void read(uint8 *buffer, uint32 length);
 
     /**
-     * @brief Transmit a byte.
-     * @param data Byte to transmit.
-     */
-//    void write(uint8 data);
-
-    /**
-     * @brief Transmit a half word.
+     * @brief Transmit one byte/word.
      * @param data to transmit.
      */
     void write(uint16 data);	
 	
     /**
-     * @brief Transmit multiple bytes.
-     * @param buffer Bytes to transmit.
-     * @param length Number of bytes in buffer to transmit.
+     * @brief Transmit one byte/word a specified number of times.
+     * @param data to transmit.
      */
-    void write(const uint8 *buffer, uint32 length);
+    void write(uint16 data, uint32 n);	
+	
+    /**
+     * @brief Transmit multiple bytes/words.
+     * @param buffer Bytes/words to transmit.
+     * @param length Number of bytes/words in buffer to transmit.
+     */
+    void write(void * buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
@@ -264,6 +271,7 @@ public:
 	
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
+	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
      *
      * This function transmits and receives to buffers.
      *
@@ -271,31 +279,19 @@ public:
      * @param receiveBuf buffer Bytes to save received data. 
      * @param length Number of bytes in buffer to transmit.
 	 */
-	uint8 dmaTransfer(uint8 *transmitBuf, uint8 *receiveBuf, uint16 length);
+	uint8 dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length);
 
 	/**
-     * @brief Sets up a DMA Transmit for bytes.
+     * @brief Sets up a DMA Transmit for SPI 8 or 16 bit transfer mode.
+	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
      *
-     * This function transmits and does not care about the RX fifo.
-     *
-     * @param transmitBuf buffer Bytes to transmit,
-     * @param length Number of bytes in buffer to transmit.
-	 * @param minc Set to use Memory Increment mode, clear to use Circular mode.
-     */
-	uint8 dmaSend(uint8 *transmitBuf, uint16 length, bool minc = 1);
-	
-	/**
-     * @brief Sets up a DMA Transmit for half words.
-	 * SPI PERFIPHERAL MUST BE SET TO 16 BIT MODE BEFORE
-     *
-     * This function transmits and does not care about the RX fifo.
+     * This function only transmits and does not care about the RX fifo.
      *
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
-     * @param minc Set to use Memory Increment mode (default if blank), clear to use Circular mode.
      */
-	uint8 dmaSend(uint16 *transmitBuf, uint16 length, bool minc = 1);
-
+	uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
+	uint8 dmaSendAsync(void * transmitBuf, uint16 length, bool minc = 1);
     /*
      * Pin accessors
      */

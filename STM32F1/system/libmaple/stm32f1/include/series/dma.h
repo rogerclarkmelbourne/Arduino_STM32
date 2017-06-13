@@ -559,7 +559,6 @@ typedef enum dma_mode_flags {
  *
  * (It's not possible to fully configure a DMA stream on F2 with just
  * this information, so this interface is too tied to the F1.) */
-__deprecated
 void dma_setup_transfer(dma_dev       *dev,
                         dma_channel    channel,
                         __io void     *peripheral_address,
