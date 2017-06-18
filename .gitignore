@@ -7,3 +7,4 @@ other/maple-bootloader/build
 other/maple-bootloader/*~
 *.o
 tools/src/stm32flash_serial/src/parsers/parsers.a
+*.bak
