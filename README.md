@@ -13,6 +13,8 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 
 ***PRIMARY SUPPORT FORUM: http://www.stm32duino.com/***
 
+***We are also on Gitter https://gitter.im/stm32duino/Lobby/***
+
 ##Background & Support:  
 * Based on https://github.com/bobc/maple-asp, which is in turn based on LibMaple by Leaflabs  
 * **Please read the wiki (https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki) for full details**

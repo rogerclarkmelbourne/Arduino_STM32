@@ -75,3 +75,8 @@ HardWire::~HardWire() {
 void HardWire::begin(uint8 self_addr) {
     i2c_master_enable(sel_hard, dev_flags);
 }
+
+void HardWire::end() {
+    i2c_disable(sel_hard);
+    sel_hard = 0;
+}
