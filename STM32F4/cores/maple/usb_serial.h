@@ -65,6 +65,9 @@ public:
 
     void enableBlockingTx(void);
     void disableBlockingTx(void);
+
+protected:
+    static bool _hasBegun;
 };
 
 extern USBSerial SerialUSB;
