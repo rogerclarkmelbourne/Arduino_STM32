@@ -102,11 +102,8 @@
 /**
  * Note: there is no USB in this board.
  */
- // Roger Clark. These USB disconnect pin definitions have been added as a temporary fix in order that the this board compiles
- // following changes to add usb serial to other boards
- // I will remove them when the code in the core usb_serial.cpp has been tidied up so that they are no longer needed.
-#define BOARD_USB_DISC_DEV        GPIOB
-#define BOARD_USB_DISC_BIT        10
+#define BOARD_USB_DISC_DEV        NULL
+#define BOARD_USB_DISC_BIT        NULL
 
 /* Pin aliases: these give the GPIO port/bit for each pin as an
  * enum. These are optional, but recommended. They make it easier to
