@@ -41,7 +41,7 @@
   * LOW so that in the next call to process() , the first clock pulse was not sent, because SCL was LOW when it should have been high.
   */
  /*
-  * Updated by Brandon Green. 20172306. Implementing the repeated stop functionality.
+  * Updated by Brandon Green. 20172306. Implementing the repeated start functionality.
   */
 
 #include "Wire.h"
