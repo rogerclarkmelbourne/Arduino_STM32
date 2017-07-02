@@ -19,8 +19,8 @@
  */
 
 #include "SdioF4.h"
-#include <libmaple\sdio.h>
-#include <libmaple\dma.h>
+#include <libmaple/sdio.h>
+#include <libmaple/dma.h>
 #include <boards.h>
 
 #define USE_DEBUG_MODE 0
