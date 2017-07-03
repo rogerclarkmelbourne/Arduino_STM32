@@ -75,43 +75,6 @@ generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
 ##############################################################
-generic_f407v.name=Generic STM32F407V series
-
-generic_f407v.upload.tool=stlink_upload
-generic_f407v.upload.protocol=stlink
-
-generic_f407v.upload.file_type=bin
-generic_f407v.upload.ram.maximum_size=131072
-generic_f407v.upload.flash.maximum_size=514288
-generic_f407v.upload.maximum_size=514288
-
-#generic_f407v.upload.usbID=0483:3748
-#generic_f407v.upload.altID=1
-#generic_f407v.upload.auto_reset=true
-
-generic_f407v.build.mcu=cortex-m4
-generic_f407v.build.f_cpu=168000000L
-generic_f407v.build.core=maple
-generic_f407v.build.extra_flags=-mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_generic_f407v
-generic_f407v.build.ldscript=ld/jtag.ld
-generic_f407v.build.variant=generic_f407v
-generic_f407v.build.variant_system_lib=lib_f407.a
-generic_f407v.build.vect=VECT_TAB_BASE
-generic_f407v.build.density=STM32_HIGH_DENSITY
-generic_f407v.build.error_led_port=GPIOA
-generic_f407v.build.error_led_pin=7
-generic_f407v.build.board=STM32GenericF407VET6
-
-generic_f407v.menu.usb_cfg.usb_nc=USB inactive
-generic_f407v.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
-
-generic_f407v.menu.usb_cfg.usb_serial=USB serial (CDC)
-generic_f407v.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
-
-generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
-generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
-
-##############################################################
 stm32f4stamp.name=STM32F4Stamp F405
 
 stm32f4stamp.upload.tool=maple_upload
