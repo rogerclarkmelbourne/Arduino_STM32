@@ -50,6 +50,9 @@
 #define BOARD_LED_PIN           Port2Pin('D', 12)
 #define BOARD_BUTTON_PIN        Port2Pin('A', 0)
 
+#define BOARD_USB_DM_PIN		PA11
+#define BOARD_USB_DP_PIN		PA12
+
 #define BOARD_NR_USARTS         5
 #define BOARD_USART1_TX_PIN     Port2Pin('A', 9)
 #define BOARD_USART1_RX_PIN     Port2Pin('A',10)

@@ -37,7 +37,7 @@
 #ifndef _BOARD_MICRODUINO_STM32_H_
 #define _BOARD_MICRODUINO_STM32_H_
 
-#define CYCLES_PER_MICROSECOND    72
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 #define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 /* Roger Clark. 

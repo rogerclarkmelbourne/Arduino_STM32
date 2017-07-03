@@ -125,9 +125,9 @@ extern gpio_dev* const GPIOG;
 #define GPIO_MODE_AF                    2
 #define GPIO_MODE_ANALOG                3
 
-#define GPIO_PUPD_INPUT_FLOATING        (0 << 2)
-#define GPIO_PUPD_INPUT_PU              (1 << 2)
-#define GPIO_PUPD_INPUT_PD              (2 << 2)
+#define GPIO_PUPD_NONE            (0 << 2)
+#define GPIO_PUPD_PU              (1 << 2)
+#define GPIO_PUPD_PD              (2 << 2)
 
 #define GPIO_OSPEED_2MHZ                (0 << 4)
 #define GPIO_OSPEED_25MHZ               (1 << 4)
@@ -177,18 +177,19 @@ typedef enum gpio_pin_mode {
     GPIO_AF_OUTPUT_PP = (GPIO_MODE_AF | GPIO_OTYPE_PP |
                          GPIO_OSPEED_50MHZ), /**< Alternate function
                                                         output push-pull. */
+    GPIO_AF_OUTPUT_PP_PU = (GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_PUPD_PU |
+                         GPIO_OSPEED_50MHZ), /**< Alternate function
+                                                        output push-pull. */
     GPIO_AF_OUTPUT_OD = (GPIO_MODE_AF | GPIO_OTYPE_OD |
                          GPIO_OSPEED_50MHZ), /**< Alternate function
                                                         output open drain. */
     GPIO_INPUT_ANALOG = (GPIO_MODE_ANALOG), /**< Analog input. */
     GPIO_INPUT_FLOATING = (GPIO_MODE_INPUT |
-                           GPIO_PUPD_INPUT_FLOATING), /**< Input floating. */
-    GPIO_INPUT_PD = (GPIO_MODE_INPUT |
-                     GPIO_PUPD_INPUT_PD), /**< Input pull-down. */
-    GPIO_INPUT_PU = (GPIO_MODE_INPUT |
-                     GPIO_PUPD_INPUT_PU), /**< Input pull-up. */
-    GPIO_AF_INPUT_PD = (GPIO_MODE_AF |
-                     GPIO_PUPD_INPUT_PD), /**< Input pull-down. */
+                           GPIO_PUPD_NONE), /**< Input floating. */
+    GPIO_INPUT_PU = (GPIO_MODE_INPUT | GPIO_PUPD_PU), /**< Input pull-up. */
+    GPIO_INPUT_PD = (GPIO_MODE_INPUT | GPIO_PUPD_PD), /**< Input pull-down. */
+    GPIO_AF_INPUT_PU = (GPIO_MODE_AF | GPIO_PUPD_PU), /**< Alternate input pull-up. */
+    GPIO_AF_INPUT_PD = (GPIO_MODE_AF | GPIO_PUPD_PD), /**< Alternate input pull-down. */
 	GPIO_BIGNUMBER = 0xfff
 } gpio_pin_mode;
 

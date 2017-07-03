@@ -256,7 +256,7 @@ public:
      * @param buffer Bytes/words to transmit.
      * @param length Number of bytes/words in buffer to transmit.
      */
-    void write(const void * buffer, uint32 length);
+    void write(void * buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
@@ -291,7 +291,7 @@ public:
      * @param length Number of bytes in buffer to transmit.
      */
 	uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
-
+	uint8 dmaSendAsync(void * transmitBuf, uint16 length, bool minc = 1);
     /*
      * Pin accessors
      */

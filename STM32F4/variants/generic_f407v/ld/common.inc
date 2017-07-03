@@ -183,6 +183,15 @@ SECTIONS
       } > REGION_BSS
 
     /*
+     * .ccmram
+     */
+	.ccmram (NOLOAD):
+		{
+			. = ALIGN(8);
+			*(.ccmram .ccmram.*)
+		} > ccmram
+
+	/*
      * Debugging sections
      */
     .stab 0 (NOLOAD) : { *(.stab) }

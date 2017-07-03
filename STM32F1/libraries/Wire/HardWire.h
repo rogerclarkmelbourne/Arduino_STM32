@@ -52,6 +52,7 @@ protected:
      * Processes the incoming I2C message defined by WireBase to the
      * hardware. If an error occured, restart the I2C device.
      */
+    uint8 process(uint8);
     uint8 process();
 public:
     /*
@@ -59,6 +60,11 @@ public:
      * passed flags
      */
     HardWire(uint8, uint8 = 0);
+	
+	/*
+	 * Shuts down (disables) the hardware I2C
+	 */
+	void end();
 
     /*
      * Disables the I2C device and remove the device address.

@@ -42,6 +42,7 @@
 #include <libmaple/dma.h>
 #include <wirish.h>
 
+#define SPI_DMA
 
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()

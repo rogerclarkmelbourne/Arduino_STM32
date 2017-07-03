@@ -9,3 +9,4 @@ other/maple-bootloader/*~
 tools/src/stm32flash_serial/src/parsers/parsers.a
 *.bak
 *.1
+STM32F4/cores/maple/libmaple/adc.h

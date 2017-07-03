@@ -457,19 +457,16 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 	spi_tx_dma_enable(_currentSetting->spi_d);	// must be the last enable to avoid DMA error flag
 	
     uint32_t m = millis();
-	while ((b = dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream) & DMA_ISR_TCIF)==0 ) {// wait for completion flag to be set
-		if ( b&(DMA_ISR_TEIF|DMA_ISR_DMEIF|DMA_ISR_FEIF) ) { b = 1; break; } // break on any error flag
+	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream) & DMA_ISR_TCIF)==0 ) {// wait for completion flag to be set
 		if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
-	if (b & DMA_ISR_TCIF) b = 0;
-
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 	// software disable sequence, see AN4031, chapter 4.1
 	spi_tx_dma_disable(_currentSetting->spi_d);
 	spi_rx_dma_disable(_currentSetting->spi_d);
+	dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream);
 	dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaStream);
-    dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream);
     return b;
 }
 
@@ -502,11 +499,9 @@ uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc)
 	spi_tx_dma_enable(_currentSetting->spi_d);
 
 	uint32_t m = millis();
-	while ((b = dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream) & DMA_ISR_TCIF)==0 ) {// wait for completion flag to be set
-		if ( b&(DMA_ISR_TEIF|DMA_ISR_DMEIF|DMA_ISR_FEIF) ) { b = 1; break; } // break on any error flag
+	while ((dma_get_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream) & DMA_ISR_TCIF)==0 ) {// wait for completion flag to be set
 		if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
-	if (b & DMA_ISR_TCIF) b = 0;
 
 	while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
 	while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
@@ -614,29 +609,6 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
     Serial.print(", mosi="); Serial.print(pins->mosi);
     Serial.println(")");
     #endif
-
-#ifdef STM32F4
-	if(dev->clk_id <= RCC_SPI2) {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 5);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 5);
-		gpio_set_af_mode(pins->miso, 5);
-		gpio_set_af_mode(pins->mosi, 5);
-	} else {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 6);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 6);
-		gpio_set_af_mode(pins->miso, 6);
-		gpio_set_af_mode(pins->mosi, 6);
-	}
-	
-#endif
 
     spi_config_gpios(dev, as_master, pins->nss, pins->sck, pins->miso, pins->mosi);
 }

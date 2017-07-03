@@ -36,6 +36,10 @@
 #include <libmaple/nvic.h>
 #include <libmaple/systick.h>
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #define US_PER_MS               1000
 
 /**
@@ -100,5 +104,9 @@ void delay(unsigned long ms);
  * @see delay()
  */
 void delayMicroseconds(uint32 us);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif
