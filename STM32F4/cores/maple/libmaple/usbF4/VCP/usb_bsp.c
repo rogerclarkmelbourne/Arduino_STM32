@@ -21,13 +21,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_bsp.h"
+#include <STM32_USB_OTG_Driver\inc\usb_bsp.h>
 #include "usbd_conf.h"
-#include <gpio.h>
+#include <libmaple/gpio.h>
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
 #define OTG_FS_IRQn 67
 //typedef unsigned char uint8_t;
-#include <misc.h>
+#include "misc.h"
 
 //#include "stm32f4_discovery.h"
 
@@ -97,10 +97,10 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
 	// ala42
 #define GPIO_AF_OTG1_FS         ((uint8_t)0xA)  /* OTG_FS Alternate Function mapping */
-	gpio_set_mode(GPIOA,11,GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
-	gpio_set_mode(GPIOA,12,GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
-	gpio_set_af_mode(GPIOA,11,GPIO_AF_OTG1_FS) ;	// OTG_FS_DM
-	gpio_set_af_mode(GPIOA,12,GPIO_AF_OTG1_FS) ;	// OTG_FS_DP
+	gpio_set_mode(BOARD_USB_DM_PIN,GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
+	gpio_set_mode(BOARD_USB_DP_PIN,GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
+	gpio_set_af_mode(BOARD_USB_DM_PIN,GPIO_AF_OTG1_FS) ;	// OTG_FS_DM
+	gpio_set_af_mode(BOARD_USB_DP_PIN,GPIO_AF_OTG1_FS) ;	// OTG_FS_DP
 #ifdef USB_OTG_FS_SOF_OUTPUT_ENABLED
 	gpio_set_mode(GPIOA, 8,GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
 	gpio_set_af_mode(GPIOA, 8,GPIO_AF_OTG1_FS) ;		// OTG_FS_SOF
@@ -122,10 +122,10 @@ void USB_OTG_BSP_DeInit(USB_OTG_CORE_HANDLE *pdev)
 {
 	// ala42
 #define GPIO_AF0         ((uint8_t)0)  /* OTG_FS Alternate Function mapping */
-	gpio_set_mode(GPIOA,11, GPIO_MODE_INPUT);
-	gpio_set_mode(GPIOA,12, GPIO_MODE_INPUT);
-	gpio_set_af_mode(GPIOA,11,GPIO_AF0) ;	// OTG_FS_DM
-	gpio_set_af_mode(GPIOA,12,GPIO_AF0) ;	// OTG_FS_DP
+	gpio_set_mode(BOARD_USB_DM_PIN, GPIO_MODE_INPUT);
+	gpio_set_mode(BOARD_USB_DP_PIN, GPIO_MODE_INPUT);
+	gpio_set_af_mode(BOARD_USB_DM_PIN,GPIO_AF0) ;	// OTG_FS_DM
+	gpio_set_af_mode(BOARD_USB_DP_PIN,GPIO_AF0) ;	// OTG_FS_DP
 #ifdef USB_OTG_FS_SOF_OUTPUT_ENABLED
 	gpio_set_mode(GPIOA, 8,GPIO_MODE_INPUT);
 	gpio_set_af_mode(GPIOA, 8,GPIO_AF0) ;		// OTG_FS_SOF

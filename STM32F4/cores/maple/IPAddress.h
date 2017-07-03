@@ -17,8 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IPAddress_h
-#define IPAddress_h
+#ifndef _IPAddress_h_
+#define _IPAddress_h_
 
 #include <stdint.h>
 #include <WString.h>

@@ -20,8 +20,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_dcd.h"
-#include "usb_bsp.h"
+#include <STM32_USB_OTG_Driver\inc\usb_dcd.h>
+#include <STM32_USB_OTG_Driver\inc\usb_bsp.h>
 
 
 /** @addtogroup USB_OTG_DRIVER

@@ -28,8 +28,8 @@
  *  @brief Arduino-style PWM implementation.
  */
 
-#include "libmaple_types.h"
-#include "timer.h"
+#include <libmaple/libmaple_types.h>
+#include <libmaple/timer.h>
 
 #include "boards.h"
 #include "pwm.h"

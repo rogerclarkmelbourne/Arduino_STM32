@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 //#include   "stm32f4_discovery.h"
+#include "usb_conf.h"
 
 /** @defgroup USB_CONF_Exported_Defines
   * @{
