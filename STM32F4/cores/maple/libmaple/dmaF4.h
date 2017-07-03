@@ -85,12 +85,7 @@ typedef struct dma_reg_map {
  * Register bit definitions
  */
 
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-/* Stream configuration register */
-
-=======
 // Stream configuration register
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 #define DMA_CR_CH0                      (0x0 << 25)
 #define DMA_CR_CH1                      (0x1 << 25)
 #define DMA_CR_CH2                      (0x2 << 25)
@@ -139,9 +134,6 @@ typedef struct dma_reg_map {
 #define DMA_CR_HTIE                     (0x1 << 3)
 #define DMA_CR_TEIE                     (0x1 << 2)
 #define DMA_CR_DMEIE                    (0x1 << 1)
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-#define DMA_CR_EN                       (0x1)
-=======
 #define DMA_CR_EN                       (0x1 << 0)
 
 // Device interrupt status register flags
@@ -170,7 +162,6 @@ typedef struct dma_reg_map {
 #define DMA_FCR_FTH_3_4                (0x2 << 0) //  3/4 full FIFO
 #define DMA_FCR_FTH_FULL               (0x3 << 0) //  full FIFO
 
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 
 typedef enum dma_channel {
     DMA_CH0 = DMA_CR_CH0,                /**< Channel 0 */
@@ -182,21 +173,6 @@ typedef enum dma_channel {
     DMA_CH6 = DMA_CR_CH6,                /**< Channel 6 */
     DMA_CH7 = DMA_CR_CH7,                /**< Channel 7 */
 } dma_channel;
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-
-/* Device interrupt status register flags */
-
-#define DMA_ISR_TCIF    (1 << 5)
-#define DMA_ISR_HTIF    (1 << 4)
-#define DMA_ISR_TEIF    (1 << 3)
-#define DMA_ISR_DMEIF   (1 << 2)
-#define DMA_ISR_FEIF    (1 << 0)
-
-/*
- * Devices
- */
-=======
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 
 /** Encapsulates state related to a DMA channel interrupt. */
 typedef struct dma_handler_config {
@@ -218,29 +194,6 @@ typedef struct dma_dev {
 /*
  * Devices
  */
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-
-extern void dma_init(dma_dev *dev);
-
-/** Flags for DMA transfer configuration. */
-typedef enum dma_mode_flags {
-    DMA_MEM_BUF_0 = DMA_CR_CT0, /**< Current memory target buffer 0 */
-    DMA_MEM_BUF_1 = DMA_CR_CT1, /**< Current memory target buffer 1 */
-    DMA_DBL_BUF_MODE = DMA_CR_DBM,  /**< Current memory double buffer mode */
-    DMA_PINC_OFFSET  = DMA_CR_PINCOS,  /**< Peripheral increment offset size */
-    DMA_MINC_MODE  = DMA_CR_MINC,  /**< Memory increment mode */
-    DMA_PINC_MODE  = DMA_CR_PINC,  /**< Peripheral increment mode */
-    DMA_CIRC_MODE  = DMA_CR_CIRC,  /**< Memory Circular mode */
-    DMA_FROM_PER   = DMA_CR_DIR_P2M,  /**< Read from memory to peripheral */
-    DMA_FROM_MEM   = DMA_CR_DIR_M2P,  /**< Read from memory to peripheral */
-    DMA_MEM_TO_MEM = DMA_CR_DIR_M2M,  /**< Read from memory to memory */
-    DMA_PERIF_CTRL   = DMA_CR_PFCTRL,  /**< Peripheral flow controller */
-    DMA_PRIO_MEDIUM    = DMA_CR_PL_MEDIUM,    /**< Medium priority */
-    DMA_PRIO_HIGH      = DMA_CR_PL_HIGH,      /**< High priority */
-    DMA_PRIO_VERY_HIGH = DMA_CR_PL_VERY_HIGH, /**< Very high priority */
-    DMA_TRNS_CMPLT   = DMA_CR_TCIE,   /**< Interrupt on transfer completion */
-    DMA_TRNS_HALF    = DMA_CR_HTIE,  /**< Interrupt on half-transfer */
-=======
 extern dma_dev *DMA1;
 extern dma_dev *DMA2;
 
@@ -262,22 +215,15 @@ typedef enum dma_mode_flags {
     DMA_PRIO_VERY_HIGH = DMA_CR_PL_VERY_HIGH, /**< Very high priority */
     DMA_TRNS_CMPLT     = DMA_CR_TCIE,   /**< Interrupt on transfer completion */
     DMA_TRNS_HALF      = DMA_CR_HTIE,  /**< Interrupt on half-transfer */
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
     DMA_TRNS_ERR       = DMA_CR_TEIE,  /**< Interrupt on transfer error */
     DMA_DIR_MODE_ERR   = DMA_CR_DMEIE  /**< Interrupt on direct mode error */
 } dma_mode_flags;
 
 // Source and destination transfer sizes.
 typedef enum dma_xfer_size {
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-    DMA_SIZE_8BITS  = ( DMA_CR_MSIZE_8BITS|DMA_CR_PSIZE_8BITS ),        /**< 8-bit transfers */
-    DMA_SIZE_16BITS = (DMA_CR_MSIZE_16BITS|DMA_CR_PSIZE_16BITS),        /**< 16-bit transfers */
-    DMA_SIZE_32BITS = (DMA_CR_MSIZE_32BITS|DMA_CR_PSIZE_32BITS)         /**< 32-bit transfers */
-=======
     DMA_SIZE_8BITS  = ( DMA_CR_MSIZE_8BITS|DMA_CR_PSIZE_8BITS ),  // 8-bit transfers
     DMA_SIZE_16BITS = (DMA_CR_MSIZE_16BITS|DMA_CR_PSIZE_16BITS),  // 16-bit transfers
     DMA_SIZE_32BITS = (DMA_CR_MSIZE_32BITS|DMA_CR_PSIZE_32BITS)   // 32-bit transfers
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 } dma_xfer_size;
 
 // Source and destination burst sizes.
@@ -312,22 +258,14 @@ static inline void dma_setup_transfer(dma_dev       *dev,
                                       __io void     *peripheral_address,
                                       __io void     *memory_address0,
                                       __io void     *memory_address1,
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-                                      uint32        flags) {
-=======
                                       uint32        flags)
 {
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
     dev->regs->STREAM[stream].CR &= ~DMA_CR_EN; // disable
 	while( (dev->regs->STREAM[stream].CR)&DMA_CR_EN ); // wait till enable bit is cleared
     dev->regs->STREAM[stream].PAR = (uint32)peripheral_address;
     dev->regs->STREAM[stream].M0AR = (uint32)memory_address0;
     dev->regs->STREAM[stream].M1AR = (uint32)memory_address1;
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-    dev->regs->STREAM[stream].CR = ((flags|channel|trx_size) & 0x0feffffe); // mask out reserved and enable
-=======
     dev->regs->STREAM[stream].CR = (uint32)((flags|channel|trx_size) & 0x0feffffe); // mask out reserved and enable
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 }
     
 static inline void dma_set_num_transfers(dma_dev *dev, dma_stream stream, uint16 num_transfers)
@@ -338,12 +276,6 @@ static inline void dma_set_num_transfers(dma_dev *dev, dma_stream stream, uint16
 static inline void dma_set_fifo_flags(dma_dev *dev, dma_stream stream, uint8 fifo_flags)
 {
     dev->regs->STREAM[stream].FCR = (uint32)(fifo_flags & 0x87); // mask out reserved bits
-}
-
-static inline void dma_set_fifo_flags(dma_dev *dev,
-                                      dma_stream stream,
-                                      uint8 fifo_flags) {
-    dev->regs->STREAM[stream].FCR = fifo_flags & 0x87; // mask out reserved bits
 }
 
 void dma_attach_interrupt(dma_dev *dev,
@@ -357,14 +289,9 @@ static inline void dma_enable(dma_dev *dev, dma_stream stream)
     dev->regs->STREAM[stream].CR |= (uint32)DMA_CR_EN;
 }    
 
-<<<<<<< HEAD:STM32F4/cores/maple/libmaple/dmaF4.h
-static inline void dma_disable(dma_dev *dev, dma_stream stream) {
-    dev->regs->STREAM[stream].CR &= ~DMA_CR_EN;
-=======
 static inline void dma_disable(dma_dev *dev, dma_stream stream)
 {
     dev->regs->STREAM[stream].CR &= (uint32)(~DMA_CR_EN);
->>>>>>> refs/remotes/origin/master:STM32F4/cores/maple/libmaple/dmaF4.h
 	while (dev->regs->STREAM[stream].CR & DMA_CR_EN); // wait till EN bit is reset, see AN4031, chapter 4.1
 }    
 

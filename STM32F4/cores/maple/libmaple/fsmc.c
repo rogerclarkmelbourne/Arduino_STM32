@@ -37,62 +37,6 @@
 /**
  * Configure FSMC GPIOs for use with LCDs.
  */
-<<<<<<< HEAD
-void fsmc_sram_init_gpios(void) {
-    /* Data lines... */
-    gpio_set_mode(PD0, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD1, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD8, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD9, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD10, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD14, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD15, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE7, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE8, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE9, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE10, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE11, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE12, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE13, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE14, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PE15, GPIO_AF_OUTPUT_PP);
-
-    /* Address lines... */
-    gpio_set_mode(PD11, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD12, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(PD13, GPIO_AF_OUTPUT_PP);
-#if 0 // not available on LQFP package
-    gpio_set_mode(GPIOF,  0, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF,  1, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF,  2, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF,  3, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF,  4, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF,  5, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF, 12, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF, 13, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF, 14, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOF, 15, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  0, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  1, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  2, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  3, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  4, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(GPIOG,  5, GPIO_AF_OUTPUT_PP);
-#endif  // not available on LQFP package
-    /* And control lines... */
-    gpio_set_mode(PD4, GPIO_AF_OUTPUT_PP);   // NOE
-    gpio_set_mode(PD5, GPIO_AF_OUTPUT_PP);   // NWE
-
-    gpio_set_mode(PD7, GPIO_AF_OUTPUT_PP);   // NE1
-#if 0 // not available on LQFP package
-    gpio_set_mode(GPIOG,  9, GPIO_AF_OUTPUT_PP);   // NE2
-    gpio_set_mode(GPIOG, 10, GPIO_AF_OUTPUT_PP);   // NE3
-    gpio_set_mode(GPIOG, 12, GPIO_AF_OUTPUT_PP);   // NE4
-#endif  // not available on LQFP package
-
-    gpio_set_mode(PE0, GPIO_AF_OUTPUT_PP);   // NBL0
-    gpio_set_mode(PE1, GPIO_AF_OUTPUT_PP);   // NBL1
-=======
 
 void fsmc_init(void) {
     rcc_clk_enable(RCC_FSMC);
@@ -137,7 +81,6 @@ void fsmc_lcd_init(void)
 	fsmc_nor_psram_set_BTR(FSMC_NOR_PSRAM1_BASE, val);
 	// enable FSCM
 	fsmc_nor_psram_bank_enable(FSMC_NOR_PSRAM1_BASE);
->>>>>>> refs/remotes/origin/master
 }
 
 
