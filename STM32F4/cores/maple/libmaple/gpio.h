@@ -59,30 +59,20 @@ static inline afio_exti_port gpio_exti_port(const gpio_dev *dev) {
  * @param pin Pin on to set or reset
  * @param val If true, set the pin.  If false, reset the pin.
  */
-static inline void gpio_write_pin(uint8_t pin, uint16 val) {
-	uint16_t bit = BIT(pin&0x0F);
-	gpio_reg_map *regs = (PIN_MAP[pin].gpio_device)->regs;
+static inline void gpio_write_pin(uint8_t pin, uint8 val) {
     if (val) {
-        regs->BSRRL = bit;
+        (PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
     } else {
-        regs->BSRRH = bit;
+        (PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
     }
 }
 
-static inline void gpio_set_dev_bit(const gpio_dev * dev, uint8_t bit) {
-	dev->regs->BSRRL = BIT(bit);
-}
-
-static inline void gpio_clear_dev_bit(const gpio_dev * dev, uint8_t bit) {
-	dev->regs->BSRRH = BIT(bit);
-}
-
 static inline void gpio_set_pin(uint8_t pin) {
-	gpio_set_dev_bit(PIN_MAP[pin].gpio_device, (pin&0x0F));
+	(PIN_MAP[pin].gpio_device)->regs->BSRRL = BIT(pin&0x0F);
 }
 
 static inline void gpio_clear_pin(uint8_t pin) {
-	gpio_clear_dev_bit(PIN_MAP[pin].gpio_device, (pin&0x0F));
+	(PIN_MAP[pin].gpio_device)->regs->BSRRH = BIT(pin&0x0F);
 }
 
 /**

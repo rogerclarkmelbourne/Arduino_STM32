@@ -100,8 +100,8 @@ void HardwareSerial::begin(uint32 baud) {
         gpio_set_af_mode(tx_pin, 7);
         gpio_set_af_mode(rx_pin, 7);
     }
-    gpio_set_mode(tx_pin, (gpio_pin_mode)(GPIO_AF_OUTPUT_PP | GPIO_PUPD_INPUT_PU | 0x700));
-    gpio_set_mode(rx_pin, (gpio_pin_mode)(GPIO_MODE_AF      | GPIO_PUPD_INPUT_PU | 0x700));
+    gpio_set_mode(tx_pin, (gpio_pin_mode)(GPIO_AF_OUTPUT_PP_PU | 0x700));
+    gpio_set_mode(rx_pin, (gpio_pin_mode)(GPIO_AF_INPUT_PU | 0x700));
     //gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
     //gpio_set_mode(rxi->gpio_device, rxi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
 #else

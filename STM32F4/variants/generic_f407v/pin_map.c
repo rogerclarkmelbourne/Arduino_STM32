@@ -56,7 +56,7 @@ extern timer_dev timer8;
 
 /*
 typedef struct stm32_pin_info {
-    const gpio_dev * gpio_device;      // Maple pin's GPIO device
+    gpio_dev *gpio_device;      // Maple pin's GPIO device
     timer_dev *timer_device;    // Pin's timer device, if any.
     uint8 timer_channel;        // Timer channel, or 0 if none.
     uint8 adc_channel;          // Pin ADC channel, or ADCx if none.
@@ -198,7 +198,7 @@ const uint8 boardUsedPins[BOARD_NR_USED_PINS] = {
 	BOARD_JTMS_SWDIO_PIN, BOARD_JTCK_SWCLK_PIN,
 	FLASH_CS_PIN, FLASH_CLK_PIN, FLASH_DO_PIN, FLASH_DI_PIN,
 	NRF24_CE_PIN, NRF24_CS_PIN, NRF24_IRQ_PIN,
-	BOARD_SDIO_D0, BOARD_SDIO_D1, BOARD_SDIO_D2, BOARD_SDIO_D3, BOARD_SDIO_CK, BOARD_SDIO_CMD,
+	BOARD_SDIO_D0, BOARD_SDIO_D1, BOARD_SDIO_D2, BOARD_SDIO_D3, BOARD_SDIO_CLK, BOARD_SDIO_CMD,
 	USB_DM_PIN, USB_DP_PIN
 };
 

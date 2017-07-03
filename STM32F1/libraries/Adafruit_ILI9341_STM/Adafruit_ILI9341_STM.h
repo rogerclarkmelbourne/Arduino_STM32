@@ -11,6 +11,10 @@ This library has been modified for the Maple Mini
 #include <Adafruit_GFX_AS.h>
 #include <avr/pgmspace.h>
 
+#ifndef swap
+  #define swap(a, b) { int16_t t = a; a = b; b = t; }
+#endif
+
 #define ILI9341_TFTWIDTH  240
 #define ILI9341_TFTHEIGHT 320
 
@@ -125,7 +129,7 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   void     dummyclock(void);
   */  
 
-  void     spiwrite(uint8_t),
+  void     spiwrite(uint16_t),
     writecommand(uint8_t c),
     writedata(uint8_t d),
     commandList(uint8_t *addr);

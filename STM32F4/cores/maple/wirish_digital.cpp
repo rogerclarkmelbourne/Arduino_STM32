@@ -33,7 +33,7 @@
 
 void pinMode(uint8 pin, WiringPinMode mode) {
     gpio_pin_mode outputMode;
-//    boolean pwm = false;
+    boolean pwm = false;
 
     if (pin >= BOARD_NR_GPIO_PINS) {
         return;
@@ -61,11 +61,11 @@ void pinMode(uint8 pin, WiringPinMode mode) {
         break;
     case PWM:
         outputMode = GPIO_AF_OUTPUT_PP;
-//        pwm = true;
+        pwm = true;
         break;
     case PWM_OPEN_DRAIN:
         outputMode = GPIO_AF_OUTPUT_OD;
-//        pwm = true;
+        pwm = true;
         break;
     default:
         ASSERT(0);
@@ -73,14 +73,14 @@ void pinMode(uint8 pin, WiringPinMode mode) {
     }
 
     gpio_set_mode(pin, outputMode);
-/*
+
     if (PIN_MAP[pin].timer_device != NULL) {
-        // Enable/disable timer channels if we're switching into or out of PWM.
+        /* Enable/disable timer channels if we're switching into or
+         * out of PWM. */
         timer_set_mode(PIN_MAP[pin].timer_device,
                        PIN_MAP[pin].timer_channel,
                        pwm ? TIMER_PWM : TIMER_DISABLED);
     }
-*/
 }
 
 
@@ -94,7 +94,7 @@ uint32 digitalRead(uint8 pin)
         HIGH : LOW;
 }
 
-void digitalWrite(uint8 pin, uint16 val)
+void digitalWrite(uint8 pin, uint8 val)
 {
     if (pin >= BOARD_NR_GPIO_PINS) {
         return;

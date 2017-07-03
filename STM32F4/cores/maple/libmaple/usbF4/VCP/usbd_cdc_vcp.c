@@ -25,7 +25,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_vcp.h"
-//#include  "stm32f4_discovery.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -57,7 +56,7 @@ uint8_t UsbRecBuffer[UsbRecBufferSize];
 volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
-uint8_t UsbTXBlock = 0;
+uint8_t UsbTXBlock = 1;
 
 uint32_t VCPBytesAvailable(void) {
 	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;

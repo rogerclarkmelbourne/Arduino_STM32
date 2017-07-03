@@ -428,13 +428,14 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 	);
 	dma_set_num_transfers(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaStream, length);
 	dma_set_fifo_flags(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaStream, 0);
+	dma_clear_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaStream);
 
 	// TX
-	uint32 flags = (DMA_MINC_MODE | DMA_FROM_MEM);
+	uint32 flags = (DMA_MINC_MODE | DMA_FROM_MEM); // | DMA_TRNS_CMPLT);
 	if ( transmitBuf==0 ) {
-		static uint16_t ff = 0XFFFF;
+		static uint8_t ff = 0XFF;
 		transmitBuf = &ff;
-		flags ^= DMA_MINC_MODE; // remove increment mode
+		flags &= ~((uint32)DMA_MINC_MODE); // remove increment mode
 	}
 	dma_setup_transfer(	_currentSetting->spiDmaDev,
 						_currentSetting->spiTxDmaStream,
@@ -467,7 +468,6 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 	spi_rx_dma_disable(_currentSetting->spi_d);
 	dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaStream);
 	dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaStream);
-
     return b;
 }
 
@@ -610,29 +610,6 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
     Serial.print(", mosi="); Serial.print(pins->mosi);
     Serial.println(")");
     #endif
-
-#ifdef STM32F4
-	if(dev->clk_id <= RCC_SPI2) {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 5);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 5);
-		gpio_set_af_mode(pins->miso, 5);
-		gpio_set_af_mode(pins->mosi, 5);
-	} else {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 6);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 6);
-		gpio_set_af_mode(pins->miso, 6);
-		gpio_set_af_mode(pins->mosi, 6);
-	}
-	
-#endif
 
     spi_config_gpios(dev, as_master, pins->nss, pins->sck, pins->miso, pins->mosi);
 }

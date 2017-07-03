@@ -121,7 +121,7 @@ void pinMode(uint8 pin, WiringPinMode mode);
  * @param value Either LOW (write a 0) or HIGH (write a 1).
  * @see pinMode()
  */
-void digitalWrite(uint8 pin, uint16 value);
+void digitalWrite(uint8 pin, uint8 value);
 
 /**
  * Read a digital value from a pin.  The pin must have its mode set to
