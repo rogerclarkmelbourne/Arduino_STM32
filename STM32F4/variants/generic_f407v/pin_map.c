@@ -39,9 +39,9 @@ extern "C"{
 //#include "generic_f407v.h"
 
 //#include "fsmc.h"
-#include <libmaple\gpio.h>
-#include <libmaple\rcc.h>
-#include <libmaple\timer.h>
+#include <libmaple/gpio.h>
+#include <libmaple/rcc.h>
+#include <libmaple/timer.h>
 
 #include <wirish_types.h>
 
