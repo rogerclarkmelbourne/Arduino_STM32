@@ -115,9 +115,8 @@ netduino2plus.upload.protocol=maple_dfu
 
 #netduino2plus.upload.use_1200bps_touch=false
 netduino2plus.upload.file_type=bin
-netduino2plus.upload.ram.maximum_size=196608
-netduino2plus.upload.flash.maximum_size=1048576
 netduino2plus.upload.maximum_size=1048576
+netduino2plus.upload.maximum_data_size=131072
 
 netduino2plus.upload.usbID=0483:df11
 netduino2plus.upload.altID=0
