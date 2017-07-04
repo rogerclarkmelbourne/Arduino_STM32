@@ -651,4 +651,4 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
 }
 
 
-//SPIClass SPI(3);
+SPIClass SPI(3); // needed for external libs
