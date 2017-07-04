@@ -10,9 +10,8 @@ discovery_f407.upload.protocol=stlink
 
 #discovery_f407.upload.use_1200bps_touch=false
 discovery_f407.upload.file_type=bin
-discovery_f407.upload.ram.maximum_size=17000
-discovery_f407.upload.flash.maximum_size=1048576
 discovery_f407.upload.maximum_size=1048576
+discovery_f407.upload.maximum_data_size=131072
 
 #discovery_f407.upload.usbID=1EAF:0003
 #discovery_f407.upload.altID=1
@@ -44,9 +43,8 @@ generic_f407v.upload.tool=stlink_upload
 generic_f407v.upload.protocol=stlink
 
 generic_f407v.upload.file_type=bin
-generic_f407v.upload.ram.maximum_size=131072
-generic_f407v.upload.flash.maximum_size=514288
 generic_f407v.upload.maximum_size=514288
+generic_f407v.upload.maximum_data_size=131072
 
 #generic_f407v.upload.usbID=0483:3748
 #generic_f407v.upload.altID=1
@@ -82,9 +80,8 @@ stm32f4stamp.upload.protocol=maple_dfu
 
 #stm32f4stamp.upload.use_1200bps_touch=false
 stm32f4stamp.upload.file_type=bin
-stm32f4stamp.upload.ram.maximum_size=196608
-stm32f4stamp.upload.flash.maximum_size=1048576
 stm32f4stamp.upload.maximum_size=1048576
+stm32f4stamp.upload.maximum_data_size=131072
 
 stm32f4stamp.upload.usbID=0483:df11
 stm32f4stamp.upload.altID=0
