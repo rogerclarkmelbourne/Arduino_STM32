@@ -19,7 +19,7 @@ void setup() {
   pinMode(33, OUTPUT);
   Serial.begin(9600);
   // wait for serial monitor to be connected.
-  while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
+  while (!Serial)
   {
     digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
