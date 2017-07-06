@@ -38,7 +38,7 @@ void setup(void)
   pinMode(A_RANDOM_ANALOG_PIN, INPUT_ANALOG);
 
 // wait for serial monitor to be connected.
-  while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
+  while (!Serial)
   {
     digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
@@ -48,7 +48,7 @@ void setup(void)
   setup_temperature_sensor();
   
 // announce start up
-  if(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS()))
+  if(Serial)
     Serial.println("Temp mon startup");
 }
 
@@ -69,7 +69,7 @@ void loop(void)
   t2 = micros();
   vsense = adc_read(ADC1, 16);
   t3 = micros();
-  if(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())) {
+  if(Serial) {
     sprintf(buf,"%04x %08x  %04x %08x" , vsense, t3-t2, alogpin, t2-t1);
     Serial.println(buf);
   }

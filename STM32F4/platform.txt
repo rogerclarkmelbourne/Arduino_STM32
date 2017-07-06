@@ -8,8 +8,6 @@ version=0.1.0
 
 # compiler variables
 # ----------------------
-#build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g -Os -w -MMD -std=gnu11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
@@ -30,6 +28,8 @@ compiler.size.cmd=arm-none-eabi-size
 compiler.define=-DARDUINO=                            
 
 # this can be overriden in boards.txt
+build.f_cpu=168000000L
+build.mcu=cortex-m4
 build.cpu_flags=
 build.hs_flag=
 build.common_flags=-mthumb -D__STM32F4__
@@ -44,12 +44,10 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 
+##compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+#compiler.libs.c.flags="-I{build.core.path}" "-I{build.core.path}/libmaple" "-I{build.core.path}/libmaple/usbF4" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Core/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Class/cdc/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_OTG_Driver/inc" "-I{build.core.path}/libmaple/usbF4/VCP" 
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.core.path}/libmaple/usbF4"
 
-##compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include" "-I{build.system.path}/libmaple/stm32f1/include/series" "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
-#compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
-
-
-compiler.libs.c.flags="-I{build.core.path}/libmaple" -I{build.core.path}/libmaple/usbF4 -I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Core/inc -I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Class/cdc/inc -I{build.core.path}/libmaple/usbF4/STM32_USB_OTG_Driver/inc -I{build.core.path}/libmaple/usbF4/VCP 
 
 
 
@@ -66,14 +64,13 @@ compiler.libs.c.flags="-I{build.core.path}/libmaple" -I{build.core.path}/libmapl
 # ---------------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.cpu_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c++ files
 recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
 recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
-#recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" "{source_file}" -o "{object_file}"
 
 ## Create archives
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
@@ -92,7 +89,6 @@ recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
-#recipe.size.regex=\.text\s+([0-9]+).*
 recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 

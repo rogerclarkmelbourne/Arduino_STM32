@@ -29,8 +29,5 @@
  * @brief reset and clock control definitions and prototypes
  */
 
-#ifdef STM32F2
-#include "rccF2.h"
-#else
-#include "rccF1.h"
-#endif
+
+#include "rccF4.h"

@@ -33,8 +33,9 @@
 #ifndef _IO_H_
 #define _IO_H_
 
-#include "gpio.h"
-#include "adc.h"
+#include <inttypes.h>
+#include <libmaple/gpio.h>
+#include <libmaple/adc.h>
 
 #include "wirish_time.h"
 
@@ -179,9 +180,11 @@ static inline void toggleLED() {
  * accomplished portably over all LeafLabs boards by calling
  * pinMode(BOARD_BUTTON_PIN, INPUT).
  *
+ * @param button - one of available on-board buttons (up to 3 for generic F4)
+ *
  * @see pinMode()
  */
-uint8 isButtonPressed();
+uint8 isButtonPressed(uint8_t button);
 
 /**
  * Wait until the button is pressed and released, timing out if no
@@ -195,12 +198,14 @@ uint8 isButtonPressed();
  * button is pressed.  If timeout_millis is left out (or 0), wait
  * forever.
  *
+ * @param button - one of available on-board buttons (up to 3 for generic F4)
+ *
  * @return true, if the button was pressed; false, if the timeout was
  * reached.
  *
  * @see pinMode()
  */
-uint8 waitForButtonPress(uint32 timeout_millis=0);
+uint8 waitForButtonPress(uint8_t button, uint32 timeout_millis=0);
 
 /**
  * Shift out a byte of data, one bit at a time.

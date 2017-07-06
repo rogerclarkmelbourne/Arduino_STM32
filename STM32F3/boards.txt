@@ -8,9 +8,8 @@ discovery_f3.upload.protocol=stlink
 
 #discovery_f407.upload.use_1200bps_touch=false
 discovery_f3.upload.file_type=bin
-discovery_f3.upload.ram.maximum_size=17000
-discovery_f3.upload.flash.maximum_size=108000
-discovery_f3.upload.maximum_size=108000
+discovery_f3.upload.maximum_size=262144
+discovery_f3.upload.maximum_data_size=49152
 
 #discovery_f3.upload.usbID=1EAF:0003
 #discovery_f3.upload.altID=1

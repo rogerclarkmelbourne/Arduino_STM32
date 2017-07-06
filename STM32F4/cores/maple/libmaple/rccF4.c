@@ -24,7 +24,7 @@
  * SOFTWARE.
  *****************************************************************************/
 
- #ifdef STM32F2
+#ifdef STM32F4
  
 /**
  * @file rcc.c
@@ -166,7 +166,6 @@ typedef struct
 #define FLASH               ((FLASH_TypeDef *) FLASH_R_BASE)
 #define RESET 0
 
-typedef uint32 uint32_t;
 
 void InitMCO1()
 {
@@ -175,8 +174,8 @@ void InitMCO1()
     RCC->CFGR &= RCC_CFGR_MCO1_RESET_MASK;
     RCC->CFGR |= RCC_CFGR_MCO1Source_HSE | RCC_CFGR_MCO1Div_1;
     // PA8 Output the Master Clock MCO1
-    gpio_set_af_mode(GPIOA, 8, 0);
-    gpio_set_mode(GPIOA, 8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
+    gpio_set_af_mode(PA8, 0);
+    gpio_set_mode(PA8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
 }
 
 
