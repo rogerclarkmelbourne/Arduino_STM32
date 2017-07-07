@@ -119,7 +119,7 @@ size_t n = 0;
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
 size_t n = 0;
-    if (!this->isConnected() || !buf) {
+    if (!(bool) *this || !buf) {
         return 0;
     }
 
@@ -190,16 +190,16 @@ uint8 USBSerial::pending(void) {
     return usb_cdcacm_get_pending();
 }
 
-uint8 USBSerial::isConnected(void) {
-    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
-}
-
 uint8 USBSerial::getDTR(void) {
     return usb_cdcacm_get_dtr();
 }
 
 uint8 USBSerial::getRTS(void) {
     return usb_cdcacm_get_rts();
+}
+
+USBSerial::operator bool() {
+    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
 #if BOARD_HAVE_SERIALUSB
