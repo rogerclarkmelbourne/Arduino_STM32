@@ -138,69 +138,8 @@
 
 #endif
 
-#if defined(MCU_STM32F103RB)
-    /* e.g., LeafLabs Maple */
 
-    #define STM32_NR_GPIO_PORTS          4
-    #define STM32_DELAY_US_MULT         12
-    #define STM32_SRAM_END              ((void*)0x20005000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F103ZE)
-    /* e.g., LeafLabs Maple Native */
-
-    #define STM32_NR_GPIO_PORTS          7
-    #define STM32_DELAY_US_MULT         12
-    #define STM32_SRAM_END              ((void*)0x20010000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F103CB)
-    /* e.g., LeafLabs Maple Mini */
-
-    /* This STM32_NR_GPIO_PORTS value is not, strictly speaking, true.
-     * But only pins 0 and 1 exist, and they're used for OSC on the
-     * Mini, so we'll live with this for now. */
-    #define STM32_NR_GPIO_PORTS          3
-    #define STM32_DELAY_US_MULT         12
-    #define STM32_SRAM_END              ((void*)0x20005000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F103RE)
-    /* e.g., LeafLabs Maple RET6 edition */
-
-    #define STM32_NR_GPIO_PORTS          4
-    #define STM32_DELAY_US_MULT         12
-    #define STM32_SRAM_END              ((void*)0x20010000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F103VE)
-    /* e.g., LeafLabs Maple Native */
-
-    #define STM32_NR_GPIO_PORTS          5
-    #define STM32_DELAY_US_MULT         12
-    #define STM32_SRAM_END              ((void*)0x20010000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F205VE)
-	#define STM32_TICKS_PER_US          120
-    #define STM32_NR_GPIO_PORTS          5
-    #define STM32_DELAY_US_MULT         (STM32_TICKS_PER_US/3)
-    #define STM32_SRAM_END              ((void*)0x20010000)
-
-    #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
-    #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#elif defined(MCU_STM32F406VG)
+#if defined( STM32F4 )
 	#define STM32_TICKS_PER_US          168
     #define STM32_NR_GPIO_PORTS          5
     #define STM32_DELAY_US_MULT         (STM32_TICKS_PER_US/3)

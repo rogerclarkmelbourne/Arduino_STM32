@@ -51,3 +51,12 @@ if [ ! -x ${DFU_UTIL} ]; then
 fi
 
 ${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R ${dfuse_addr} -R
+
+echo -n Waiting for ${dummy_port_fullpath} serial...
+
+COUNTER=0
+while [ ! -c ${dummy_port_fullpath} ] && ((COUNTER++ < 40)); do
+    sleep 0.1
+done
+
+echo Done

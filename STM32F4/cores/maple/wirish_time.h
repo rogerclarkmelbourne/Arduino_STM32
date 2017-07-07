@@ -32,10 +32,13 @@
 #ifndef __WIRISH_TIME_H_
 #define __WIRISH_TIME_H_
 
-#include "libmaple.h"
-#include "nvic.h"
-#include "systick.h"
 #include "boards.h"
+#include <libmaple/nvic.h>
+#include <libmaple/systick.h>
+
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 #define US_PER_MS               1000
 
@@ -101,5 +104,9 @@ void delay(unsigned long ms);
  * @see delay()
  */
 void delayMicroseconds(uint32 us);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif
