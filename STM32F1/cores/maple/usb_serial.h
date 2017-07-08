@@ -51,7 +51,7 @@ public:
 
     virtual int available(void);// Changed to virtual
 
-    size_t usb_serial_class::readBytes(char *buf, const size_t& len);
+    size_t readBytes(char *buf, const size_t& len);
     uint32 read(uint8 * buf, uint32 len);
     // uint8  read(void);
 
