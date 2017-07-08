@@ -168,6 +168,19 @@ uint32 USBSerial::read(uint8 * buf, uint32 len) {
     return rxed;
 }
 
+size_t USBSerial::readBytes(char *buf, const size_t& len)
+{
+    size_t rxed=0;
+    unsigned long startMillis;
+    startMillis = millis();
+    if (len <= 0) return 0;
+    do {
+        rxed += usb_cdcacm_rx((uint8 *)buf + rxed, len - rxed);
+        if (rxed == len) return rxed;
+    } while(millis() - startMillis < _timeout);
+    return rxed;
+}
+
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
