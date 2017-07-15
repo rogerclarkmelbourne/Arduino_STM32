@@ -26,7 +26,7 @@
 
 #include "usbd_ioreq.h"
 #include "usbd_req.h"
-#include <VCP\usbd_desc.h>
+#include <VCP/usbd_desc.h>
 
 
 

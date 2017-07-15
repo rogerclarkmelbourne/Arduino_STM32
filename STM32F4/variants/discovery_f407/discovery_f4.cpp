@@ -34,8 +34,8 @@
 
 #include "discovery_f4.h"
 
-#include <libmaple\gpio.h>
-#include <libmaple\rcc.h>
+#include <libmaple/gpio.h>
+#include <libmaple/rcc.h>
 
 #include "wirish_types.h"
 

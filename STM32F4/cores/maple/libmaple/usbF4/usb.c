@@ -4,11 +4,11 @@
 
 #include <STM32_USB_Device_Library/Class/cdc/inc/usbd_cdc_core.h>
 #include <STM32_USB_Device_Library/Core/inc/usbd_usr.h>
-#include <VCP\usbd_desc.h>
+#include <VCP/usbd_desc.h>
 #include "usb.h"
 #include <libmaple/gpio.h>
 #include <libmaple/rccF4.h>
-#include <VCP\usbd_cdc_vcp.h>
+#include <VCP/usbd_cdc_vcp.h>
 #include <boards.h>
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;
@@ -96,7 +96,7 @@ RESULT usbPowerOff(void) {
 
 void usbDsbISR(void) {};
 
-#include <STM32_USB_OTG_Driver\inc\usb_dcd_int.h>
+#include <STM32_USB_OTG_Driver/inc/usb_dcd_int.h>
 void __irq_OTG_FS_IRQHandler(void)
 {
   USBD_OTG_ISR_Handler (&USB_OTG_dev);
