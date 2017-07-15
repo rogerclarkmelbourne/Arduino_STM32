@@ -32,11 +32,11 @@
 #include "fsmc.h"
 #include "gpio.h"
 
-#ifdef STM32_HIGH_DENSITY
+#if defined(STM32_HIGH_DENSITY) && defined(BOARD_generic_f407v) // pins not yet defined for disco F407
 
 /**
  * Configure FSMC GPIOs for use with LCDs.
- */ 
+ */
 
 void fsmc_init(void) {
     rcc_clk_enable(RCC_FSMC);

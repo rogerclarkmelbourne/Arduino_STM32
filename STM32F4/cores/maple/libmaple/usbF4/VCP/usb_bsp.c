@@ -21,7 +21,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <STM32_USB_OTG_Driver\inc\usb_bsp.h>
+#include <STM32_USB_OTG_Driver/inc/usb_bsp.h>
 #include "usbd_conf.h"
 #include <libmaple/gpio.h>
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;

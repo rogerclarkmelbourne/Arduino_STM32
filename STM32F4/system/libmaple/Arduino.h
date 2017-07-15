@@ -27,7 +27,6 @@
 #ifndef _WIRISH_ARDUINO_H_
 #define _WIRISH_ARDUINO_H_
 
-//#warning Include Arduino.h from system\libmaple
 
 #include "wirish.h"
 

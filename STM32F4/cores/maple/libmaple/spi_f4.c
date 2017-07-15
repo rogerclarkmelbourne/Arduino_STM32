@@ -54,16 +54,14 @@ spi_dev *SPI3 = &spi3;
  * Routines
  */
 
-void spi_config_gpios(spi_dev *ignored,
+void spi_config_gpios(spi_dev *dev,
                       uint8 as_master,
                       uint8 nss_pin,
                       uint8 sck_pin,
                       uint8 miso_pin,
                       uint8 mosi_pin) {
     if (as_master) {
-//        gpio_set_mode(nss_dev, nss_bit, GPIO_AF_OUTPUT_PP);
         gpio_set_mode(sck_pin, GPIO_AF_OUTPUT_PP);
-//        gpio_set_mode(comm_dev, miso_bit, GPIO_INPUT_FLOATING);
         gpio_set_mode(miso_pin, GPIO_AF_INPUT_PD);		
         gpio_set_mode(mosi_pin, GPIO_AF_OUTPUT_PP);
     } else {
@@ -72,6 +70,15 @@ void spi_config_gpios(spi_dev *ignored,
         gpio_set_mode(miso_pin, GPIO_AF_OUTPUT_PP);
         gpio_set_mode(mosi_pin, GPIO_INPUT_FLOATING);
     }
+
+	uint8_t af_mode = 6;
+	if(dev->clk_id <= RCC_SPI2) { af_mode = 5; }
+	if(!as_master) {
+		gpio_set_af_mode(nss_pin, af_mode);
+	}
+	gpio_set_af_mode(sck_pin, af_mode);
+	gpio_set_af_mode(miso_pin, af_mode);
+	gpio_set_af_mode(mosi_pin, af_mode);
 }
 
 void spi_foreach(void (*fn)(spi_dev*)) {
