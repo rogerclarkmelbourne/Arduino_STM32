@@ -188,7 +188,7 @@ void SPIClass::end(void) {
 void SPIClass::setClockDivider(uint32_t clockDivider)
 {
 	#ifdef SPI_DEBUG
-	Serial.print("Clock divider set to "); Serial.println(clockDivider);
+    Serial.print("Clock divider set to "); Serial.println(clockDivider, DEC);
 	#endif
 	_currentSetting->clockDivider = clockDivider;
 	uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_BR);
@@ -622,9 +622,6 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
  */
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
 	uint32_t clock = 0, i;
-	#ifdef SPI_DEBUG
-	Serial.print("determine_baud_rate("); Serial.print(freq); Serial.println(")");
-	#endif
     switch (rcc_dev_clk(dev->clk_id))
     {
     	case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
