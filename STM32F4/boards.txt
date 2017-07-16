@@ -44,7 +44,7 @@ generic_f407v.upload.protocol=stlink
 
 generic_f407v.upload.file_type=bin
 generic_f407v.upload.maximum_size=514288
-generic_f407v.upload.ram.maximum_size=131072
+generic_f407v.upload.maximum_data_size=131072
 
 #generic_f407v.upload.usbID=0483:3748
 #generic_f407v.upload.altID=1

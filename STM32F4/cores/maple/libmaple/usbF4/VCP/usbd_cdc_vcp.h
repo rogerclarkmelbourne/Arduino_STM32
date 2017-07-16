@@ -26,7 +26,7 @@
 /* Includes ------------------------------------------------------------------*/
 //#include "stm32f4xx.h"
 
-#include <STM32_USB_Device_Library\Class\cdc\inc\usbd_cdc_core.h>
+#include <STM32_USB_Device_Library/Class/cdc/inc/usbd_cdc_core.h>
 #include "usbd_conf.h"
 
 

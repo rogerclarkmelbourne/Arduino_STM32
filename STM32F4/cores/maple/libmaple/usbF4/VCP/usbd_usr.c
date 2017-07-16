@@ -20,8 +20,8 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include <STM32_USB_Device_Library\Core\inc\usbd_usr.h>
-#include <STM32_USB_Device_Library\Core\inc\usbd_ioreq.h>
+#include <STM32_USB_Device_Library/Core/inc/usbd_usr.h>
+#include <STM32_USB_Device_Library/Core/inc/usbd_ioreq.h>
 
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
