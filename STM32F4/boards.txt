@@ -1,6 +1,7 @@
 # 
 
 menu.usb_cfg=USB configuration
+menu.opt=Optimize
 
 ##############################################################
 discovery_f407.name=STM32 Discovery F407

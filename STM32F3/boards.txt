@@ -1,5 +1,7 @@
 # 
 
+menu.opt=Optimize
+
 ##############################################################
 discovery_f3.name=STM32F3Discovery
 
