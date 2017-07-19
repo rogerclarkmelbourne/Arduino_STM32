@@ -57,6 +57,11 @@ uint8 HardwareCAN::available(void)
 	return can_rx_available();
 }
 
+uint8 HardwareCAN::frame_lost(void)
+{
+	return can_frame_lost() ;
+}
+
 CanMsg* HardwareCAN::recv(void)
 {
 	return can_rx_queue_get();

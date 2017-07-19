@@ -1,9 +1,4 @@
-//#include "libmaple.h"
 #include "can.h"
-//#include "rcc.h"
-//#include "gpio.h"
-//#include "nvic.h"
-//#include "usb.h"
 
 /**
   *	CAN_interrupts
@@ -73,10 +68,10 @@ static const struct can_speed_info can_speed_table[] = {
 CAN_STATUS status;
 CanMsg can_rx_queue[CAN_RX_QUEUE_SIZE];
 
-uint8 can_rx_head;
-uint8 can_rx_tail;
-uint8 can_rx_count;
-uint8 can_rx_lost;
+// JMD 2017/07/18 -- added volatile to fix queue problems, removed can_rx_count
+volatile uint8 can_rx_head;
+volatile uint8 can_rx_tail;
+volatile uint8 can_rx_lost;
 uint8 can_active = 0;
 
 /**
@@ -137,7 +132,10 @@ CAN_STATUS can_deinit(CAN_Port* CANx)
 	if (CANx == CAN1_BASE)
 	{
 		nvic_irq_disable(NVIC_USB_LP_CAN_RX0);	// Disable interrupts
+		nvic_irq_disable(NVIC_CAN_RX1);
 		nvic_irq_disable(NVIC_USB_HP_CAN_TX);
+		__asm volatile( "dsb" );						// Synchronization of the pipeline to guarantee
+		__asm volatile( "isb" );						// that the protection against interrupts is effective
 		rcc_reset_dev(RCC_CAN);
 		rcc_clk_disable(RCC_CAN);
 		can_active = 0;
@@ -161,11 +159,10 @@ CAN_STATUS can_init(CAN_Port* CANx, uint32 control, uint8 speed)
 {
 	status = CAN_INIT_FAILED;			// default result status
 										// initialize receive message queue
-	can_rx_head = can_rx_tail = can_rx_count = can_rx_lost = 0;
+	can_rx_head = can_rx_tail = can_rx_lost = 0;
 
 	rcc_reset_dev(RCC_USB);			//! X893
 	rcc_clk_disable(RCC_USB);		//! X893
-//	line_dtr_rts = 0;				//! X893
 	rcc_clk_enable(RCC_AFIO);			// enable clocks for AFIO
 	rcc_clk_enable(RCC_CAN);			// and CAN
 	rcc_reset_dev(RCC_CAN);				// reset CAN interface
@@ -184,6 +181,7 @@ CAN_STATUS can_init(CAN_Port* CANx, uint32 control, uint8 speed)
 	CANx->BTR |= (can_speed_table[speed].btr & CAN_TIMING_MASK);
 
 	nvic_irq_enable(NVIC_USB_LP_CAN_RX0);	// Enable interrupts
+	nvic_irq_enable(NVIC_CAN_RX1);
     
 	nvic_irq_enable(NVIC_USB_HP_CAN_TX);
 
@@ -291,6 +289,7 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 	CANx->FMR &= ~CAN_FMR_FINIT;
 	return CAN_OK;
 }
+
 
 /**
   * @brief  Initiates the transmission of a message.
@@ -430,30 +429,54 @@ void can_cancel(CAN_Port* CANx, uint8 mbx)
 void can_rx_queue_clear(void)
 {
 	nvic_irq_disable(NVIC_USB_LP_CAN_RX0);
-	can_rx_head = can_rx_tail = can_rx_count = can_rx_lost = 0;
+	nvic_irq_disable(NVIC_CAN_RX1);
+	__asm volatile( "dsb" );						// Synchronization of the pipeline to guarantee
+	__asm volatile( "isb" );						// that the protection against interrupts is effective
+	can_rx_head = can_rx_tail = can_rx_lost = 0;					// JMD 2017/07/18
 	nvic_irq_enable(NVIC_USB_LP_CAN_RX0);
+	nvic_irq_enable(NVIC_CAN_RX1);
 }
 
+// JMD 2017/07/18 -- changed
 uint8 can_rx_available(void)
 {
-	return can_rx_count;
+	if ( can_rx_head >= can_rx_tail )
+		return can_rx_head - can_rx_tail ;
+	else
+		return CAN_RX_QUEUE_SIZE - ( can_rx_tail - can_rx_head ) ;
+}
+
+// JMD 2017/07/18 -- added
+uint8 can_frame_lost(void)
+{
+	if ( can_rx_lost != 0 )
+	{
+		can_rx_lost = 0 ;
+		return 1 ;
+	}
+	return 0 ;
+	
 }
 
 CanMsg* can_rx_queue_get(void)
 {
-	if (can_rx_count == 0)
+	if (can_rx_head == can_rx_tail)			// JMD 2017/07/18 -- changed
 		return NULL;
 	return &(can_rx_queue[can_rx_tail]);
 }
 
+
 void can_rx_queue_free(void)
 {
-	if (can_rx_count > 0)
+	if (can_rx_head != can_rx_tail)			// JMD 2017/07/18 -- changed
 	{
-		nvic_irq_disable(NVIC_USB_LP_CAN_RX0);			// JMD problème d'atomicité
+		nvic_irq_disable(NVIC_USB_LP_CAN_RX0);			// JMD atomicity problem
+		nvic_irq_disable(NVIC_CAN_RX1);
+		__asm volatile( "dsb" );						// Synchronization of the pipeline to guarantee
+		__asm volatile( "isb" );						// that the protection against interrupts is effective
 		can_rx_tail = (can_rx_tail == (CAN_RX_QUEUE_SIZE - 1)) ? 0 : (can_rx_tail + 1);
-		--can_rx_count;
 		nvic_irq_enable(NVIC_USB_LP_CAN_RX0);			// fin JMD problème d'atomicité
+		nvic_irq_enable(NVIC_CAN_RX1);
 	}
 }
 
@@ -504,12 +527,11 @@ void can_rx_release(CAN_Port* CANx, CAN_FIFO fifo)
 
 void can_rx_read(CAN_Port* CANx, CAN_FIFO fifo)
 {
-	if (can_rx_count < CAN_RX_QUEUE_SIZE)		// read the message
+	if (can_rx_available() < CAN_RX_QUEUE_SIZE)		// read the message
 	{
 		CanMsg* msg = &can_rx_queue[can_rx_head];
 		can_read(CANx, fifo, msg);
 		can_rx_head = (can_rx_head == (CAN_RX_QUEUE_SIZE - 1)) ? 0 : (can_rx_head + 1);
-		can_rx_count++;
 	}
 	else
 		can_rx_lost = 1;						// no place in queue, ignore package
@@ -527,6 +549,12 @@ uint8 CAN_RX0_IRQ_Handler(void)
 			can_rx_read(CAN1_BASE, CAN_FIFO1);		// message pending FIFO1
 	}
 	return can_active;								// return CAN active flag to USB handler
+}
+
+// Addition JMD: the messages stored in fifo1 must also trigger an interrupt.
+void __irq_can_rx1(void)
+{
+	CAN_RX0_IRQ_Handler() ;
 }
 
 void USB_HP_CAN_TX_IRQHandler (void)
