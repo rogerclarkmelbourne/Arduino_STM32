@@ -66,6 +66,7 @@ public:
 	 */
 	void end();
 
+	void setClock(uint32_t frequencyHz);
     /*
      * Disables the I2C device and remove the device address.
      */

@@ -142,6 +142,11 @@ void HardwareTimer::refresh(void) {
     timer_generate_update(this->dev);
 }
 
+void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
+	this->dev->regs.bas->CR2 &= ~TIMER_CR2_MMS;
+	this->dev->regs.bas->CR2 |= mode;
+}
+
 /*  CARLOS Changes to add encoder mode.*/
 
 //direction of movement. (to be better described). 

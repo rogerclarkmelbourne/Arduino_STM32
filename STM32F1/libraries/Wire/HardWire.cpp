@@ -84,3 +84,18 @@ void HardWire::end() {
     i2c_disable(sel_hard);
     sel_hard = 0;
 }
+
+void HardWire::setClock(uint32_t frequencyHz)
+{
+	switch(frequencyHz)
+	{
+		case 400000:
+			dev_flags |= I2C_FAST_MODE;// set FAST_MODE bit
+			break;
+		case 100000:
+		default:
+			dev_flags &= ~I2C_FAST_MODE;// clear FAST_MODE bit
+			break;
+	}
+	
+}

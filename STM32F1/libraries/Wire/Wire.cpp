@@ -56,7 +56,9 @@
 
 void TwoWire::set_scl(bool state) {
     I2C_DELAY(this->i2c_delay);
-    digitalWrite(this->scl_pin,state);
+
+	gpio_write_bit(sclDevice,sclBit, state);
+//    digitalWrite(this->scl_pin,state);
     //Allow for clock stretching - dangerous currently
     if (state == HIGH) {
         while(digitalRead(this->scl_pin) == 0);
@@ -65,7 +67,8 @@ void TwoWire::set_scl(bool state) {
 
 void TwoWire::set_sda(bool state) {
 	I2C_DELAY(this->i2c_delay);
-    digitalWrite(this->sda_pin, state);
+	gpio_write_bit(sdaDevice,sdaBit, state);
+    //digitalWrite(this->sda_pin, state);
 }
 
 void TwoWire::i2c_start() {
@@ -198,6 +201,11 @@ void TwoWire::begin(uint8 self_addr) {
     rx_buf_len = 0;
     pinMode(this->scl_pin, OUTPUT_OPEN_DRAIN);
     pinMode(this->sda_pin, OUTPUT_OPEN_DRAIN);
+	
+	sclDevice = PIN_MAP[this->scl_pin].gpio_device;
+	sclBit = PIN_MAP[this->scl_pin].gpio_bit;	
+	sdaDevice = PIN_MAP[this->sda_pin].gpio_device;
+	sdaBit = PIN_MAP[this->sda_pin].gpio_bit;		
     set_scl(HIGH);
     set_sda(HIGH);
 }
@@ -211,6 +219,20 @@ void TwoWire::end()
 	if (this->sda_pin)
 	{
 		pinMode(this->sda_pin, INPUT);
+	}
+}
+
+void TwoWire::setClock(uint32_t frequencyHz)
+{
+	switch(frequencyHz)
+	{
+		case 400000:
+			i2c_delay = SOFT_FAST;
+			break;
+		case 100000:
+		default:
+			i2c_delay = SOFT_STANDARD;
+			break;
 	}
 }
 

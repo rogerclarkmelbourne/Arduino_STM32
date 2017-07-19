@@ -45,7 +45,7 @@ void enable_adc_irq(adc_dev* dev) {//ADC1 for now.
     Enable the reading of the internal variables (Temperature and Vref).
 */
 void enable_internal_reading(adc_dev *dev) {
-  dev->regs->CR2 |= ADC_CR2_TSEREFE;
+  dev->regs->CR2 |= ADC_CR2_TSVREFE;
   }
 
 /*
