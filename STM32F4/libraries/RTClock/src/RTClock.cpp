@@ -42,15 +42,7 @@ voidFuncPtr handlerAlarmA = NULL;
 voidFuncPtr handlerAlarmB = NULL;
 voidFuncPtr handlerPeriodicWakeup = NULL;
 
-
-RTClock::RTClock() {
-    RTClock(RTCSEL_HSE, 7999, 124);
-}
-
-RTClock::RTClock(rtc_clk_src src) {
-    RTClock(src, 0, 0);	
-}
-
+//-----------------------------------------------------------------------------
 RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler) {
     uint32 t = 0;
     RCC_BASE->APB1ENR |= RCC_APB1RSTR_PWRRST;
@@ -144,117 +136,155 @@ RTClock::~RTClock() {
 }
 */	
 	
-void RTClock::setTime (time_t time_stamp) {
-    unsigned char years = 0;
-    unsigned char months = 0;
-    unsigned char monthLength = 0;
-    unsigned char wdays = 0;
-    unsigned char hours = 0;
-    unsigned char mins = 0;
-    unsigned char secs = 0;
-    unsigned long days;
+//-----------------------------------------------------------------------------
+void RTClock::setTime (time_t time_stamp)
+{
+	breakTime(time_stamp, tm); // time will be broken to tm
+    setTime(tm);
+}
 
-    secs = time_stamp % 60;
-    time_stamp /= 60; // now it is minutes
-    mins = time_stamp % 60;
-    time_stamp /= 60; // now it is hours
-    hours = time_stamp % 24;
-    time_stamp /= 24; // now it is days
-    wdays = ((time_stamp + 4) % 7) + 1;  // Sunday is day 1 
-  
-    while((unsigned)(days += (LEAP_YEAR(years) ? 366 : 365)) <= time_stamp) {
-        years++;
-    }
-  
-    days -= LEAP_YEAR(years) ? 366 : 365;
-    time_stamp -= days; // now it is days in this year, starting at 0
-  
-    for (months = 0; months < 12; months++) {
-        if (months == 1) { // february
-            if (LEAP_YEAR(years)) {
-                monthLength = 29;
-            } else {
-                monthLength = 28;
-            }
-        } else {
-            monthLength = monthDays[months];
-        }
-    
-        if (time_stamp >= monthLength) {
-            time_stamp -= monthLength;
-        } else {
-            break;
-        }
-    }
-    months++;  // jan is month 1  
-    days = time_stamp + 1;     // day of month
+//-----------------------------------------------------------------------------
+void RTClock::setTime (tm_t & tm)
+{
+    if (tm.year > 99)
+        tm.year = tm.year % 100;
     rtc_enter_config_mode();
-    RTC_BASE->TR = ((hours / 10) << 20) | ((hours % 10) << 16) | ((mins / 10) << 12) | ((mins % 10) << 8) | ((secs / 10) << 4) | (secs % 10);
-    RTC_BASE->DR = ((years / 10) << 20) | ((years % 10) << 16) | (wdays << 13) | ((months / 10) << 12) | ((months % 10) << 8) |	((days / 10) << 4) | (days % 10);
+    RTC_BASE->TR = BUILD_TIME_REGISTER(tm.hour, tm.minute, tm.second);
+    RTC_BASE->DR = BUILD_DATE_REGISTER(tm.year, tm.month, tm.day, tm.weekday);
     rtc_exit_config_mode();		                
 }
-	
-void RTClock::setTime (struct tm* tm_ptr) {
-    rtc_enter_config_mode();
-    if (tm_ptr->tm_year > 99)
-        tm_ptr->tm_year = tm_ptr->tm_year % 100;
-    tm_ptr->tm_wday = tm_ptr->tm_wday & 0x7;
-    RTC_BASE->TR = ((tm_ptr->tm_hour / 10) << 20) | ((tm_ptr->tm_hour % 10) << 16) | 
-			((tm_ptr->tm_min / 10) << 12) | ((tm_ptr->tm_min % 10) << 8) | 
-			((tm_ptr->tm_sec / 10) << 4) | (tm_ptr->tm_sec % 10);
-    RTC_BASE->DR = ((tm_ptr->tm_year / 10) << 20) | ((tm_ptr->tm_year % 10) << 16) | (tm_ptr->tm_wday << 13) | 
-			((tm_ptr->tm_mon / 10) << 12) | ((tm_ptr->tm_mon % 10) << 8) |
-			((tm_ptr->tm_mday / 10) << 4) | (tm_ptr->tm_mday % 10);
-    rtc_exit_config_mode();		                
-}
-	
-time_t RTClock::getTime() {
-    uint32 dr_reg = RTC_BASE->DR;
-    uint32 tr_reg = RTC_BASE->TR;
-    int years = 10 * ((dr_reg & 0x00F00000) >> 20) + ((dr_reg & 0x000F0000) >> 16);
-    int months = 10 * ((dr_reg & 0x00001000) >> 12) + ((dr_reg & 0x00000F00) >> 8);
-    int days = 10 * ((dr_reg & 0x00000030) >> 4) + (dr_reg & 0x000000F);
-    int hours = 10 * ((tr_reg & 0x00300000) >> 20) + ((tr_reg & 0x000F0000) >> 16);
-    int mins = 10 * ((tr_reg & 0x00007000) >> 12) + ((tr_reg & 0x0000F00) >> 8);
-    int secs = 10 * ((tr_reg & 0x00000070) >> 4) + (tr_reg & 0x0000000F);
-    // seconds from 1970 till 1 jan 00:00:00 of the given year
-    time_t t = (years + 30) * SECS_PER_DAY * 365;
-    for (int i = 0; i < (years + 30); i++) {
-	if (LEAP_YEAR(i)) {
-	    t +=  SECS_PER_DAY;   // add extra days for leap years
+
+/*============================================================================*/	
+/* functions to convert to and from system time */
+/* These are for interfacing with time serivces and are not normally needed in a sketch */
+
+// leap year calulator expects year argument as years offset from 1970
+#define LEAP_YEAR(Y)     ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
+
+//static const uint8_t monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31}; // API starts months from 1, this array starts from 0
+
+//-----------------------------------------------------------------------------
+void RTClock::breakTime(time_t timeInput, tm_t & tm)
+{
+// break the given time_t into time components
+// this is a more compact version of the C library localtime function
+// note that year is offset from 1970 !!!
+
+	uint8_t year;
+	uint8_t month, monthLength;
+	uint32_t time;
+	uint32_t days;
+
+	time = (uint32_t)timeInput;
+	tm.second = time % 60;
+	time /= 60; // now it is minutes
+	tm.minute = time % 60;
+	time /= 60; // now it is hours
+	tm.hour = time % 24;
+	time /= 24; // now it is days
+	tm.weekday = ((time + 4) % 7); // Monday is day 1 // + 1;  // Sunday is day 1 
+
+	year = 0;
+	days = 0;
+	while((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
+		year++;
 	}
-    }
-    // add days for this year, months start from 1
-    for (int i = 1; i < months; i++) {
-	if ( (i == 2) && LEAP_YEAR(years)) { 
-	    t += SECS_PER_DAY * 29;
-	} else {
-	    t += SECS_PER_DAY * monthDays[i - 1];  //monthDays array starts from 0
+	tm.year = year; // year is offset from 1970 
+
+	days -= LEAP_YEAR(year) ? 366 : 365;
+	time -= days; // now it is days in this year, starting at 0
+
+	days = 0;
+	month = 0;
+	monthLength = 0;
+	for (month=0; month<12; month++) {
+		if (month==1) { // february
+			if (LEAP_YEAR(year)) {
+				monthLength=29;
+			} else {
+				monthLength=28;
+			}
+		} else {
+			monthLength = monthDays[month];
+		}
+
+		if (time >= monthLength) {
+			time -= monthLength;
+		} else {
+			break;
+		}
 	}
-    }
-    t += (days - 1) * SECS_PER_DAY + hours * SECS_PER_HOUR + mins * SECS_PER_MIN + secs;
-    return t;
+	tm.month = month + 1;  // jan is month 1  
+	tm.day = time + 1;     // day of month
 }
-	
-struct tm* RTClock::getTime(struct tm* tm_ptr) {
-    uint32 dr_reg = RTC_BASE->DR;
-    uint32 tr_reg = RTC_BASE->TR;
-    tm_ptr->tm_year = 10 * ((dr_reg & 0x00F00000) >> 20) + ((dr_reg & 0x000F0000) >> 16);
-    tm_ptr->tm_mon = 10 * ((dr_reg & 0x00001000) >> 12) + ((dr_reg & 0x00000F00) >> 8);
-    tm_ptr->tm_mday = 10 * ((dr_reg & 0x00000030) >> 4) + (dr_reg & 0x000000F);
-    tm_ptr->tm_hour = 10 * ((tr_reg & 0x00300000) >> 20) + ((tr_reg & 0x000F0000) >> 16);
-    tm_ptr->tm_min = 10 * ((tr_reg & 0x00007000) >> 12) + ((tr_reg & 0x0000F00) >> 8);
-    tm_ptr->tm_sec = 10 * ((tr_reg & 0x00000070) >> 4) + (tr_reg & 0x0000000F);
-    return tm_ptr;
+
+//-----------------------------------------------------------------------------
+time_t RTClock::makeTime(tm_t & tm)
+{
+// assemble time elements into time_t 
+// note year argument is offset from 1970 (see macros in time.h to convert to other formats)
+// previous version used full four digit year (or digits since 2000),i.e. 2009 was 2009 or 9
+  
+	int i;
+	uint32_t seconds;
+
+	// seconds from 1970 till 1 jan 00:00:00 of the given year
+	seconds = tm.year*(SECS_PER_DAY * 365);
+	for (i = 0; i < tm.year; i++) {
+		if (LEAP_YEAR(i)) {
+			seconds +=  SECS_PER_DAY;   // add extra days for leap years
+		}
+	}
+
+	// add days for this year, months start from 1
+	for (i = 1; i < tm.month; i++) {
+		if ( (i == 2) && LEAP_YEAR(tm.year)) { 
+			seconds += SECS_PER_DAY * 29;
+		} else {
+			seconds += SECS_PER_DAY * monthDays[i-1];  //monthDay array starts from 0
+		}
+	}
+	seconds+= (tm.day-1) * SECS_PER_DAY;
+	seconds+= tm.hour * SECS_PER_HOUR;
+	seconds+= tm.minute * SECS_PER_MIN;
+	seconds+= tm.second;
+	return (time_t)seconds; 
 }
-	
-void RTClock::setAlarmATime (tm * tm_ptr, bool hours_match, bool mins_match, bool secs_match, bool date_match) {
+
+//-----------------------------------------------------------------------------
+void RTClock::getTime(tm_t & tm)
+{
+    uint32_t dr_reg, tr_reg;
+	do { // read multiple time till both readings are equal
+		dr_reg = getDReg();
+		tr_reg = getTReg();
+	} while ( (dr_reg!=getDReg()) || (tr_reg!=getTReg()) );
+	tm.year    = _year(dr_reg);
+    tm.month   = _month(dr_reg);
+    tm.day     = _day(dr_reg);
+    tm.weekday = _weekday(dr_reg);
+    tm.pm      = _pm(tr_reg);
+    tm.hour    = _hour(tr_reg);
+    tm.minute  = _minute(tr_reg);
+    tm.second  = _second(tr_reg);
+}
+
+//-----------------------------------------------------------------------------
+time_t RTClock::getTime()
+{
+	getTime(tm);
+	return makeTime(tm);
+}
+
+//-----------------------------------------------------------------------------
+void RTClock::setAlarmATime (tm_t * tm_ptr, bool hours_match, bool mins_match, bool secs_match, bool date_match)
+{
     uint32 t = 0;
     rtc_enter_config_mode();
-    unsigned int bits = ((tm_ptr->tm_mday / 10) << 28) | ((tm_ptr->tm_mday % 10) << 24) |
-		        ((tm_ptr->tm_hour / 10) << 20) | ((tm_ptr->tm_hour % 10) << 16) | 
-			((tm_ptr->tm_min / 10) << 12) | ((tm_ptr->tm_min % 10) << 8) | 
-			((tm_ptr->tm_sec / 10) << 4) | (tm_ptr->tm_sec % 10);
+    unsigned int bits = ((tm_ptr->day / 10) << 28) | ((tm.day % 10) << 24) |
+		        ((tm_ptr->hour / 10) << 20) | ((tm_ptr->hour % 10) << 16) | 
+			((tm_ptr->minute / 10) << 12) | ((tm_ptr->minute % 10) << 8) | 
+			((tm_ptr->second / 10) << 4) | (tm_ptr->second % 10);
     if (!date_match) bits |= (1 << 31);
     if (!hours_match) bits |= (1 << 23);
     if (!mins_match) bits |= (1 << 15);
@@ -276,27 +306,30 @@ void RTClock::setAlarmATime (tm * tm_ptr, bool hours_match, bool mins_match, boo
     rtc_enable_alarm_event();
 }
 
-
-void RTClock::setAlarmATime (time_t alarm_time, bool hours_match, bool mins_match, bool secs_match, bool date_match) {	
-    struct tm* tm_ptr = gmtime(&alarm_time);
-    setAlarmATime(tm_ptr, hours_match, mins_match, secs_match, date_match);
+//-----------------------------------------------------------------------------
+void RTClock::setAlarmATime (time_t alarm_time, bool hours_match, bool mins_match, bool secs_match, bool date_match)
+{	
+    breakTime(alarm_time, tm);
+    setAlarmATime(&tm, hours_match, mins_match, secs_match, date_match);
 }
 
-
-void RTClock::turnOffAlarmA() {
+//-----------------------------------------------------------------------------
+void RTClock::turnOffAlarmA(void)
+{
     rtc_enter_config_mode();
     RTC_BASE->CR &= ~(1 << RTC_CR_ALRAIE_BIT); // turn off ALRAIE
     rtc_exit_config_mode();
 }
 
-
-void RTClock::setAlarmBTime (tm * tm_ptr, bool hours_match, bool mins_match, bool secs_match, bool date_match) {
+//-----------------------------------------------------------------------------
+void RTClock::setAlarmBTime (tm_t * tm_ptr, bool hours_match, bool mins_match, bool secs_match, bool date_match)
+{
     uint32 t = 0;
     rtc_enter_config_mode();
-    unsigned int bits = ((tm_ptr->tm_mday / 10) << 28) | ((tm_ptr->tm_mday % 10) << 24) |
-		        ((tm_ptr->tm_hour / 10) << 20) | ((tm_ptr->tm_hour % 10) << 16) | 
-			((tm_ptr->tm_min / 10) << 12) | ((tm_ptr->tm_min % 10) << 8) | 
-			((tm_ptr->tm_sec / 10) << 4) | (tm_ptr->tm_sec % 10);
+    unsigned int bits = ((tm_ptr->day / 10) << 28) | ((tm_ptr->day % 10) << 24) |
+		        ((tm_ptr->hour / 10) << 20) | ((tm_ptr->hour % 10) << 16) | 
+			((tm_ptr->minute / 10) << 12) | ((tm_ptr->minute % 10) << 8) | 
+			((tm_ptr->second / 10) << 4) | (tm_ptr->second % 10);
     if (!date_match) bits |= (1 << 31);
     if (!hours_match) bits |= (1 << 23);
     if (!mins_match) bits |= (1 << 15);
@@ -318,21 +351,23 @@ void RTClock::setAlarmBTime (tm * tm_ptr, bool hours_match, bool mins_match, boo
     rtc_enable_alarm_event();
 }
 
-
-void RTClock::setAlarmBTime (time_t alarm_time, bool hours_match, bool mins_match, bool secs_match, bool date_match) {	
-    struct tm* tm_ptr = gmtime(&alarm_time);
-    setAlarmBTime(tm_ptr, hours_match, mins_match, secs_match, date_match);
+//-----------------------------------------------------------------------------
+void RTClock::setAlarmBTime (time_t alarm_time, bool hours_match, bool mins_match, bool secs_match, bool date_match)
+{	
+    breakTime(alarm_time, tm);
+    setAlarmBTime(&tm, hours_match, mins_match, secs_match, date_match);
 }
 
-
+//-----------------------------------------------------------------------------
 void RTClock::turnOffAlarmB() {
     rtc_enter_config_mode();
     RTC_BASE->CR &= ~(1 << RTC_CR_ALRBIE_BIT); // turn off ALRBIE
     rtc_exit_config_mode();
 }
 
-
-void RTClock::setPeriodicWakeup(uint16 period) {
+//-----------------------------------------------------------------------------
+void RTClock::setPeriodicWakeup(uint16 period)
+{
     uint32 t = 0;
     rtc_enter_config_mode();
     RTC_BASE->CR &= ~(1 << RTC_CR_WUTE_BIT);
