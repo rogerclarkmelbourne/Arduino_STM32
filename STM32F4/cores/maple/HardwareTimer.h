@@ -33,7 +33,7 @@
 
 // TODO [0.1.0] Remove deprecated pieces, pick a better API
 
-#include "timer.h"
+#include <libmaple/timer.h>
 
 /** Timer mode. */
 typedef timer_mode TimerMode;

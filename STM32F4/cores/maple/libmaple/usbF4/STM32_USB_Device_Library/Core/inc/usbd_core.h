@@ -24,9 +24,9 @@
 #define __USBD_CORE_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_dcd.h"
+#include <STM32_USB_OTG_Driver/inc/usb_dcd.h>
 #include "usbd_def.h"
-#include "usbd_conf.h"
+#include <VCP/usbd_conf.h>
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{

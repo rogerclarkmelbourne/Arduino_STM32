@@ -25,17 +25,15 @@ mapleMini.upload.auto_reset=true
 mapleMini.menu.bootloader_version.original = Original (17k RAM,108k Flash)
 mapleMini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
 mapleMini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
-mapleMini.menu.bootloader_version.original.upload.ram.maximum_size=17408
-mapleMini.menu.bootloader_version.original.upload.flash.maximum_size=110592
 mapleMini.menu.bootloader_version.original.upload.maximum_size=110592
+mapleMini.menu.bootloader_version.original.upload.maximum_data_size=17408
 mapleMini.menu.bootloader_version.original.upload.altID=1
 
 mapleMini.menu.bootloader_version.bootloader20 = Bootloader 2.0 (20k RAM,120k Flash)
 mapleMini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
 mapleMini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
-mapleMini.menu.bootloader_version.bootloader20.upload.ram.maximum_size=20480
-mapleMini.menu.bootloader_version.bootloader20.upload.flash.maximum_size=122880
 mapleMini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
+mapleMini.menu.bootloader_version.bootloader20.upload.maximum_data_size=20480
 mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 
 #-- CPU Clock frequency
@@ -54,10 +52,9 @@ maple.pid.0=0x0004
 maple.upload.tool=maple_upload
 maple.upload.protocol=maple_dfu
 maple.upload.maximum_size=108000
+maple.upload.maximum_data_size=17000
 maple.upload.use_1200bps_touch=false
 maple.upload.file_type=bin
-maple.upload.ram.maximum_size=17000
-maple.upload.flash.maximum_size=108000
 maple.upload.usbID=1EAF:0003
 maple.upload.altID=1
 maple.upload.auto_reset=true
@@ -85,10 +82,9 @@ mapleRET6.build.vect=VECT_TAB_ADDR=0x8005000
 mapleRET6.upload.tool=maple_upload
 mapleRET6.upload.protocol=maple_dfu
 mapleRET6.upload.maximum_size=262144
+mapleRET6.upload.maximum_data_size=49152
 mapleRET6.upload.use_1200bps_touch=false
 mapleRET6.upload.file_type=bin
-mapleRET6.upload.ram.maximum_size=49152
-mapleRET6.upload.flash.maximum_size=262144
 mapleRET6.upload.usbID=1EAF:0003
 mapleRET6.upload.altID=1
 mapleRET6.upload.auto_reset=true
@@ -102,10 +98,9 @@ microduino32_flash.pid.0=0x0004
 microduino32_flash.upload.tool=maple_upload
 microduino32_flash.upload.protocol=maple_dfu
 microduino32_flash.upload.maximum_size=108000
+microduino32_flash.upload.maximum_data_size=17000
 microduino32_flash.upload.use_1200bps_touch=false
 microduino32_flash.upload.file_type=bin
-microduino32_flash.upload.ram.maximum_size=17000
-microduino32_flash.upload.flash.maximum_size=108000
 microduino32_flash.upload.usbID=1EAF:0003
 microduino32_flash.upload.altID=1
 microduino32_flash.upload.auto_reset=true
@@ -131,10 +126,9 @@ nucleo_f103rb.name=STM Nucleo F103RB (STLink)
 nucleo_f103rb.upload.tool=stlink_upload
 nucleo_f103rb.upload.protocol=maple_dfu
 nucleo_f103rb.upload.maximum_size=108000
+nucleo_f103rb.upload.maximum_data_size=17000
 nucleo_f103rb.upload.use_1200bps_touch=false
 nucleo_f103rb.upload.file_type=bin
-nucleo_f103rb.upload.ram.maximum_size=17000
-nucleo_f103rb.upload.flash.maximum_size=108000
 nucleo_f103rb.upload.params.quiet=no
 
 nucleo_f103rb.upload.usbID=1EAF:0003
@@ -182,16 +176,14 @@ genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flas
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8
 genericSTM32F103C.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
 genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_size=65536
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20480
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.flash.maximum_size=65536
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_data_size=20480
 
 ## STM32F103CB -------------------------
 genericSTM32F103C.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Flash)
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=131072
-genericSTM32F103C.menu.device_variant.STM32F103CB.upload.ram.maximum_size=20480
-genericSTM32F103C.menu.device_variant.STM32F103CB.upload.flash.maximum_size=131072
+genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_data_size=20480
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
@@ -218,7 +210,6 @@ genericSTM32F103C.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103C.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103C.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
-
 
 genericSTM32F103C.menu.upload_method.jlinkMethod=JLink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.protocol=jlink
@@ -249,22 +240,21 @@ genericSTM32F103R.menu.device_variant.STM32F103R8=STM32F103R8 (20k RAM. 64k Flas
 genericSTM32F103R.menu.device_variant.STM32F103R8.build.variant=generic_stm32f103r8
 genericSTM32F103R.menu.device_variant.STM32F103R8.build.cpu_flags=-DMCU_STM32F103R8
 genericSTM32F103R.menu.device_variant.STM32F103R8.upload.maximum_size=65536
-genericSTM32F103R.menu.device_variant.STM32F103R8.upload.ram.maximum_size=20480
-genericSTM32F103R.menu.device_variant.STM32F103R8.upload.flash.maximum_size=65536
+genericSTM32F103R.menu.device_variant.STM32F103R8.upload.maximum_data_size=20480
 genericSTM32F103R.menu.device_variant.STM32F103R8.build.ldscript=ld/stm32f103r8.ld
 
 genericSTM32F103R.menu.device_variant.STM32F103RB=STM32F103RB (20k RAM. 128k Flash)
 genericSTM32F103R.menu.device_variant.STM32F103RB.build.variant=generic_stm32f103r8
 genericSTM32F103R.menu.device_variant.STM32F103RB.build.cpu_flags=-DMCU_STM32F103RB
 genericSTM32F103R.menu.device_variant.STM32F103RB.upload.maximum_size=131072
-genericSTM32F103R.menu.device_variant.STM32F103RB.upload.ram.maximum_size=20480
-genericSTM32F103R.menu.device_variant.STM32F103RB.upload.flash.maximum_size=131072
+genericSTM32F103R.menu.device_variant.STM32F103RB.upload.maximum_data_size=20480
 genericSTM32F103R.menu.device_variant.STM32F103RB.build.ldscript=ld/stm32f103rb.ld
 
 genericSTM32F103R.menu.device_variant.STM32F103RC=STM32F103RC (48k RAM. 256k Flash)
 genericSTM32F103R.menu.device_variant.STM32F103RC.build.variant=generic_stm32f103r
 genericSTM32F103R.menu.device_variant.STM32F103RC.build.cpu_flags=-DMCU_STM32F103RC
 genericSTM32F103R.menu.device_variant.STM32F103RC.upload.maximum_size=262144
+genericSTM32F103R.menu.device_variant.STM32F103RC.upload.maximum_data_size=49152
 genericSTM32F103R.menu.device_variant.STM32F103RC.upload.ram.maximum_size=49152
 genericSTM32F103R.menu.device_variant.STM32F103RC.upload.flash.maximum_size=262144
 genericSTM32F103R.menu.device_variant.STM32F103RC.build.ldscript=ld/stm32f103rc.ld
@@ -273,8 +263,7 @@ genericSTM32F103R.menu.device_variant.STM32F103RE=STM32F103RE (64k RAM. 512k Fla
 genericSTM32F103R.menu.device_variant.STM32F103RE.build.variant=generic_stm32f103r
 genericSTM32F103R.menu.device_variant.STM32F103RE.build.cpu_flags=-DMCU_STM32F103RE
 genericSTM32F103R.menu.device_variant.STM32F103RE.upload.maximum_size=524288
-genericSTM32F103R.menu.device_variant.STM32F103RE.upload.ram.maximum_size=65536
-genericSTM32F103R.menu.device_variant.STM32F103RE.upload.flash.maximum_size=524288
+genericSTM32F103R.menu.device_variant.STM32F103RE.upload.maximum_data_size=65536
 genericSTM32F103R.menu.device_variant.STM32F103RE.build.ldscript=ld/stm32f103re.ld
 
 #---------------------------- UPLOAD METHODS ---------------------------
@@ -321,16 +310,14 @@ genericSTM32F103T.menu.device_variant.STM32F103T8=STM32F103T8 (20k RAM. 64k Flas
 genericSTM32F103T.menu.device_variant.STM32F103T8.build.cpu_flags=-DMCU_STM32F103T8
 genericSTM32F103T.menu.device_variant.STM32F103T8.build.ldscript=ld/jtag_t8.ld
 genericSTM32F103T.menu.device_variant.STM32F103T8.upload.maximum_size=65536
-genericSTM32F103T.menu.device_variant.STM32F103T8.upload.ram.maximum_size=20480
-genericSTM32F103T.menu.device_variant.STM32F103T8.upload.flash.maximum_size=65536
+genericSTM32F103T.menu.device_variant.STM32F103T8.upload.maximum_data_size=20480
 
 ## STM32F103TB -------------------------
 genericSTM32F103T.menu.device_variant.STM32F103TB=STM32F103TB (20k RAM. 128k Flash)
 genericSTM32F103T.menu.device_variant.STM32F103TB.build.cpu_flags=-DMCU_STM32F103TB
 genericSTM32F103T.menu.device_variant.STM32F103TB.build.ldscript=ld/jtag.ld
 genericSTM32F103T.menu.device_variant.STM32F103TB.upload.maximum_size=131072
-genericSTM32F103T.menu.device_variant.STM32F103TB.upload.ram.maximum_size=20480
-genericSTM32F103T.menu.device_variant.STM32F103TB.upload.flash.maximum_size=131072
+genericSTM32F103T.menu.device_variant.STM32F103TB.upload.maximum_data_size=20480
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
@@ -377,22 +364,19 @@ genericSTM32F103V.build.error_led_pin=6
 genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_size=262144
-genericSTM32F103V.menu.device_variant.STM32F103VC.upload.ram.maximum_size=49152
-genericSTM32F103V.menu.device_variant.STM32F103VC.upload.flash.maximum_size=262144
+genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_data_size=49152
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.ldscript=ld/stm32f103vc.ld
 
 genericSTM32F103V.menu.device_variant.STM32F103VD=STM32F103VD
 genericSTM32F103V.menu.device_variant.STM32F103VD.build.cpu_flags=-DMCU_STM32F103VD
 genericSTM32F103V.menu.device_variant.STM32F103VD.upload.maximum_size=393216
-genericSTM32F103V.menu.device_variant.STM32F103VD.upload.ram.maximum_size=65536
-genericSTM32F103V.menu.device_variant.STM32F103VD.upload.flash.maximum_size=393216
+genericSTM32F103V.menu.device_variant.STM32F103VD.upload.maximum_data_size=65536
 genericSTM32F103V.menu.device_variant.STM32F103VD.build.ldscript=ld/stm32f103vd.ld
 
 genericSTM32F103V.menu.device_variant.STM32F103VE=STM32F103VE
 genericSTM32F103V.menu.device_variant.STM32F103VE.build.cpu_flags=-DMCU_STM32F103VE
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_size=524288
-genericSTM32F103V.menu.device_variant.STM32F103VE.upload.ram.maximum_size=65536
-genericSTM32F103V.menu.device_variant.STM32F103VE.upload.flash.maximum_size=524288
+genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_data_size=65536
 genericSTM32F103V.menu.device_variant.STM32F103VE.build.ldscript=ld/stm32f103ve.ld
 
 #---------------------------- UPLOAD METHODS ---------------------------
@@ -437,22 +421,19 @@ genericSTM32F103Z.upload.auto_reset=true
 genericSTM32F103Z.menu.device_variant.STM32F103ZC=STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.cpu_flags=-DMCU_STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.maximum_size=262144
-genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.ram.maximum_size=49152
-genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.flash.maximum_size=262144
+genericSTM32F103Z.menu.device_variant.STM32F103ZC.upload.maximum_data_size=49152
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.ldscript=ld/stm32f103zc.ld
 
 genericSTM32F103Z.menu.device_variant.STM32F103ZD=STM32F103ZD
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.cpu_flags=-DMCU_STM32F103ZD
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.maximum_size=393216
-genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.ram.maximum_size=65536
-genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.flash.maximum_size=393216
+genericSTM32F103Z.menu.device_variant.STM32F103ZD.upload.maximum_data_size=65536
 genericSTM32F103Z.menu.device_variant.STM32F103ZD.build.ldscript=ld/stm32f103zd.ld
 
 genericSTM32F103Z.menu.device_variant.STM32F103ZE=STM32F103ZE
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.cpu_flags=-DMCU_STM32F103ZE
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.maximum_size=524288
-genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.ram.maximum_size=65536
-genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.flash.maximum_size=524288
+genericSTM32F103Z.menu.device_variant.STM32F103ZE.upload.maximum_data_size=65536
 genericSTM32F103Z.menu.device_variant.STM32F103ZE.build.ldscript=ld/stm32f103ze.ld
 
 #---------------------------- UPLOAD METHODS ---------------------------
@@ -498,9 +479,7 @@ hytiny-stm32f103t.upload.auto_reset=true
 hytiny-stm32f103t.build.cpu_flags=-DMCU_STM32F103CB
 hytiny-stm32f103t.build.ldscript=ld/jtag.ld
 hytiny-stm32f103t.upload.maximum_size=131072
-hytiny-stm32f103t.upload.ram.maximum_size=20480
-hytiny-stm32f103t.upload.flash.maximum_size=131072
-
+hytiny-stm32f103t.upload.maximum_data_size=20480
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
@@ -548,20 +527,17 @@ genericGD32F103C.upload.auto_reset=true
 genericGD32F103C.build.cpu_flags=-DMCU_STM32F103CB  
 genericGD32F103C.build.f_cpu=72000000L
 
-## GD32F103CB -------------------------
-genericGD32F103C.menu.device_variant.GD32F103CB=GD32F103CB (20k RAM. 128k Flash)
-genericGD32F103C.menu.device_variant.GD32F103CB.build.ldscript=ld/jtag.ld
-genericGD32F103C.menu.device_variant.GD32F103CB.upload.maximum_size=131072
-genericGD32F103C.menu.device_variant.GD32F103CB.upload.ram.maximum_size=20480
-genericGD32F103C.menu.device_variant.GD32F103CB.upload.flash.maximum_size=131072
-
-
 ## GD32F103C8 -------------------------
 genericGD32F103C.menu.device_variant.GD32F103C8=GD32F103C8 (20k RAM. 64k Flash)
 genericGD32F103C.menu.device_variant.GD32F103C8.build.ldscript=ld/jtag_c8.ld
 genericGD32F103C.menu.device_variant.GD32F103C8.upload.maximum_size=65536
-genericGD32F103C.menu.device_variant.GD32F103C8.upload.ram.maximum_size=20480
-genericGD32F103C.menu.device_variant.GD32F103C8.upload.flash.maximum_size=65536
+genericGD32F103C.menu.device_variant.GD32F103C8.upload.maximum_data_size=20480
+
+## GD32F103CB -------------------------
+genericGD32F103C.menu.device_variant.GD32F103CB=GD32F103CB (20k RAM. 128k Flash)
+genericGD32F103C.menu.device_variant.GD32F103CB.build.ldscript=ld/jtag.ld
+genericGD32F103C.menu.device_variant.GD32F103CB.upload.maximum_size=131072
+genericGD32F103C.menu.device_variant.GD32F103CB.upload.maximum_data_size=20480
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
@@ -620,8 +596,8 @@ STM32VLD.upload.auto_reset=true
 STM32VLD.upload.params.quiet=no
 
 STM32VLD.build.cpu_flags=-DMCU_STM32F100RB
-##---------------------------- UPLOAD METHODS ---------------------------
 
+#---------------------------- UPLOAD METHODS ---------------------------
 
 STM32VLD.menu.upload_method.STLinkMethod=STLink
 STM32VLD.menu.upload_method.STLinkMethod.upload.protocol=STLink

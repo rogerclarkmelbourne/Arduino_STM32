@@ -23,6 +23,7 @@
 #ifndef __USB_OTG__
 #define __USB_OTG__
 
+#include "usb_core.h"
 
 /** @addtogroup USB_OTG_DRIVER
   * @{

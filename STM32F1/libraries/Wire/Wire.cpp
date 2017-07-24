@@ -40,6 +40,9 @@
   * Updated by Roger Clark. 20141111. Fixed issue when process() returned because of missing ACK (often caused by invalid device address being used), caused SCL to be left
   * LOW so that in the next call to process() , the first clock pulse was not sent, because SCL was LOW when it should have been high.
   */
+ /*
+  * Updated by Brandon Green. 20172306. Implementing the repeated start functionality.
+  */
 
 #include "Wire.h"
 
@@ -53,7 +56,9 @@
 
 void TwoWire::set_scl(bool state) {
     I2C_DELAY(this->i2c_delay);
-    digitalWrite(this->scl_pin,state);
+
+	gpio_write_bit(sclDevice,sclBit, state);
+//    digitalWrite(this->scl_pin,state);
     //Allow for clock stretching - dangerous currently
     if (state == HIGH) {
         while(digitalRead(this->scl_pin) == 0);
@@ -62,7 +67,8 @@ void TwoWire::set_scl(bool state) {
 
 void TwoWire::set_sda(bool state) {
 	I2C_DELAY(this->i2c_delay);
-    digitalWrite(this->sda_pin, state);
+	gpio_write_bit(sdaDevice,sdaBit, state);
+    //digitalWrite(this->sda_pin, state);
 }
 
 void TwoWire::i2c_start() {
@@ -74,6 +80,12 @@ void TwoWire::i2c_stop() {
     set_sda(LOW);
     set_scl(HIGH);
     set_sda(HIGH);
+}
+
+void TwoWire::i2c_repeated_start() {
+    set_sda(HIGH);
+    set_scl(HIGH);
+    set_sda(LOW);
 }
 
 bool TwoWire::i2c_get_ack() {
@@ -121,7 +133,8 @@ void TwoWire::i2c_shift_out(uint8 val) {
     }
 }
 
-uint8 TwoWire::process() {
+//process needs to be updated for repeated start.
+uint8 TwoWire::process(uint8 stop) {
     itc_msg.xferred = 0;
 
     uint8 sla_addr = (itc_msg.addr << 1);
@@ -162,8 +175,16 @@ uint8 TwoWire::process() {
             itc_msg.xferred++;
         }
     }
-    i2c_stop();
+    if(stop == true)
+		i2c_stop();
+    else i2c_repeated_start();
+	
     return SUCCESS;
+}
+
+// For compatibility with legacy code
+uint8 TwoWire::process(){
+	return process(true);
 }
 
 // TODO: Add in Error Handling if pins is out of range for other Maples
@@ -180,6 +201,11 @@ void TwoWire::begin(uint8 self_addr) {
     rx_buf_len = 0;
     pinMode(this->scl_pin, OUTPUT_OPEN_DRAIN);
     pinMode(this->sda_pin, OUTPUT_OPEN_DRAIN);
+	
+	sclDevice = PIN_MAP[this->scl_pin].gpio_device;
+	sclBit = PIN_MAP[this->scl_pin].gpio_bit;	
+	sdaDevice = PIN_MAP[this->sda_pin].gpio_device;
+	sdaBit = PIN_MAP[this->sda_pin].gpio_bit;		
     set_scl(HIGH);
     set_sda(HIGH);
 }
@@ -193,6 +219,20 @@ void TwoWire::end()
 	if (this->sda_pin)
 	{
 		pinMode(this->sda_pin, INPUT);
+	}
+}
+
+void TwoWire::setClock(uint32_t frequencyHz)
+{
+	switch(frequencyHz)
+	{
+		case 400000:
+			i2c_delay = SOFT_FAST;
+			break;
+		case 100000:
+		default:
+			i2c_delay = SOFT_STANDARD;
+			break;
 	}
 }
 

@@ -29,6 +29,10 @@ HardWire HWIRE(2,I2C_FAST_MODE); // I2c2
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306_STM32.h"
 
+#ifndef swap
+#define swap(a, b) { int16_t t = a; a = b; b = t; }
+#endif
+
 // the memory buffer for the LCD
 
 static uint8_t buffer[SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8] = { 

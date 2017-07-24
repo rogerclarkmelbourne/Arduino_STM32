@@ -128,7 +128,7 @@ void throb(void) {
     uint32 TOP_CNT = 0x0800;
     uint32 i       = 0;
 
-    gpio_set_mode(ERROR_LED_PORT, ERROR_LED_PIN, GPIO_OUTPUT_PP);
+    gpio_set_mode(ERROR_LED_PIN, GPIO_OUTPUT_PP);
     /* Error fade. */
     while (1) {
         if (CC == TOP_CNT)  {
@@ -143,9 +143,9 @@ void throb(void) {
         }
 
         if (i < CC) {
-            gpio_write_bit(ERROR_LED_PORT, ERROR_LED_PIN, 1);
+            gpio_set_pin(ERROR_LED_PIN);
         } else {
-            gpio_write_bit(ERROR_LED_PORT, ERROR_LED_PIN, 0);
+            gpio_clear_pin(ERROR_LED_PIN);
         }
         i++;
     }

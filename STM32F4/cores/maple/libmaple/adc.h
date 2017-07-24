@@ -42,17 +42,15 @@ extern "C"{
 #endif
 
 
-#ifdef STM32F2
-  typedef struct
-  {
-    __io uint32 CSR;    /*!< ADC Common status register,                  Address offset: ADC1 base address + 0x300 */
-    __io uint32 CCR;    /*!< ADC common control register,                 Address offset: ADC1 base address + 0x304 */
-    __io uint32 CDR;    /*!< ADC common regular data register for dual
-                             AND triple modes,                            Address offset: ADC1 base address + 0x308 */
-  } ADC_Common_TypeDef;
+typedef struct
+{
+	__io uint32 CSR;    /*!< ADC Common status register,                  Address offset: ADC1 base address + 0x300 */
+	__io uint32 CCR;    /*!< ADC common control register,                 Address offset: ADC1 base address + 0x304 */
+	__io uint32 CDR;    /*!< ADC common regular data register for dual
+							 AND triple modes,                            Address offset: ADC1 base address + 0x308 */
+} ADC_Common_TypeDef;
 #define ADC_COMMON  ((ADC_Common_TypeDef *) 0x40012300)
 
-#endif
 
 /** ADC register map type. */
 typedef struct adc_reg_map {
@@ -84,33 +82,22 @@ typedef struct adc_dev {
     rcc_clk_id clk_id; /**< RCC clock information */
 } adc_dev;
 
-extern const adc_dev *ADC1;
-extern const adc_dev *ADC2;
+extern const adc_dev ADC1;
+extern const adc_dev ADC2;
 #ifdef STM32_HIGH_DENSITY
-extern const adc_dev *ADC3;
+extern const adc_dev ADC3;
 #endif
 
 /*
  * Register map base pointers
  */
 
-#ifdef STM32F2
-	/** ADC1 register map base pointer. */
-	#define ADC1_BASE                       ((struct adc_reg_map*)0x40012000)
-	/** ADC2 register map base pointer. */
-	#define ADC2_BASE                       ((struct adc_reg_map*)0x40012100)
-  /** ADC3 register map base pointer. */
-  #define ADC3_BASE                       ((struct adc_reg_map*)0x40012200)
-#else
-	/** ADC1 register map base pointer. */
-	#define ADC1_BASE                       ((struct adc_reg_map*)0x40012400)
-	/** ADC2 register map base pointer. */
-	#define ADC2_BASE                       ((struct adc_reg_map*)0x40012800)
-	#ifdef STM32_HIGH_DENSITY
-  	/** ADC3 register map base pointer. */
-	  #define ADC3_BASE                       ((struct adc_reg_map*)0x40013C00)
-  #endif
-#endif
+/** ADC1 register map base pointer. */
+#define ADC1_BASE                       ((struct adc_reg_map*)0x40012000)
+/** ADC2 register map base pointer. */
+#define ADC2_BASE                       ((struct adc_reg_map*)0x40012100)
+/** ADC3 register map base pointer. */
+#define ADC3_BASE                       ((struct adc_reg_map*)0x40012200)
 
 /*
  * Register bit definitions
@@ -167,17 +154,10 @@ extern const adc_dev *ADC3;
 #define ADC_CR2_JEXTTRIG_BIT            15
 #define ADC_CR2_EXTTRIG_BIT             20
 #define ADC_CR2_TSVREFE_BIT             23
-#ifdef STM32F2
 #define ADC_CR2_JSWSTART_BIT            22
 #define ADC_CR2_SWSTART_BIT             30
 #define ADC_CR2_EXTSEL                  (0x0F000000)
 #define ADC_CR2_JEXTSEL                 (0x000F0000)
-#else
-#define ADC_CR2_JSWSTART_BIT            21
-#define ADC_CR2_SWSTART_BIT             22
-#define ADC_CR2_EXTSEL                  (0x000E0000)
-#define ADC_CR2_JEXTSEL                 (0x00007000)
-#endif
 
 
 
@@ -388,7 +368,7 @@ static inline void adc_disable_all(void) {
     adc_foreach(adc_disable);
 }
 
-void setupADC_F2();
+extern void setupADC_F4(void);
 
 #ifdef __cplusplus
 } // extern "C"

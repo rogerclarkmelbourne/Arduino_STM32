@@ -38,7 +38,7 @@
 
 #include "HardWire.h"
 
-uint8 HardWire::process() {
+uint8 HardWire::process(uint8 stop) {
     int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, 0);
     if (res == I2C_ERROR_PROTOCOL) {
         if (sel_hard->error_flags & I2C_SR1_AF) { /* NACK */
@@ -53,6 +53,10 @@ uint8 HardWire::process() {
         i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags));
     }
     return res;
+}
+
+uint8 HardWire::process(){
+	return process(true);
 }
 
 // TODO: Add in Error Handling if devsel is out of range for other Maples
@@ -79,4 +83,19 @@ void HardWire::begin(uint8 self_addr) {
 void HardWire::end() {
     i2c_disable(sel_hard);
     sel_hard = 0;
+}
+
+void HardWire::setClock(uint32_t frequencyHz)
+{
+	switch(frequencyHz)
+	{
+		case 400000:
+			dev_flags |= I2C_FAST_MODE;// set FAST_MODE bit
+			break;
+		case 100000:
+		default:
+			dev_flags &= ~I2C_FAST_MODE;// clear FAST_MODE bit
+			break;
+	}
+	
 }

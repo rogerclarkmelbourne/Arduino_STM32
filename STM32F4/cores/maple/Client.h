@@ -17,8 +17,9 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef client_h
-#define client_h
+#ifndef _CLIENT_H_
+#define _CLIENT_H_
+
 #include "Print.h"
 #include "Stream.h"
 #include "IPAddress.h"

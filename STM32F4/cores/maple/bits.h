@@ -27,4 +27,9 @@
 /* Note: Use of this header file is deprecated.  Use bit_constants.h
    instead. */
 
+#ifndef _BITS_H_
+#define _BITS_H_
+
 #include "bit_constants.h"
+
+#endif

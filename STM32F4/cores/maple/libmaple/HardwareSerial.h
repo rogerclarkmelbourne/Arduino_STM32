@@ -57,6 +57,7 @@ public:
     void begin(uint32 baud);
     void end(void);
 
+	operator bool() { return true; } // This is needed because of "if (!Serial)"
     /* I/O */
     virtual int available(void);
     virtual int peek(void);
@@ -75,12 +76,12 @@ private:
     uint8 rx_pin;
 };
 
-extern HardwareSerial Serial;
 extern HardwareSerial Serial1;
 extern HardwareSerial Serial2;
 #if defined(STM32_HIGH_DENSITY) && !defined(BOARD_maple_RET6)
 extern HardwareSerial Serial3;
 extern HardwareSerial Serial4;
+extern HardwareSerial Serial5;
 #endif
 extern HardwareSerial &SerialDebug;
 #endif

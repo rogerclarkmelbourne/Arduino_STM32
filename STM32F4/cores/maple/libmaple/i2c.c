@@ -41,9 +41,9 @@
 
 static i2c_dev i2c_dev1 = {
     .regs         = I2C1_BASE,
-    .gpio_port    = &gpiob,
-    .sda_pin      = 7,
-    .scl_pin      = 6,
+    //.gpio_port    = &gpiob,
+    .sda_pin      = PB7,
+    .scl_pin      = PB6,
     .clk_id       = RCC_I2C1,
     .ev_nvic_line = NVIC_I2C1_EV,
     .er_nvic_line = NVIC_I2C1_ER,
@@ -54,9 +54,9 @@ i2c_dev* const I2C1 = &i2c_dev1;
 
 static i2c_dev i2c_dev2 = {
     .regs         = I2C2_BASE,
-    .gpio_port    = &gpiob,
-    .sda_pin      = 11,
-    .scl_pin      = 10,
+    //.gpio_port    = &gpiob,
+    .sda_pin      = PB11,
+    .scl_pin      = PB10,
     .clk_id       = RCC_I2C2,
     .ev_nvic_line = NVIC_I2C2_EV,
     .er_nvic_line = NVIC_I2C2_ER,
@@ -336,38 +336,38 @@ void __irq_i2c2_er(void) {
  */
 void i2c_bus_reset(const i2c_dev *dev) {
     /* Release both lines */
-    gpio_write_bit(dev->gpio_port, dev->scl_pin, 1);
-    gpio_write_bit(dev->gpio_port, dev->sda_pin, 1);
-    gpio_set_mode(dev->gpio_port, dev->scl_pin, GPIO_OUTPUT_OD);
-    gpio_set_mode(dev->gpio_port, dev->sda_pin, GPIO_OUTPUT_OD);
+    gpio_set_pin(dev->scl_pin);
+    gpio_set_pin(dev->sda_pin);
+    gpio_set_mode(dev->scl_pin, GPIO_OUTPUT_OD);
+    gpio_set_mode(dev->sda_pin, GPIO_OUTPUT_OD);
 
     /*
      * Make sure the bus is free by clocking it until any slaves release the
      * bus.
      */
-    while (!gpio_read_bit(dev->gpio_port, dev->sda_pin)) {
+    while (!gpio_read_pin(dev->sda_pin)) {
         /* Wait for any clock stretching to finish */
-        while (!gpio_read_bit(dev->gpio_port, dev->scl_pin))
+        while (!gpio_read_pin(dev->scl_pin))
             ;
         delay_us(10);
 
         /* Pull low */
-        gpio_write_bit(dev->gpio_port, dev->scl_pin, 0);
+        gpio_clear_pin(dev->scl_pin);
         delay_us(10);
 
         /* Release high again */
-        gpio_write_bit(dev->gpio_port, dev->scl_pin, 1);
+        gpio_set_pin(dev->scl_pin);
         delay_us(10);
     }
 
     /* Generate start then stop condition */
-    gpio_write_bit(dev->gpio_port, dev->sda_pin, 0);
+    gpio_clear_pin(dev->sda_pin);
     delay_us(10);
-    gpio_write_bit(dev->gpio_port, dev->scl_pin, 0);
+    gpio_clear_pin(dev->scl_pin);
     delay_us(10);
-    gpio_write_bit(dev->gpio_port, dev->scl_pin, 1);
+    gpio_set_pin(dev->scl_pin);
     delay_us(10);
-    gpio_write_bit(dev->gpio_port, dev->sda_pin, 1);
+    gpio_set_pin(dev->sda_pin);
 }
 
 /**
@@ -413,8 +413,8 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
 
     /* Turn on clock and set GPIO modes */
     i2c_init(dev);
-    gpio_set_mode(dev->gpio_port, dev->sda_pin, GPIO_AF_OUTPUT_OD);
-    gpio_set_mode(dev->gpio_port, dev->scl_pin, GPIO_AF_OUTPUT_OD);
+    gpio_set_mode(dev->sda_pin, GPIO_AF_OUTPUT_OD);
+    gpio_set_mode(dev->scl_pin, GPIO_AF_OUTPUT_OD);
 
     /* I2C1 and I2C2 are fed from APB1, clocked at 36MHz */
     i2c_set_input_clk(dev, I2C_CLK);

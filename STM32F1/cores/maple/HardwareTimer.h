@@ -209,6 +209,23 @@ public:
      */
     void refresh(void);
 
+	// SYFRE
+    /**
+     * @brief Set the Master mode TRGO signal 
+     *        These bits allow to select the information to be sent in master mode to slave timers for 
+     *        synchronization (TRGO). 
+	 *	mode:
+	 * 		TIMER_CR2_MMS_RESET
+	 * 		TIMER_CR2_MMS_ENABLE
+	 * 		TIMER_CR2_MMS_UPDATE
+	 * 		TIMER_CR2_MMS_COMPARE_PULSE
+	 * 		TIMER_CR2_MMS_COMPARE_OC1REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC2REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC3REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC4REF
+     */
+	void setMasterModeTrGo(uint32_t mode);
+	
 //CARLOS.
 /*
     added these functions to make sense for the encoder mode. 

@@ -24,8 +24,8 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include "libmaple_types.h"
-#include "nvic.h"
+#ifndef _EXT_INTERRUPTS_H_
+#define _EXT_INTERRUPTS_H_
 
 /**
  *  @file ext_interrupts.h
@@ -33,8 +33,9 @@
  *  @brief Wiring-like external interrupt prototypes and types.
  */
 
-#ifndef _EXT_INTERRUPTS_H_
-#define _EXT_INTERRUPTS_H_
+#include <libmaple/libmaple_types.h>
+#include <libmaple/nvic.h>
+
 
 /**
  * The kind of transition on an external pin which should trigger an

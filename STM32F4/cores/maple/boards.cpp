@@ -33,17 +33,16 @@
  */
 #include "boards.h"
 
-#include "flash.h"
-#include "rcc.h"
-#include "nvic.h"
-#include "systick.h"
-#include "gpio.h"
-#include "adc.h"
-#include "timer.h"
+#include <libmaple/flash.h>
+#include <libmaple/rcc.h>
+#include <libmaple/nvic.h>
+#include <libmaple/systick.h>
+#include <libmaple/gpio.h>
+#include <libmaple/adc.h>
+#include <libmaple/timer.h>
 #include "usb.h"
-#ifdef STM32F2
-//#include "usbF4.h"
-#endif
+#include "usb_serial.h"
+
 
 static void setupFlash(void);
 static void setupClocks(void);
@@ -59,7 +58,7 @@ void init(void) {
 	systick_init(SYSTICK_RELOAD_VAL);
 	gpio_init_all();
 
-#ifdef STM32F2
+#ifdef STM32F4
 	rcc_clk_enable(RCC_SYSCFG);
 #else
     afio_init();
@@ -69,7 +68,10 @@ void init(void) {
     setupADC();
     setupTimers();
 
-    //setupUSB();
+#ifdef SERIAL_USB
+    setupUSB();
+    SerialUSB.begin();
+#endif
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes
@@ -84,11 +86,13 @@ bool boardUsesPin(uint8 pin) {
 }
 
 static void setupFlash(void) {
+/*
 #ifndef STM32F2
 	// for F2 and F4 CPUs this is done in SetupClock...(), e.g. in SetupClock168MHz()
     flash_enable_prefetch();
     flash_set_latency(FLASH_WAIT_STATE_2);
 #endif
+*/
 }
 
 /*
@@ -121,8 +125,8 @@ static void setupNVIC() {
 static void adcDefaultConfig(const adc_dev* dev);
 
 static void setupADC() {
-#ifdef STM32F2
-	setupADC_F2();
+#ifdef STM32F4
+	setupADC_F4();
 #else
 	rcc_set_prescaler(RCC_PRESCALER_ADC, RCC_ADCPRE_PCLK_DIV_6);
 #endif
