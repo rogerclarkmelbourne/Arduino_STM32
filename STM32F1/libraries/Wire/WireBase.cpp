@@ -59,7 +59,7 @@ void WireBase::beginTransmission(int slave_address) {
     beginTransmission((uint8)slave_address);
 }
 
-uint8 WireBase::endTransmission(uint8 stop) {
+uint8 WireBase::endTransmission(bool stop) {
     uint8 retVal;
     if (tx_buf_overflow) {
         return EDATA;
