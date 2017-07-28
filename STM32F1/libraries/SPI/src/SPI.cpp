@@ -31,7 +31,6 @@
 
 #include "SPI.h"
 
-//#define SPI_DEBUG
 
 #include <libmaple/timer.h>
 #include <libmaple/util.h>
@@ -92,11 +91,10 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
  * Constructor
  */
 
-SPIClass::SPIClass(uint32 spi_num) {
-
+SPIClass::SPIClass(uint32 spi_num)
+{
     _currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
 
-    
     switch (spi_num) {
 #if BOARD_NR_SPI >= 1
     case 1:
@@ -119,7 +117,7 @@ SPIClass::SPIClass(uint32 spi_num) {
     default:
         ASSERT(0);
     }
-    
+
     // Init things specific to each SPI device
     // clock divider setup is a bit of hack, and needs to be improved at a later date.
     _settings[0].spi_d = SPI1;
@@ -149,9 +147,6 @@ SPIClass::SPIClass(uint32 spi_num) {
  */
 void SPIClass::updateSettings(void) {
     uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_SW_SLAVE | SPI_SOFT_SS);
-    #ifdef SPI_DEBUG
-    Serial.print("spi_master_enable("); Serial.print(_currentSetting->clockDivider); Serial.print(","); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
-    #endif
     spi_master_enable(_currentSetting->spi_d, (spi_baud_rate)_currentSetting->clockDivider, (spi_mode)_currentSetting->dataMode, flags);
 }
 
@@ -167,9 +162,6 @@ void SPIClass::beginSlave(void) {
     spi_init(_currentSetting->spi_d);
     configure_gpios(_currentSetting->spi_d, 0);
     uint32 flags = ((_currentSetting->bitOrder == MSBFIRST ? SPI_FRAME_MSB : SPI_FRAME_LSB) | _currentSetting->dataSize | SPI_RX_ONLY);
-    #ifdef SPI_DEBUG
-    Serial.print("spi_slave_enable("); Serial.print(_currentSetting->dataMode); Serial.print(","); Serial.print(flags); Serial.println(")");
-    #endif
     spi_slave_enable(_currentSetting->spi_d, (spi_mode)_currentSetting->dataMode, flags);
     // added for DMA callbacks.
     _currentSetting->state = SPI_STATE_READY;
@@ -199,9 +191,6 @@ void SPIClass::end(void) {
 /* Roger Clark added  3 functions */
 void SPIClass::setClockDivider(uint32_t clockDivider)
 {
-    #ifdef SPI_DEBUG
-    Serial.print("Clock divider set to "); Serial.println(clockDivider);
-    #endif
     _currentSetting->clockDivider = clockDivider;
     uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_BR);
     _currentSetting->spi_d->regs->CR1 = cr1 | (clockDivider & SPI_CR1_BR);
@@ -209,9 +198,6 @@ void SPIClass::setClockDivider(uint32_t clockDivider)
 
 void SPIClass::setBitOrder(BitOrder bitOrder)
 {
-    #ifdef SPI_DEBUG
-    Serial.print("Bit order set to "); Serial.println(bitOrder);
-    #endif
     _currentSetting->bitOrder = bitOrder;
     uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_LSBFIRST);
     if ( bitOrder==LSBFIRST )	cr1 |= SPI_CR1_LSBFIRST;
@@ -258,9 +244,6 @@ bit 0 - CPHA : Clock phase
  
 If someone finds this is not the case or sees a logic error with this let me know ;-) 
  */
-    #ifdef SPI_DEBUG
-    Serial.print("Data mode set to "); Serial.println(dataMode);
-    #endif
     _currentSetting->dataMode = dataMode;
     uint32 cr1 = _currentSetting->spi_d->regs->CR1 & ~(SPI_CR1_CPOL|SPI_CR1_CPHA);
     _currentSetting->spi_d->regs->CR1 = cr1 | (dataMode & (SPI_CR1_CPOL|SPI_CR1_CPHA));
@@ -268,9 +251,6 @@ If someone finds this is not the case or sees a logic error with this let me kno
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
-    #ifdef SPI_DEBUG
-    Serial.println("SPIClass::beginTransaction");
-    #endif
     setBitOrder(settings.bitOrder);
     setDataMode(settings.dataMode);
     setDataSize(settings.dataSize);
@@ -280,9 +260,6 @@ void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 
 void SPIClass::beginTransactionSlave(SPISettings settings)
 {
-    #ifdef SPI_DEBUG
-    Serial.println(F("SPIClass::beginTransactionSlave"));
-    #endif
     setBitOrder(settings.bitOrder);
     setDataMode(settings.dataMode);
     setDataSize(settings.dataSize);
@@ -291,9 +268,6 @@ void SPIClass::beginTransactionSlave(SPISettings settings)
 
 void SPIClass::endTransaction(void)
 {
-    #ifdef SPI_DEBUG
-    Serial.println("SPIClass::endTransaction");
-    #endif
     //digitalWrite(_SSPin,HIGH);
 #if false
 // code from SAM core
@@ -355,6 +329,16 @@ void SPIClass::write(uint16 data)
     while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
 }
 
+void SPIClass::write16(uint16 data)
+{
+    // Added by stevestrong: write two consecutive bytes in 8 bit mode (DFF=0)
+    spi_tx_reg(_currentSetting->spi_d, data>>8); // write high byte
+    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // Wait until TXE=1
+    spi_tx_reg(_currentSetting->spi_d, data); // write low byte
+    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // Wait until TXE=1
+    while (spi_is_busy(_currentSetting->spi_d) != 0); // wait until BSY=0
+}
+
 void SPIClass::write(uint16 data, uint32 n)
 {
     // Added by stevstrong: Repeatedly send same data by the specified number of times
@@ -384,14 +368,21 @@ uint8 SPIClass::transfer(uint8 byte) const
     return (uint8)spi_rx_reg(spi_d); // "... and read the last received data."
 }
 
-uint16_t SPIClass::transfer16(uint16_t wr_data) const
+uint16_t SPIClass::transfer16(uint16_t data) const
 {
+    // Modified by stevestrong: write & read two consecutive bytes in 8 bit mode (DFF=0)
+	// This is more effective than two distinct byte transfers
     spi_dev * spi_d = _currentSetting->spi_d;
-    spi_rx_reg(spi_d); // read any previous data
-    spi_tx_reg(spi_d, wr_data); // "2. Write the first data item to be transmitted into the SPI_DR register (this clears the TXE flag)."
-    while (spi_is_tx_empty(spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
-    return (uint16)spi_rx_reg(spi_d); // "... and read the last received data."
+    spi_rx_reg(spi_d);                   // read any previous data
+    spi_tx_reg(spi_d, data>>8);          // write high byte
+    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
+    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
+	uint16_t ret = spi_rx_reg(spi_d)<<8; // read and shift high byte
+    spi_tx_reg(spi_d, data);             // write low byte
+    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
+    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
+	ret += spi_rx_reg(spi_d);            // read low byte
+    return ret;
 }
 
 /*  Roger Clark and Victor Perez, 2015
@@ -523,7 +514,7 @@ uint8 SPIClass::dmaSendAsync(void * transmitBuf, uint16 length, bool minc) {
             //delayMicroseconds(10);
             if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
         }		
-        
+
         while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
         while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
         spi_tx_dma_disable(_currentSetting->spi_d);
@@ -531,11 +522,9 @@ uint8 SPIClass::dmaSendAsync(void * transmitBuf, uint16 length, bool minc) {
         _currentSetting->state = SPI_STATE_READY;
     }
 
-    
     if (length == 0) return 0;
     uint32 flags = ( (DMA_MINC_MODE*minc) | DMA_FROM_MEM | DMA_TRNS_CMPLT);
 
-    
     dma_init(_currentSetting->spiDmaDev);
     // TX
     dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_16BIT) ? DMA_SIZE_16BITS : DMA_SIZE_8BITS;
@@ -770,9 +759,6 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
 */
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
     uint32_t clock = 0, i;
-    #ifdef SPI_DEBUG
-    Serial.print("determine_baud_rate("); Serial.print(freq); Serial.println(")");
-    #endif
     switch (rcc_dev_clk(dev->clk_id))
     {
     case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
