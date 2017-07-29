@@ -8,7 +8,7 @@
 #define portInputRegister(port)    ( &(port->regs->IDR) )
 
 #define portSetRegister(pin)		( &(PIN_MAP[pin].gpio_device->regs->BSRR) )
-#define portClearRegister(pin)		( &(PIN_MAP[pin].gpio_device->regs->BRR) )
+#define portClearRegister(pin)		( &(PIN_MAP[pin].gpio_device->regs->BSRR) )
 
 #define portConfigRegister(pin)		( &(PIN_MAP[pin].gpio_device->regs->CRL) )
 

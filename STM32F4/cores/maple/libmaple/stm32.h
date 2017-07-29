@@ -55,7 +55,7 @@
 #endif
 
 #ifndef STM32_PCLK1
-#define STM32_PCLK1   36000000U
+#define STM32_PCLK1   42000000U
 #endif
 #ifndef PCLK1
 #define PCLK1 STM32_PCLK1
@@ -65,7 +65,7 @@
 #endif
 
 #ifndef STM32_PCLK2
-#define STM32_PCLK2   72000000U
+#define STM32_PCLK2   84000000U
 #endif
 #ifndef PCLK2
 #define PCLK2 STM32_PCLK2
