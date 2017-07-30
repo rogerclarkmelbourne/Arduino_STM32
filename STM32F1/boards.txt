@@ -385,7 +385,7 @@ genericSTM32F103C.menu.device_variant.STM32F103CB=STM32F103CB (20k RAM. 128k Fla
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.cpu_flags=-DMCU_STM32F103CB
 genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=131072
-genericSTM32F103C.menu.device_variant.STM32F103C8.upload.maximum_data_size=20480
+genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_data_size=20480
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
