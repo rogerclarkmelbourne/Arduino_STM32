@@ -1,6 +1,7 @@
 # 
 
 menu.usb_cfg=USB configuration
+menu.opt=Optimize
 
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
@@ -36,6 +37,39 @@ discovery_f407.menu.usb_cfg.usb_serial=USB serial (CDC)
 discovery_f407.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 discovery_f407.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 discovery_f407.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
+
+#-- Optimizations
+discovery_f407.menu.opt.o2std=Faster
+discovery_f407.menu.opt.o2std.build.flags.optimize=-O2
+discovery_f407.menu.opt.o2std.build.flags.ldspecs=
+discovery_f407.menu.opt.o2lto=Faster with LTO
+discovery_f407.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+discovery_f407.menu.opt.o2lto.build.flags.ldspecs=-flto
+discovery_f407.menu.opt.o1std=Fast
+discovery_f407.menu.opt.o1std.build.flags.optimize=-O1
+discovery_f407.menu.opt.o1std.build.flags.ldspecs=
+discovery_f407.menu.opt.o1lto=Fast with LTO
+discovery_f407.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+discovery_f407.menu.opt.o1lto.build.flags.ldspecs=-flto
+discovery_f407.menu.opt.o3std=Fastest
+discovery_f407.menu.opt.o3std.build.flags.optimize=-O3
+discovery_f407.menu.opt.o3std.build.flags.ldspecs=
+discovery_f407.menu.opt.o3lto=Fastest with LTO
+discovery_f407.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+discovery_f407.menu.opt.o3lto.build.flags.ldspecs=-flto
+discovery_f407.menu.opt.ogstd=Debug
+discovery_f407.menu.opt.ogstd.build.flags.optimize=-Og
+discovery_f407.menu.opt.ogstd.build.flags.ldspecs=
+discovery_f407.menu.opt.oglto=Debug with LTO
+discovery_f407.menu.opt.oglto.build.flags.optimize=-Og -flto
+discovery_f407.menu.opt.oglto.build.flags.ldspecs=-flto
+discovery_f407.menu.opt.osstd=Smallest Code
+discovery_f407.menu.opt.osstd.build.flags.optimize=-Os
+discovery_f407.menu.opt.osstd.build.flags.ldspecs=
+discovery_f407.menu.opt.oslto=Smallest Code with LTO
+discovery_f407.menu.opt.oslto.build.flags.optimize=-Os -flto
+discovery_f407.menu.opt.oslto.build.flags.ldspecs=-flto
+
 ##############################################################
 generic_f407v.name=Generic STM32F407V series
 
@@ -72,6 +106,38 @@ generic_f407v.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
+#-- Optimizations
+generic_f407v.menu.opt.o2std=Faster
+generic_f407v.menu.opt.o2std.build.flags.optimize=-O2
+generic_f407v.menu.opt.o2std.build.flags.ldspecs=
+generic_f407v.menu.opt.o2lto=Faster with LTO
+generic_f407v.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+generic_f407v.menu.opt.o2lto.build.flags.ldspecs=-flto
+generic_f407v.menu.opt.o1std=Fast
+generic_f407v.menu.opt.o1std.build.flags.optimize=-O1
+generic_f407v.menu.opt.o1std.build.flags.ldspecs=
+generic_f407v.menu.opt.o1lto=Fast with LTO
+generic_f407v.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+generic_f407v.menu.opt.o1lto.build.flags.ldspecs=-flto
+generic_f407v.menu.opt.o3std=Fastest
+generic_f407v.menu.opt.o3std.build.flags.optimize=-O3
+generic_f407v.menu.opt.o3std.build.flags.ldspecs=
+generic_f407v.menu.opt.o3lto=Fastest with LTO
+generic_f407v.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+generic_f407v.menu.opt.o3lto.build.flags.ldspecs=-flto
+generic_f407v.menu.opt.ogstd=Debug
+generic_f407v.menu.opt.ogstd.build.flags.optimize=-Og
+generic_f407v.menu.opt.ogstd.build.flags.ldspecs=
+generic_f407v.menu.opt.oglto=Debug with LTO
+generic_f407v.menu.opt.oglto.build.flags.optimize=-Og -flto
+generic_f407v.menu.opt.oglto.build.flags.ldspecs=-flto
+generic_f407v.menu.opt.osstd=Smallest Code
+generic_f407v.menu.opt.osstd.build.flags.optimize=-Os
+generic_f407v.menu.opt.osstd.build.flags.ldspecs=
+generic_f407v.menu.opt.oslto=Smallest Code with LTO
+generic_f407v.menu.opt.oslto.build.flags.optimize=-Os -flto
+generic_f407v.menu.opt.oslto.build.flags.ldspecs=-flto
+
 ##############################################################
 stm32f4stamp.name=STM32F4Stamp F405
 
@@ -107,6 +173,39 @@ stm32f4stamp.menu.usb_cfg.usb_serial=USB serial (CDC)
 stm32f4stamp.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 stm32f4stamp.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 stm32f4stamp.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
+
+#-- Optimizations
+stm32f4stamp.menu.opt.o2std=Faster
+stm32f4stamp.menu.opt.o2std.build.flags.optimize=-O2
+stm32f4stamp.menu.opt.o2std.build.flags.ldspecs=
+stm32f4stamp.menu.opt.o2lto=Faster with LTO
+stm32f4stamp.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+stm32f4stamp.menu.opt.o2lto.build.flags.ldspecs=-flto
+stm32f4stamp.menu.opt.o1std=Fast
+stm32f4stamp.menu.opt.o1std.build.flags.optimize=-O1
+stm32f4stamp.menu.opt.o1std.build.flags.ldspecs=
+stm32f4stamp.menu.opt.o1lto=Fast with LTO
+stm32f4stamp.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+stm32f4stamp.menu.opt.o1lto.build.flags.ldspecs=-flto
+stm32f4stamp.menu.opt.o3std=Fastest
+stm32f4stamp.menu.opt.o3std.build.flags.optimize=-O3
+stm32f4stamp.menu.opt.o3std.build.flags.ldspecs=
+stm32f4stamp.menu.opt.o3lto=Fastest with LTO
+stm32f4stamp.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+stm32f4stamp.menu.opt.o3lto.build.flags.ldspecs=-flto
+stm32f4stamp.menu.opt.ogstd=Debug
+stm32f4stamp.menu.opt.ogstd.build.flags.optimize=-Og
+stm32f4stamp.menu.opt.ogstd.build.flags.ldspecs=
+stm32f4stamp.menu.opt.oglto=Debug with LTO
+stm32f4stamp.menu.opt.oglto.build.flags.optimize=-Og -flto
+stm32f4stamp.menu.opt.oglto.build.flags.ldspecs=-flto
+stm32f4stamp.menu.opt.osstd=Smallest Code
+stm32f4stamp.menu.opt.osstd.build.flags.optimize=-Os
+stm32f4stamp.menu.opt.osstd.build.flags.ldspecs=
+stm32f4stamp.menu.opt.oslto=Smallest Code with LTO
+stm32f4stamp.menu.opt.oslto.build.flags.optimize=-Os -flto
+stm32f4stamp.menu.opt.oslto.build.flags.ldspecs=-flto
+
 ##############################################################
 netduino2plus.name=Netduino2 F405
 
@@ -142,5 +241,37 @@ netduino2plus.menu.usb_cfg.usb_serial=USB serial (CDC)
 netduino2plus.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 netduino2plus.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 netduino2plus.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
-##############################################################
 
+#-- Optimizations
+netduino2plus.menu.opt.o2std=Faster
+netduino2plus.menu.opt.o2std.build.flags.optimize=-O2
+netduino2plus.menu.opt.o2std.build.flags.ldspecs=
+netduino2plus.menu.opt.o2lto=Faster with LTO
+netduino2plus.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+netduino2plus.menu.opt.o2lto.build.flags.ldspecs=-flto
+netduino2plus.menu.opt.o1std=Fast
+netduino2plus.menu.opt.o1std.build.flags.optimize=-O1
+netduino2plus.menu.opt.o1std.build.flags.ldspecs=
+netduino2plus.menu.opt.o1lto=Fast with LTO
+netduino2plus.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+netduino2plus.menu.opt.o1lto.build.flags.ldspecs=-flto
+netduino2plus.menu.opt.o3std=Fastest
+netduino2plus.menu.opt.o3std.build.flags.optimize=-O3
+netduino2plus.menu.opt.o3std.build.flags.ldspecs=
+netduino2plus.menu.opt.o3lto=Fastest with LTO
+netduino2plus.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+netduino2plus.menu.opt.o3lto.build.flags.ldspecs=-flto
+netduino2plus.menu.opt.ogstd=Debug
+netduino2plus.menu.opt.ogstd.build.flags.optimize=-Og
+netduino2plus.menu.opt.ogstd.build.flags.ldspecs=
+netduino2plus.menu.opt.oglto=Debug with LTO
+netduino2plus.menu.opt.oglto.build.flags.optimize=-Og -flto
+netduino2plus.menu.opt.oglto.build.flags.ldspecs=-flto
+netduino2plus.menu.opt.osstd=Smallest Code
+netduino2plus.menu.opt.osstd.build.flags.optimize=-Os
+netduino2plus.menu.opt.osstd.build.flags.ldspecs=
+netduino2plus.menu.opt.oslto=Smallest Code with LTO
+netduino2plus.menu.opt.oslto.build.flags.optimize=-Os -flto
+netduino2plus.menu.opt.oslto.build.flags.ldspecs=-flto
+
+##############################################################
