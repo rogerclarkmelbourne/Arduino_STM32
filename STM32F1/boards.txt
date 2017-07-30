@@ -4,6 +4,7 @@ menu.device_variant=Variant
 menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 menu.cpu_speed=CPU Speed(MHz)
+menu.opt=Optimize
 
 ##############################################################
 mapleMini.name=Maple Mini
@@ -43,6 +44,38 @@ mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
+#-- Optimizations
+mapleMini.menu.opt.osstd=Smallest (default)
+mapleMini.menu.opt.osstd.build.flags.optimize=-Os
+mapleMini.menu.opt.osstd.build.flags.ldspecs=
+mapleMini.menu.opt.oslto=Smallest Code with LTO
+mapleMini.menu.opt.oslto.build.flags.optimize=-Os -flto
+mapleMini.menu.opt.oslto.build.flags.ldspecs=-flto
+mapleMini.menu.opt.o1std=Fast (-O1)
+mapleMini.menu.opt.o1std.build.flags.optimize=-O1
+mapleMini.menu.opt.o1std.build.flags.ldspecs=
+mapleMini.menu.opt.o1lto=Fast (-O1) with LTO
+mapleMini.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+mapleMini.menu.opt.o1lto.build.flags.ldspecs=-flto
+mapleMini.menu.opt.o2std=Faster (-O2)
+mapleMini.menu.opt.o2std.build.flags.optimize=-O2
+mapleMini.menu.opt.o2std.build.flags.ldspecs=
+mapleMini.menu.opt.o2lto=Faster (-O2) with LTO
+mapleMini.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+mapleMini.menu.opt.o2lto.build.flags.ldspecs=-flto
+mapleMini.menu.opt.o3std=Fastest (-03)
+mapleMini.menu.opt.o3std.build.flags.optimize=-O3
+mapleMini.menu.opt.o3std.build.flags.ldspecs=
+mapleMini.menu.opt.o3lto=Fastest (-0) with LTO
+mapleMini.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+mapleMini.menu.opt.o3lto.build.flags.ldspecs=-flto
+mapleMini.menu.opt.ogstd=Debug (-g)
+mapleMini.menu.opt.ogstd.build.flags.optimize=-Og
+mapleMini.menu.opt.ogstd.build.flags.ldspecs=
+mapleMini.menu.opt.oglto=Debug with LTO
+mapleMini.menu.opt.oglto.build.flags.optimize=-Og -flto
+mapleMini.menu.opt.oglto.build.flags.ldspecs=-flto
+
 
 ##############################################################
 maple.name=Maple (Rev 3)
@@ -66,6 +99,38 @@ maple.build.ldscript=ld/flash.ld
 maple.build.variant=maple
 maple.build.vect=VECT_TAB_ADDR=0x8005000
 
+#-- Optimizations
+maple.menu.opt.osstd=Smallest (default)
+maple.menu.opt.osstd.build.flags.optimize=-Os
+maple.menu.opt.osstd.build.flags.ldspecs=
+maple.menu.opt.oslto=Smallest Code with LTO
+maple.menu.opt.oslto.build.flags.optimize=-Os -flto
+maple.menu.opt.oslto.build.flags.ldspecs=-flto
+maple.menu.opt.o1std=Fast (-O1)
+maple.menu.opt.o1std.build.flags.optimize=-O1
+maple.menu.opt.o1std.build.flags.ldspecs=
+maple.menu.opt.o1lto=Fast (-O1) with LTO
+maple.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+maple.menu.opt.o1lto.build.flags.ldspecs=-flto
+maple.menu.opt.o2std=Faster (-O2)
+maple.menu.opt.o2std.build.flags.optimize=-O2
+maple.menu.opt.o2std.build.flags.ldspecs=
+maple.menu.opt.o2lto=Faster (-O2) with LTO
+maple.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+maple.menu.opt.o2lto.build.flags.ldspecs=-flto
+maple.menu.opt.o3std=Fastest (-03)
+maple.menu.opt.o3std.build.flags.optimize=-O3
+maple.menu.opt.o3std.build.flags.ldspecs=
+maple.menu.opt.o3lto=Fastest (-0) with LTO
+maple.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+maple.menu.opt.o3lto.build.flags.ldspecs=-flto
+maple.menu.opt.ogstd=Debug (-g)
+maple.menu.opt.ogstd.build.flags.optimize=-Og
+maple.menu.opt.ogstd.build.flags.ldspecs=
+maple.menu.opt.oglto=Debug with LTO
+maple.menu.opt.oglto.build.flags.optimize=-Og -flto
+maple.menu.opt.oglto.build.flags.ldspecs=-flto
+
 ##############################################################
 mapleRET6.name=Maple (RET6)
 
@@ -88,6 +153,38 @@ mapleRET6.upload.file_type=bin
 mapleRET6.upload.usbID=1EAF:0003
 mapleRET6.upload.altID=1
 mapleRET6.upload.auto_reset=true
+
+#-- Optimizations
+mapleRET6.menu.opt.osstd=Smallest (default)
+mapleRET6.menu.opt.osstd.build.flags.optimize=-Os
+mapleRET6.menu.opt.osstd.build.flags.ldspecs=
+mapleRET6.menu.opt.oslto=Smallest Code with LTO
+mapleRET6.menu.opt.oslto.build.flags.optimize=-Os -flto
+mapleRET6.menu.opt.oslto.build.flags.ldspecs=-flto
+mapleRET6.menu.opt.o1std=Fast (-O1)
+mapleRET6.menu.opt.o1std.build.flags.optimize=-O1
+mapleRET6.menu.opt.o1std.build.flags.ldspecs=
+mapleRET6.menu.opt.o1lto=Fast (-O1) with LTO
+mapleRET6.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+mapleRET6.menu.opt.o1lto.build.flags.ldspecs=-flto
+mapleRET6.menu.opt.o2std=Faster (-O2)
+mapleRET6.menu.opt.o2std.build.flags.optimize=-O2
+mapleRET6.menu.opt.o2std.build.flags.ldspecs=
+mapleRET6.menu.opt.o2lto=Faster (-O2) with LTO
+mapleRET6.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+mapleRET6.menu.opt.o2lto.build.flags.ldspecs=-flto
+mapleRET6.menu.opt.o3std=Fastest (-03)
+mapleRET6.menu.opt.o3std.build.flags.optimize=-O3
+mapleRET6.menu.opt.o3std.build.flags.ldspecs=
+mapleRET6.menu.opt.o3lto=Fastest (-0) with LTO
+mapleRET6.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+mapleRET6.menu.opt.ogstd=Debug (-g)
+mapleRET6.menu.opt.o3lto.build.flags.ldspecs=-flto
+mapleRET6.menu.opt.ogstd.build.flags.optimize=-Og
+mapleRET6.menu.opt.ogstd.build.flags.ldspecs=
+mapleRET6.menu.opt.oglto=Debug with LTO
+mapleRET6.menu.opt.oglto.build.flags.optimize=-Og -flto
+mapleRET6.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ##############################################################
 
@@ -119,6 +216,38 @@ microduino32_flash.build.density=STM32_MEDIUM_DENSITY
 microduino32_flash.build.error_led_port=GPIOB
 microduino32_flash.build.error_led_pin=1
 microduino32_flash.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
+#-- Optimizations
+microduino32_flash.menu.opt.osstd=Smallest (default)
+microduino32_flash.menu.opt.osstd.build.flags.optimize=-Os
+microduino32_flash.menu.opt.osstd.build.flags.ldspecs=
+microduino32_flash.menu.opt.oslto=Smallest Code with LTO
+microduino32_flash.menu.opt.oslto.build.flags.optimize=-Os -flto
+microduino32_flash.menu.opt.oslto.build.flags.ldspecs=-flto
+microduino32_flash.menu.opt.o1std=Fast (-O1)
+microduino32_flash.menu.opt.o1std.build.flags.optimize=-O1
+microduino32_flash.menu.opt.o1std.build.flags.ldspecs=
+microduino32_flash.menu.opt.o1lto=Fast (-O1) with LTO
+microduino32_flash.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+microduino32_flash.menu.opt.o1lto.build.flags.ldspecs=-flto
+microduino32_flash.menu.opt.o2std=Faster (-O2)
+microduino32_flash.menu.opt.o2std.build.flags.optimize=-O2
+microduino32_flash.menu.opt.o2std.build.flags.ldspecs=
+microduino32_flash.menu.opt.o2lto=Faster (-O2) with LTO
+microduino32_flash.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+microduino32_flash.menu.opt.o2lto.build.flags.ldspecs=-flto
+microduino32_flash.menu.opt.o3std=Fastest (-03)
+microduino32_flash.menu.opt.o3std.build.flags.optimize=-O3
+microduino32_flash.menu.opt.o3std.build.flags.ldspecs=
+microduino32_flash.menu.opt.o3lto=Fastest (-0) with LTO
+microduino32_flash.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+microduino32_flash.menu.opt.ogstd=Debug (-g)
+microduino32_flash.menu.opt.o3lto.build.flags.ldspecs=-flto
+microduino32_flash.menu.opt.ogstd.build.flags.optimize=-Og
+microduino32_flash.menu.opt.ogstd.build.flags.ldspecs=
+microduino32_flash.menu.opt.oglto=Debug with LTO
+microduino32_flash.menu.opt.oglto.build.flags.optimize=-Og -flto
+microduino32_flash.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ##############################################################
 nucleo_f103rb.name=STM Nucleo F103RB (STLink)
@@ -157,6 +286,38 @@ nucleo_f103rb.menu.device_variant.NucleoF103_HSI.build.extra_flags=-DMCU_STM32F1
 nucleo_f103rb.menu.device_variant.NucleoF103_HSE=Nucleo F103 @ 72 MHz w/ crystal
 nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.f_cpu=72000000L
 nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.extra_flags=-DNUCLEO_HSE_CRYSTAL -DMCU_STM32F103RB -mthumb -march=armv7-m -D__STM32F1__
+
+#-- Optimizations
+nucleo_f103rb.menu.opt.osstd=Smallest (default)
+nucleo_f103rb.menu.opt.osstd.build.flags.optimize=-Os
+nucleo_f103rb.menu.opt.osstd.build.flags.ldspecs=
+nucleo_f103rb.menu.opt.oslto=Smallest Code with LTO
+nucleo_f103rb.menu.opt.oslto.build.flags.optimize=-Os -flto
+nucleo_f103rb.menu.opt.oslto.build.flags.ldspecs=-flto
+nucleo_f103rb.menu.opt.o1std=Fast (-O1)
+nucleo_f103rb.menu.opt.o1std.build.flags.optimize=-O1
+nucleo_f103rb.menu.opt.o1std.build.flags.ldspecs=
+nucleo_f103rb.menu.opt.o1lto=Fast (-O1) with LTO
+nucleo_f103rb.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+nucleo_f103rb.menu.opt.o1lto.build.flags.ldspecs=-flto
+nucleo_f103rb.menu.opt.o2std=Faster (-O2)
+nucleo_f103rb.menu.opt.o2std.build.flags.optimize=-O2
+nucleo_f103rb.menu.opt.o2std.build.flags.ldspecs=
+nucleo_f103rb.menu.opt.o2lto=Faster (-O2) with LTO
+nucleo_f103rb.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+nucleo_f103rb.menu.opt.o2lto.build.flags.ldspecs=-flto
+nucleo_f103rb.menu.opt.o3std=Fastest (-03)
+nucleo_f103rb.menu.opt.o3std.build.flags.optimize=-O3
+nucleo_f103rb.menu.opt.o3std.build.flags.ldspecs=
+nucleo_f103rb.menu.opt.o3lto=Fastest (-0) with LTO
+nucleo_f103rb.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+nucleo_f103rb.menu.opt.ogstd=Debug (-g)
+nucleo_f103rb.menu.opt.o3lto.build.flags.ldspecs=-flto
+nucleo_f103rb.menu.opt.ogstd.build.flags.optimize=-Og
+nucleo_f103rb.menu.opt.ogstd.build.flags.ldspecs=
+nucleo_f103rb.menu.opt.oglto=Debug with LTO
+nucleo_f103rb.menu.opt.oglto.build.flags.optimize=-Og -flto
+nucleo_f103rb.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### Generic STM32F103C ########################################
 
@@ -222,6 +383,38 @@ genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 
 genericSTM32F103C.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103C.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+#-- Optimizations
+genericSTM32F103C.menu.opt.osstd=Smallest (default)
+genericSTM32F103C.menu.opt.osstd.build.flags.optimize=-Os
+genericSTM32F103C.menu.opt.osstd.build.flags.ldspecs=
+genericSTM32F103C.menu.opt.oslto=Smallest Code with LTO
+genericSTM32F103C.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericSTM32F103C.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103C.menu.opt.o1std=Fast (-O1)
+genericSTM32F103C.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103C.menu.opt.o1std.build.flags.ldspecs=
+genericSTM32F103C.menu.opt.o1lto=Fast (-O1) with LTO
+genericSTM32F103C.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericSTM32F103C.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103C.menu.opt.o2std=Faster (-O2)
+genericSTM32F103C.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103C.menu.opt.o2std.build.flags.ldspecs=
+genericSTM32F103C.menu.opt.o2lto=Faster (-O2) with LTO
+genericSTM32F103C.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericSTM32F103C.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103C.menu.opt.o3std=Fastest (-03)
+genericSTM32F103C.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103C.menu.opt.o3std.build.flags.ldspecs=
+genericSTM32F103C.menu.opt.o3lto=Fastest (-0) with LTO
+genericSTM32F103C.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericSTM32F103C.menu.opt.ogstd=Debug (-g)
+genericSTM32F103C.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103C.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
+genericSTM32F103C.menu.opt.oglto=Debug with LTO
+genericSTM32F103C.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericSTM32F103C.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### Generic STM32F103R ###########################
 
@@ -292,6 +485,38 @@ genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- Optimizations
+genericSTM32F103R.menu.opt.osstd=Smallest (default)
+genericSTM32F103R.menu.opt.osstd.build.flags.optimize=-Os
+genericSTM32F103R.menu.opt.osstd.build.flags.ldspecs=
+genericSTM32F103R.menu.opt.oslto=Smallest Code with LTO
+genericSTM32F103R.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericSTM32F103R.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103R.menu.opt.o1std=Fast (-O1)
+genericSTM32F103R.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103R.menu.opt.o1std.build.flags.ldspecs=
+genericSTM32F103R.menu.opt.o1lto=Fast (-O1) with LTO
+genericSTM32F103R.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericSTM32F103R.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103R.menu.opt.o2std=Faster (-O2)
+genericSTM32F103R.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103R.menu.opt.o2std.build.flags.ldspecs=
+genericSTM32F103R.menu.opt.o2lto=Faster (-O2) with LTO
+genericSTM32F103R.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericSTM32F103R.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103R.menu.opt.o3std=Fastest (-03)
+genericSTM32F103R.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103R.menu.opt.o3std.build.flags.ldspecs=
+genericSTM32F103R.menu.opt.o3lto=Fastest (-0) with LTO
+genericSTM32F103R.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericSTM32F103R.menu.opt.ogstd=Debug (-g)
+genericSTM32F103R.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103R.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103R.menu.opt.ogstd.build.flags.ldspecs=
+genericSTM32F103R.menu.opt.oglto=Debug with LTO
+genericSTM32F103R.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericSTM32F103R.menu.opt.oglto.build.flags.ldspecs=-flto
+
 ###################### Generic STM32F103T ########################################
 
 genericSTM32F103T.name=Generic STM32F103T series
@@ -344,6 +569,38 @@ genericSTM32F103T.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103T.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+#-- Optimizations
+genericSTM32F103T.menu.opt.osstd=Smallest (default)
+genericSTM32F103T.menu.opt.osstd.build.flags.optimize=-Os
+genericSTM32F103T.menu.opt.osstd.build.flags.ldspecs=
+genericSTM32F103T.menu.opt.oslto=Smallest Code with LTO
+genericSTM32F103T.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericSTM32F103T.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103T.menu.opt.o1std=Fast (-O1)
+genericSTM32F103T.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103T.menu.opt.o1std.build.flags.ldspecs=
+genericSTM32F103T.menu.opt.o1lto=Fast (-O1) with LTO
+genericSTM32F103T.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericSTM32F103T.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103T.menu.opt.o2std=Faster (-O2)
+genericSTM32F103T.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103T.menu.opt.o2std.build.flags.ldspecs=
+genericSTM32F103T.menu.opt.o2lto=Faster (-O2) with LTO
+genericSTM32F103T.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericSTM32F103T.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103T.menu.opt.o3std=Fastest (-03)
+genericSTM32F103T.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103T.menu.opt.o3std.build.flags.ldspecs=
+genericSTM32F103T.menu.opt.o3lto=Fastest (-0) with LTO
+genericSTM32F103T.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericSTM32F103T.menu.opt.ogstd=Debug (-g)
+genericSTM32F103T.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103T.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103T.menu.opt.ogstd.build.flags.ldspecs=
+genericSTM32F103T.menu.opt.oglto=Debug with LTO
+genericSTM32F103T.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericSTM32F103T.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### Generic STM32F103V ###########################
 
@@ -405,6 +662,38 @@ genericSTM32F103V.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- Optimizations
+genericSTM32F103V.menu.opt.osstd=Smallest (default)
+genericSTM32F103V.menu.opt.osstd.build.flags.optimize=-Os
+genericSTM32F103V.menu.opt.osstd.build.flags.ldspecs=
+genericSTM32F103V.menu.opt.oslto=Smallest Code with LTO
+genericSTM32F103V.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericSTM32F103V.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103V.menu.opt.o1std=Fast (-O1)
+genericSTM32F103V.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103V.menu.opt.o1std.build.flags.ldspecs=
+genericSTM32F103V.menu.opt.o1lto=Fast (-O1) with LTO
+genericSTM32F103V.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericSTM32F103V.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103V.menu.opt.o2std=Faster (-O2)
+genericSTM32F103V.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103V.menu.opt.o2std.build.flags.ldspecs=
+genericSTM32F103V.menu.opt.o2lto=Faster (-O2) with LTO
+genericSTM32F103V.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericSTM32F103V.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103V.menu.opt.o3std=Fastest (-03)
+genericSTM32F103V.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103V.menu.opt.o3std.build.flags.ldspecs=
+genericSTM32F103V.menu.opt.o3lto=Fastest (-0) with LTO
+genericSTM32F103V.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericSTM32F103V.menu.opt.ogstd=Debug (-g)
+genericSTM32F103V.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103V.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103V.menu.opt.ogstd.build.flags.ldspecs=
+genericSTM32F103V.menu.opt.oglto=Debug with LTO
+genericSTM32F103V.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericSTM32F103V.menu.opt.oglto.build.flags.ldspecs=-flto
+
 ########################### Generic STM32F103Z ###########################
 
 genericSTM32F103Z.name=Generic STM32F103Z series
@@ -462,6 +751,38 @@ genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- Optimizations
+genericSTM32F103Z.menu.opt.osstd=Smallest (default)
+genericSTM32F103Z.menu.opt.osstd.build.flags.optimize=-Os
+genericSTM32F103Z.menu.opt.osstd.build.flags.ldspecs=
+genericSTM32F103Z.menu.opt.oslto=Smallest Code with LTO
+genericSTM32F103Z.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericSTM32F103Z.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103Z.menu.opt.o1std=Fast (-O1)
+genericSTM32F103Z.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103Z.menu.opt.o1std.build.flags.ldspecs=
+genericSTM32F103Z.menu.opt.o1lto=Fast (-O1) with LTO
+genericSTM32F103Z.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericSTM32F103Z.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103Z.menu.opt.o2std=Faster (-O2)
+genericSTM32F103Z.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103Z.menu.opt.o2std.build.flags.ldspecs=
+genericSTM32F103Z.menu.opt.o2lto=Faster (-O2) with LTO
+genericSTM32F103Z.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericSTM32F103Z.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103Z.menu.opt.o3std=Fastest (-03)
+genericSTM32F103Z.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103Z.menu.opt.o3std.build.flags.ldspecs=
+genericSTM32F103Z.menu.opt.o3lto=Fastest (-0) with LTO
+genericSTM32F103Z.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericSTM32F103Z.menu.opt.ogstd=Debug (-g)
+genericSTM32F103Z.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103Z.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103Z.menu.opt.ogstd.build.flags.ldspecs=
+genericSTM32F103Z.menu.opt.oglto=Debug with LTO
+genericSTM32F103Z.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericSTM32F103Z.menu.opt.oglto.build.flags.ldspecs=-flto
+
 ###################### HYTiny STM32F103T ########################################
 
 hytiny-stm32f103t.name=HYTiny STM32F103TB
@@ -513,6 +834,37 @@ hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.protocol=jlink
 hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 hytiny-stm32f103t.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
 
+#-- Optimizations
+hytiny-stm32f103t.menu.opt.osstd=Smallest (default)
+hytiny-stm32f103t.menu.opt.osstd.build.flags.optimize=-Os
+hytiny-stm32f103t.menu.opt.osstd.build.flags.ldspecs=
+hytiny-stm32f103t.menu.opt.oslto=Smallest Code with LTO
+hytiny-stm32f103t.menu.opt.oslto.build.flags.optimize=-Os -flto
+hytiny-stm32f103t.menu.opt.oslto.build.flags.ldspecs=-flto
+hytiny-stm32f103t.menu.opt.o1std=Fast (-O1)
+hytiny-stm32f103t.menu.opt.o1std.build.flags.optimize=-O1
+hytiny-stm32f103t.menu.opt.o1std.build.flags.ldspecs=
+hytiny-stm32f103t.menu.opt.o1lto=Fast (-O1) with LTO
+hytiny-stm32f103t.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+hytiny-stm32f103t.menu.opt.o1lto.build.flags.ldspecs=-flto
+hytiny-stm32f103t.menu.opt.o2std=Faster (-O2)
+hytiny-stm32f103t.menu.opt.o2std.build.flags.optimize=-O2
+hytiny-stm32f103t.menu.opt.o2std.build.flags.ldspecs=
+hytiny-stm32f103t.menu.opt.o2lto=Faster (-O2) with LTO
+hytiny-stm32f103t.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+hytiny-stm32f103t.menu.opt.o2lto.build.flags.ldspecs=-flto
+hytiny-stm32f103t.menu.opt.o3std=Fastest (-03)
+hytiny-stm32f103t.menu.opt.o3std.build.flags.optimize=-O3
+hytiny-stm32f103t.menu.opt.o3std.build.flags.ldspecs=
+hytiny-stm32f103t.menu.opt.o3lto=Fastest (-0) with LTO
+hytiny-stm32f103t.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+hytiny-stm32f103t.menu.opt.ogstd=Debug (-g)
+hytiny-stm32f103t.menu.opt.o3lto.build.flags.ldspecs=-flto
+hytiny-stm32f103t.menu.opt.ogstd.build.flags.optimize=-Og
+hytiny-stm32f103t.menu.opt.ogstd.build.flags.ldspecs=
+hytiny-stm32f103t.menu.opt.oglto=Debug with LTO
+hytiny-stm32f103t.menu.opt.oglto.build.flags.optimize=-Og -flto
+hytiny-stm32f103t.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### Generic GD32F103C  ########################################
 
@@ -576,6 +928,38 @@ genericGD32F103C.menu.cpu_speed.speed_96mhz.build.f_cpu=96000000L
 genericGD32F103C.menu.cpu_speed.speed_72mhz=72Mhz (compatibility)
 genericGD32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 
+#-- Optimizations
+genericGD32F103C.menu.opt.osstd=Smallest (default)
+genericGD32F103C.menu.opt.osstd.build.flags.optimize=-Os
+genericGD32F103C.menu.opt.osstd.build.flags.ldspecs=
+genericGD32F103C.menu.opt.oslto=Smallest Code with LTO
+genericGD32F103C.menu.opt.oslto.build.flags.optimize=-Os -flto
+genericGD32F103C.menu.opt.oslto.build.flags.ldspecs=-flto
+genericGD32F103C.menu.opt.o1std=Fast (-O1)
+genericGD32F103C.menu.opt.o1std.build.flags.optimize=-O1
+genericGD32F103C.menu.opt.o1std.build.flags.ldspecs=
+genericGD32F103C.menu.opt.o1lto=Fast (-O1) with LTO
+genericGD32F103C.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+genericGD32F103C.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericGD32F103C.menu.opt.o2std=Faster (-O2)
+genericGD32F103C.menu.opt.o2std.build.flags.optimize=-O2
+genericGD32F103C.menu.opt.o2std.build.flags.ldspecs=
+genericGD32F103C.menu.opt.o2lto=Faster (-O2) with LTO
+genericGD32F103C.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+genericGD32F103C.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericGD32F103C.menu.opt.o3std=Fastest (-03)
+genericGD32F103C.menu.opt.o3std.build.flags.optimize=-O3
+genericGD32F103C.menu.opt.o3std.build.flags.ldspecs=
+genericGD32F103C.menu.opt.o3lto=Fastest (-0) with LTO
+genericGD32F103C.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+genericGD32F103C.menu.opt.ogstd=Debug (-g)
+genericGD32F103C.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericGD32F103C.menu.opt.ogstd.build.flags.optimize=-Og
+genericGD32F103C.menu.opt.ogstd.build.flags.ldspecs=
+genericGD32F103C.menu.opt.oglto=Debug with LTO
+genericGD32F103C.menu.opt.oglto.build.flags.optimize=-Og -flto
+genericGD32F103C.menu.opt.oglto.build.flags.ldspecs=-flto
+
 ########################### STM32VLD to FLASH ###########################
 
 STM32VLD.name=STM32VLD to FLASH
@@ -604,5 +988,36 @@ STM32VLD.menu.upload_method.STLinkMethod.upload.protocol=STLink
 STM32VLD.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 STM32VLD.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG  
 
+#-- Optimizations
+STM32VLD.menu.opt.osstd=Smallest (default)
+STM32VLD.menu.opt.osstd.build.flags.optimize=-Os
+STM32VLD.menu.opt.osstd.build.flags.ldspecs=
+STM32VLD.menu.opt.oslto=Smallest Code with LTO
+STM32VLD.menu.opt.oslto.build.flags.optimize=-Os -flto
+STM32VLD.menu.opt.oslto.build.flags.ldspecs=-flto
+STM32VLD.menu.opt.o1std=Fast (-O1)
+STM32VLD.menu.opt.o1std.build.flags.optimize=-O1
+STM32VLD.menu.opt.o1std.build.flags.ldspecs=
+STM32VLD.menu.opt.o1lto=Fast (-O1) with LTO
+STM32VLD.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+STM32VLD.menu.opt.o1lto.build.flags.ldspecs=-flto
+STM32VLD.menu.opt.o2std=Faster (-O2)
+STM32VLD.menu.opt.o2std.build.flags.optimize=-O2
+STM32VLD.menu.opt.o2std.build.flags.ldspecs=
+STM32VLD.menu.opt.o2lto=Faster (-O2) with LTO
+STM32VLD.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+STM32VLD.menu.opt.o2lto.build.flags.ldspecs=-flto
+STM32VLD.menu.opt.o3std=Fastest (-03)
+STM32VLD.menu.opt.o3std.build.flags.optimize=-O3
+STM32VLD.menu.opt.o3std.build.flags.ldspecs=
+STM32VLD.menu.opt.o3lto=Fastest (-0) with LTO
+STM32VLD.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+STM32VLD.menu.opt.ogstd=Debug (-g)
+STM32VLD.menu.opt.o3lto.build.flags.ldspecs=-flto
+STM32VLD.menu.opt.ogstd.build.flags.optimize=-Og
+STM32VLD.menu.opt.ogstd.build.flags.ldspecs=
+STM32VLD.menu.opt.oglto=Debug with LTO
+STM32VLD.menu.opt.oglto.build.flags.optimize=-Og -flto
+STM32VLD.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ################################################################################
