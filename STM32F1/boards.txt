@@ -44,6 +44,16 @@ mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
+#-- CPU Clock frequency
+mapleMini.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+mapleMini.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 #-- Optimizations
 mapleMini.menu.opt.osstd=Smallest (default)
 mapleMini.menu.opt.osstd.build.flags.optimize=-Os
@@ -99,6 +109,16 @@ maple.build.ldscript=ld/flash.ld
 maple.build.variant=maple
 maple.build.vect=VECT_TAB_ADDR=0x8005000
 
+#-- CPU Clock frequency
+maple.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+maple.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+maple.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+maple.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+maple.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+maple.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 #-- Optimizations
 maple.menu.opt.osstd=Smallest (default)
 maple.menu.opt.osstd.build.flags.optimize=-Os
@@ -153,6 +173,17 @@ mapleRET6.upload.file_type=bin
 mapleRET6.upload.usbID=1EAF:0003
 mapleRET6.upload.altID=1
 mapleRET6.upload.auto_reset=true
+
+#-- CPU Clock frequency
+mapleRET6.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+mapleRET6.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+mapleRET6.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+mapleRET6.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+mapleRET6.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+mapleRET6.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 
 #-- Optimizations
 mapleRET6.menu.opt.osstd=Smallest (default)
@@ -216,6 +247,16 @@ microduino32_flash.build.density=STM32_MEDIUM_DENSITY
 microduino32_flash.build.error_led_port=GPIOB
 microduino32_flash.build.error_led_pin=1
 microduino32_flash.build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
+
+#-- CPU Clock frequency
+microduino32_flash.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+microduino32_flash.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+microduino32_flash.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+microduino32_flash.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+microduino32_flash.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+microduino32_flash.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
 microduino32_flash.menu.opt.osstd=Smallest (default)
@@ -384,6 +425,9 @@ genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103C.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103C.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
+genericSTM32F103C.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103C.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 #-- Optimizations
 genericSTM32F103C.menu.opt.osstd=Smallest (default)
 genericSTM32F103C.menu.opt.osstd.build.flags.optimize=-Os
@@ -485,6 +529,17 @@ genericSTM32F103R.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103R.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103R.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- CPU Clock frequency
+genericSTM32F103R.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103R.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103R.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103R.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+genericSTM32F103R.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103R.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
+
 #-- Optimizations
 genericSTM32F103R.menu.opt.osstd=Smallest (default)
 genericSTM32F103R.menu.opt.osstd.build.flags.optimize=-Os
@@ -569,6 +624,16 @@ genericSTM32F103T.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103T.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103T.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+#-- CPU Clock frequency
+genericSTM32F103T.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103T.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103T.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103T.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+genericSTM32F103T.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103T.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
 genericSTM32F103T.menu.opt.osstd=Smallest (default)
@@ -662,6 +727,16 @@ genericSTM32F103V.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103V.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103V.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- CPU Clock frequency
+genericSTM32F103V.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103V.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103V.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103V.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+genericSTM32F103V.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103V.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 #-- Optimizations
 genericSTM32F103V.menu.opt.osstd=Smallest (default)
 genericSTM32F103V.menu.opt.osstd.build.flags.optimize=-Os
@@ -751,6 +826,16 @@ genericSTM32F103Z.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
 genericSTM32F103Z.menu.upload_method.BMPMethod.upload.tool=bmp_upload
 genericSTM32F103Z.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
 
+#-- CPU Clock frequency
+genericSTM32F103Z.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103Z.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103Z.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103Z.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+genericSTM32F103Z.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103Z.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
 #-- Optimizations
 genericSTM32F103Z.menu.opt.osstd=Smallest (default)
 genericSTM32F103Z.menu.opt.osstd.build.flags.optimize=-Os
@@ -833,6 +918,16 @@ hytiny-stm32f103t.menu.upload_method.jlinkMethod=JLink
 hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.protocol=jlink
 hytiny-stm32f103t.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 hytiny-stm32f103t.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
+
+#-- CPU Clock frequency
+hytiny-stm32f103t.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+hytiny-stm32f103t.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+hytiny-stm32f103t.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+hytiny-stm32f103t.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+hytiny-stm32f103t.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+hytiny-stm32f103t.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
 hytiny-stm32f103t.menu.opt.osstd=Smallest (default)
@@ -987,6 +1082,16 @@ STM32VLD.menu.upload_method.STLinkMethod=STLink
 STM32VLD.menu.upload_method.STLinkMethod.upload.protocol=STLink
 STM32VLD.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 STM32VLD.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG  
+
+#-- CPU Clock frequency
+STM32VLD.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+STM32VLD.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+STM32VLD.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+STM32VLD.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+STM32VLD.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+STM32VLD.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
 STM32VLD.menu.opt.osstd=Smallest (default)
