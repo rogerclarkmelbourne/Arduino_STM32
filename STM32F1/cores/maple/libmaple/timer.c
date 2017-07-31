@@ -327,7 +327,7 @@ static void output_compare_mode(timer_dev *dev, uint8 channel) {
 }
 
 //added by CARLOS.
-static void encoder_mode(timer_dev *dev, uint8 channel) {
+static void encoder_mode(timer_dev *dev, uint8 channel __attribute__((unused))) {
     
     //prescaler. 
     //(dev->regs).gen->PSC = 1;

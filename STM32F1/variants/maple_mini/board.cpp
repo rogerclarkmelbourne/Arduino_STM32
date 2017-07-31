@@ -50,6 +50,9 @@ void boardInit(void) {
 #endif
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
@@ -92,6 +95,8 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     {&gpiob, &timer4, NULL,  8, 3, ADCx}, /* D32/PB8 */
     {&gpiob, &timer3, &adc1,  1, 4,    9}, /* D33/PB1 */
 };
+
+#pragma GCC diagnostic pop
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
     3, 4, 5, 8, 9, 10, 11, 15, 16, 25, 26, 27

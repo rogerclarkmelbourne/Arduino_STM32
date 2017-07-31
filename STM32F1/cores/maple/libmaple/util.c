@@ -88,7 +88,7 @@ void _fail(const char* file, int line, const char* exp) {
  * Provide an __assert_func handler to libc so that calls to assert()
  * get redirected to _fail.
  */
-void __assert_func(const char* file, int line, const char* method,
+void __assert_func(const char* file, int line, const char* method __attribute__((unused)),
                    const char* expression) {
     _fail(file, line, expression);
 }

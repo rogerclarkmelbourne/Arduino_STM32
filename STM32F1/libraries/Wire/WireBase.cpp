@@ -41,7 +41,7 @@
 #include "WireBase.h"
 #include "wirish.h"
 
-void WireBase::begin(uint8 self_addr) {
+void WireBase::begin(uint8 self_addr __attribute__((unused))) {
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
