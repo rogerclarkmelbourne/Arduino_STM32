@@ -33,6 +33,7 @@
 #define _WIRISH_WIRISH_MATH_H_
 
 #include <math.h>
+#include <stdint.h>
 
 /**
  * @brief Initialize the pseudo-random number generator.
@@ -160,5 +161,10 @@ double sqrt(double x);
  * @return x raised to the power y.
  */
 double pow(double x, double y);
+
+extern uint16_t makeWord( uint16_t w ) ;
+extern uint16_t makeWord( uint8_t h, uint8_t l ) ;
+
+#define word(...) makeWord(__VA_ARGS__)
 
 #endif
