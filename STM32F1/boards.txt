@@ -51,7 +51,7 @@ mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-mapleMini.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -116,7 +116,7 @@ maple.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 maple.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 maple.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-maple.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+maple.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 maple.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -181,7 +181,7 @@ mapleRET6.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 mapleRET6.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleRET6.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-mapleRET6.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+mapleRET6.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 mapleRET6.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 
@@ -255,7 +255,7 @@ microduino32_flash.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 microduino32_flash.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 microduino32_flash.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-microduino32_flash.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+microduino32_flash.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 microduino32_flash.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -425,7 +425,7 @@ genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103C.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103C.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-genericSTM32F103C.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103C.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103C.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -536,7 +536,7 @@ genericSTM32F103R.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103R.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103R.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-genericSTM32F103R.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103R.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103R.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 
@@ -632,7 +632,7 @@ genericSTM32F103T.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103T.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103T.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-genericSTM32F103T.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103T.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103T.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -734,7 +734,7 @@ genericSTM32F103V.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103V.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103V.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-genericSTM32F103V.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103V.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103V.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -833,7 +833,7 @@ genericSTM32F103Z.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 genericSTM32F103Z.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 genericSTM32F103Z.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-genericSTM32F103Z.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+genericSTM32F103Z.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103Z.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -926,7 +926,7 @@ hytiny-stm32f103t.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 hytiny-stm32f103t.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 hytiny-stm32f103t.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-hytiny-stm32f103t.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+hytiny-stm32f103t.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 hytiny-stm32f103t.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -1090,7 +1090,7 @@ STM32VLD.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 STM32VLD.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 STM32VLD.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-STM32VLD.menu.cpu_speed.speed_128mhz=128Mhz (Turbo NO USB!)
+STM32VLD.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 STM32VLD.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
