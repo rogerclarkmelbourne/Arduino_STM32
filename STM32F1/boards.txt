@@ -82,9 +82,6 @@ mapleMini.menu.opt.o3lto.build.flags.ldspecs=-flto
 mapleMini.menu.opt.ogstd=Debug (-g)
 mapleMini.menu.opt.ogstd.build.flags.optimize=-Og
 mapleMini.menu.opt.ogstd.build.flags.ldspecs=
-mapleMini.menu.opt.oglto=Debug with LTO
-mapleMini.menu.opt.oglto.build.flags.optimize=-Og -flto
-mapleMini.menu.opt.oglto.build.flags.ldspecs=-flto
 
 
 ##############################################################
@@ -147,9 +144,6 @@ maple.menu.opt.o3lto.build.flags.ldspecs=-flto
 maple.menu.opt.ogstd=Debug (-g)
 maple.menu.opt.ogstd.build.flags.optimize=-Og
 maple.menu.opt.ogstd.build.flags.ldspecs=
-maple.menu.opt.oglto=Debug with LTO
-maple.menu.opt.oglto.build.flags.optimize=-Og -flto
-maple.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ##############################################################
 mapleRET6.name=Maple (RET6)
@@ -213,9 +207,6 @@ mapleRET6.menu.opt.ogstd=Debug (-g)
 mapleRET6.menu.opt.o3lto.build.flags.ldspecs=-flto
 mapleRET6.menu.opt.ogstd.build.flags.optimize=-Og
 mapleRET6.menu.opt.ogstd.build.flags.ldspecs=
-mapleRET6.menu.opt.oglto=Debug with LTO
-mapleRET6.menu.opt.oglto.build.flags.optimize=-Og -flto
-mapleRET6.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ##############################################################
 
@@ -286,9 +277,6 @@ microduino32_flash.menu.opt.ogstd=Debug (-g)
 microduino32_flash.menu.opt.o3lto.build.flags.ldspecs=-flto
 microduino32_flash.menu.opt.ogstd.build.flags.optimize=-Og
 microduino32_flash.menu.opt.ogstd.build.flags.ldspecs=
-microduino32_flash.menu.opt.oglto=Debug with LTO
-microduino32_flash.menu.opt.oglto.build.flags.optimize=-Og -flto
-microduino32_flash.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ##############################################################
 nucleo_f103rb.name=STM Nucleo F103RB (STLink)
@@ -356,9 +344,6 @@ nucleo_f103rb.menu.opt.ogstd=Debug (-g)
 nucleo_f103rb.menu.opt.o3lto.build.flags.ldspecs=-flto
 nucleo_f103rb.menu.opt.ogstd.build.flags.optimize=-Og
 nucleo_f103rb.menu.opt.ogstd.build.flags.ldspecs=
-nucleo_f103rb.menu.opt.oglto=Debug with LTO
-nucleo_f103rb.menu.opt.oglto.build.flags.optimize=-Og -flto
-nucleo_f103rb.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### Generic STM32F103C ########################################
 
@@ -456,9 +441,6 @@ genericSTM32F103C.menu.opt.ogstd=Debug (-g)
 genericSTM32F103C.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103C.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
-genericSTM32F103C.menu.opt.oglto=Debug with LTO
-genericSTM32F103C.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericSTM32F103C.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### Generic STM32F103R ###########################
 
@@ -568,9 +550,6 @@ genericSTM32F103R.menu.opt.ogstd=Debug (-g)
 genericSTM32F103R.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103R.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103R.menu.opt.ogstd.build.flags.ldspecs=
-genericSTM32F103R.menu.opt.oglto=Debug with LTO
-genericSTM32F103R.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericSTM32F103R.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### Generic STM32F103T ########################################
 
@@ -663,9 +642,6 @@ genericSTM32F103T.menu.opt.ogstd=Debug (-g)
 genericSTM32F103T.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103T.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103T.menu.opt.ogstd.build.flags.ldspecs=
-genericSTM32F103T.menu.opt.oglto=Debug with LTO
-genericSTM32F103T.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericSTM32F103T.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### Generic STM32F103V ###########################
 
@@ -765,9 +741,6 @@ genericSTM32F103V.menu.opt.ogstd=Debug (-g)
 genericSTM32F103V.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103V.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103V.menu.opt.ogstd.build.flags.ldspecs=
-genericSTM32F103V.menu.opt.oglto=Debug with LTO
-genericSTM32F103V.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericSTM32F103V.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### Generic STM32F103Z ###########################
 
@@ -864,9 +837,6 @@ genericSTM32F103Z.menu.opt.ogstd=Debug (-g)
 genericSTM32F103Z.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103Z.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103Z.menu.opt.ogstd.build.flags.ldspecs=
-genericSTM32F103Z.menu.opt.oglto=Debug with LTO
-genericSTM32F103Z.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericSTM32F103Z.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### HYTiny STM32F103T ########################################
 
@@ -957,9 +927,6 @@ hytiny-stm32f103t.menu.opt.ogstd=Debug (-g)
 hytiny-stm32f103t.menu.opt.o3lto.build.flags.ldspecs=-flto
 hytiny-stm32f103t.menu.opt.ogstd.build.flags.optimize=-Og
 hytiny-stm32f103t.menu.opt.ogstd.build.flags.ldspecs=
-hytiny-stm32f103t.menu.opt.oglto=Debug with LTO
-hytiny-stm32f103t.menu.opt.oglto.build.flags.optimize=-Og -flto
-hytiny-stm32f103t.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ###################### Generic GD32F103C  ########################################
 
@@ -1051,9 +1018,6 @@ genericGD32F103C.menu.opt.ogstd=Debug (-g)
 genericGD32F103C.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericGD32F103C.menu.opt.ogstd.build.flags.optimize=-Og
 genericGD32F103C.menu.opt.ogstd.build.flags.ldspecs=
-genericGD32F103C.menu.opt.oglto=Debug with LTO
-genericGD32F103C.menu.opt.oglto.build.flags.optimize=-Og -flto
-genericGD32F103C.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ########################### STM32VLD to FLASH ###########################
 
@@ -1121,8 +1085,5 @@ STM32VLD.menu.opt.ogstd=Debug (-g)
 STM32VLD.menu.opt.o3lto.build.flags.ldspecs=-flto
 STM32VLD.menu.opt.ogstd.build.flags.optimize=-Og
 STM32VLD.menu.opt.ogstd.build.flags.ldspecs=
-STM32VLD.menu.opt.oglto=Debug with LTO
-STM32VLD.menu.opt.oglto.build.flags.optimize=-Og -flto
-STM32VLD.menu.opt.oglto.build.flags.ldspecs=-flto
 
 ################################################################################
