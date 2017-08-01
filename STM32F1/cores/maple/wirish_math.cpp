@@ -47,3 +47,12 @@ long random(long howsmall, long howbig) {
     return random(diff) + howsmall;
 }
 
+extern uint16_t makeWord( uint16_t w )
+{
+  return w ;
+}
+
+extern uint16_t makeWord( uint8_t h, uint8_t l )
+{
+  return (h << 8) | l ;
+}

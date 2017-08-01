@@ -1,5 +1,7 @@
 # 
 
+menu.opt=Optimize
+
 ##############################################################
 discovery_f3.name=STM32F3Discovery
 
@@ -28,5 +30,33 @@ discovery_f3.build.error_led_port=GPIOE
 discovery_f3.build.error_led_pin=8
 discovery_f3.build.board=STM32F3Discovery
 
+#-- Optimizations
+discovery_f3.menu.opt.osstd=Smallest (default)
+discovery_f3.menu.opt.osstd.build.flags.optimize=-Os
+discovery_f3.menu.opt.osstd.build.flags.ldspecs=
+discovery_f3.menu.opt.oslto=Smallest Code with LTO
+discovery_f3.menu.opt.oslto.build.flags.optimize=-Os -flto
+discovery_f3.menu.opt.oslto.build.flags.ldspecs=-flto
+discovery_f3.menu.opt.o1std=Fast (-O1)
+discovery_f3.menu.opt.o1std.build.flags.optimize=-O1
+discovery_f3.menu.opt.o1std.build.flags.ldspecs=
+discovery_f3.menu.opt.o1lto=Fast (-O1) with LTO
+discovery_f3.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+discovery_f3.menu.opt.o1lto.build.flags.ldspecs=-flto
+discovery_f3.menu.opt.o2std=Faster (-O2)
+discovery_f3.menu.opt.o2std.build.flags.optimize=-O2
+discovery_f3.menu.opt.o2std.build.flags.ldspecs=
+discovery_f3.menu.opt.o2lto=Faster (-O2) with LTO
+discovery_f3.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+discovery_f3.menu.opt.o2lto.build.flags.ldspecs=-flto
+discovery_f3.menu.opt.o3std=Fastest (-O3)
+discovery_f3.menu.opt.o3std.build.flags.optimize=-O3
+discovery_f3.menu.opt.o3std.build.flags.ldspecs=
+discovery_f3.menu.opt.o3lto=Fastest (-O3) with LTO
+discovery_f3.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+discovery_f3.menu.opt.o3lto.build.flags.ldspecs=-flto
+discovery_f3.menu.opt.ogstd=Debug (-g)
+discovery_f3.menu.opt.ogstd.build.flags.optimize=-Og
+discovery_f3.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
 
