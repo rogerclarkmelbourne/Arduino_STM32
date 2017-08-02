@@ -14,25 +14,21 @@
  ****************************************************/
 
 
-#include "SPI.h"
 
-#include <Adafruit_GFX_AS.h>    // Core graphics library, with extra fonts.
 #include <Adafruit_ILI9341_STM.h> // STM32 DMA Hardware-specific library
 
 // For the Adafruit shield, these are the default.
-#define TFT_CS         8                  
-#define TFT_DC         10                
-#define TFT_RST        9 
+#define TFT_CS         PA4                  
+#define TFT_DC         PA3               
+#define TFT_RST        PA2
  
 
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
-// If using the breakout, change pins as desired
-//Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC, TFT_RST); // Use hardware SPI
+Adafruit_ILI9341_STM tft(TFT_CS, TFT_DC, TFT_RST); // Use hardware SPI
 
 void setup() {
   Serial.begin(115200);
+  while(!Serial);
+  delay(1000);
   tft.begin();
 }
 
