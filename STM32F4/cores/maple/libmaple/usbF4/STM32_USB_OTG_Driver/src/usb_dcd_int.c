@@ -20,12 +20,12 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <STM32_USB_OTG_Driver\inc\usb_dcd_int.h>
+#include <STM32_USB_OTG_Driver/inc/usb_dcd_int.h>
 
 typedef int IRQn_Type;
 #define __NVIC_PRIO_BITS          4
 #define __Vendor_SysTickConfig    1
-#include <VCP\core_cm4.h>
+#include <VCP/core_cm4.h>
 
 
 /** @addtogroup USB_OTG_DRIVER

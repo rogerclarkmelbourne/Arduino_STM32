@@ -152,7 +152,7 @@ typedef struct dma_tube_reg_map {
 
 #define DMA_ISR_TEIF (1 << DMA_ISR_TEIF_BIT)
 #define DMA_ISR_HTIF (1 << DMA_ISR_HTIF_BIT)
-#define DMA_ISR_TCID (1 << DMA_ISR_TCIF_BIT)
+#define DMA_ISR_TCIF (1 << DMA_ISR_TCIF_BIT)
 #define DMA_ISR_GIF  (1 << DMA_ISR_GIF_BIT)
 
 #define DMA_ISR_TEIF7_BIT               27

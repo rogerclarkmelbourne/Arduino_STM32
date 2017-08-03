@@ -24,7 +24,7 @@
 #ifndef __USBD_DEF_H
 #define __USBD_DEF_H
 /* Includes ------------------------------------------------------------------*/
-#include <VCP\usbd_conf.h>
+#include <VCP/usbd_conf.h>
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{

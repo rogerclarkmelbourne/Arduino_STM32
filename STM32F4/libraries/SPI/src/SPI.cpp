@@ -611,29 +611,6 @@ static void configure_gpios(spi_dev *dev, bool as_master) {
     Serial.println(")");
     #endif
 
-#ifdef STM32F4
-	if(dev->clk_id <= RCC_SPI2) {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 5);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 5);
-		gpio_set_af_mode(pins->miso, 5);
-		gpio_set_af_mode(pins->mosi, 5);
-	} else {
-		if(nssi) {
-			if(!as_master) {
-				gpio_set_af_mode(pins->nss, 6);
-			}
-		}
-		gpio_set_af_mode(pins->sck, 6);
-		gpio_set_af_mode(pins->miso, 6);
-		gpio_set_af_mode(pins->mosi, 6);
-	}
-	
-#endif
-
     spi_config_gpios(dev, as_master, pins->nss, pins->sck, pins->miso, pins->mosi);
 }
 
@@ -674,4 +651,4 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
 }
 
 
-//SPIClass SPI(3);
+SPIClass SPI(3); // needed for external libs

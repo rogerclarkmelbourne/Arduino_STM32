@@ -40,7 +40,7 @@
 #ifndef _FSMC_H_
 #define _FSMC_H_
 
-#include <libmaple\util.h>
+#include <libmaple/util.h>
 #include "libmaple_types.h"
 
 #ifdef __cplusplus
