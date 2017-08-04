@@ -107,6 +107,7 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   void     begin(void),
            setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
            pushColor(uint16_t color),
+		   pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async),
            fillScreen(uint16_t color),
 		   #if defined (__STM32F1__)
 		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
