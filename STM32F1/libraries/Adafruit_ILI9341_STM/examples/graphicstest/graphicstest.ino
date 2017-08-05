@@ -15,6 +15,7 @@
 
 
 #include <Adafruit_ILI9341_STM.h>
+#include <Streaming.h>
 
 // Use hardware SPI
 Adafruit_ILI9341_STM tft(PA4, PA3, PA2); // input chip select, DC and reset pins
@@ -50,6 +51,22 @@ static SPIClass _spi(2);
   Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX);
   
   tft.fillScreen(ILI9341_BLACK);
+  // read/write test
+  uint16_t pixels[4] = {0x1234, 0x5678, 0x9012, 0x3456};
+  Serial << "\nRead single pixel test\n------------------------------\n";
+  Serial << "Write pixel: 0x1234\n";
+  tft.writePixel(100, 100, pixels[0]);
+  // read back
+  Serial << "Read pixel: 0x" << _HEX(tft.readPixel(100,100)) << endl;
+  // write pixels
+  Serial << "\nRead multiple pixel test\n------------------------------\n";
+  Serial << "Write pixels: 0x1234, 0x5678, 0x9012, 0x3456\n";
+  tft.setAddrWindow(100,100,101,101);
+  tft.pushColors(pixels,4);
+  memset(pixels, 4, 0); // clear before read back
+  // read back
+  uint16_t nr=tft.readPixels(100,100,101,101, pixels);
+  Serial << "Read " << nr << " pixels: 0x" << _HEX(pixels[0]) << ", 0x" << _HEX(pixels[1]) << ", 0x" << _HEX(pixels[2]) << ", 0x" << _HEX(pixels[3]) << endl;
 }
 
 void do_test(void)
@@ -62,7 +79,7 @@ void do_test(void)
 
   Serial.print(F("Text                     "));
   Serial.println(testText());
-  delay(3000);
+  delay(500);
 
   Serial.print(F("Lines                    "));
   Serial.println(testLines(ILI9341_CYAN));
