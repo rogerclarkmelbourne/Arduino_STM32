@@ -100,4 +100,4 @@ void HardWire::setClock(uint32_t frequencyHz)
 	
 }
 
-HardWire Wire(1, I2C_FAST_MODE);;
+HardWire Wire(1);
