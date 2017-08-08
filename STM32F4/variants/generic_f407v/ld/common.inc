@@ -150,7 +150,7 @@ SECTIONS
          * I'm shoving these here naively; there's probably a cleaner way
          * to go about this. [mbolivar]
          */
-        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : __ccm_end;
+        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : __ccm_end__;
         _lm_heap_end   = DEFINED(_lm_heap_end) ? _lm_heap_end : __msp_init;
       } > REGION_RODATA
 
