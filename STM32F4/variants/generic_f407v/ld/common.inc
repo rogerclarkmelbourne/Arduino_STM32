@@ -172,8 +172,8 @@ SECTIONS
     /* CCM-RAM section 
     * 
     * IMPORTANT NOTE! 
-    * If initialized variables will be placed in this section, 
-    * the startup code needs to be modified to copy the init-values.  
+    * The startup code is modified to copy the init-values from flash to ccmram 
+    * at startup
     */
     .ccmdata :
       {
