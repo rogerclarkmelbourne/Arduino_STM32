@@ -140,7 +140,7 @@ SECTIONS
         . = ALIGN(4);
         _lm_rom_img_cfgp = .;
         LONG(LOADADDR(.data));
-	LONG(LOADADDR(.ccmram));
+	LONG(LOADADDR(.ccmdata));
         /*
          * Heap: Linker scripts may choose a custom heap by overriding
          * _lm_heap_start and _lm_heap_end. Otherwise, the heap is in
@@ -150,7 +150,7 @@ SECTIONS
          * I'm shoving these here naively; there's probably a cleaner way
          * to go about this. [mbolivar]
          */
-        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : __ccm_end__;
+        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : __ccmdata_end__;
         _lm_heap_end   = DEFINED(_lm_heap_end) ? _lm_heap_end : __msp_init;
       } > REGION_RODATA
 
@@ -175,15 +175,15 @@ SECTIONS
     * If initialized variables will be placed in this section, 
     * the startup code needs to be modified to copy the init-values.  
     */
-    .ccmram :
+    .ccmdata :
       {
         . = ALIGN(4);
-        __ccm_start__ = .;       /* create a global symbol at ccmram start */
+        __ccmdata_start__ = .;       /* create a global symbol at ccmram start */
         *(.ccmram)
         *(.ccmram*)
     
         . = ALIGN(4);
-        __ccm_end__ = .;       /* create a global symbol at ccmram end */
+        __ccmdata_end__ = .;       /* create a global symbol at ccmram end */
       } >REGION_CCMRAM AT> REGION_RODATA
 
     /*
