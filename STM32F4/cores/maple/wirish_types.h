@@ -73,5 +73,6 @@ typedef struct stm32_pin_info {
  * Variable attribute, instructs the linker to place the marked
  * variable in Flash instead of RAM. */
 #define __FLASH__ __attr_flash
+#define __CCMRAM__ __attr_ccmram
 
 #endif
