@@ -179,7 +179,7 @@ SECTIONS
       {
         . = ALIGN(4);
         __ccmdata_start__ = .;       /* create a global symbol at ccmram start */
-        *(.ccmram)
+        *(.ccmdata)
         *(.ccmram*)
     
         . = ALIGN(4);
