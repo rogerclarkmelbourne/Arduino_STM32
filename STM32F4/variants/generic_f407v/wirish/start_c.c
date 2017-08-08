@@ -78,7 +78,7 @@ void __attribute__((noreturn)) start_c(void) {
     
     /* Initialize .ccm, if necessary. */    
     src = img_cfg->ccmimg_start;
-    dst = (int*)&__ccmtada_start__;
+    dst = (int*)&__ccmdata_start__;
     if (src != dst) {
         while (dst < (int*)&__ccmdata_end__) {
             *dst++ = *src++;
