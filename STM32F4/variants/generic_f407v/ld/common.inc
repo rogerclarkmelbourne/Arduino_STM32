@@ -200,6 +200,7 @@ SECTIONS
         _end = __bss_end__;
       } > REGION_BSS
 
+     /*
      * Debugging sections
      */
     .stab 0 (NOLOAD) : { *(.stab) }
