@@ -63,7 +63,7 @@ typedef struct stm32_pin_info {
     const adc_dev *adc_device;  // ADC device, if any.
 } stm32_pin_info;
 */
-const __CCMRAM__ stm32_pin_info PIN_MAP[] = { // LQFP100 package pin
+const stm32_pin_info PIN_MAP[] = { // LQFP100 package pin
     {&GPIOA, &timer5, 1,    0, &ADC1}, // D00/PA0  | 23 | USART2_CTS | UART4_TX       | ETH_MII_CRS      | TIM2_CH1_ETR   | TIM5_CH1       | TIM8_ETR                      | ADC123_IN0/WKUP
     {&GPIOA, &timer5, 2,    1, &ADC1}, // D01/PA1  | 24 | USART2_RTS | UART4_RX       | ETH_RMII_REF_CLK | ETH_MII_RX_CLK | TIM5_CH2       | TIM2_CH2                      | ADC123_IN1
     {&GPIOA, &timer5, 3,    2, &ADC1}, // D02/PA2  | 25 | USART2_TX  | TIM5_CH3       | TIM9_CH1         | TIM2_CH3       | ETH_MDIO                                       | ADC123_IN2
