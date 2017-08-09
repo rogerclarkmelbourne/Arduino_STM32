@@ -52,7 +52,7 @@ extern volatile int APP_Rx_ptr_in;    /* Increment this pointer or roll it back 
 extern volatile int APP_Rx_ptr_out;
 
 #define UsbRecBufferSize 2048
-uint8_t UsbRecBuffer[UsbRecBufferSize];
+uint8_t __CCMRAM__ UsbRecBuffer[UsbRecBufferSize];
 volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
