@@ -176,8 +176,6 @@ static void (*_spi3_this);
 class SPIClass {
 public:
 
-
-
     /**
      * @param spiPortNumber Number of the SPI port to manage.
      */
@@ -186,8 +184,6 @@ public:
     /*
      * Set up/tear down
      */
-
-
 
     /**
      * @brief Equivalent to begin(SPI_1_125MHZ, MSBFIRST, 0).
@@ -268,14 +264,15 @@ public:
      * @brief Transmit one byte/word.
      * @param data to transmit.
      */
-    void write(uint16 data);	
-	
+    void write(uint16 data);
+    void write16(uint16 data); // write 2 bytes in 8 bit mode (DFF=0)
+
     /**
      * @brief Transmit one byte/word a specified number of times.
      * @param data to transmit.
      */
     void write(uint16 data, uint32 n);	
-	
+
     /**
      * @brief Transmit multiple bytes/words.
      * @param buffer Bytes/words to transmit.
@@ -293,7 +290,7 @@ public:
      */
     uint8 transfer(uint8 data) const;
     uint16_t transfer16(uint16_t data) const;
-	
+
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
 	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
@@ -321,7 +318,7 @@ public:
     uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
     void dmaSendSet(void * transmitBuf, bool minc);
     uint8 dmaSendRepeat(uint16 length);
-	
+
     uint8 dmaSendAsync(void * transmitBuf, uint16 length, bool minc = 1);
     /*
      * Pin accessors
@@ -354,23 +351,20 @@ public:
      *        this HardwareSPI instance.
      */
     spi_dev* c_dev(void) { return _currentSetting->spi_d; }
-	
-		
+
     spi_dev *dev(){ return _currentSetting->spi_d;}
-	
-	 /**
-     * @brief Sets the number of the SPI peripheral to be used by
-     *        this HardwareSPI instance.
-	 *
-	 * @param spi_num Number of the SPI port. 1-2 in low density devices
-	 *			or 1-3 in high density devices.
-     */
-	
+
+    /**
+    * @brief Sets the number of the SPI peripheral to be used by
+    *        this HardwareSPI instance.
+    *
+    * @param spi_num Number of the SPI port. 1-2 in low density devices
+    *			or 1-3 in high density devices.
+    */
     void setModule(int spi_num)
     {
         _currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
     }
-
 
     /* -- The following methods are deprecated --------------------------- */
 
@@ -403,20 +397,20 @@ public:
      * @see HardwareSPI::read()
      */
     uint8 recv(void);
-	
+
 private:
 
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
-	
+
 	void updateSettings(void);
     /*
 	* Functions added for DMA transfers with Callback. 
 	* Experimental.
 	*/
-	
+
     void EventCallback(void);
-    
+
     static void _spi1EventCallback(void);
     static void _spi2EventCallback(void);
     #if BOARD_NR_SPI >= 3
