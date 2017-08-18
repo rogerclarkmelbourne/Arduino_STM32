@@ -4,7 +4,6 @@ This library has been modified for the Maple Mini.
 Includes DMA transfers on DMA1 CH2 and CH3.
 */
 #include <Adafruit_ILI9341_STM.h>
-#include <libmaple/dma.h>
 
 
 // Constructor when using hardware SPI.  Faster, but must use SPI pins
@@ -239,10 +238,9 @@ void Adafruit_ILI9341_STM::pushColors(void * colorBuffer, uint16_t nr_pixels, ui
   if (async==0) {
     mSPI.dmaSend(colorBuffer, nr_pixels, 1);
     cs_set();
-  } else
+  } else {
     mSPI.dmaSendAsync(colorBuffer, nr_pixels, 1);
-
-  cs_set();
+  }
 }
 
 void Adafruit_ILI9341_STM::pushColor(uint16_t color)
@@ -272,8 +270,8 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
   if ((y + h - 1) >= _height)
     h = _height - y;
   if (h < 2 ) {
-	drawPixel(x, y, color);
-	return;
+    drawPixel(x, y, color);
+    return;
   }
 
   setAddrWindow(x, y, x, y + h - 1);
@@ -282,9 +280,8 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
     lineBuffer[0] = color;
     mSPI.dmaSend(lineBuffer, h, 0);
   } else {
-	mSPI.write(color, h);
+    mSPI.write(color, h);
   }
-
   cs_set();
 }
 
@@ -296,8 +293,8 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
   if ((x >= _width) || (y >= _height || w < 1)) return;
   if ((x + w - 1) >= _width)  w = _width - x;
   if (w < 2 ) {
-	drawPixel(x, y, color);
-	return;
+    drawPixel(x, y, color);
+    return;
   }
 
   setAddrWindow(x, y, x + w - 1, y);
@@ -305,9 +302,9 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
   if (w>DMA_ON_LIMIT) {
     lineBuffer[0] = color;
     mSPI.dmaSend(lineBuffer, w, 0);
-  } else
-	mSPI.write(color, w);
-
+  } else {
+    mSPI.write(color, w);
+  }
   cs_set();
 }
 
@@ -317,7 +314,7 @@ void Adafruit_ILI9341_STM::fillScreen(uint16_t color)
   setAddrWindow(0, 0, _width - 1, _height - 1);
   uint32_t nr_bytes = _width * _height;
   while ( nr_bytes>65535 ) {
-	nr_bytes -= 65535;
+    nr_bytes -= 65535;
     mSPI.dmaSend(lineBuffer, (65535), 0);
   }
   mSPI.dmaSend(lineBuffer, nr_bytes, 0);
@@ -342,12 +339,13 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   uint32_t nr_bytes = w * h;
   if ( nr_bytes>DMA_ON_LIMIT ) {
     while ( nr_bytes>65535 ) {
-  	nr_bytes -= 65535;
+      nr_bytes -= 65535;
       mSPI.dmaSend(lineBuffer, (65535), 0);
     }
     mSPI.dmaSend(lineBuffer, nr_bytes, 0);
-  } else
-	  mSPI.write(color, nr_bytes);
+  } else {
+    mSPI.write(color, nr_bytes);
+  }
   cs_set();
 }
 
