@@ -78,8 +78,8 @@ uint8 WireBase::endTransmission(){
 // call, allows for the Arduino style to stay while also giving the flexibility
 // to bulk send
 uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
-    if (num_bytes > WIRE_BUFSIZ) {
-        num_bytes = WIRE_BUFSIZ;
+    if (num_bytes > BUFFER_LENGTH) {
+        num_bytes = BUFFER_LENGTH;
     }
     itc_msg.addr = address;
     itc_msg.flags = I2C_MSG_READ;
@@ -96,7 +96,7 @@ uint8 WireBase::requestFrom(int address, int numBytes) {
 }
 
 void WireBase::write(uint8 value) {
-    if (tx_buf_idx == WIRE_BUFSIZ) {
+    if (tx_buf_idx == BUFFER_LENGTH) {
         tx_buf_overflow = true;
         return;
     }
