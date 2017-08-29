@@ -320,6 +320,23 @@ void Adafruit_ILI9341_STM::pushColor(uint16_t color)
   cs_set();
 }
 
+void Adafruit_ILI9341_STM::pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async)
+{
+  *dcport |=  dcpinmask;
+  *csport &= ~cspinmask;
+
+  if (async==0) 
+  {
+    SPI.dmaSend(colorBuffer, nr_pixels, 1);
+	*csport |= cspinmask;
+  }
+  else
+  {
+    SPI.dmaSendAsync(colorBuffer, nr_pixels, 1);
+  }
+
+}
+
 void Adafruit_ILI9341_STM::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
   if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height)) return;
