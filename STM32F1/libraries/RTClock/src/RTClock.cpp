@@ -81,21 +81,108 @@
 */	
 	
 	void RTClock::setTime (time_t time_stamp) {
-		rtc_set_count(time_stamp);
+			breakTime(time_stamp, tmm); // time will be broken to tm
+    setTime(tmm);
+		//rtc_set_count(time_stamp);
 	}
 	
-	void RTClock::setTime (struct tm* tm_ptr) {
-		rtc_set_count(mktime (tm_ptr));
-	}
+	#define LEAP_YEAR(Y)     ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
 	
+	//-----------------------------------------------------------------------------
+void RTClock::breakTime(time_t timeInput, tm_t & tmm)
+{
+// break the given time_t into time components
+// this is a more compact version of the C library localtime function
+// note that year is offset from 1970 !!!
+
+	uint8_t year;
+	uint8_t month, monthLength;
+	uint32_t time;
+	uint32_t days;
+
+	time = (uint32_t)timeInput;
+	tmm.second = time % 60;
+	time /= 60; // now it is minutes
+	tmm.minute = time % 60;
+	time /= 60; // now it is hours
+	tmm.hour = time % 24;
+	time /= 24; // now it is days
+	tmm.weekday = ((time + 4) % 7); // Monday is day 1 // + 1;  // Sunday is day 1 
+
+	year = 0;
+	days = 0;
+	while((unsigned)(days += (LEAP_YEAR(year) ? 366 : 365)) <= time) {
+		year++;
+	}
+	tmm.year = year; // year is offset from 1970 
+
+	days -= LEAP_YEAR(year) ? 366 : 365;
+	time -= days; // now it is days in this year, starting at 0
+
+	days = 0;
+	month = 0;
+	monthLength = 0;
+	for (month=0; month<12; month++) {
+		if (month==1) { // february
+			if (LEAP_YEAR(year)) {
+				monthLength=29;
+			} else {
+				monthLength=28;
+			}
+		} else {
+			monthLength = monthDays[month];
+		}
+
+		if (time >= monthLength) {
+			time -= monthLength;
+		} else {
+			break;
+		}
+	}
+	tmm.month = month + 1;  // jan is month 1  
+	tmm.day = time + 1;     // day of month
+}
+
+//-----------------------------------------------------------------------------
+time_t RTClock::makeTime(tm_t & tmm)
+{
+// assemble time elements into time_t 
+// note year argument is offset from 1970 (see macros in time.h to convert to other formats)
+// previous version used full four digit year (or digits since 2000),i.e. 2009 was 2009 or 9
+  
+	int i;
+	uint32_t seconds;
+
+	// seconds from 1970 till 1 jan 00:00:00 of the given year
+	seconds = tmm.year*(SECS_PER_DAY * 365);
+	for (i = 0; i < tmm.year; i++) {
+		if (LEAP_YEAR(i)) {
+			seconds +=  SECS_PER_DAY;   // add extra days for leap years
+		}
+	}
+
+	// add days for this year, months start from 1
+	for (i = 1; i < tmm.month; i++) {
+		if ( (i == 2) && LEAP_YEAR(tmm.year)) { 
+			seconds += SECS_PER_DAY * 29;
+		} else {
+			seconds += SECS_PER_DAY * monthDays[i-1];  //monthDay array starts from 0
+		}
+	}
+	seconds+= (tmm.day-1) * SECS_PER_DAY;
+	seconds+= tmm.hour * SECS_PER_HOUR;
+	seconds+= tmm.minute * SECS_PER_MIN;
+	seconds+= tmm.second;
+	return (time_t)seconds; 
+}
+
 	time_t RTClock::getTime() {
 		return rtc_get_count();
 	}
-	
-	struct tm*  RTClock::getTime(struct tm* tm_ptr) {
+
+    void RTClock::getTime(tm_t & tm_ptr) {
 		time_t res = rtc_get_count();
-		tm_ptr = gmtime(&res); //why not gmtime? 
-		return tm_ptr;
+		breakTime(res, tm_ptr);
 	}
 	
 	void RTClock::createAlarm(voidFuncPtr function, time_t alarm_time_t) {
@@ -110,15 +197,16 @@
 		rtc_detach_interrupt(RTC_SECONDS_INTERRUPT);
 	}
 
-	
-	void RTClock::createAlarm(voidFuncPtr function, tm* alarm_tm) {
-		time_t alarm = mktime(alarm_tm);//convert to time_t
+
+	void RTClock::createAlarm(voidFuncPtr function, tm_t & alarm_tm) {
+		time_t alarm = makeTime(alarm_tm);//convert to time_t
 		createAlarm(function, alarm);	
 	}
 
 //change alarm time	
-	void RTClock::setAlarmTime (tm * tm_ptr) {
-		time_t time = mktime(tm_ptr);//convert to time_t
+
+	void RTClock::setAlarmTime (tm_t  & tm_ptr) {
+		time_t time = makeTime(tm_ptr);//convert to time_t
 		rtc_set_alarm(time); //must be int... for standardization sake. 
 	}
 
