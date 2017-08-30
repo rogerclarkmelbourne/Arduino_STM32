@@ -80,9 +80,9 @@
 	}
 */	
 	
-	void RTClock::setTime (time_t time_stamp) {
-		breakTime(time_stamp, tmm); // time will be broken to tmm
-    		setTime(tmm);
+	void RTClock::setTime (tm_t & tmm) {
+		time_t mktm = makeTime(tmm); // time will be make to mktm
+    		setTime(mktm);
 		//rtc_set_count(time_stamp);
 	}
 	
