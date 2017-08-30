@@ -81,12 +81,16 @@
 */	
 	
 	void RTClock::setTime (time_t time_stamp) {
-			breakTime(time_stamp, tmm); // time will be broken to tm
-    setTime(tmm);
+		breakTime(time_stamp, tmm); // time will be broken to tmm
+    		setTime(tmm);
 		//rtc_set_count(time_stamp);
 	}
 	
-	#define LEAP_YEAR(Y)     ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
+	void RTClock::setTime (time_t time_stamp) {
+		rtc_set_count(time_stamp);
+	}
+	
+#define LEAP_YEAR(Y)     ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
 	
 	//-----------------------------------------------------------------------------
 void RTClock::breakTime(time_t timeInput, tm_t & tmm)
