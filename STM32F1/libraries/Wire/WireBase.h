@@ -44,7 +44,7 @@
 #include "wirish.h"
 #include <libmaple/i2c.h>
 
-#define WIRE_BUFSIZ 32
+#define BUFFER_LENGTH 32
 
 /* return codes from endTransmission() */
 #define SUCCESS   0        /* transmission was successful */
@@ -56,11 +56,11 @@
 class WireBase { // Abstraction is awesome!
 protected:
     i2c_msg itc_msg;
-    uint8 rx_buf[WIRE_BUFSIZ];      /* receive buffer */
+    uint8 rx_buf[BUFFER_LENGTH];      /* receive buffer */
     uint8 rx_buf_idx;               /* first unread idx in rx_buf */
     uint8 rx_buf_len;               /* number of bytes read */
 
-    uint8 tx_buf[WIRE_BUFSIZ];      /* transmit buffer */
+    uint8 tx_buf[BUFFER_LENGTH];      /* transmit buffer */
     uint8 tx_buf_idx;  // next idx available in tx_buf, -1 overflow
     boolean tx_buf_overflow;
 
