@@ -201,6 +201,18 @@ time_t RTClock::makeTime(tm_t & tmm)
 		rtc_detach_interrupt(RTC_SECONDS_INTERRUPT);
 	}
 
+        void RTClock::attachAlarmInterrupt(voidFuncPtr function, time_t alarm_time) {  // Don't need run RTClock::setAlarmTime(time_t alarm_time)
+		rtc_set_alarm(alarm_time);
+		rtc_attach_interrupt(RTC_ALARM_GLOBAL_INTERRUPT, function);
+	}
+	
+	void RTClock::attachAlarmInterrupt(voidFuncPtr function) {       // Must run RTClock::setAlarmTime (time_t alarm_time or tm_t & alarm_tm) first
+		rtc_attach_interrupt(RTC_ALARM_GLOBAL_INTERRUPT, function);
+	}
+	
+	void RTClock::detachAlarmInterrupt() {
+		rtc_detach_interrupt(RTC_ALARM_GLOBAL_INTERRUPT);
+	}
 
 	void RTClock::createAlarm(voidFuncPtr function, tm_t & alarm_tm) {
 		time_t alarm = makeTime(alarm_tm);//convert to time_t
