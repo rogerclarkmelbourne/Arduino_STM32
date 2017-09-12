@@ -97,7 +97,8 @@ void HardWire::setClock(uint32_t frequencyHz)
 			dev_flags &= ~I2C_FAST_MODE;// clear FAST_MODE bit
 			break;
 	}
-	
+	i2c_disable(sel_hard);
+	i2c_master_enable(sel_hard, dev_flags);
 }
 
 HardWire Wire(1);
