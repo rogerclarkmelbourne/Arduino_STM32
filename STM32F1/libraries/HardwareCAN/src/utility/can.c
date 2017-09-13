@@ -279,7 +279,7 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 	return status;
 }
 
-CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2)
+CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2, int extID = 0)
 {
 	uint32 mask = ((uint32)0x00000001) << filter_idx;
 
@@ -291,9 +291,15 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 		CANx->FS1R |= mask;
 	else
 		CANx->FS1R &= ~mask;
-
-	CANx->sFilterRegister[filter_idx].FR1 = fr1;
-	CANx->sFilterRegister[filter_idx].FR2 = fr2;
+	if (extID) {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 3) | CAN_ID_EXT;
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 3) | CAN_ID_EXT;	
+	}
+	else {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 21);
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 21);	
+	}
+	
 
 	if (mode == CAN_FILTER_MASK)
 		CANx->FM1R &= ~mask;
@@ -309,7 +315,6 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 	CANx->FMR &= ~CAN_FMR_FINIT;
 	return CAN_OK;
 }
-
 /**
   * @brief  Initiates the transmission of a message.
   * @param	CANx: where x can be 1 to select the CAN peripheral.
