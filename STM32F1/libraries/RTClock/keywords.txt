@@ -13,6 +13,7 @@ setTime			KEYWORD2
 getTime			KEYWORD2
 
 createAlarm		KEYWORD2
+removeAlarm		KEYWORD2
 setAlarmTime		KEYWORD2
 
 attachSecondsInterrupt	KEYWORD2

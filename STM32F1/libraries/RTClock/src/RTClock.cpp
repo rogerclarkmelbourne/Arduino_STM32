@@ -194,6 +194,10 @@ time_t RTClock::makeTime(tm_t & tmm)
 		rtc_attach_interrupt(RTC_ALARM_SPECIFIC_INTERRUPT, function);
 	}
 	
+	void RTClock::removeAlarm() {
+		rtc_detach_interrupt(RTC_ALARM_SPECIFIC_INTERRUPT);
+	}
+	
 	void RTClock::attachSecondsInterrupt(voidFuncPtr function) {
 		rtc_attach_interrupt(RTC_SECONDS_INTERRUPT, function);
 	}

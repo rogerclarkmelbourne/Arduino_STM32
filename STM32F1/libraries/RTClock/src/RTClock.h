@@ -76,11 +76,12 @@ class RTClock {
 	
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
+	void removeAlarm();
 	
 	void attachSecondsInterrupt(voidFuncPtr function); 
 	void detachSecondsInterrupt();
 	
-        void attachAlarmInterrupt(voidFuncPtr function); 
+    void attachAlarmInterrupt(voidFuncPtr function); 
 	void attachAlarmInterrupt(voidFuncPtr function, time_t alarm_time);
 	void detachAlarmInterrupt();
 	
