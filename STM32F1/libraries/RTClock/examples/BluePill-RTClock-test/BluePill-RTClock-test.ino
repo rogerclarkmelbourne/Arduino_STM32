@@ -14,6 +14,13 @@
   ##  Why the 10 bits Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
 ****in the <NTPClient.h> library. getNtpTime() will return this 10 bits Unix epoch time.
+*
+*  嗨！朋友们， 这是一个STM32F10x系列的RTC应用的例子，希望对你的编码有所帮助
+*  这个程序基于https://github.com/rogerclarkmelbourne/Arduino_STM32 ， 感谢所有贡献者的付出。
+*  程序测试了 F10x系列RTC 的 几种中断， 并通过LED和串口进行表达。
+*  RTClock 使用 UTC 作为时间标准， 你可以从https://www.epochconverter.com/ 获得 Unix epoch time数值
+*  并通过串口进行设置， 当然你也可以略微修改一下串口接收处理方法，直接从串口接收日期形式。如 2017-9-13-10:30:00, 
+*  另外一个方法是通过ESP8266获取NTP网络时间，并定期发送给F10x进行更新。
 */
 
 
@@ -23,7 +30,7 @@ RTClock rtclock (RTCSEL_LSE); // initialise
 int timezone = 8;      // change to your timezone
 time_t tt;
 time_t tt1;
-tm_t mtt = { 47, 9, 13, 3, 1, 22, 30, 30 };    // init time 47+1970 = 2017  Unix epoch Time counted from 00:00:00 1 Jan 1970  
+tm_t mtt = { 47, 9, 13, 3, 11, 22, 30, 30 };    // init time 47+1970 = 2017  Unix epoch Time counted from 00:00:00 1 Jan 1970  
 char weekday1[][7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};  // 0,1,2,3,4,5,6
 uint8_t dateread[11];
 int globAlmCount = 0;
@@ -62,7 +69,8 @@ void setup()
   lastSPECAlmCount = ~SPECAlmCount;
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
-  tt = rtclock.makeTime(mtt);   
+  tt = rtclock.makeTime(mtt); 
+  rtclock.setTime(tt);  
   tt1 = tt;
   rtclock.attachAlarmInterrupt(blink);// Call blink
   rtclock.attachSecondsInterrupt(SecondCount);// Call SecondCount
@@ -79,7 +87,8 @@ void loop()
       i = 0;
       tt = (dateread[0] - '0') * 1000000000 + (dateread[1] - '0') * 100000000 + (dateread[2] - '0') * 10000000 + (dateread[3] - '0') * 1000000 + (dateread[4] - '0') * 100000;
       tt += (dateread[5] - '0') * 10000 + (dateread[6] - '0') * 1000 + (dateread[7] - '0') * 100 + (dateread[8] - '0') * 10 + (dateread[9] - '0');
-      tt = rtclock.TimeZone(tt, timezone);    //adjust to your local date
+      rtclock.TimeZone(tt, timezone);    //adjust to your local date
+      rtclock.setTime(rtclock.TimeZone(tt, timezone));
     }
   }
   if (lastGlobAlmCount != globAlmCount | lastSPECAlmCount != SPECAlmCount ) {
@@ -111,20 +120,20 @@ void loop()
   if (tt1 != tt & dispflag == true )
   {
     tt1 = tt;
-    rtclock.breakTime(tt, mtt);
+    //rtclock.breakTime(tt, mtt);
     Serial.print("Date:  ");
-    Serial.print(mtt.day);
+    Serial.print(rtclock.day());
     Serial.print("- ");
-    Serial.print(mtt.month);
+    Serial.print(rtclock.month());
     Serial.print("  ");
-    Serial.print(mtt.year + 1970);
+    Serial.print(rtclock.year() + 1970);
     Serial.print("  ");
-    Serial.print(weekday1[mtt.weekday]);
+    Serial.print(weekday1[rtclock.weekday()]);
     Serial.print("  Time: ");
-    Serial.print(mtt.hour);
+    Serial.print(rtclock.hour());
     Serial.print(" : ");
-    Serial.print(mtt.minute);
+    Serial.print(rtclock.minute());
     Serial.print(" : ");
-    Serial.println(mtt.second);
+    Serial.println(rtclock.second());
   }
 }

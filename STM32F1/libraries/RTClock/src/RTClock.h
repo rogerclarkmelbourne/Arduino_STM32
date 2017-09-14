@@ -72,7 +72,7 @@ class RTClock {
 	uint8_t second(time_t t)  { breakTime(t, tmm); return tmm.second; }
 	uint8_t isPM(time_t t)    { return (hour(t)>=12); }
 	
-	time_t TimeZone(time_t t, int TZ)  { return ( t - (TZ * SECS_PER_HOUR)); }    // usage: localtime = TimeZone(UnixTime, 8); // Beijing timezone = 8  
+	time_t TimeZone(time_t t, int TZ)  { return ( t + (TZ * SECS_PER_HOUR)); }    // usage: localtime = TimeZone(UnixTime, 8); // Beijing timezone = 8  
 	
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
