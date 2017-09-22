@@ -14,7 +14,7 @@
  ****************************************************/
 
 
-#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_GFX_AS.h>    // Core graphics library
 #include <SPI.h>
 #include <Wire.h>      // this is needed even tho we aren't using it
 #include <Adafruit_ILI9341.h>
