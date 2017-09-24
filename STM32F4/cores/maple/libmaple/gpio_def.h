@@ -207,7 +207,7 @@ typedef struct syscfg_reg_map {
     __io uint32 CMPCR;    /**< Compensation cell control register */
 } syscfg_reg_map;
 
-extern const syscfg_reg_map * const SYSCFG;
+extern syscfg_reg_map * const SYSCFG;
 
 /** AFIO register map base pointer. */
 #define SYSCFG_BASE                       ((struct syscfg_reg_map *)0x40013800)

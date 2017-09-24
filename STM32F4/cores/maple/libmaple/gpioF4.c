@@ -89,7 +89,7 @@ const gpio_dev GPIOG = {
 #endif
 #endif
 
-const syscfg_reg_map * const SYSCFG = SYSCFG_BASE;
+syscfg_reg_map * const SYSCFG = SYSCFG_BASE;
 
 /*
  * GPIO convenience routines
