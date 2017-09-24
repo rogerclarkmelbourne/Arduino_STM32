@@ -36,6 +36,7 @@
 #include <libmaple/gpio_def.h>
 #include <libmaple/timer.h>
 #include <libmaple/adc.h>
+#include <libmaple/libmaple_types.h>
 
 /**
  * Invalid stm32_pin_info adc_channel value.
