@@ -357,6 +357,8 @@ genericSTM32F103C.build.board=GENERIC_STM32F103C
 genericSTM32F103C.upload.use_1200bps_touch=false
 genericSTM32F103C.upload.file_type=bin
 genericSTM32F103C.upload.auto_reset=true
+genericSTM32F103C.upload.tool=maple_upload
+genericSTM32F103C.upload.protocol=maple_dfu
 
 ## STM32F103C8 -------------------------
 genericSTM32F103C.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
@@ -454,6 +456,8 @@ genericSTM32F103R.build.board=GENERIC_STM32F103R
 genericSTM32F103R.upload.use_1200bps_touch=false
 genericSTM32F103R.upload.file_type=bin
 genericSTM32F103R.upload.auto_reset=true
+genericSTM32F103R.upload.tool=maple_upload
+genericSTM32F103R.upload.protocol=maple_dfu
 
 genericSTM32F103R.menu.device_variant.STM32F103R8=STM32F103R8 (20k RAM. 64k Flash)
 genericSTM32F103R.menu.device_variant.STM32F103R8.build.variant=generic_stm32f103r8
@@ -563,6 +567,8 @@ genericSTM32F103T.build.board=GENERIC_STM32F103T
 genericSTM32F103T.upload.use_1200bps_touch=false
 genericSTM32F103T.upload.file_type=bin
 genericSTM32F103T.upload.auto_reset=true
+genericSTM32F103T.upload.tool=maple_upload
+genericSTM32F103T.upload.protocol=maple_dfu
 
 ## STM32F103T8 -------------------------
 genericSTM32F103T.menu.device_variant.STM32F103T8=STM32F103T8 (20k RAM. 64k Flash)
@@ -655,6 +661,8 @@ genericSTM32F103V.build.board=GENERIC_STM32F103V
 genericSTM32F103V.upload.use_1200bps_touch=false
 genericSTM32F103V.upload.file_type=bin
 genericSTM32F103V.upload.auto_reset=true
+genericSTM32F103V.upload.tool=maple_upload
+genericSTM32F103V.upload.protocol=maple_dfu
 
 genericSTM32F103V.build.error_led_port=GPIOE
 genericSTM32F103V.build.error_led_pin=6
@@ -754,6 +762,8 @@ genericSTM32F103Z.build.board=GENERIC_STM32F103Z
 genericSTM32F103Z.upload.use_1200bps_touch=false
 genericSTM32F103Z.upload.file_type=bin
 genericSTM32F103Z.upload.auto_reset=true
+genericSTM32F103Z.upload.tool=maple_upload
+genericSTM32F103Z.upload.protocol=maple_dfu
 
 genericSTM32F103Z.menu.device_variant.STM32F103ZC=STM32F103ZC
 genericSTM32F103Z.menu.device_variant.STM32F103ZC.build.cpu_flags=-DMCU_STM32F103ZC
