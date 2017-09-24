@@ -48,7 +48,7 @@ typedef struct systick_reg_map {
     __io uint32 CALIB;          /**< Calibration value register */
 } systick_reg_map;
 
-extern const systick_reg_map * const SYSTICK;
+extern systick_reg_map * const SYSTICK;
 
 /** SysTick register map base pointer */
 #define SYSTICK_BASE                    ((struct systick_reg_map*)0xE000E010)

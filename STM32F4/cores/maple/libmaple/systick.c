@@ -34,7 +34,7 @@
 volatile uint32 systick_uptime_millis;
 static void (*systick_user_callback)(void);
 
-const systick_reg_map * const SYSTICK = SYSTICK_BASE;
+systick_reg_map * const SYSTICK = SYSTICK_BASE;
 
 /**
  * @brief Initialize and enable SysTick.
