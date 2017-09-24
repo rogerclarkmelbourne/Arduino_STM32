@@ -198,7 +198,7 @@ typedef enum gpio_pin_mode {
 
 /** AFIO register map */
 typedef struct syscfg_reg_map {
-    __io uint32 MEMRM;    /**< memory remap register  */
+    __io uint32 MEMRMP;    /**< memory remap register  */
     __io uint32 PMC;      /**< peripheral mode configuration register */
     __io uint32 EXTICR1;  /**< External interrupt configuration register 1. */
     __io uint32 EXTICR2;  /**< External interrupt configuration register 2. */
@@ -206,6 +206,8 @@ typedef struct syscfg_reg_map {
     __io uint32 EXTICR4;  /**< External interrupt configuration register 4. */
     __io uint32 CMPCR;    /**< Compensation cell control register */
 } syscfg_reg_map;
+
+extern const syscfg_reg_map * const SYSCFG;
 
 /** AFIO register map base pointer. */
 #define SYSCFG_BASE                       ((struct syscfg_reg_map *)0x40013800)
