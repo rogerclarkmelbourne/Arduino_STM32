@@ -77,7 +77,7 @@ typedef struct
 /** RCC register map base pointer */
 #define RCC_BASE              ((rcc_reg_map*)0x40023800)
 
-extern const rcc_reg_map * const RCC;
+extern rcc_reg_map * const RCC;
 
 /*
  * Register bit definitions

@@ -44,7 +44,7 @@
 #define AHB2                            RCC_AHB2
 #define AHB3                            RCC_AHB3
 
-const rcc_reg_map * const RCC = RCC_BASE;
+rcc_reg_map * const RCC = RCC_BASE;
 
 struct rcc_dev_info {
     const rcc_clk_domain clk_domain;
