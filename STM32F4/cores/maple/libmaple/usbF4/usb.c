@@ -28,8 +28,6 @@ void setupUSB (void)
   delay_us(200000);
 
   /* setup the apb1 clock for USB */
-  //rcc_reg_map *pRCC = RCC_BASE;
-  //pRCC->APB1ENR |= RCC_APB1ENR_USBEN;
 
   /* initialize the usb application */
   gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host

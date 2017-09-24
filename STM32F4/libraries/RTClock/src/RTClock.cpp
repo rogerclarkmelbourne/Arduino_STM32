@@ -45,8 +45,8 @@ voidFuncPtr handlerPeriodicWakeup = NULL;
 //-----------------------------------------------------------------------------
 RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler) {
     uint32 t = 0;
-    RCC_BASE->APB1ENR |= RCC_APB1RSTR_PWRRST;
-    rtc_debug_printf("RCC_BASE->APB1ENR = %08X\r\n", RCC_BASE->APB1ENR);
+    RCC->APB1ENR |= RCC_APB1RSTR_PWRRST;
+    rtc_debug_printf("RCC->APB1ENR = %08X\r\n", RCC->APB1ENR);
     rtc_debug_printf("before bkp_init\r\n");
     bkp_init();		// turn on peripheral clocks to PWR and BKP and reset the backup domain via RCC registers.
                         // (we reset the backup domain here because we must in order to change the rtc clock source).
@@ -54,25 +54,25 @@ RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler)
     bkp_disable_writes();
     rtc_debug_printf("before bkp_enable_writes\r\n");
     bkp_enable_writes();	// enable writes to the backup registers and the RTC registers via the DBP bit in the PWR control register
-    rtc_debug_printf("RCC_BASE->CFGR = %08X\r\n", RCC_BASE->CFGR);
-    RCC_BASE->CFGR |= (0x08 << 16); // Set the RTCPRE to HSE / 8.
-    rtc_debug_printf("RCC_BASE->CFGR = %08X\r\n", RCC_BASE->CFGR);
+    rtc_debug_printf("RCC->CFGR = %08X\r\n", RCC->CFGR);
+    RCC->CFGR |= (0x08 << 16); // Set the RTCPRE to HSE / 8.
+    rtc_debug_printf("RCC->CFGR = %08X\r\n", RCC->CFGR);
 
     switch (src) {	
         case RTCSEL_LSE :
 	    rtc_debug_printf("Preparing RTC for LSE mode\r\n");
-	    if ((RCC_BASE->BDCR & 0x00000300) != 0x0100)
-                RCC_BASE->BDCR = 0x00010000; // Reset the entire Backup domain
-            RCC_BASE->BDCR = 0x00008101;
-            rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
-            while (!(RCC_BASE->BDCR & 0x00000002)) {
+	    if ((RCC->BDCR & 0x00000300) != 0x0100)
+                RCC->BDCR = 0x00010000; // Reset the entire Backup domain
+            RCC->BDCR = 0x00008101;
+            rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
+            while (!(RCC->BDCR & 0x00000002)) {
                 if (++t > 1000000) {
-                    rtc_debug_printf("RCC_BASE->BDCR.LSERDY Timeout !\r\n");
-                    rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
+                    rtc_debug_printf("RCC->BDCR.LSERDY Timeout !\r\n");
+                    rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
                     return;
                 }
             }
-            rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
+            rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
             rtc_enter_config_mode();
             if (sync_prescaler == 0 && async_prescaler == 0)
                 RTC_BASE->PRER = 255 | (127 << 16);
@@ -81,19 +81,19 @@ RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler)
 	    break;
 	case RTCSEL_LSI :
 	    rtc_debug_printf("Preparing RTC for LSI mode\r\n");
-	    if ((RCC_BASE->BDCR & 0x00000300) != 0x0200)
-                RCC_BASE->BDCR = 0x00010000; // Reset the entire Backup domain
-            RCC_BASE->BDCR = 0x00008204;
-            RCC_BASE->CSR |= 0x00000001;
-            rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
-            while (!(RCC_BASE->CSR & 0x00000002)) {
+	    if ((RCC->BDCR & 0x00000300) != 0x0200)
+                RCC->BDCR = 0x00010000; // Reset the entire Backup domain
+            RCC->BDCR = 0x00008204;
+            RCC->CSR |= 0x00000001;
+            rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
+            while (!(RCC->CSR & 0x00000002)) {
                 if (++t > 1000000) {
-                    rtc_debug_printf("RCC_BASE->CSR.LSIRDY Timeout !\r\n");
-                    rtc_debug_printf("RCC_BASE->CSR = %08X\r\n", RCC_BASE->CSR);
+                    rtc_debug_printf("RCC->CSR.LSIRDY Timeout !\r\n");
+                    rtc_debug_printf("RCC->CSR = %08X\r\n", RCC->CSR);
                     return;
                 }
             }
-            rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
+            rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
        	    rtc_enter_config_mode();
             if (sync_prescaler == 0 && async_prescaler == 0)
                	RTC_BASE->PRER = 249 | (127 << 16);
@@ -103,10 +103,10 @@ RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler)
 	case RTCSEL_DEFAULT: 
 	case RTCSEL_HSE : 
 	    rtc_debug_printf("Preparing RTC for HSE mode\r\n");
-	    if ((RCC_BASE->BDCR & 0x00000300) != 0x0300)
-                RCC_BASE->BDCR = 0x00010000; // Reset the entire Backup domain
-            RCC_BASE->BDCR = 0x00008304;
-            rtc_debug_printf("RCC_BASE->BDCR = %08X\r\n", RCC_BASE->BDCR);
+	    if ((RCC->BDCR & 0x00000300) != 0x0300)
+                RCC->BDCR = 0x00010000; // Reset the entire Backup domain
+            RCC->BDCR = 0x00008304;
+            rtc_debug_printf("RCC->BDCR = %08X\r\n", RCC->BDCR);
             rtc_enter_config_mode();
             if (sync_prescaler == 0 && async_prescaler == 0)
                 RTC_BASE->PRER = 7999 | (124 << 16);
@@ -115,13 +115,13 @@ RTClock::RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler)
 	    break;
 	case RTCSEL_NONE:
 	    rtc_debug_printf("Preparing RTC for NONE mode\r\n");
-	    if ((RCC_BASE->BDCR & 0x00000300) != 0x0000)
-                RCC_BASE->BDCR = 0x00010000; // Reset the entire Backup domain
-	    RCC_BASE->BDCR = RCC_BDCR_RTCSEL_NONE;
+	    if ((RCC->BDCR & 0x00000300) != 0x0000)
+                RCC->BDCR = 0x00010000; // Reset the entire Backup domain
+	    RCC->BDCR = RCC_BDCR_RTCSEL_NONE;
 	    //do nothing. Have a look at the clocks to see the diff between NONE and DEFAULT
 	    break;
     }
-    RCC_BASE->CR |= 0x00000040; // Turn to 24hrs mode
+    RCC->CR |= 0x00000040; // Turn to 24hrs mode
 //    rtc_debug_printf("before rtc_clear_sync\r\n");
 //    rtc_clear_sync();
 //    rtc_debug_printf("before rtc_wait_sync\r\n");
@@ -391,7 +391,7 @@ void RTClock::setPeriodicWakeup(uint16 period)
         rtc_debug_printf("before turn ON RTC_BASE->CR.WUTIE\r\n");    
         RTC_BASE->CR |= (1 << RTC_CR_WUTIE_BIT); // turn on WUTIE
     }
-    rtc_debug_printf("RCC_BASE->CR = %08X\r\n", RCC_BASE->CR);
+    rtc_debug_printf("RCC->CR = %08X\r\n", RCC->CR);
     rtc_exit_config_mode();
     rtc_enable_wakeup_event();
     nvic_irq_enable(NVIC_RTC);
