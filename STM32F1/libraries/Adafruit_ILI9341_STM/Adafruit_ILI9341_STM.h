@@ -104,7 +104,6 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   void     begin(SPIClass & spi, uint32_t freq=48000000);
   void     begin(void) { begin(SPI); }
   void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
-           pushColor(uint16_t color),
            pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async=0),
            fillScreen(uint16_t color),
 		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
@@ -119,7 +118,8 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
 
   /* These are not for current use, 8-bit protocol only! */
   uint16_t readPixel(int16_t x, int16_t y);
-  uint16_t readPixels(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t *buf);
+  uint16_t readPixels16(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t *buf);
+  uint16_t readPixels24(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t *buf);
   uint8_t  readcommand8(uint8_t reg, uint8_t index = 0);
   /*
   uint16_t readcommand16(uint8_t);
@@ -146,6 +146,8 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   inline void    writedata(uint8_t c)   { mSPI.write(c); }
   inline void    spiwrite(uint16_t c)   { mSPI.write(c); }
   inline void    spiwrite16(uint16_t c) { mSPI.write16(c); } // 8 bit mode
+  
+  inline void pushColor(uint16_t color) { cs_clear(); spiwrite(color); cs_set(); }
 
   void  writecommand(uint8_t c),
         commandList(uint8_t *addr);
