@@ -14,7 +14,7 @@
  ****************************************************/
 
 
-#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_GFX_AS.h>    // Core graphics library
 #include "Adafruit_ILI9341_STM.h" // Hardware-specific library
 #include <SPI.h>
 #include <SD.h>
