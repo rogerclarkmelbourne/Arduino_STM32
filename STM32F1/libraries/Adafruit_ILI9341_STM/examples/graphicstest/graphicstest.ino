@@ -15,7 +15,7 @@
 
 
 #include "SPI.h"
-#include "Adafruit_GFX.h"
+#include "Adafruit_GFX_AS.h"
 #include "Adafruit_ILI9341_STM.h"
 
 // For the Adafruit shield, these are the default.
