@@ -7,9 +7,7 @@ This library has been modified for the Maple Mini
 #define _ADAFRUIT_ILI9341H_
 
 #include "Arduino.h"
-#include "Print.h"
 #include <Adafruit_GFX_AS.h>
-#include <avr/pgmspace.h>
 #include <SPI.h>
 
 #ifndef swap
@@ -122,31 +120,20 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
 
   /* These are not for current use, 8-bit protocol only! */
-  uint8_t  readdata(void),
-    readcommand8(uint8_t reg, uint8_t index = 0);
+  uint16_t readPixel(int16_t x, int16_t y);
+  uint16_t readPixels(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t *buf);
+  uint16_t readPixelsRGB24(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t *buf);
+
+  uint8_t  readcommand8(uint8_t reg, uint8_t index = 0);
   /*
   uint16_t readcommand16(uint8_t);
   uint32_t readcommand32(uint8_t);
-  void     dummyclock(void);
-  */  
+  */
 
-  void     spiwrite(uint16_t),
-    writecommand(uint8_t c),
-    writedata(uint8_t d),
-    commandList(uint8_t *addr);
-  uint8_t  spiread(void);
+#define DMA_ON_LIMIT 250 // do DMA only for more data than this
+#define SAFE_FREQ  24000000ul // 24MHz for reading
 
-
- private:
-  uint8_t  tabcolor;
-  
-  SPIClass & mSPI = SPI;
-  boolean  hwSPI;
-  volatile uint32_t *mosiport, *misoport, *clkport, *csport, *dcport;
-  int8_t  _mosi, _miso, _sclk, _cs, _dc, _rst;
-  uint16_t  mosipinmask, misopinmask, clkpinmask, cspinmask, dcpinmask;
-  uint16_t lineBuffer[ILI9341_TFTHEIGHT]; // DMA buffer. 16bit color data per pixel
-};
+#define writePixel drawPixel
 
 #define dc_command() ( *dcport  =(uint32_t)dcpinmask<<16 ) // 0
 #define dc_data()    ( *dcport  =(uint32_t)dcpinmask )     // 1
@@ -157,6 +144,25 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
 #define mosi_clear() ( *mosiport=(uint32_t)misopinmask<<16 )
 #define mosi_set()   ( *mosiport=(uint32_t)misopinmask )
 #define miso_in()    ( (*misoport)&misopinmask )
+
+  inline uint8_t spiread(void)  { return mSPI.transfer(0x00); }
+  inline uint8_t readdata(void) { return mSPI.transfer(0x00); }
+  inline void    writedata(uint8_t c)   { mSPI.write(c); }
+  inline void    spiwrite(uint16_t c)   { mSPI.write(c); }
+  inline void    spiwrite16(uint16_t c) { mSPI.write16(c); } // 8 bit mode
+
+  void  writecommand(uint8_t c),
+        commandList(uint8_t *addr);
+
+ private:
+  uint32_t _freq, _safe_freq;
+  SPIClass & mSPI = SPI;
+
+  volatile uint32_t *csport, *dcport;
+  int8_t  _cs, _dc, _rst;
+  uint16_t  cspinmask, dcpinmask;
+  uint16_t lineBuffer[ILI9341_TFTHEIGHT]; // DMA buffer. 16bit color data per pixel
+};
 
 
 #endif

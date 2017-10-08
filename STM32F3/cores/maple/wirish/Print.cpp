@@ -88,10 +88,6 @@ void Print::print(unsigned long n, int base) {
 }
 
 void Print::print(long long n, int base) {
-    if (base == BYTE) {
-        write((uint8)n);
-        return;
-    }
     if (n < 0) {
         print('-');
         n = -n;
@@ -100,11 +96,7 @@ void Print::print(long long n, int base) {
 }
 
 void Print::print(unsigned long long n, int base) {
-    if (base == BYTE) {
-        write((uint8)n);
-    } else {
-        printNumber(n, base);
-    }
+    printNumber(n, base);
 }
 
 void Print::print(double n, int digits) {

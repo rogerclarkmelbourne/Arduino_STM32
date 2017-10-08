@@ -246,7 +246,7 @@ public:
      * @param buffer Bytes/words to transmit.
      * @param length Number of bytes/words in buffer to transmit.
      */
-    void write(void * buffer, uint32 length);
+    void write(const void * buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
@@ -269,7 +269,7 @@ public:
      * @param receiveBuf buffer Bytes to save received data. 
      * @param length Number of bytes in buffer to transmit.
 	 */
-    uint8 dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length);
+	uint8 dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length);
 
 	/**
      * @brief Sets up a DMA Transmit for SPI 8 or 16 bit transfer mode.
@@ -280,7 +280,7 @@ public:
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
      */
-    uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
+	uint8 dmaSend(const void * transmitBuf, uint16 length, bool minc = 1);
 
     /*
      * Pin accessors

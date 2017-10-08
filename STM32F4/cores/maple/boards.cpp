@@ -69,8 +69,7 @@ void init(void) {
     setupTimers();
 
 #ifdef SERIAL_USB
-    setupUSB();
-    SerialUSB.begin();
+    SerialUSB.begin(); // includes { setupUSB(); }
 #endif
 }
 

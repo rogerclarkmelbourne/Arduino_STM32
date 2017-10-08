@@ -78,11 +78,12 @@ long random(long min, long max);
  * @param toEnd the end of the value's mapped range.
  * @return the mapped value.
  */
-static inline long map(long value, long fromStart, long fromEnd,
-                long toStart, long toEnd) {
-    return (value - fromStart) * (toEnd - toStart) / (fromEnd - fromStart) +
-        toStart;
-}
+ // Fix by Pito 9/2017
+  static inline int32_t map(int32_t value, int32_t fromStart, int32_t fromEnd,
+     int32_t toStart, int32_t toEnd) {
+     return ((int64_t)(value - fromStart) * (toEnd - toStart)) / (fromEnd - fromStart) +
+         toStart;
+ }
 
 #define PI          3.1415926535897932384626433832795
 #define HALF_PI     1.5707963267948966192313216916398
