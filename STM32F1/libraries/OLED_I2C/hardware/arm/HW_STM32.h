@@ -1,4 +1,4 @@
-#include "HardWire.h"
+#include "Wire.h"
 #define WIRE_WRITE HWIRE.write
 
  HardWire HWIRE(2,I2C_FAST_MODE); // stupid compiler
