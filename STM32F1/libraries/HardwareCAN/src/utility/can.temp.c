@@ -1,3 +1,21 @@
+Skip to content
+Features
+Business
+Explore
+Marketplace
+Pricing
+This repository
+Search
+Sign in or Sign up
+ Watch 3  Star 2  Fork 363 megadrifter/Arduino_STM32
+forked from Phonog/Arduino_STM32
+ Code  Pull requests 0  Projects 0 Insights 
+Branch: megadrifter-GM… Find file Copy pathArduino_STM32/STM32F1/libraries/HardwareCAN/src/utility/can.c
+a9807d2  9 days ago
+@megadrifter megadrifter CAN filter corrected by tjb12345
+2 contributors @megadrifter @Phonog
+RawBlameHistory     
+567 lines (500 sloc)  14.3 KB
 #include "can.h"
 
 /**
@@ -243,6 +261,12 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 			gpio_set_mode(GPIOB, 8, GPIO_INPUT_FLOATING);
 			gpio_set_mode(GPIOB, 9, GPIO_AF_OUTPUT_PP);
 			break;
+		 case CAN_GPIO_PA11_PA12:
+			 rcc_clk_enable(RCC_GPIOA);
+			 afio_remap(AFIO_MAPR_CAN_REMAP_NONE);
+			 gpio_set_mode(GPIOA, 11, GPIO_INPUT_FLOATING);
+			 gpio_set_mode(GPIOA, 12, GPIO_AF_OUTPUT_PP);
+		 break;
 #if NR_GPIO_PORTS >= 4
 		case CAN_GPIO_PD0_PD1:
 			rcc_clk_enable(RCC_GPIOD);
@@ -259,7 +283,7 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 	return status;
 }
 
-CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2)
+CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2, int extID = 0)
 {
 	uint32 mask = ((uint32)0x00000001) << filter_idx;
 
@@ -271,10 +295,14 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 		CANx->FS1R |= mask;
 	else
 		CANx->FS1R &= ~mask;
-
-	CANx->sFilterRegister[filter_idx].FR1 = fr1;
-	CANx->sFilterRegister[filter_idx].FR2 = fr2;
-
+	if (extID) {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 3) | CAN_ID_EXT;
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 3) | CAN_ID_EXT;	
+	}
+	else {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 21);
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 21);	
+	}
 	if (mode == CAN_FILTER_MASK)
 		CANx->FM1R &= ~mask;
 	else

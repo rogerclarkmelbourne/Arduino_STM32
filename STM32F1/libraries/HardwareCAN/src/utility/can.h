@@ -285,6 +285,7 @@ CAN_STATUS can_status(void);
 void can_cancel(CAN_Port* CANx, uint8 mbx);
 void can_rx_queue_clear(void);
 uint8 can_rx_available(void);
+uint8 can_frame_lost(void);
 CanMsg* can_rx_queue_get(void);
 CanMsg* can_read(CAN_Port* CANx, CAN_FIFO fifo, CanMsg* msg);
 void can_rx_release(CAN_Port* CANx, CAN_FIFO fifo);
