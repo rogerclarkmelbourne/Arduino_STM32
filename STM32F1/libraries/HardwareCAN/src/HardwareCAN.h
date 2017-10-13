@@ -54,6 +54,7 @@ public:
 	void cancel(CAN_TX_MBX mbx);
 
 	uint8 available(void);
+	uint8 frame_lost(void);
 
 	CanMsg* recv(void);
 

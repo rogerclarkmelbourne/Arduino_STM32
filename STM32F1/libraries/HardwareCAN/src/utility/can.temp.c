@@ -1,3 +1,21 @@
+Skip to content
+Features
+Business
+Explore
+Marketplace
+Pricing
+This repository
+Search
+Sign in or Sign up
+ Watch 3  Star 2  Fork 363 megadrifter/Arduino_STM32
+forked from Phonog/Arduino_STM32
+ Code  Pull requests 0  Projects 0 Insights 
+Branch: megadrifter-GM… Find file Copy pathArduino_STM32/STM32F1/libraries/HardwareCAN/src/utility/can.c
+a9807d2  9 days ago
+@megadrifter megadrifter CAN filter corrected by tjb12345
+2 contributors @megadrifter @Phonog
+RawBlameHistory     
+567 lines (500 sloc)  14.3 KB
 #include "can.h"
 
 /**
@@ -39,18 +57,6 @@ struct can_speed_info {
 #define CAN_CLOCK	(36000000UL / 18UL)
 
 static const struct can_speed_info can_speed_table[] = {
-	[CAN_SPEED_33]		= { .btr = (
-		(( 4-1) << CAN_BTR_SJW_POS) |
-		((12-1) << CAN_BTR_TS1_POS) |
-		(( 5-1) << CAN_BTR_TS2_POS) |
-		(CAN_CLOCK / 33000UL - 1)
-		)},
-	[CAN_SPEED_95]		= { .btr = (
-		(( 4-1) << CAN_BTR_SJW_POS) |
-		((12-1) << CAN_BTR_TS1_POS) |
-		(( 5-1) << CAN_BTR_TS2_POS) |
-		(CAN_CLOCK / 95000UL - 1)
-		)},
 	[CAN_SPEED_125]		= { .btr = (
 		(( 4-1) << CAN_BTR_SJW_POS) |
 		((12-1) << CAN_BTR_TS1_POS) |
@@ -297,8 +303,6 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 21);
 		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 21);	
 	}
-	
-
 	if (mode == CAN_FILTER_MASK)
 		CANx->FM1R &= ~mask;
 	else
@@ -313,6 +317,7 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 	CANx->FMR &= ~CAN_FMR_FINIT;
 	return CAN_OK;
 }
+
 
 /**
   * @brief  Initiates the transmission of a message.
