@@ -13,6 +13,8 @@
  *           - CAN_SPEED_500
  *           - CAN_SPEED_250
  *           - CAN_SPEED_125
+ *           - CAN_SPEED_95
+ *           - CAN_SPEED_33
  */
 CAN_STATUS HardwareCAN::begin(CAN_SPEED speed, uint32 mode)
 {

@@ -117,6 +117,22 @@ uint16 HardwareTimer::setPeriod(uint32 microseconds) {
     return overflow;
 }
 
+uint16 HardwareTimer::setCycles(uint32 Cycles) {
+    // Not the best way to handle this edge case?
+    if (!Cycles) {
+        this->setPrescaleFactor(1);
+        this->setOverflow(1);
+        return this->getOverflow();
+    }
+
+    uint32 period_cyc = Cycles;
+    uint16 prescaler = (uint16)(period_cyc / MAX_RELOAD + 1);
+    uint16 overflow = (uint16)((period_cyc + (prescaler / 2)) / prescaler);
+    this->setPrescaleFactor(prescaler);
+    this->setOverflow(overflow);
+    return overflow;
+}
+
 void HardwareTimer::setMode(int channel, timer_mode mode) {
     timer_set_mode(this->dev, (uint8)channel, (timer_mode)mode);
 }

@@ -139,7 +139,8 @@ extern "C" {
 
 typedef enum CAN_GPIO_MAP {
 	CAN_GPIO_PB8_PB9,		/* RX to PB8, TX to PB9 */
-	CAN_GPIO_PD0_PD1		/* RX to PD0, TX to PD1 */
+	CAN_GPIO_PD0_PD1,		/* RX to PD0, TX to PD1 */
+	CAN_GPIO_PA11_PA12		/* RX to PA11, TX to PA12 */
 } CAN_GPIO_MAP;
 
 typedef enum CAN_STATUS
@@ -168,6 +169,8 @@ typedef enum CAN_TX_MBX
 #define CAN_MODE_SILENT_LOOPBACK	(CAN_BTR_LBKM | CAN_BTR_SILM)	/* loopback combined with silent mode */
 
 enum CAN_SPEED {
+	CAN_SPEED_33,
+	CAN_SPEED_95,
 	CAN_SPEED_125,
 	CAN_SPEED_250,
 	CAN_SPEED_500,

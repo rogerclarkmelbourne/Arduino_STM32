@@ -39,6 +39,18 @@ struct can_speed_info {
 #define CAN_CLOCK	(36000000UL / 18UL)
 
 static const struct can_speed_info can_speed_table[] = {
+	[CAN_SPEED_33]		= { .btr = (
+		(( 4-1) << CAN_BTR_SJW_POS) |
+		((12-1) << CAN_BTR_TS1_POS) |
+		(( 5-1) << CAN_BTR_TS2_POS) |
+		(CAN_CLOCK / 33000UL - 1)
+		)},
+	[CAN_SPEED_95]		= { .btr = (
+		(( 4-1) << CAN_BTR_SJW_POS) |
+		((12-1) << CAN_BTR_TS1_POS) |
+		(( 5-1) << CAN_BTR_TS2_POS) |
+		(CAN_CLOCK / 95000UL - 1)
+		)},
 	[CAN_SPEED_125]		= { .btr = (
 		(( 4-1) << CAN_BTR_SJW_POS) |
 		((12-1) << CAN_BTR_TS1_POS) |
@@ -243,6 +255,12 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 			gpio_set_mode(GPIOB, 8, GPIO_INPUT_FLOATING);
 			gpio_set_mode(GPIOB, 9, GPIO_AF_OUTPUT_PP);
 			break;
+		 case CAN_GPIO_PA11_PA12:
+			 rcc_clk_enable(RCC_GPIOA);
+			 afio_remap(AFIO_MAPR_CAN_REMAP_NONE);
+			 gpio_set_mode(GPIOA, 11, GPIO_INPUT_FLOATING);
+			 gpio_set_mode(GPIOA, 12, GPIO_AF_OUTPUT_PP);
+		 break;
 #if NR_GPIO_PORTS >= 4
 		case CAN_GPIO_PD0_PD1:
 			rcc_clk_enable(RCC_GPIOD);
@@ -259,7 +277,7 @@ CAN_STATUS can_gpio_map(CAN_Port* CANx, CAN_GPIO_MAP map_mode)
 	return status;
 }
 
-CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2)
+CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTER_SCALE scale, CAN_FILTER_MODE mode, uint32 fr1, uint32 fr2, int extID = 0)
 {
 	uint32 mask = ((uint32)0x00000001) << filter_idx;
 
@@ -271,9 +289,15 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 		CANx->FS1R |= mask;
 	else
 		CANx->FS1R &= ~mask;
-
-	CANx->sFilterRegister[filter_idx].FR1 = fr1;
-	CANx->sFilterRegister[filter_idx].FR2 = fr2;
+	if (extID) {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 3) | CAN_ID_EXT;
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 3) | CAN_ID_EXT;	
+	}
+	else {
+		CANx->sFilterRegister[filter_idx].FR1 = (fr1 << 21);
+		CANx->sFilterRegister[filter_idx].FR2 = (fr2 << 21);	
+	}
+	
 
 	if (mode == CAN_FILTER_MASK)
 		CANx->FM1R &= ~mask;
@@ -289,7 +313,6 @@ CAN_STATUS can_filter(CAN_Port* CANx, uint8 filter_idx, CAN_FIFO fifo, CAN_FILTE
 	CANx->FMR &= ~CAN_FMR_FINIT;
 	return CAN_OK;
 }
-
 
 /**
   * @brief  Initiates the transmission of a message.
