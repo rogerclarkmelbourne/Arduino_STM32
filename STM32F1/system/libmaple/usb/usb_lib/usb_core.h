@@ -102,8 +102,8 @@ typedef union
   struct BW
   {
     /* Little Endian */
-    u8 bb0;
 	u8 bb1;
+    u8 bb0;
   }
   bw;
 } u16_u8;
