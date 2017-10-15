@@ -113,13 +113,8 @@ typedef struct timer_bas_reg_map {
 } timer_bas_reg_map;
 
 
-#ifdef STM32F2
-  /** Timer 1 register map base pointer */
-  #define TIMER1_BASE        ((struct timer_adv_reg_map*)0x40010000)
-#else
-  /** Timer 1 register map base pointer */
-  #define TIMER1_BASE        ((struct timer_adv_reg_map*)0x40012C00)
-#endif
+/** Timer 1 register map base pointer */
+#define TIMER1_BASE        ((struct timer_adv_reg_map*)0x40010000)
 /** Timer 2 register map base pointer */
 #define TIMER2_BASE        ((struct timer_gen_reg_map*)0x40000000)
 /** Timer 3 register map base pointer */
@@ -133,14 +128,8 @@ typedef struct timer_bas_reg_map {
 #define TIMER6_BASE        ((struct timer_bas_reg_map*)0x40001000)
 /** Timer 7 register map base pointer */
 #define TIMER7_BASE        ((struct timer_bas_reg_map*)0x40001400)
-
-#ifdef STM32F2
-  /** Timer 8 register map base pointer */
-  #define TIMER8_BASE        ((struct timer_adv_reg_map*)0x40010400)
-#else
-  /** Timer 8 register map base pointer */
-  #define TIMER8_BASE        ((struct timer_adv_reg_map*)0x40013400)
-#endif
+/** Timer 8 register map base pointer */
+#define TIMER8_BASE        ((struct timer_adv_reg_map*)0x40010400)
 #endif
 
 /*

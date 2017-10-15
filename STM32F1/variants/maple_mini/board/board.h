@@ -36,7 +36,7 @@
 #ifndef _BOARD_MAPLE_MINI_H_
 #define _BOARD_MAPLE_MINI_H_
 
-#define CYCLES_PER_MICROSECOND    72
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 #define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 #define BOARD_NR_USARTS           3
@@ -70,6 +70,8 @@
 
 #define BOARD_USB_DISC_DEV        GPIOB
 #define BOARD_USB_DISC_BIT        9
+
+#define LED_BUILTIN PB1
 
 enum {
     PB11, PB10, PB2, PB0, PA7, PA6, PA5, PA4, PA3, PA2, PA1, PA0, PC15, PC14,

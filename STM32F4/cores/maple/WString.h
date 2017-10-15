@@ -19,8 +19,9 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef String_class_h
-#define String_class_h
+#ifndef _WSTRING_H_
+#define _WSTRING_H_
+
 #ifdef __cplusplus
 
 #include <stdlib.h>
@@ -161,6 +162,10 @@ public:
 	void toCharArray(char *buf, unsigned int bufsize, unsigned int index=0) const
 		{getBytes((unsigned char *)buf, bufsize, index);}
 	const char * c_str() const { return buffer; }
+	char* begin() { return buffer; }
+	char* end() { return buffer + length(); }
+	const char* begin() const { return c_str(); }
+	const char* end() const { return c_str() + length(); }
 
 	// search
 	int indexOf( char ch ) const;
@@ -221,4 +226,4 @@ public:
 };
 
 #endif  // __cplusplus
-#endif  // String_class_h
+#endif  // _WSTRING_H_

@@ -142,6 +142,33 @@ void HardwareTimer::refresh(void) {
     timer_generate_update(this->dev);
 }
 
+void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
+	this->dev->regs.bas->CR2 &= ~TIMER_CR2_MMS;
+	this->dev->regs.bas->CR2 |= mode;
+}
+
+/*  CARLOS Changes to add encoder mode.*/
+
+//direction of movement. (to be better described). 
+    uint8 HardwareTimer::getDirection(){
+        return get_direction(this->dev);
+    }
+    
+//set if the encoder will count edges on one, which or both channels. 
+    void HardwareTimer::setEdgeCounting(uint32 counting) {
+        (dev->regs).gen->SMCR = counting;//TIMER_SMCR_SMS_ENCODER3; //choose encoder 3, counting on 
+    
+    }
+    
+    uint8 HardwareTimer::getEdgeCounting() {
+        return (dev->regs).gen->SMCR;
+    }
+    
+    
+
+//set the polarity of counting... not sure how interesting this is.. 
+    void HardwareTimer::setPolarity(){} 
+
 /* -- Deprecated predefined instances -------------------------------------- */
 
 HardwareTimer Timer1(1);

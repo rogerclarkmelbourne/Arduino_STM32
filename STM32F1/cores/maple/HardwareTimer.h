@@ -38,6 +38,10 @@
 /** Timer mode. */
 typedef timer_mode TimerMode;
 
+//CARLOS
+//defines for the ENCODER mode.
+
+
 /**
  * @brief Interface to one of the 16-bit timer peripherals.
  */
@@ -204,6 +208,40 @@ public:
      * @see HardwareTimer::setOverflow()
      */
     void refresh(void);
+
+	// SYFRE
+    /**
+     * @brief Set the Master mode TRGO signal 
+     *        These bits allow to select the information to be sent in master mode to slave timers for 
+     *        synchronization (TRGO). 
+	 *	mode:
+	 * 		TIMER_CR2_MMS_RESET
+	 * 		TIMER_CR2_MMS_ENABLE
+	 * 		TIMER_CR2_MMS_UPDATE
+	 * 		TIMER_CR2_MMS_COMPARE_PULSE
+	 * 		TIMER_CR2_MMS_COMPARE_OC1REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC2REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC3REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC4REF
+     */
+	void setMasterModeTrGo(uint32_t mode);
+	
+//CARLOS.
+/*
+    added these functions to make sense for the encoder mode. 
+*/
+//direction of movement. (to be better described). 
+    uint8 getDirection();
+    
+//set if the encoder will count edges on one, which or both channels. 
+    void setEdgeCounting(uint32 counting);
+    uint8 getEdgeCounting(); //not sure if needed. 
+
+//set the polarity of counting... not sure how interesting this is.. 
+    void setPolarity();
+    
+//add the filtering definition for the input channel.
+    
 
     /* Escape hatch */
 

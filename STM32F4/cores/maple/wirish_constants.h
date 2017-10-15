@@ -1,5 +1,5 @@
-#ifndef _WIRING_CONSTANTS_
-#define _WIRING_CONSTANTS_
+#ifndef _WIRISH_CONSTANTS_H_
+#define _WIRISH_CONSTANTS_H_
 
 #ifdef __cplusplus
 extern "C"{

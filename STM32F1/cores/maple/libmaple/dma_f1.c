@@ -341,7 +341,6 @@ void dma_set_per_addr(dma_dev *dev, dma_channel channel, __io void *addr) {
  * @see dma_attach_interrupt()
  * @see dma_enable()
  */
-__deprecated
 void dma_setup_transfer(dma_dev       *dev,
                         dma_channel    channel,
                         __io void     *peripheral_address,

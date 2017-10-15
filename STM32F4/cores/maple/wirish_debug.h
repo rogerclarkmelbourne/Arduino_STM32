@@ -24,6 +24,9 @@
  * SOFTWARE.
  *****************************************************************************/
 
+#ifndef _WIRISH_DEBUG_H_
+#define _WIRISH_DEBUG_H_
+
 /**
  * @file wirish_debug.h
  * @brief High level debug port configuration
@@ -50,5 +53,7 @@ static inline void disableDebugPorts(void) {
  * @see disableDebugPorts()
  */
 static inline void enableDebugPorts(void) {
-    afio_cfg_debug_ports(AFIO_DEBUG_FULL_SWJ);
+    afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //AFIO_DEBUG_FULL_SWJ);
 }
+
+#endif

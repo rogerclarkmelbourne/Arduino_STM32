@@ -569,6 +569,8 @@ typedef enum timer_mode {
     /* TIMER_ONE_PULSE, TODO: In this mode, the timer can generate a single
      *                        pulse on a GPIO pin for a specified amount of
      *                        time. */
+     
+     TIMER_ENCODER,  //CARLOS Change
 } timer_mode;
 
 /** Timer channel numbers */
@@ -619,6 +621,11 @@ void timer_attach_interrupt(timer_dev *dev,
                             uint8 interrupt,
                             voidFuncPtr handler);
 void timer_detach_interrupt(timer_dev *dev, uint8 interrupt);
+
+//CARLOS 
+uint8 get_direction(timer_dev *dev);
+
+
 
 /**
  * Initialize all timer devices on the chip.
@@ -776,6 +783,22 @@ static inline void timer_dma_enable_trg_req(timer_dev *dev) {
  */
 static inline void timer_dma_disable_trg_req(timer_dev *dev) {
     *bb_perip(&(dev->regs).gen->DIER, TIMER_DIER_TDE_BIT) = 0;
+}
+
+/**
+ * @brief Enable a timer's update DMA request
+ * @param dev Timer device, must have type TIMER_ADVANCED or TIMER_GENERAL
+ */
+static inline void timer_dma_enable_upd_req(timer_dev *dev) {
+    *bb_perip(&(dev->regs).gen->DIER, TIMER_DIER_UDE_BIT) = 1;
+}
+
+/**
+ * @brief Disable a timer's update DMA request
+ * @param dev Timer device, must have type TIMER_ADVANCED or TIMER_GENERAL
+ */
+static inline void timer_dma_disable_upd_req(timer_dev *dev) {
+    *bb_perip(&(dev->regs).gen->DIER, TIMER_DIER_UDE_BIT) = 0;
 }
 
 /**

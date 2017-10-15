@@ -38,3 +38,28 @@ void shiftOut(uint8 dataPin, uint8 clockPin, uint8 bitOrder, uint8 val) {
         digitalWrite(clockPin, LOW);
     }
 }
+
+uint32 shiftIn( uint32 ulDataPin, uint32 ulClockPin, uint32 ulBitOrder )
+{
+  uint8_t value = 0 ;
+  uint8_t i ;
+
+  
+  for ( i=0 ; i < 8 ; ++i )
+  {
+    digitalWrite( ulClockPin, HIGH ) ;
+
+    if ( ulBitOrder == LSBFIRST )
+    {
+      value |= digitalRead( ulDataPin ) << i ;
+    }
+    else
+    {
+      value |= digitalRead( ulDataPin ) << (7 - i) ;
+    }
+
+    digitalWrite( ulClockPin, LOW ) ;
+  }
+
+  return value ;
+}

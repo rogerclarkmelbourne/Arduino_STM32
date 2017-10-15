@@ -301,11 +301,11 @@ void adc_config_gpio(const adc_dev *ignored, gpio_dev *gdev, uint8 bit) {
 }
 
 void adc_enable_single_swstart(const adc_dev *dev) {
+    int check_dev_adc = dev == ADC1;
 #if STM32_F3_LINE == STM32_F3_LINE_303
-		if ( (dev == ADC1) || (dev == ADC3) )
-#else
-		if (dev == ADC1)
+		check_dev_adc = (check_dev_adc || dev == ADC3);
 #endif
+		if (check_dev_adc)
 			adc_init(dev); /* FIXME hack needed for wirish, as master and slave ADC share the same reset register */
     adc_set_exttrig(dev, ADC_EXTTRIG_MODE_SOFTWARE);
 		adc_regulator_enable(dev);

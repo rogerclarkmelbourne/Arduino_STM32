@@ -20,11 +20,11 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_core.h"
-#include "usbd_req.h"
-#include "usbd_ioreq.h"
-#include "usb_dcd_int.h"
-#include "usb_bsp.h"
+#include <STM32_USB_Device_Library/Core/inc/usbd_core.h>
+#include <STM32_USB_Device_Library/Core/inc/usbd_req.h>
+#include <STM32_USB_Device_Library/Core/inc/usbd_ioreq.h>
+#include <STM32_USB_OTG_Driver/inc/usb_dcd_int.h>
+#include <STM32_USB_OTG_Driver/inc/usb_bsp.h>
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
