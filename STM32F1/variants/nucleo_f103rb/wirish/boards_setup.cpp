@@ -88,9 +88,18 @@ namespace wirish {
         }
 
         __weak void board_setup_usb(void) {
-#ifdef SERIAL_USB 
+#ifdef USB_HARDWARE 
+#ifdef USB_SERIAL
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 #endif
+#if  defined(USB_HARDWARE) && (defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J))
+			HID.begin();
+#endif
+#ifdef USB_MIDI
+			MidiUSB.begin();
+#endif
+#endif
+
 		}
 
         __weak void series_init(void) {
