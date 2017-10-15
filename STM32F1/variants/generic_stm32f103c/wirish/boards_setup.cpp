@@ -34,6 +34,9 @@
  * upon each other.
  */
 
+#include <usb_hid_device.h>
+#include <usb_midi.h>
+
 #include "boards_private.h"
 
 #include <libmaple/gpio.h>

@@ -17,6 +17,8 @@
  * @brief Wirish USB HID port (HID USB).
  */
  
+#define JOY8BIT
+
 #if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
 
 #ifndef _WIRISH_USB_HID_H_
@@ -262,8 +264,12 @@ public:
 class HIDJoystick{
 private:
 	uint8_t joystick_Report[13] = {3,0,0,0,0,0x0F,0x20,0x80,0x00,0x02,0x08,0x20,0x80};
+    bool manualReport = false;
+	void safeSendReport(void);
 	void sendReport(void);
 public:
+	void sendManualReport(void);
+    void setManualReportMode(bool manualReport);
 	HIDJoystick(void);
 	void begin(void);
 	void end(void);

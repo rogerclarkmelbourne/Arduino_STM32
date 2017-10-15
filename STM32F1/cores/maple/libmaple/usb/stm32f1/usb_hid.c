@@ -33,6 +33,8 @@
  * the result made cleaner.
  */
 
+#define RXRY
+ 
 #if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
  
  
@@ -187,8 +189,13 @@ const uint8_t hid_report_descriptor[] = {
 	0x95, 0x04,						//   Report Count (4)
 	0x09, 0x30,						//   Usage (X)
 	0x09, 0x31,						//   Usage (Y)
+#ifdef RXRY
+	0x09, 0x33,						//   Usage (Rx)
+	0x09, 0x34,						//   Usage (Ry)
+#else
 	0x09, 0x32,						//   Usage (Z)
 	0x09, 0x35,						//   Usage (Rz)
+#endif
 	0x81, 0x02,						//   Input (variable,absolute)
     0xC0,                           // End Collection
 	0x15, 0x00,						// Logical Minimum (0)

@@ -59,23 +59,27 @@ void WireBase::beginTransmission(int slave_address) {
     beginTransmission((uint8)slave_address);
 }
 
-uint8 WireBase::endTransmission(void) {
+uint8 WireBase::endTransmission(bool stop) {
     uint8 retVal;
     if (tx_buf_overflow) {
         return EDATA;
     }
-    retVal = process();// Changed so that the return value from process is returned by this function see also the return line below
+    retVal = process(stop);// Changed so that the return value from process is returned by this function see also the return line below
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     return retVal;//SUCCESS;
+}
+
+uint8 WireBase::endTransmission(){
+    endTransmission(true);
 }
 
 //TODO: Add the ability to queue messages (adding a boolean to end of function
 // call, allows for the Arduino style to stay while also giving the flexibility
 // to bulk send
 uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
-    if (num_bytes > WIRE_BUFSIZ) {
-        num_bytes = WIRE_BUFSIZ;
+    if (num_bytes > BUFFER_LENGTH) {
+        num_bytes = BUFFER_LENGTH;
     }
     itc_msg.addr = address;
     itc_msg.flags = I2C_MSG_READ;
@@ -92,7 +96,7 @@ uint8 WireBase::requestFrom(int address, int numBytes) {
 }
 
 void WireBase::write(uint8 value) {
-    if (tx_buf_idx == WIRE_BUFSIZ) {
+    if (tx_buf_idx == BUFFER_LENGTH) {
         tx_buf_overflow = true;
         return;
     }
