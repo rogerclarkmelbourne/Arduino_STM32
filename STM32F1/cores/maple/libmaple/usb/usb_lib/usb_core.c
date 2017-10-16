@@ -31,7 +31,7 @@
 #define USB_StatusIn() Send0LengthData()
 #define USB_StatusOut() vSetEPRxStatus(EP_RX_VALID)
 
-#define StatusInfo0 StatusInfo.bw.bb1 /* Reverse bb0 & bb1 */
+#define StatusInfo0 StatusInfo.bw.bb1 /* Reverse bb0 & bb1; TODO: be more consistent, as similar things in usb_core.h aren't reversed */
 #define StatusInfo1 StatusInfo.bw.bb0
 
 /* Private macro -------------------------------------------------------------*/
