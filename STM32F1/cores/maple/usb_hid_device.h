@@ -17,15 +17,15 @@
  * @brief Wirish USB HID port (HID USB).
  */
  
-#define JOY8BIT
-
 #if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
+
 
 #ifndef _WIRISH_USB_HID_H_
 #define _WIRISH_USB_HID_H_
 
 #include <Print.h>
 #include <boards.h>
+#include <libmaple/usb_hid.h>
 
 class HIDDevice{
 private:
@@ -277,8 +277,13 @@ public:
 	void X(uint16_t val);
 	void Y(uint16_t val);
 	void position(uint16_t x, uint16_t y);
+#ifdef JOYSTICK_MODE_RXRY
+	void Xrotate(uint16_t val);
+	void Yrotate(uint16_t val);
+#else
 	void Z(uint16_t val);
 	void Zrotate(uint16_t val);
+#endif    
 	void sliderLeft(uint16_t val);
 	void sliderRight(uint16_t val);
 	void slider(uint16_t val);

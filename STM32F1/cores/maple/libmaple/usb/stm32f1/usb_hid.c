@@ -33,10 +33,7 @@
  * the result made cleaner.
  */
 
-#define RXRY
- 
-#if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
- 
+#if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J) 
  
 #include <libmaple/usb_hid.h>
 
@@ -189,7 +186,7 @@ const uint8_t hid_report_descriptor[] = {
 	0x95, 0x04,						//   Report Count (4)
 	0x09, 0x30,						//   Usage (X)
 	0x09, 0x31,						//   Usage (Y)
-#ifdef RXRY
+#ifdef JOYSTICK_MODE_RXRY
 	0x09, 0x33,						//   Usage (Rx)
 	0x09, 0x34,						//   Usage (Ry)
 #else

@@ -371,7 +371,13 @@ void HIDJoystick::position(uint16_t x, uint16_t y){
     safeSendReport();
 }
 
-void HIDJoystick::Z(uint16_t val){
+void HIDJoystick::
+#ifdef JOYSTICK_MODE_RXRY
+    Xrotate
+#else
+    Z
+#endif
+    (uint16_t val){
 	if (val > 1023) val = 1023;
 	joystick_Report[8] = val;
 	joystick_Report[9] = (joystick_Report[9] & 0xFC) | (val >> 8);
@@ -379,7 +385,13 @@ void HIDJoystick::Z(uint16_t val){
     safeSendReport();
 }
 
-void HIDJoystick::Zrotate(uint16_t val){
+void HIDJoystick::
+#ifdef JOYSTICK_MODE_RXRY
+    Yrotate
+#else
+    Zrotate
+#endif
+    (uint16_t val){
 	if (val > 1023) val = 1023;
 	joystick_Report[9] = (joystick_Report[9] & 0x03) | (val << 2);
 	joystick_Report[10] = (joystick_Report[10] & 0xF0) | (val >> 6);
