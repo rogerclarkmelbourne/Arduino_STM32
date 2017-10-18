@@ -102,8 +102,13 @@
 /**
  * Note: there is no USB in this board.
  */
+#ifdef USB_SERIAL
+#define BOARD_USB_DISC_DEV        NULL
+#define BOARD_USB_DISC_BIT        NULL
+#else
 #define BOARD_USB_DISC_DEV        GPIOB
 #define BOARD_USB_DISC_BIT        10
+#endif
 
 /* Pin aliases: these give the GPIO port/bit for each pin as an
  * enum. These are optional, but recommended. They make it easier to
