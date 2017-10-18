@@ -15,6 +15,7 @@
 #define SECS_PER_YEAR (SECS_PER_WEEK * 52UL)
 #define SECS_YR_2000  (946684800UL) // the time at the start of y2k
 #define LEAP_YEAR(Y)  ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
+#define HALFTZ 0
 
 #if !defined(__time_t_defined) // avoid conflict with newlib or other posix libc
   #warning "Using private time_t definintion"
@@ -71,8 +72,14 @@ class RTClock {
 	uint8_t minute(time_t t)  { breakTime(t, tmm); return tmm.minute; }
 	uint8_t second(time_t t)  { breakTime(t, tmm); return tmm.second; }
 	uint8_t isPM(time_t t)    { return (hour(t)>=12); }
+
+	// Usage: localtime = TimeZone(UnixTime, 8); 
+	time_t TimeZone(time_t t, int TZ) { return ( t + (TZ * SECS_PER_HOUR)); } 
 	
-	time_t TimeZone(time_t t, int TZ)  { return ( t + (TZ * SECS_PER_HOUR)); }    // usage: localtime = TimeZone(UnixTime, 8); // Beijing timezone = 8  
+	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 1)  means SAT +09:30 TimeZone; 
+    //         2.  localtime = TimeZone(UnixTime, -3, 1)  means NST,NFT -03:30 TimeZone;
+    //         3.  TimeZone(UnixTime, 8, 0)  same function as TimeZone(UnixTime, 8)  -> CCT +08:00
+	time_t TimeZone(time_t t, int TZ, bool HFZ);   // HFZ : Half-hour TimeZone flag
 	
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
