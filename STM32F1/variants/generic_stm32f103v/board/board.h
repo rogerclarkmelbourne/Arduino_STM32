@@ -106,7 +106,7 @@
 
 /* USB configuration.  BOARD_USB_DISC_DEV is the GPIO port containing
  * the USB_DISC pin, and BOARD_USB_DISC_BIT is that pin's bit. */
-#define BOARD_USB_DISC_DEV      GPIOC
+#define BOARD_USB_DISC_DEV      GPIOA
 #define BOARD_USB_DISC_BIT      12
 
 /* Pin aliases: these give the GPIO port/bit for each pin as an

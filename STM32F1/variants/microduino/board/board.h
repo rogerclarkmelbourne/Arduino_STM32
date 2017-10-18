@@ -70,8 +70,8 @@ Removed the definitions for led pin 4 and button pin 24
 #define BOARD_JTDO_PIN            8
 #define BOARD_NJTRST_PIN          9
 
-#define BOARD_USB_DISC_DEV        GPIOB // FIXME
-#define BOARD_USB_DISC_BIT        9  // FIXME
+#define BOARD_USB_DISC_DEV        GPIOA
+#define BOARD_USB_DISC_BIT        12
 
 enum {
     PA10, PA9, PB11, PB10, PA8, PA13, PA14, PA15,
