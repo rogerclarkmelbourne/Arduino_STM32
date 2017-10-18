@@ -15,7 +15,6 @@
 #define SECS_PER_YEAR (SECS_PER_WEEK * 52UL)
 #define SECS_YR_2000  (946684800UL) // the time at the start of y2k
 #define LEAP_YEAR(Y)  ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
-#define HALFTZ 0
 
 #if !defined(__time_t_defined) // avoid conflict with newlib or other posix libc
   #warning "Using private time_t definintion"
