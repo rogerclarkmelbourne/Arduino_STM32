@@ -76,7 +76,7 @@ class RTClock {
 	time_t TimeZone(time_t t, int TZ) { return ( t + (TZ * SECS_PER_HOUR)); } 
 	
 	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 45)  ->   UTC +09:45 TimeZone; 
-	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60); }    // HTZ = Hour offset, MTZ = Minute offset
+	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60)); }    // HTZ = Hour offset, MTZ = Minute offset
 	
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
