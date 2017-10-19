@@ -24,8 +24,8 @@
 #define __USB_OTG_REGS_H__
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_conf.h"
-
+#include <VCP/usbd_conf.h>
+#include <libmaple/libmaple_types.h>
 
 /** @addtogroup USB_OTG_DRIVER
   * @{

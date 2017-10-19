@@ -19,7 +19,7 @@ void setup_temperature_sensor() {
 //    temperature sensor from power down mode.  Do this first 'cause according to
 //    the Datasheet section 5.3.21 it takes from 4 to 10 uS to power up the sensor.
 
-  regs->CR2 |= ADC_CR2_TSEREFE;
+  regs->CR2 |= ADC_CR2_TSVREFE;
 
 // 2. Select a sample time of 17.1 μs
 // set channel 16 sample time to 239.5 cycles
@@ -38,7 +38,7 @@ void setup(void)
   pinMode(A_RANDOM_ANALOG_PIN, INPUT_ANALOG);
 
 // wait for serial monitor to be connected.
-  while (!(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())))
+  while (!Serial)
   {
     digitalWrite(33,!digitalRead(33));// Turn the LED from off to on, or on to off
     delay(100);         // fast blink
@@ -48,7 +48,7 @@ void setup(void)
   setup_temperature_sensor();
   
 // announce start up
-  if(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS()))
+  if(Serial)
     Serial.println("Temp mon startup");
 }
 
@@ -69,7 +69,7 @@ void loop(void)
   t2 = micros();
   vsense = adc_read(ADC1, 16);
   t3 = micros();
-  if(Serial.isConnected() && (Serial.getDTR() || Serial.getRTS())) {
+  if(Serial) {
     sprintf(buf,"%04x %08x  %04x %08x" , vsense, t3-t2, alogpin, t2-t1);
     Serial.println(buf);
   }

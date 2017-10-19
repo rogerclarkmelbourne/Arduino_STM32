@@ -39,11 +39,8 @@
 #ifndef _BOARDS_H_
 #define _BOARDS_H_
 
-#include "libmaple.h"
-#include "gpio.h"
-#include "timer.h"
-
-#include "wirish_types.h"
+#include <wirish_types.h>
+#include <stdbool.h>
 
 /* Set of all possible pin names; not all boards have all these (note
  * that we use the Dx convention since all of the Maple's pins are
@@ -55,9 +52,12 @@ enum {
     D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46,
     D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D61,
     D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76,
+#if 0 // not available on LQFP100 package
     D77, D78, D79, D80, D81, D82, D83, D84, D85, D86, D87, D88, D89, D90, D91,
     D92, D93, D94, D95, D96, D97, D98, D99, D100, D101, D102, D103, D104, D105,
-    D106, D107, D108, D109, D110, D111, };
+    D106, D107, D108, D109, D110, D111,
+#endif // not available on LQFP100 package
+};
 
 /**
  * @brief Maps each Maple pin to a corresponding stm32_pin_info.
@@ -115,31 +115,20 @@ extern void boardInit(void);
  * @return true if the given pin is in boardUsedPins, and false otherwise.
  * @see boardUsedPins
  */
-bool boardUsesPin(uint8 pin);
+extern bool boardUsesPin(uint8 pin);
 
 /* Include the appropriate private header from boards/: */
 
 /* FIXME HACK put boards/ before these paths once IDE uses make. */
 
-#ifdef BOARD_maple
-#include "maple.h"
-#elif defined(BOARD_maple_native)
-#include "maple_native.h"
-#elif defined(BOARD_maple_mini)
-#include "maple_mini.h"
-#elif defined(BOARD_maple_RET6)
-/*
- * **NOT** MAPLE REV6.  This the **Maple RET6 EDITION**, which is a
- * Maple with an STM32F103RET6 (...RET6) instead of an STM32F103RBT6
- * (...RBT6) on it.  Maple Rev6 (as of March 2011) DOES NOT EXIST.
- */
-#include "maple_RET6.h"
-#elif defined(BOARD_aeroquad32) || defined(BOARD_aeroquad32f1)
+#if defined(BOARD_aeroquad32) || defined(BOARD_aeroquad32f1)
 #include "aeroquad32.h"
 #elif defined(BOARD_aeroquad32mini)
 #include "aeroquad32mini.h"
 #elif defined(BOARD_discovery_f4)
 #include "discovery_f4.h"
+#elif defined(BOARD_generic_f407v)
+#include "generic_f407v.h"
 #elif defined(BOARD_freeflight)
 #include "freeflight.h"
 #else
@@ -159,5 +148,13 @@ bool boardUsesPin(uint8 pin);
 
 #define CLOCK_SPEED_MHZ                 CYCLES_PER_MICROSECOND
 #define CLOCK_SPEED_HZ                  (CLOCK_SPEED_MHZ * 1000000UL)
+
+#ifndef SYSTICK_RELOAD_VAL
+#define SYSTICK_RELOAD_VAL              (1000 * CYCLES_PER_MICROSECOND - 1)
+#endif
+
+#ifndef BOARD_BUTTON_PRESSED_LEVEL
+#define BOARD_BUTTON_PRESSED_LEVEL      HIGH
+#endif
 
 #endif

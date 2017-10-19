@@ -152,7 +152,7 @@ typedef struct dma_tube_reg_map {
 
 #define DMA_ISR_TEIF (1 << DMA_ISR_TEIF_BIT)
 #define DMA_ISR_HTIF (1 << DMA_ISR_HTIF_BIT)
-#define DMA_ISR_TCID (1 << DMA_ISR_TCIF_BIT)
+#define DMA_ISR_TCIF (1 << DMA_ISR_TCIF_BIT)
 #define DMA_ISR_GIF  (1 << DMA_ISR_GIF_BIT)
 
 #define DMA_ISR_TEIF7_BIT               27
@@ -559,7 +559,6 @@ typedef enum dma_mode_flags {
  *
  * (It's not possible to fully configure a DMA stream on F2 with just
  * this information, so this interface is too tied to the F1.) */
-__deprecated
 void dma_setup_transfer(dma_dev       *dev,
                         dma_channel    channel,
                         __io void     *peripheral_address,

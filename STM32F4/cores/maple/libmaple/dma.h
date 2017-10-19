@@ -30,9 +30,4 @@
  *  @brief Direct Memory Access peripheral support
  */
 
-#ifdef STM32F2
-#include "dmaF2.h"
-#include <libmaple/dma_common.h>
-#else
-#include "dmaF1.h"
-#endif
+#include "dmaF4.h"

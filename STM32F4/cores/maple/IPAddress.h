@@ -17,8 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef IPAddress_h
-#define IPAddress_h
+#ifndef _IPAddress_h_
+#define _IPAddress_h_
 
 #include <stdint.h>
 #include <WString.h>
@@ -45,6 +45,9 @@ public:
     IPAddress(uint8_t first_octet, uint8_t second_octet, uint8_t third_octet, uint8_t fourth_octet);
     IPAddress(uint32_t address);
     IPAddress(const uint8_t *address);
+
+    bool fromString(const char *address);
+    bool fromString(const String &address) { return fromString(address.c_str()); }
 
     // Overloaded cast operator to allow IPAddress objects to be used where a pointer
     // to a four-byte uint8_t array is expected

@@ -34,7 +34,7 @@
 #define _BOARD_MAPLE_H_
 
 /* 72 MHz -> 72 cycles per microsecond. */
-#define CYCLES_PER_MICROSECOND  72
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 
 /* Roger clark
 

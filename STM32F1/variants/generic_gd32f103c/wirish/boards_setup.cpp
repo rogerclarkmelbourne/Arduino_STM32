@@ -82,7 +82,7 @@ namespace wirish {
 			#elif F_CPU == 72000000
 			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);
 			#elif F_CPU == 48000000
-			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);			
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1);			
 			#endif	
         }
 

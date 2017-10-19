@@ -126,11 +126,11 @@ void dac_enable_channel(const dac_dev *dev, uint8 channel) {
      */
     switch (channel) {
     case 1:
-        gpio_set_mode(GPIOA, 4, GPIO_INPUT_ANALOG);
+        gpio_set_mode((uint8_t)PA4, GPIO_INPUT_ANALOG);
         dev->regs->CR |= DAC_CR_EN1;
         break;
     case 2:
-        gpio_set_mode(GPIOA, 5, GPIO_INPUT_ANALOG);
+        gpio_set_mode((uint8_t)PA5, GPIO_INPUT_ANALOG);
         dev->regs->CR |= DAC_CR_EN2;
         break;
     }

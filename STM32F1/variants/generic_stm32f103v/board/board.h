@@ -38,7 +38,7 @@
 /* A few of these values will seem strange given that it's a
  * high-density board. */
 
-#define CYCLES_PER_MICROSECOND  72
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 #define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 #define BOARD_BUTTON_PIN        PC0
@@ -108,6 +108,16 @@
  * the USB_DISC pin, and BOARD_USB_DISC_BIT is that pin's bit. */
 #define BOARD_USB_DISC_DEV      GPIOC
 #define BOARD_USB_DISC_BIT      12
+
+/*
+ * SDIO Pins
+ */
+#define BOARD_SDIO_D0 			PC8
+#define BOARD_SDIO_D1 			PC9
+#define BOARD_SDIO_D2 			PC10
+#define BOARD_SDIO_D3 			PC11
+#define BOARD_SDIO_CLK 			PC12
+#define BOARD_SDIO_CMD 			PD2
 
 /* Pin aliases: these give the GPIO port/bit for each pin as an
  * enum. These are optional, but recommended. They make it easier to

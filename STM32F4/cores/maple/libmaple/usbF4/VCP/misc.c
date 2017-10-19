@@ -80,7 +80,7 @@ typedef unsigned char		u8;
 typedef int IRQn_Type;
 #define __NVIC_PRIO_BITS          4
 #define __Vendor_SysTickConfig    1
-#include <core_cm4.h>
+#include "core_cm4.h"
 
 /** @addtogroup STM32F4xx_StdPeriph_Driver
   * @{
