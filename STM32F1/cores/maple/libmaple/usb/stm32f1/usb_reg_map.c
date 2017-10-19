@@ -29,7 +29,7 @@
 /* TODO these could use some improvement; they're fairly
  * straightforward ports of the analogous ST code.  The PMA blit
  * routines in particular are obvious targets for performance
- * measurement and tuning.
+ * measurement and tuning. */
 
 void usb_copy_to_pma(const uint8 *buf, uint16 len, uint16 pma_offset) {
     uint16 *dst = (uint16*)usb_pma_ptr(pma_offset);
@@ -57,7 +57,7 @@ void usb_copy_from_pma(uint8 *buf, uint16 len, uint16 pma_offset) {
         *dst = *src & 0xFF;
     }
 }
- */
+ 
 static void usb_set_ep_rx_count_common(uint32 *rxc, uint16 count) {
     uint16 nblocks;
     if (count > 62) {

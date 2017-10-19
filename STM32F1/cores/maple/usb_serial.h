@@ -89,8 +89,9 @@ protected:
     static bool _hasBegun;
 };
 
-#ifdef SERIAL_USB
+#ifdef USB_HARDWARE
     extern USBSerial Serial;
 #endif
 
+#endif
 #endif
