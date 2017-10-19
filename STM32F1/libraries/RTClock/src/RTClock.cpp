@@ -80,21 +80,6 @@
 	}
 */	
 
-	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 1)  means SAT +09:30 TimeZone; 
-    //         2.  localtime = TimeZone(UnixTime, -3, 1)  means NST,NFT -03:30 TimeZone;
-    //         3.  TimeZone(UnixTime, 8, 0)  same function as TimeZone(UnixTime, 8)  -> CCT +08:00
-    
-	time_t RTClock::TimeZone(time_t t, int TZ, bool HFZ)  {    // HFZ : Half-hour TimeZone flag
-	if(HFZ) {
-	if(TZ > 0 )
- 	return ( t + (TZ * SECS_PER_HOUR) + 1800); 
-	else
- 	return ( t + (TZ * SECS_PER_HOUR) - 1800); 
-	}
-	else
-	return ( t + (TZ * SECS_PER_HOUR));
-	}
-// 
 	
 	void RTClock::setTime (tm_t & tmm) {
 		time_t mktm = makeTime(tmm); // time will be make to mktm

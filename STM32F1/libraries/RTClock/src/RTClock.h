@@ -75,10 +75,8 @@ class RTClock {
 	// Usage: localtime = TimeZone(UnixTime, 8); 
 	time_t TimeZone(time_t t, int TZ) { return ( t + (TZ * SECS_PER_HOUR)); } 
 	
-	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 1)  means SAT +09:30 TimeZone; 
-    //         2.  localtime = TimeZone(UnixTime, -3, 1)  means NST,NFT -03:30 TimeZone;
-    //         3.  TimeZone(UnixTime, 8, 0)  same function as TimeZone(UnixTime, 8)  -> CCT +08:00
-	time_t TimeZone(time_t t, int TZ, bool HFZ);   // HFZ : Half-hour TimeZone flag
+	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 45)  ->   UTC +09:45 TimeZone; 
+	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60); }    // HTZ = Hour offset, MTZ = Minute offset
 	
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
