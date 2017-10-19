@@ -19,11 +19,13 @@
  
 #if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
 
+
 #ifndef _WIRISH_USB_HID_H_
 #define _WIRISH_USB_HID_H_
 
 #include <Print.h>
 #include <boards.h>
+#include <libmaple/usb_hid.h>
 
 class HIDDevice{
 private:
@@ -262,8 +264,12 @@ public:
 class HIDJoystick{
 private:
 	uint8_t joystick_Report[13] = {3,0,0,0,0,0x0F,0x20,0x80,0x00,0x02,0x08,0x20,0x80};
+    bool manualReport = false;
+	void safeSendReport(void);
 	void sendReport(void);
 public:
+	void sendManualReport(void);
+    void setManualReportMode(bool manualReport);
 	HIDJoystick(void);
 	void begin(void);
 	void end(void);
@@ -271,8 +277,8 @@ public:
 	void X(uint16_t val);
 	void Y(uint16_t val);
 	void position(uint16_t x, uint16_t y);
-	void Z(uint16_t val);
-	void Zrotate(uint16_t val);
+	void Xrotate(uint16_t val);
+	void Yrotate(uint16_t val);
 	void sliderLeft(uint16_t val);
 	void sliderRight(uint16_t val);
 	void slider(uint16_t val);

@@ -33,8 +33,7 @@
  * the result made cleaner.
  */
 
-#if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J)
- 
+#if defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J) 
  
 #include <libmaple/usb_hid.h>
 
@@ -187,8 +186,8 @@ const uint8_t hid_report_descriptor[] = {
 	0x95, 0x04,						//   Report Count (4)
 	0x09, 0x30,						//   Usage (X)
 	0x09, 0x31,						//   Usage (Y)
-	0x09, 0x32,						//   Usage (Z)
-	0x09, 0x35,						//   Usage (Rz)
+	0x09, 0x33,						//   Usage (Rx)
+	0x09, 0x34,						//   Usage (Ry)
 	0x81, 0x02,						//   Input (variable,absolute)
     0xC0,                           // End Collection
 	0x15, 0x00,						// Logical Minimum (0)
@@ -456,8 +455,10 @@ void usb_hid_enable(gpio_dev *disc_dev, uint8 disc_bit) {
     /* Present ourselves to the host. Writing 0 to "disc" pin must
      * pull USB_DP pin up while leaving USB_DM pulled down by the
      * transceiver. See USB 2.0 spec, section 7.1.7.3. */
-    gpio_set_mode(disc_dev, disc_bit, GPIO_OUTPUT_PP);
-    gpio_write_bit(disc_dev, disc_bit, 0);
+    if (disc_dev != NULL) {
+        gpio_set_mode(disc_dev, disc_bit, GPIO_OUTPUT_PP);
+        gpio_write_bit(disc_dev, disc_bit, 0);
+    }
 
     /* Initialize the USB peripheral. */
     usb_init_usblib(USBLIB, ep_int_in, ep_int_out);
@@ -467,7 +468,9 @@ void usb_hid_disable(gpio_dev *disc_dev, uint8 disc_bit) {
     /* Turn off the interrupt and signal disconnect (see e.g. USB 2.0
      * spec, section 7.1.7.3). */
     nvic_irq_disable(NVIC_USB_LP_CAN_RX0);
-    gpio_write_bit(disc_dev, disc_bit, 1);
+    if (disc_dev != NULL) {
+        gpio_write_bit(disc_dev, disc_bit, 1);
+    }
 }
 
 void usb_hid_putc(char ch) {

@@ -504,7 +504,6 @@ unsigned int USBMidi::getParam(unsigned int param)
 
 // Placeholders.  You should subclass the Midi base class and define these to have your
 //  version called.
-/*
 void USBMidi::handleNoteOff(unsigned int channel, unsigned int note, unsigned int velocity) {
     digitalWrite(33,0);
 }
@@ -527,7 +526,6 @@ void USBMidi::handleContinue(void) {}
 void USBMidi::handleStop(void) {}
 void USBMidi::handleActiveSense(void) {}
 void USBMidi::handleReset(void) {}
-  */
 
 
 #endif
