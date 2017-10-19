@@ -181,7 +181,7 @@ private:
 #endif
 };
 
-#ifdef SERIAL_USB 
+#ifdef USB_HARDWARE 
 	#if BOARD_HAVE_USART1
 	extern HardwareSerial Serial1;
 	#endif

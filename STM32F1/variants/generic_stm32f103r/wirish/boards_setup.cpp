@@ -36,6 +36,8 @@
 
 #include "boards_private.h"
 
+#include <usb_hid_device.h>
+#include <usb_midi.h>
 #include <libmaple/gpio.h>
 #include <libmaple/timer.h>
 
@@ -86,7 +88,7 @@ namespace wirish {
         }
 
         __weak void board_setup_usb(void) {
-#ifdef SERIAL_USB 
+
 			
 #ifdef GENERIC_BOOTLOADER			
 			//Reset the USB interface on generic boards - developed by Victor PV
@@ -97,8 +99,18 @@ namespace wirish {
 			gpio_set_mode(PIN_MAP[PA12].gpio_device, PIN_MAP[PA12].gpio_bit, GPIO_INPUT_FLOATING);
 #endif	
 
+#ifdef USB_HARDWARE 
+#ifdef USB_SERIAL
 			Serial.begin();// Roger Clark. Changed SerialUSB to Serial for Arduino sketch compatibility
 #endif
+#if  defined(USB_HARDWARE) && (defined(USB_HID_KMJ) || defined(USB_HID_KM) || defined(USB_HID_J))
+			HID.begin();
+#endif
+#ifdef USB_MIDI
+			MidiUSB.begin();
+#endif
+#endif
+
         }
 
         __weak void series_init(void) {
