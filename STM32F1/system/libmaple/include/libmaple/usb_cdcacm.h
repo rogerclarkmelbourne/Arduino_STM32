@@ -31,6 +31,8 @@
  * IMPORTANT: this API is unstable, and may change without notice.
  */
 
+#ifdef USB_SERIAL
+
 #ifndef _LIBMAPLE_USB_CDCACM_H_
 #define _LIBMAPLE_USB_CDCACM_H_
 
@@ -175,6 +177,8 @@ static inline __always_inline void usb_cdcacm_remove_hooks(unsigned hook_flags) 
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

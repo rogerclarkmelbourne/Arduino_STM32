@@ -70,8 +70,8 @@
 #define BOARD_JTDO_PIN            19
 #define BOARD_NJTRST_PIN          18
 
-#define BOARD_USB_DISC_DEV        NULL
-#define BOARD_USB_DISC_BIT        NULL
+#define BOARD_USB_DISC_DEV        GPIOA
+#define BOARD_USB_DISC_BIT        12
 
 // Note this needs to match with the PIN_MAP array in board.cpp
 enum {

@@ -69,6 +69,8 @@
 #include <HardwareSerial.h>
 #include <HardwareTimer.h>
 #include <usb_serial.h>
+#include <usb_hid_device.h>
+#include <usb_midi.h>
 #include <wirish_types.h>
 
 #include <libmaple/libmaple.h>

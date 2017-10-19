@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo
+echo YOU MAY NEED TO PRESS THE RESET BUTTON AT THIS POINT OR
+echo UNPLUG AND RE-PLUG YOUR BOARD.
+echo
+
 #set -e
 
 
