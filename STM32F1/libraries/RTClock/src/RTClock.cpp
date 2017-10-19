@@ -79,7 +79,6 @@
 	//to implement
 	}
 */	
-
 	
 	void RTClock::setTime (tm_t & tmm) {
 		time_t mktm = makeTime(tmm); // time will be make to mktm
