@@ -284,16 +284,16 @@ static const usb_descriptor_string usbMIDIDescriptor_LangID = {
 static const usb_descriptor_string usbMIDIDescriptor_iManufacturer = {
     .bLength = USB_DESCRIPTOR_STRING_LEN(8),
     .bDescriptorType = USB_DESCRIPTOR_TYPE_STRING,
-    .bString = {'D', 0, 'i', 0, 'r', 0, 'o', 0,
-                ' ', 0, ' ', 0, ' ', 0, ' ', 0},
+    .bString = {'M', 0, 'a', 0, 'p', 0, 'l', 0,
+                'e', 0, ' ', 0, ' ', 0, ' ', 0},
 };
 
 /* FIXME move to Wirish */
 static const usb_descriptor_string usbMIDIDescriptor_iProduct = {
     .bLength = USB_DESCRIPTOR_STRING_LEN(10),
     .bDescriptorType = USB_DESCRIPTOR_TYPE_STRING,
-  //  .bString = {'M', 0, 'a', 0, 'p', 0, 'l', 0, 'e', 0, ' ', 0, 'M', 0, 'I', 0, 'D', 0, 'I', 0},
-    .bString = {'D', 0, 'i', 0, 'r', 0, 'o', 0, ' ', 0, 'S', 0, 'y', 0, 'n', 0, 't', 0, 'h', 0},
+    .bString = {'M', 0, 'a', 0, 'p', 0, 'l', 0, 'e', 0, ' ', 0, 'M', 0, 'I', 0, 'D', 0, 'I', 0},
+  //  .bString = {'D', 0, 'i', 0, 'r', 0, 'o', 0, ' ', 0, 'S', 0, 'y', 0, 'n', 0, 't', 0, 'h', 0},
 };
 
 /* FIXME move to Wirish */
