@@ -67,8 +67,11 @@
     float STM32ADC::readTemp(){
         unsigned int result = 0;
         float temperature = 0.0;
-        result = adc_read(_dev, 16);
-        temperature = (float)((_V25-result)/_AverageSlope)+ 25.0; 
+        result = adc_read(_dev, 16); // raw ADC value
+        // ADC inputs are 0.0V to 3.6V
+        // ADC has 12 bit or resolution
+		float vsense = (3.6f/4096.0f) * (float)result; // Volts
+		temperature = (float)(((_V25 - vsense) * 1000.0) / _AverageSlope) + 25.0; // (((V25 - VSense) in mV)/ (AverageSlope in mV/degC)) + 25
         return temperature;
     }
 
