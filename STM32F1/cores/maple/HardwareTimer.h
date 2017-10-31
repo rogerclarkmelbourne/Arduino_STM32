@@ -252,6 +252,12 @@ public:
 	void disableDMA(int channel);
 	
     /**
+     * @brief Enable/disable DMA request for the input channel.
+     */
+	void enableDMA(int channel);
+	void disableDMA(int channel);
+
+    /**
      * @brief Get a pointer to the underlying libmaple timer_dev for
      *        this HardwareTimer instance.
      */
