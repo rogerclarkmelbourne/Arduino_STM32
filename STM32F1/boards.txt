@@ -467,14 +467,21 @@ genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
 #--USB
 genericSTM32F103C.menu.usb.serial=Serial
 genericSTM32F103C.menu.usb.serial.build.usbtype=USB_SERIAL
+genericSTM32F103C.menu.usb.serial.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103C.menu.usb.hid_kmj=Keyboard + Mouse + Joystick
 genericSTM32F103C.menu.usb.hid_kmj.build.usbtype=USB_HID_KMJ
+genericSTM32F103C.menu.usb.hid_kmj.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103C.menu.usb.hid_km=Keyboard + Mouse
 genericSTM32F103C.menu.usb.hid_km.build.usbtype=USB_HID_KM
+genericSTM32F103C.menu.usb.hid_km.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103C.menu.usb.hid_j=Joystick
 genericSTM32F103C.menu.usb.hid_j.build.usbtype=USB_HID_J
+genericSTM32F103C.menu.usb.hid_j.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103C.menu.usb.midi=MIDI
 genericSTM32F103C.menu.usb.midi.build.usbtype=USB_MIDI
+genericSTM32F103C.menu.usb.midi.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
+genericSTM32F103C.menu.usb.no_usb=No USB
+genericSTM32F103C.menu.usb.no_usb.build.usbtype=NO_USB
 ########################### Generic STM32F103R ###########################
 
 genericSTM32F103R.name=Generic STM32F103R series
@@ -589,14 +596,21 @@ genericSTM32F103R.menu.opt.ogstd.build.flags.ldspecs=
 #--USB
 genericSTM32F103R.menu.usb.serial=Serial
 genericSTM32F103R.menu.usb.serial.build.usbtype=USB_SERIAL
+genericSTM32F103R.menu.usb.serial.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103R.menu.usb.hid_kmj=Keyboard + Mouse + Joystick
 genericSTM32F103R.menu.usb.hid_kmj.build.usbtype=USB_HID_KMJ
+genericSTM32F103R.menu.usb.hid_kmj.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103R.menu.usb.hid_km=Keyboard + Mouse
 genericSTM32F103R.menu.usb.hid_km.build.usbtype=USB_HID_KM
+genericSTM32F103R.menu.usb.hid_km.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103R.menu.usb.hid_j=Joystick
 genericSTM32F103R.menu.usb.hid_j.build.usbtype=USB_HID_J
+genericSTM32F103R.menu.usb.hid_j.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103R.menu.usb.midi=MIDI
 genericSTM32F103R.menu.usb.midi.build.usbtype=USB_MIDI
+genericSTM32F103R.menu.usb.midi.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
+genericSTM32F103R.menu.usb.no_usb=No USB
+genericSTM32F103R.menu.usb.no_usb.build.usbtype=NO_USB
 
 ###################### Generic STM32F103T ########################################
 
@@ -796,14 +810,21 @@ genericSTM32F103V.menu.opt.ogstd.build.flags.ldspecs=
 #--USB
 genericSTM32F103V.menu.usb.serial=Serial
 genericSTM32F103V.menu.usb.serial.build.usbtype=USB_SERIAL
+genericSTM32F103V.menu.usb.serial.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103V.menu.usb.hid_kmj=Keyboard + Mouse + Joystick
 genericSTM32F103V.menu.usb.hid_kmj.build.usbtype=USB_HID_KMJ
+genericSTM32F103V.menu.usb.hid_kmj.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103V.menu.usb.hid_km=Keyboard + Mouse
 genericSTM32F103V.menu.usb.hid_km.build.usbtype=USB_HID_KM
+genericSTM32F103V.menu.usb.hid_km.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103V.menu.usb.hid_j=Joystick
 genericSTM32F103V.menu.usb.hid_j.build.usbtype=USB_HID_J
+genericSTM32F103V.menu.usb.hid_j.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103V.menu.usb.midi=MIDI
 genericSTM32F103V.menu.usb.midi.build.usbtype=USB_MIDI
+genericSTM32F103V.menu.usb.midi.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
+genericSTM32F103V.menu.usb.no_usb=No USB
+genericSTM32F103V.menu.usb.no_usb.build.usbtype=NO_USB
 
 ########################### Generic STM32F103Z ###########################
 
@@ -906,14 +927,21 @@ genericSTM32F103Z.menu.opt.ogstd.build.flags.ldspecs=
 #--USB
 genericSTM32F103Z.menu.usb.serial=Serial
 genericSTM32F103Z.menu.usb.serial.build.usbtype=USB_SERIAL
+genericSTM32F103Z.menu.usb.serial.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103Z.menu.usb.hid_kmj=Keyboard + Mouse + Joystick
 genericSTM32F103Z.menu.usb.hid_kmj.build.usbtype=USB_HID_KMJ
+genericSTM32F103Z.menu.usb.hid_kmj.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103Z.menu.usb.hid_km=Keyboard + Mouse
 genericSTM32F103Z.menu.usb.hid_km.build.usbtype=USB_HID_KM
+genericSTM32F103Z.menu.usb.hid_km.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103Z.menu.usb.hid_j=Joystick
 genericSTM32F103Z.menu.usb.hid_j.build.usbtype=USB_HID_J
+genericSTM32F103Z.menu.usb.hid_j.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
 genericSTM32F103Z.menu.usb.midi=MIDI
 genericSTM32F103Z.menu.usb.midi.build.usbtype=USB_MIDI
+genericSTM32F103Z.menu.usb.midi.build.extra_usb_flags=-DUSB_HARDWARE -DGENERIC_BOOTLOADER
+genericSTM32F103Z.menu.usb.no_usb=No USB
+genericSTM32F103Z.menu.usb.no_usb.build.usbtype=NO_USB
 
 ###################### HYTiny STM32F103T ########################################
 
