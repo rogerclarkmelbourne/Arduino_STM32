@@ -7,7 +7,7 @@
   This example code is in the public domain.
 */
 
-#define LED_PIN PB1  // Maple Mini LED is on PB1, other boards may vary
+#define LED_PIN PC13  // Maple Mini LED is on PB1, other boards may vary
 
 int n = 0;
 
