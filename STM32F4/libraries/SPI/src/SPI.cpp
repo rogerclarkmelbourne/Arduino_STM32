@@ -347,7 +347,7 @@ void SPIClass::write(uint16 data, uint32 n)
     while ( (regs->SR & SPI_SR_BSY) != 0); // wait until BSY=0 before returning 
 }
 
-void SPIClass::write(void *data, uint32 length)
+void SPIClass::write(const void *data, uint32 length)
 {
     spi_dev * spi_d = _currentSetting->spi_d;
     spi_tx(spi_d, (void*)data, length); // data can be array of bytes or words
@@ -388,7 +388,7 @@ uint16_t SPIClass::transfer16(uint16_t data) const
 *	On exit TX buffer is not modified, and RX buffer contains the received data.
 *	Still in progress.
 */
-uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length)
+uint8 SPIClass::dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length)
 {
 	if (length == 0) return 0;
 
@@ -422,7 +422,7 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 						_currentSetting->spiDmaChannel,
 						dma_bit_size,
 						&_currentSetting->spi_d->regs->DR,	// peripheral address
-						transmitBuf,						// memory bank 0 address
+						(volatile void*)transmitBuf,						// memory bank 0 address
 						NULL,								// memory bank 1 address
 						flags
 	);
@@ -457,7 +457,7 @@ uint8 SPIClass::dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length
 *	Still in progress.
 *	2016 - stevstrong - reworked to automatically detect bit size from SPI setting
 */
-uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc)
+uint8 SPIClass::dmaSend(const void * transmitBuf, uint16 length, bool minc)
 {
 	if (length == 0) return 0;
 	uint8 b = 0;
@@ -469,7 +469,7 @@ uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc)
 						_currentSetting->spiDmaChannel,
 						dma_bit_size,
 						&_currentSetting->spi_d->regs->DR,	// peripheral address
-						transmitBuf,						// memory bank 0 address
+						(volatile void*)transmitBuf,						// memory bank 0 address
 						NULL,								// memory bank 1 address
 						( (DMA_MINC_MODE*minc) | DMA_FROM_MEM ) //| DMA_TRNS_CMPLT ) // flags
 	);// Transmit buffer DMA 

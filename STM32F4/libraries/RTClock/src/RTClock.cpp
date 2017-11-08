@@ -281,7 +281,7 @@ void RTClock::setAlarmATime (tm_t * tm_ptr, bool hours_match, bool mins_match, b
 {
     uint32 t = 0;
     rtc_enter_config_mode();
-    unsigned int bits = ((tm_ptr->day / 10) << 28) | ((tm.day % 10) << 24) |
+    unsigned int bits = ((tm_ptr->day / 10) << 28) | ((tm_ptr->day % 10) << 24) |
 		        ((tm_ptr->hour / 10) << 20) | ((tm_ptr->hour % 10) << 16) | 
 			((tm_ptr->minute / 10) << 12) | ((tm_ptr->minute % 10) << 8) | 
 			((tm_ptr->second / 10) << 4) | (tm_ptr->second % 10);
