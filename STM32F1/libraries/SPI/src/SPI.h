@@ -278,7 +278,7 @@ public:
      * @param buffer Bytes/words to transmit.
      * @param length Number of bytes/words in buffer to transmit.
      */
-    void write(void * buffer, uint32 length);
+    void write(const void * buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
@@ -301,8 +301,8 @@ public:
      * @param receiveBuf buffer Bytes to save received data. 
      * @param length Number of bytes in buffer to transmit.
 	 */
-    uint8 dmaTransfer(void * transmitBuf, void * receiveBuf, uint16 length);
-    void dmaTransferSet(void *transmitBuf, void *receiveBuf);
+    uint8 dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length);
+    void dmaTransferSet(const void *transmitBuf, void *receiveBuf);
     uint8 dmaTransferRepeat(uint16 length);
 
 	/**
@@ -315,11 +315,11 @@ public:
      * @param length Number of bytes in buffer to transmit.
 	 * @param minc Set to use Memory Increment mode, clear to use Circular mode.
      */
-    uint8 dmaSend(void * transmitBuf, uint16 length, bool minc = 1);
-    void dmaSendSet(void * transmitBuf, bool minc);
+    uint8 dmaSend(const void * transmitBuf, uint16 length, bool minc = 1);
+    void dmaSendSet(const void * transmitBuf, bool minc);
     uint8 dmaSendRepeat(uint16 length);
 
-    uint8 dmaSendAsync(void * transmitBuf, uint16 length, bool minc = 1);
+    uint8 dmaSendAsync(const void * transmitBuf, uint16 length, bool minc = 1);
     /*
      * Pin accessors
      */
