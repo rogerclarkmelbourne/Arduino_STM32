@@ -30,8 +30,6 @@
  * @brief  generic_f407v board file.
  */
 
-#ifdef BOARD_generic_f407v
-
 #include "generic_f407v.h"
 
 #include "wirish_types.h"
@@ -78,4 +76,3 @@ static void initSRAMChip(void) {
     fsmc_nor_psram_set_datast(regs, 3);
 }
 */
-#endif
