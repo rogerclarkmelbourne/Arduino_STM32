@@ -52,7 +52,7 @@ class RTClock {
 	
 	time_t getTime();
 	void getTime(tm_t & tmm );
-		#define now getTime
+	#define now getTime
 
 	uint8_t year(void)    { getTime(tmm); return tmm.year; }
 	uint8_t month(void)   { getTime(tmm); return tmm.month; }
@@ -72,8 +72,12 @@ class RTClock {
 	uint8_t second(time_t t)  { breakTime(t, tmm); return tmm.second; }
 	uint8_t isPM(time_t t)    { return (hour(t)>=12); }
 	
-	time_t TimeZone(time_t t, int TZ)  { return ( t + (TZ * SECS_PER_HOUR)); }    // usage: localtime = TimeZone(UnixTime, 8); // Beijing timezone = 8  
+	// Usage: localtime = TimeZone(UnixTime, 8); 
+	time_t TimeZone(time_t t, int TZ) { return ( t + (TZ * SECS_PER_HOUR)); } 
 	
+	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 45)  ->   UTC +09:45 TimeZone; 
+	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60)); }    // HTZ = Hour offset, MTZ = Minute offset	
+
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
 	void removeAlarm();
