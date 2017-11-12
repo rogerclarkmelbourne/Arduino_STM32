@@ -30,8 +30,6 @@
  * @brief  discovery_f4 board file.
  */
 
-#ifdef BOARD_discovery_f4
-
 #include "discovery_f4.h"
 
 #include <libmaple/gpio.h>
@@ -62,7 +60,7 @@ void boardInit(void) {
 	//gpio_set_af_mode(GPIOA, 2, 7);
 	//gpio_set_af_mode(GPIOA, 3, 7);
 
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
     // PA8 Output the Master Clock MCO1
     gpio_set_af_mode(PA8, 0);
     // PB4 as alternate MISO Input
@@ -245,4 +243,3 @@ static void initSRAMChip(void) {
     fsmc_nor_psram_set_datast(regs, 3);
 }
 */
-#endif

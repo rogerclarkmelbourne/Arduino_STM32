@@ -24,8 +24,6 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#ifdef STM32F4
- 
 /**
  * @file rcc.c
  * @brief Implements pretty much only the basic clock setup on the
@@ -364,10 +362,12 @@ void SetupClock168MHz()
 	/******************************************************************************/
 	/************************* PLL Parameters *************************************/
 	/* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#if CRYSTAL_FREQ==25
 	int PLL_M = 25; // The NETDUINO has a 25MHz external oscillator
-#else
+#elif CRYSTAL_FREQ==8
 	int PLL_M = 8;
+#else
+	#error Crystal frequency not specified!
 #endif
 	int PLL_N = 336;
 
@@ -380,7 +380,7 @@ void SetupClock168MHz()
 
 	uint32 StartUpCounter = 0, HSEStatus = 0;
 
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
         InitMCO1();
 #endif
         
@@ -692,5 +692,3 @@ void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider) {
     RCC->CFGR = cfgr;
 #endif
 }
-
-#endif

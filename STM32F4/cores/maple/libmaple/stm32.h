@@ -138,8 +138,6 @@
 
 #endif
 
-
-#if defined( STM32F4 )
 	#define STM32_TICKS_PER_US          168
     #define STM32_NR_GPIO_PORTS          5
     #define STM32_DELAY_US_MULT         (STM32_TICKS_PER_US/3)
@@ -148,12 +146,5 @@
 
     #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
     #define DELAY_US_MULT               STM32_DELAY_US_MULT
-
-#else
-
-#error "No MCU type specified. Add something like -DMCU_STM32F103RB "   \
-       "to your compiler arguments (probably in a Makefile)."
-
-#endif
 
 #endif  /* _STM32_H_ */

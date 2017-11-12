@@ -124,7 +124,7 @@ void gpio_init_all(void) {
   #endif // not available on LQFP 100 package
 #endif
 
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
     // PA8 Output the Master Clock MCO1
     gpio_set_af_mode(PA8, 0);
     gpio_set_mode(PA8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
