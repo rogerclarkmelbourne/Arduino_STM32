@@ -127,7 +127,7 @@ extern bool boardUsesPin(uint8 pin);
 #include "aeroquad32mini.h"
 #elif defined(BOARD_discovery_f4)
 #include "discovery_f4.h"
-#elif defined(BOARD_generic_f407v)
+#elif defined(VARIANT_generic_f407v)
 #include "generic_f407v.h"
 #elif defined(BOARD_freeflight)
 #include "freeflight.h"
