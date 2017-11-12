@@ -25,8 +25,7 @@ discovery_f407.build.ldscript=ld/jtag.ld
 discovery_f407.build.variant=discovery_f407
 discovery_f407.build.variant_system_lib=lib_f407.a
 discovery_f407.build.density=STM32_HIGH_DENSITY
-discovery_f407.build.error_led_port=GPIOD
-discovery_f407.build.error_led_pin=14
+discovery_f407.build.error_led_pin=PD14
 discovery_f407.build.board=discovery_f4
 discovery_f407.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
