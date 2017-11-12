@@ -30,7 +30,7 @@ RTClock rtclock (RTCSEL_LSE); // initialise
 int timezone = 8;      // change to your timezone
 time_t tt;
 time_t tt1;
-tm_t mtt = { 47, 10, 8, 0, 0, 11, 25, 0 };    // init time 47+1970 = 2017  Unix epoch Time counted from 00:00:00 1 Jan 1970  
+tm_t mtt = { 47, 9, 13, 3, 11, 22, 30, 30 };    // init time 47+1970 = 2017  Unix epoch Time counted from 00:00:00 1 Jan 1970  
 char weekday1[][7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};  // 0,1,2,3,4,5,6
 uint8_t dateread[11];
 int globAlmCount = 0;
