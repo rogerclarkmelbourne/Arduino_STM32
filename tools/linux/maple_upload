@@ -42,7 +42,7 @@ fi
 echo -n Waiting for ${dummy_port_fullpath} serial...
 
 COUNTER=0
-while [ ! -c ${dummy_port_fullpath} ] && ((COUNTER++ < 40)); do
+while [ ! -r ${dummy_port_fullpath} ] && ((COUNTER++ < 40)); do
     sleep 0.1
 done
 
