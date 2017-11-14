@@ -292,7 +292,6 @@ nucleo_f103rb.build.core=maple
 nucleo_f103rb.build.ldscript=ld/jtag.ld
 nucleo_f103rb.build.variant=nucleo_f103rb
 nucleo_f103rb.build.variant_system_lib=libmaple.a
-nucleo_f103rb.build.vect=VECT_TAB_FLASH
 nucleo_f103rb.build.density=STM32_MEDIUM_DENSITY
 nucleo_f103rb.build.error_led_port=GPIOB
 nucleo_f103rb.build.error_led_pin=1
