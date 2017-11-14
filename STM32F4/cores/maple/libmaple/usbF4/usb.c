@@ -13,7 +13,8 @@
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
-
+extern uint8_t usb_isConnected(void);
+extern uint8_t usb_isConfigured(void);
 
 void setupUSB (void)
 {
@@ -42,6 +43,7 @@ extern uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len);
 extern void     VCP_SetUSBTxBlocking(uint8_t mode);
 extern uint32_t VCPBytesAvailable(void);
 extern uint8_t  VCPGetByte(void);
+extern uint8_t  VCPGetDTR(void);
 
 uint32_t usbSendBytes(const uint8_t* sendBuf, uint32_t len) {
 	VCP_DataTx((uint8_t*)sendBuf, len);
@@ -76,11 +78,15 @@ uint32_t usbReceiveBytes(uint8_t* recvBuf, uint32_t len) {
 }
 
 uint8 usbIsConfigured() {
-  return 1; //(bDeviceState == CONFIGURED);
+  return usb_isConfigured();
 }
 
 uint8 usbIsConnected() {
-  return 1; //(bDeviceState != UNCONNECTED);
+  return usb_isConnected();
+}
+
+uint8_t usbGetDTR(void) {
+  return VCPGetDTR();
 }
 
 RESULT usbPowerOn(void) {
