@@ -93,6 +93,8 @@ rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSI_DIV_2, &pll_data};
 
 //       0    1    3      4    2     5
 //       0    1    2      4    2     5
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Arduino-like header, right connectors */
@@ -149,6 +151,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
    // PMAP_ROW(&gpioa,  14,   NULL,  0, NULL, ADCx), /* D42/PA14  do not use*/
    // PMAP_ROW(&gpioa,  15,   &timer2,  1, NULL, ADCx), /* D43/PA15 do not use*/
 };
+#pragma GCC diagnostic pop
 
 // Array of pins you can use for pwmWrite(). Keep it in Flash because
 // it doesn't change, and so we don't waste RAM.

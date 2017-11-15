@@ -68,6 +68,8 @@ void boardInit(void) {
 // - Timer channel (1 to 4, for PWM), or 0 if none
 // - ADC device, or NULL if none
 // - ADC channel, or ADCx if none
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
@@ -126,6 +128,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     PMAP_ROW(&gpiob,   3,   NULL,  0, NULL, ADCx), /* D42/PB3  */
     PMAP_ROW(&gpiob,   4,   NULL,  0, NULL, ADCx), /* D43/PB4  */
 };
+#pragma GCC diagnostic pop
 
 // Array of pins you can use for pwmWrite(). Keep it in Flash because
 // it doesn't change, and so we don't waste RAM.

@@ -51,7 +51,8 @@ void boardInit(void) {
 }
 
 // Note. See the enum of pin names in board.h
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 
@@ -113,6 +114,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{&gpiod,   NULL, NULL, 1, 0, ADCx},  /* PD2 */
 	{&gpiod,   NULL, NULL, 2, 0, ADCx},  /* PD2 */
 };
+#pragma GCC diagnostic pop
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
     PA0, PA1, PA2, PA3, PA6, PA7, PA8, PA9, PA10, PB0, PB1, PB6, PB7, PB8, PB9

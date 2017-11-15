@@ -51,6 +51,8 @@ void boardInit(void) {
 #endif
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
 
@@ -84,6 +86,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     // FIXME: find out which pin is the button, if any
     {&gpiob,   NULL, NULL,  8, 0, ADCx}, /* D24/PB8??/Button */
 };
+#pragma GCC diagnostic pop
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
     0, 1, 4, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 23

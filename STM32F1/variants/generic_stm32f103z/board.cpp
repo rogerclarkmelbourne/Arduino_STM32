@@ -69,6 +69,8 @@ void boardInit(void) {
 // - ADC device, or NULL if none
 // - ADC channel, or ADCx if none
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 /*
     gpio_dev *gpio_device;      GPIO device 
@@ -201,6 +203,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	{&gpiog,   NULL, NULL,  14, 0, ADCx} , /* PG14  */
 	{&gpiog,   NULL, NULL,  15, 0, ADCx}  /* PG15  */		
 };
+#pragma GCC diagnostic pop
 
 /*  Basically everything that is defined as having a timer us PWM */
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
