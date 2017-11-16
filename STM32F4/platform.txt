@@ -45,7 +45,7 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 #compiler.libs.c.flags="-I{build.core.path}" "-I{build.core.path}/libmaple" "-I{build.core.path}/libmaple/usbF4" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Core/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Class/cdc/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_OTG_Driver/inc" "-I{build.core.path}/libmaple/usbF4/VCP" 
-compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.core.path}/libmaple" "-I{build.core.path}/libmaple/usbF4"
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.core.path}/libmaple/usbF4"
 
 
 
