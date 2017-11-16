@@ -50,51 +50,48 @@ void boardInit(void) {
 #endif
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 
     /* Top header */
 
-    {&gpiob,   NULL, NULL, 11, 0, ADCx}, /* D0/PB11 */
-    {&gpiob,   NULL, NULL, 10, 0, ADCx}, /* D1/PB10 */
-    {&gpiob,   NULL, NULL,  2, 0, ADCx}, /* D2/PB2 */
-    {&gpiob, &timer3, &adc1,  0, 3,    8}, /* D3/PB0 */
-    {&gpioa, &timer3, &adc1,  7, 2,    7}, /* D4/PA7 */
-    {&gpioa, &timer3, &adc1,  6, 1,    6}, /* D5/PA6 */
-    {&gpioa,   NULL, &adc1,  5, 0,    5}, /* D6/PA5 */
-    {&gpioa,   NULL, &adc1,  4, 0,    4}, /* D7/PA4 */
-    {&gpioa, &timer2, &adc1,  3, 4,    3}, /* D8/PA3 */
-    {&gpioa, &timer2, &adc1,  2, 3,    2}, /* D9/PA2 */
-    {&gpioa, &timer2, &adc1,  1, 2,    1}, /* D10/PA1 */
-    {&gpioa, &timer2, &adc1,  0, 1,    0}, /* D11/PA0 */
-    {&gpioc,   NULL, NULL, 15, 0, ADCx}, /* D12/PC15 */
-    {&gpioc,   NULL, NULL, 14, 0, ADCx}, /* D13/PC14 */
-    {&gpioc,   NULL, NULL, 13, 0, ADCx}, /* D14/PC13 */
+    {&gpiob,   NULL, NULL, 11, 0, ADCx, 0}, /* D0/PB11 */
+    {&gpiob,   NULL, NULL, 10, 0, ADCx, 0}, /* D1/PB10 */
+    {&gpiob,   NULL, NULL,  2, 0, ADCx, 0}, /* D2/PB2 */
+    {&gpiob, &timer3, &adc1,  0, 3,    8, 0}, /* D3/PB0 */
+    {&gpioa, &timer3, &adc1,  7, 2,    7, 0}, /* D4/PA7 */
+    {&gpioa, &timer3, &adc1,  6, 1,    6, 0}, /* D5/PA6 */
+    {&gpioa,   NULL, &adc1,  5, 0,    5, 0}, /* D6/PA5 */
+    {&gpioa,   NULL, &adc1,  4, 0,    4, 0}, /* D7/PA4 */
+    {&gpioa, &timer2, &adc1,  3, 4,    3, 0}, /* D8/PA3 */
+    {&gpioa, &timer2, &adc1,  2, 3,    2, 0}, /* D9/PA2 */
+    {&gpioa, &timer2, &adc1,  1, 2,    1, 0}, /* D10/PA1 */
+    {&gpioa, &timer2, &adc1,  0, 1,    0, 0}, /* D11/PA0 */
+    {&gpioc,   NULL, NULL, 15, 0, ADCx, 0}, /* D12/PC15 */
+    {&gpioc,   NULL, NULL, 14, 0, ADCx, 0}, /* D13/PC14 */
+    {&gpioc,   NULL, NULL, 13, 0, ADCx, 0}, /* D14/PC13 */
 
     /* Bottom header */
 
-    {&gpiob, &timer4, NULL,  7, 2, ADCx}, /* D15/PB7 */
-    {&gpiob, &timer4, NULL,  6, 1, ADCx}, /* D16/PB6 */
-    {&gpiob,   NULL, NULL,  5, 0, ADCx}, /* D17/PB5 */
-    {&gpiob,   NULL, NULL,  4, 0, ADCx}, /* D18/PB4 */
-    {&gpiob,   NULL, NULL,  3, 0, ADCx}, /* D19/PB3 */
-    {&gpioa,   NULL, NULL, 15, 0, ADCx}, /* D20/PA15 */
-    {&gpioa,   NULL, NULL, 14, 0, ADCx}, /* D21/PA14 */
-    {&gpioa,   NULL, NULL, 13, 0, ADCx}, /* D22/PA13 */
-    {&gpioa,   NULL, NULL, 12, 0, ADCx}, /* D23/PA12 */
-    {&gpioa, &timer1, NULL, 11, 4, ADCx}, /* D24/PA11 */
-    {&gpioa, &timer1, NULL, 10, 3, ADCx}, /* D25/PA10 */
-    {&gpioa, &timer1, NULL,  9, 2, ADCx}, /* D26/PA9 */
-    {&gpioa, &timer1, NULL,  8, 1, ADCx}, /* D27/PA8 */
-    {&gpiob,   NULL, NULL, 15, 0, ADCx}, /* D28/PB15 */
-    {&gpiob,   NULL, NULL, 14, 0, ADCx}, /* D29/PB14 */
-    {&gpiob,   NULL, NULL, 13, 0, ADCx}, /* D30/PB13 */
-    {&gpiob,   NULL, NULL, 12, 0, ADCx}, /* D31/PB12 */
-    {&gpiob, &timer4, NULL,  8, 3, ADCx}, /* D32/PB8 */
-    {&gpiob, &timer3, &adc1,  1, 4,    9}, /* D33/PB1 */
+    {&gpiob, &timer4, NULL,  7, 2, ADCx, 0}, /* D15/PB7 */
+    {&gpiob, &timer4, NULL,  6, 1, ADCx, 0}, /* D16/PB6 */
+    {&gpiob,   NULL, NULL,  5, 0, ADCx, 0}, /* D17/PB5 */
+    {&gpiob,   NULL, NULL,  4, 0, ADCx, 0}, /* D18/PB4 */
+    {&gpiob,   NULL, NULL,  3, 0, ADCx, 0}, /* D19/PB3 */
+    {&gpioa,   NULL, NULL, 15, 0, ADCx, 0}, /* D20/PA15 */
+    {&gpioa,   NULL, NULL, 14, 0, ADCx, 0}, /* D21/PA14 */
+    {&gpioa,   NULL, NULL, 13, 0, ADCx, 0}, /* D22/PA13 */
+    {&gpioa,   NULL, NULL, 12, 0, ADCx, 0}, /* D23/PA12 */
+    {&gpioa, &timer1, NULL, 11, 4, ADCx, 0}, /* D24/PA11 */
+    {&gpioa, &timer1, NULL, 10, 3, ADCx, 0}, /* D25/PA10 */
+    {&gpioa, &timer1, NULL,  9, 2, ADCx, 0}, /* D26/PA9 */
+    {&gpioa, &timer1, NULL,  8, 1, ADCx, 0}, /* D27/PA8 */
+    {&gpiob,   NULL, NULL, 15, 0, ADCx, 0}, /* D28/PB15 */
+    {&gpiob,   NULL, NULL, 14, 0, ADCx, 0}, /* D29/PB14 */
+    {&gpiob,   NULL, NULL, 13, 0, ADCx, 0}, /* D30/PB13 */
+    {&gpiob,   NULL, NULL, 12, 0, ADCx, 0}, /* D31/PB12 */
+    {&gpiob, &timer4, NULL,  8, 3, ADCx, 0}, /* D32/PB8 */
+    {&gpiob, &timer3, &adc1,  1, 4,    9, 0}, /* D33/PB1 */
 };
-#pragma GCC diagnostic pop
 
 extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
     3, 4, 5, 8, 9, 10, 11, 15, 16, 25, 26, 27

@@ -42,7 +42,7 @@
 
 /* Makes the PIN_MAP rows more human-readable. */
 #define PMAP_ROW(gpio_dev, gpio_bit, timer_dev, timer_ch, adc_dev, adc_ch) \
-    { gpio_dev, timer_dev, adc_dev, gpio_bit, timer_ch, adc_ch }
+    { gpio_dev, timer_dev, adc_dev, gpio_bit, timer_ch, adc_ch, 0}
 
 namespace wirish {
     namespace priv {
