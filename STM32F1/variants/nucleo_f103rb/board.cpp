@@ -145,9 +145,9 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     {&gpiob, NULL,   NULL,  14,  0, ADCx, 0}, /*  D43/PB14 */
     {&gpiob, NULL,   NULL,  13,  0, ADCx, 0}, /*  D44/PB13 */
     {&gpioc, NULL,   &adc1,   4,  0,   14, 0}, /*  D45/PC4 */
-  //  PMAP_ROW(&gpioa,  13,   NULL,  0, NULL, ADCx, 0), /* D41/PA13 do not use*/
-   // PMAP_ROW(&gpioa,  14,   NULL,  0, NULL, ADCx, 0), /* D42/PA14  do not use*/
-   // PMAP_ROW(&gpioa,  15,   &timer2,  1, NULL, ADCx, 0), /* D43/PA15 do not use*/
+  //  PMAP_ROW(&gpioa,  13,   NULL,  0, NULL, ADCx), /* D41/PA13 do not use*/
+   // PMAP_ROW(&gpioa,  14,   NULL,  0, NULL, ADCx), /* D42/PA14  do not use*/
+   // PMAP_ROW(&gpioa,  15,   &timer2,  1, NULL, ADCx), /* D43/PA15 do not use*/
 };
 
 // Array of pins you can use for pwmWrite(). Keep it in Flash because
