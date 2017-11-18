@@ -1,5 +1,6 @@
 #include <wiring_pulse.h>
 #include "boards.h"
+#include "variant.h"
 /* Measures the length (in microseconds) of a pulse on the pin; state is HIGH
  * or LOW, the type of pulse to measure.  Works on pulses from 2-3 microseconds
  * to 3 minutes in length, but must be called at least a few dozen microseconds
@@ -28,13 +29,13 @@
   */
 uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
 {
-   // cache the port and bit of the pin in order to speed up the
+   // cache the reg map and bit of the pin in order to speed up the
    // pulse width measuring loop and achieve finer resolution.  calling
    // digitalRead() instead yields much coarser resolution.
  
-	gpio_dev *dev=PIN_MAP[pin].gpio_device;
-	uint32_t bit = (1U << PIN_MAP[pin].gpio_bit);
-   
+   const gpio_reg_map * const regs = digitalPinToPort(pin)->regs;
+   const uint32_t bit = digitalPinToBitMask(pin);
+   const uint32_t stateMask = (state ? bit:0);
 
    uint32_t width = 0; // keep initialization out of time critical area
    
@@ -45,23 +46,23 @@ uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
    volatile uint32_t dummyWidth=0;
    
    // wait for any previous pulse to end
-   while ( (dev->regs->IDR & bit)  == bit)   {
+   while ((regs->IDR & bit) == stateMask)   {
       if (numloops++ == maxloops)  {
          return 0;
       }
-	   dummyWidth++;
+      dummyWidth++;
    }
    
    // wait for the pulse to start
-   while ((dev->regs->IDR & bit) != bit)   {
+   while ((regs->IDR & bit) != stateMask)   {
       if (numloops++ == maxloops) {
          return 0;
       }
-	  dummyWidth++;
+      dummyWidth++;
    }
    
    // wait for the pulse to stop
-   while ((dev->regs->IDR & bit) == bit) {
+   while ((regs->IDR & bit) == stateMask) {
       if (numloops++ == maxloops)  {
          return 0;
       }
