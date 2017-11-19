@@ -29,11 +29,11 @@
   */
 uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
 {
-   // cache the reg map and bit of the pin in order to speed up the
+   // cache the IDR address and bit of the pin in order to speed up the
    // pulse width measuring loop and achieve finer resolution.  calling
    // digitalRead() instead yields much coarser resolution.
  
-   const gpio_reg_map * const regs = digitalPinToPort(pin)->regs;
+   __io uint32_t * const idr = portInputRegister(digitalPinToPort(pin));
    const uint32_t bit = digitalPinToBitMask(pin);
    const uint32_t stateMask = (state ? bit:0);
 
@@ -46,7 +46,7 @@ uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
    volatile uint32_t dummyWidth=0;
    
    // wait for any previous pulse to end
-   while ((regs->IDR & bit) == stateMask)   {
+   while ((*idr & bit) == stateMask)   {
       if (numloops++ == maxloops)  {
          return 0;
       }
@@ -54,7 +54,7 @@ uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
    }
    
    // wait for the pulse to start
-   while ((regs->IDR & bit) != stateMask)   {
+   while ((*idr & bit) != stateMask)   {
       if (numloops++ == maxloops) {
          return 0;
       }
@@ -62,7 +62,7 @@ uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
    }
    
    // wait for the pulse to stop
-   while ((regs->IDR & bit) == stateMask) {
+   while ((*idr & bit) == stateMask) {
       if (numloops++ == maxloops)  {
          return 0;
       }
