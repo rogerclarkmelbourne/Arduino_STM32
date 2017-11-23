@@ -4,36 +4,6 @@
 #include <wirish.h>
 #include "flash_stm32.h"
 
-// HACK ALERT. This definition may not match your processor
-// To Do. Work out correct value for EEPROM_PAGE_SIZE on the STM32F103CT6 etc 
-#define MCU_STM32F103RB
-
-#ifndef EEPROM_PAGE_SIZE
-	#if defined (MCU_STM32F103RB)
-		#define EEPROM_PAGE_SIZE	(uint16)0x400  /* Page size = 1KByte */
-	#elif defined (MCU_STM32F103ZE) || defined (MCU_STM32F103RE) || defined (MCU_STM32F103RD)
-		#define EEPROM_PAGE_SIZE	(uint16)0x800  /* Page size = 2KByte */
-	#else
-		#error	"No MCU type specified. Add something like -DMCU_STM32F103RB to your compiler arguments (probably in a Makefile)."
-	#endif
-#endif
-
-#ifndef EEPROM_START_ADDRESS
-	#if defined (MCU_STM32F103RB)
-		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 128 * 1024 - 2 * EEPROM_PAGE_SIZE))
-	#elif defined (MCU_STM32F103ZE) || defined (MCU_STM32F103RE)
-		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 512 * 1024 - 2 * EEPROM_PAGE_SIZE))
-	#elif defined (MCU_STM32F103RD)
-		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 384 * 1024 - 2 * EEPROM_PAGE_SIZE))
-	#else
-		#error	"No MCU type specified. Add something like -DMCU_STM32F103RB to your compiler arguments (probably in a Makefile)."
-	#endif
-#endif
-
-/* Pages 0 and 1 base and end addresses */
-#define EEPROM_PAGE0_BASE		((uint32)(EEPROM_START_ADDRESS + 0x000))
-#define EEPROM_PAGE1_BASE		((uint32)(EEPROM_START_ADDRESS + EEPROM_PAGE_SIZE))
-
 /* Page status definitions */
 #define EEPROM_ERASED			((uint16)0xFFFF)	/* PAGE is empty */
 #define EEPROM_RECEIVE_DATA		((uint16)0xEEEE)	/* PAGE is marked to receive data */
