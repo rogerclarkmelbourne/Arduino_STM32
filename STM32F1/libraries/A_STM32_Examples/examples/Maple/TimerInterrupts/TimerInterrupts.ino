@@ -32,24 +32,24 @@ void setup()
     pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     // Setup LED Timer
-    Timer2.setChannel1Mode(TIMER_OUTPUTCOMPARE);
+    Timer2.setMode(TIMER_CH1, TIMER_OUTPUTCOMPARE);
     Timer2.setPeriod(LED_RATE); // in microseconds
-    Timer2.setCompare1(1);      // overflow might be small
-    Timer2.attachCompare1Interrupt(handler_led);
+    Timer2.setCompare(TIMER_CH1, 1);      // overflow might be small
+    Timer2.attachInterrupt(TIMER_CH1, handler_led);
 
     // Setup Counting Timers
-    Timer3.setChannel1Mode(TIMER_OUTPUTCOMPARE);
-    Timer4.setChannel1Mode(TIMER_OUTPUTCOMPARE);
+    Timer3.setMode(TIMER_CH1, TIMER_OUTPUTCOMPARE);
+    Timer4.setMode(TIMER_CH1, TIMER_OUTPUTCOMPARE);
     Timer3.pause();
     Timer4.pause();
     Timer3.setCount(0);
     Timer4.setCount(0);
     Timer3.setOverflow(30000);
     Timer4.setOverflow(30000);
-    Timer3.setCompare1(1000);   // somewhere in the middle
-    Timer4.setCompare1(1000);   
-    Timer3.attachCompare1Interrupt(handler1);
-    Timer4.attachCompare1Interrupt(handler2);
+    Timer3.setCompare(TIMER_CH1, 1000);   // somewhere in the middle
+    Timer4.setCompare(TIMER_CH1, 1000);   
+    Timer3.attachInterrupt(TIMER_CH1, handler1);
+    Timer4.attachInterrupt(TIMER_CH1, handler2);
     Timer3.resume();
     Timer4.resume();
 
