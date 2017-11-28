@@ -60,7 +60,7 @@ uint8_t tone_ntimer = TONE_TIMER;               // timer used to generate freque
 bool tone_state = true;             // last pin state for toggling
 short tone_pin = -1;                // pin for outputting sound
 short tone_freq = 444;              // tone frequency (0=pause)
-uint32_t tone_nhw = 0;              // tone duration in number of half waves
+volatile uint32_t tone_nhw = 0;              // tone duration in number of half waves
 uint16_t tone_tcount = 0;           // time between handler calls in 1/36 usec
 uint16_t tone_ncount = 0;           // handler call between toggling
 uint16_t tone_n = 0;                // remaining handler calls before toggling
@@ -146,12 +146,12 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
 
    tone_timer->pause();
 
-   if(freq > 0 && duration >0 ){
+   if(freq > 0){
       uint32_t count = (F_CPU/4)/freq;       // timer counts per half wave
       tone_ncount = tone_n = (count>>16)+1; // number of 16-bit count chunk
       tone_tcount = count/tone_ncount;      // size of count chunk
       if(duration > 0) // number of half waves to be generated
-         tone_nhw = ((duration*(freq>0?freq:100))/1000)<<1;
+         tone_nhw = ((duration*freq)/1000)<<1;
       else  // no duration specified, continuous sound until noTone() called
          tone_nhw = 0;
 
@@ -186,6 +186,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
       pinMode(tone_pin, INPUT);
 
    }
+   while(tone_nhw) ; // blocks till duration elapsed
 }
 
 ////////////////////////////////////////////////////////////////////////////////

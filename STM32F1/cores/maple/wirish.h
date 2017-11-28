@@ -106,5 +106,7 @@ typedef unsigned int word;
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
 #define microsecondsToClockCycles(a) ( (a) * (F_CPU / 1000000L) )
 
+#define digitalPinToInterrupt(pin) (pin)
+
 #endif
 

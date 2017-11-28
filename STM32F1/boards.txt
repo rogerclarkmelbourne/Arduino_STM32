@@ -57,13 +57,6 @@ mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-#-- CPU Clock frequency
-mapleMini.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
-mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
-
-mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
-mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
-
 mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
