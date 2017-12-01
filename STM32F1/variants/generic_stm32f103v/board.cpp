@@ -68,6 +68,7 @@ void boardInit(void) {
 // - Timer channel (1 to 4, for PWM), or 0 if none
 // - ADC device, or NULL if none
 // - ADC channel, or ADCx if none
+
 extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 /*
     gpio_dev *gpio_device;      GPIO device 
@@ -78,91 +79,91 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
     uint8 adc_channel;          Pin ADC channel, or ADCx if none. 
 */
 
-    {&gpioa, &timer2, &adc1,  0, 1,    0, 0}, /* PA0 */
-    {&gpioa, &timer2, &adc1,  1, 2,    1, 0}, /* PA1 */
-	{&gpioa, &timer2, &adc1,  2, 3,    2, 0}, /* PA2 */
-    {&gpioa, &timer2, &adc1,  3, 4,    3, 0}, /* PA3 */
-	{&gpioa,   NULL, &adc1,  4, 0,    4, 0}, /* PA4 */
-    {&gpioa,   NULL, &adc1,  5, 0,    5, 0}, /* PA5 */
-    {&gpioa, &timer3, &adc1,  6, 1,    6, 0}, /* PA6 */
-    {&gpioa, &timer3, &adc1,  7, 2,    7, 0}, /* PA7 */
-    {&gpioa, &timer1, NULL,  8, 1, ADCx, 0}, /* PA8 */
-    {&gpioa, &timer1, NULL,  9, 2, ADCx, 0}, /* PA9 */
-    {&gpioa, &timer1, NULL, 10, 3, ADCx, 0}, /* PA10 */
-    {&gpioa,   NULL, NULL, 11, 0, ADCx, 0}, /* PA11 */ //Could have &timer1_CH4, but is also CAN_RX and USBDM
-    {&gpioa,   NULL, NULL, 12, 0, ADCx, 0}, /* PA12 */ //Could have &timer1_ETR, but is also CAN_TX and USBDP
-    {&gpioa,   NULL, NULL, 13, 0, ADCx, 0}, /* PA13 */
-    {&gpioa,   NULL, NULL, 14, 0, ADCx, 0}, /* PA14 */
-    {&gpioa,   NULL, NULL, 15, 0, ADCx, 0}, /* PA15 */ //SPI3_NSS
+    {&gpioa, &timer2, &adc1,  0, 1,    0}, /* PA0 */
+    {&gpioa, &timer2, &adc1,  1, 2,    1}, /* PA1 */
+	{&gpioa, &timer2, &adc1,  2, 3,    2}, /* PA2 */
+    {&gpioa, &timer2, &adc1,  3, 4,    3}, /* PA3 */
+	{&gpioa,   NULL, &adc1,  4, 0,    4}, /* PA4 */	
+    {&gpioa,   NULL, &adc1,  5, 0,    5}, /* PA5 */
+    {&gpioa, &timer3, &adc1,  6, 1,    6}, /* PA6 */
+    {&gpioa, &timer3, &adc1,  7, 2,    7}, /* PA7 */
+    {&gpioa, &timer1, NULL,  8, 1, ADCx}, /* PA8 */
+    {&gpioa, &timer1, NULL,  9, 2, ADCx}, /* PA9 */
+    {&gpioa, &timer1, NULL, 10, 3, ADCx}, /* PA10 */
+    {&gpioa,   NULL, NULL, 11, 0, ADCx}, /* PA11 */ //Could have &timer1_CH4, but is also CAN_RX and USBDM 
+    {&gpioa,   NULL, NULL, 12, 0, ADCx}, /* PA12 */ //Could have &timer1_ETR, but is also CAN_TX and USBDP
+    {&gpioa,   NULL, NULL, 13, 0, ADCx}, /* PA13 */
+    {&gpioa,   NULL, NULL, 14, 0, ADCx}, /* PA14 */
+    {&gpioa,   NULL, NULL, 15, 0, ADCx}, /* PA15 */ //SPI3_NSS 
 	
-	{&gpiob, &timer3, &adc1,  0, 3,    8, 0}, /* PB0 */
-	{&gpiob, &timer3, &adc1,  1, 4,    9, 0}, /* PB1 */
+	{&gpiob, &timer3, &adc1,  0, 3,    8}, /* PB0 */ 
+	{&gpiob, &timer3, &adc1,  1, 4,    9}, /* PB1 */
 	/* NOTE PB2 is not included as its Boot 1 */
-	{&gpiob,   NULL, NULL,  3, 0, ADCx, 0}, /* PB3  */ //JTDO, SPI3_SCK / I2S3_CK/
-    {&gpiob,   NULL, NULL,  4, 0, ADCx, 0}, /* PB4  */ //NJTRST, SPI3_MISO
-    {&gpiob,   NULL, NULL,  5, 0, ADCx, 0}, /* PB5 */ //I2C1_SMBA/ SPI3_MOSI
-    {&gpiob, &timer4, NULL,  6, 1, ADCx, 0}, /* PB6 */ //I2C1_SCL(9)
-    {&gpiob, &timer4, NULL,  7, 2, ADCx, 0}, /* PB7 */ //I2C1_SDA(9) / FSMC_NADV
-    {&gpiob, &timer4, NULL,  8, 3, ADCx, 0}, /* PB8 */ //SDIO_D4
-	{&gpiob, &timer4, NULL,  9, 4, ADCx, 0}, /* PB9 */ //SDIO_D5
-    {&gpiob,   NULL, NULL, 10, 0, ADCx, 0}, /* PB10 */ //I2C2_SCL/USART3_TX
-    {&gpiob,   NULL, NULL, 11, 0, ADCx, 0}, /* PB11 */ //I2C2_SDA/USART3_RX
-    {&gpiob,   NULL, NULL, 12, 0, ADCx, 0}, /* PB12 */ //SPI2_NSS/I2S2_WS/I2C2_SMBA/USART3_CK
-    {&gpiob,   NULL, NULL, 13, 0, ADCx, 0}, /* PB13 */ //SPI2_SCK/I2S2_CK/USART3_CTS
-    {&gpiob,   NULL, NULL, 14, 0, ADCx, 0}, /* PB14 */ //SPI2_MISO/TIM1_CH2N/USART3_RTS
-    {&gpiob,   NULL, NULL, 15, 0, ADCx, 0}, /* PB15 */ //SPI2_MOSI/I2S2_SD
+	{&gpiob,   NULL, NULL,  3, 0, ADCx}, /* PB3  */ //JTDO, SPI3_SCK / I2S3_CK/
+    {&gpiob,   NULL, NULL,  4, 0, ADCx}, /* PB4  */ //NJTRST, SPI3_MISO
+    {&gpiob,   NULL, NULL,  5, 0, ADCx}, /* PB5 */ //I2C1_SMBA/ SPI3_MOSI
+    {&gpiob, &timer4, NULL,  6, 1, ADCx}, /* PB6 */ //I2C1_SCL(9)
+    {&gpiob, &timer4, NULL,  7, 2, ADCx}, /* PB7 */ //I2C1_SDA(9) / FSMC_NADV
+    {&gpiob, &timer4, NULL,  8, 3, ADCx}, /* PB8 */ //SDIO_D4
+	{&gpiob, &timer4, NULL,  9, 4, ADCx}, /* PB9 */ //SDIO_D5
+    {&gpiob,   NULL, NULL, 10, 0, ADCx}, /* PB10 */ //I2C2_SCL/USART3_TX
+    {&gpiob,   NULL, NULL, 11, 0, ADCx}, /* PB11 */ //I2C2_SDA/USART3_RX
+    {&gpiob,   NULL, NULL, 12, 0, ADCx}, /* PB12 */ //SPI2_NSS/I2S2_WS/I2C2_SMBA/USART3_CK
+    {&gpiob,   NULL, NULL, 13, 0, ADCx}, /* PB13 */ //SPI2_SCK/I2S2_CK/USART3_CTS
+    {&gpiob,   NULL, NULL, 14, 0, ADCx}, /* PB14 */ //SPI2_MISO/TIM1_CH2N/USART3_RTS
+    {&gpiob,   NULL, NULL, 15, 0, ADCx}, /* PB15 */ //SPI2_MOSI/I2S2_SD
 
 
-    {&gpioc,   NULL, &adc1,  0, 0,   10, 0}, /* PC0 */
-    {&gpioc,   NULL, &adc1,  1, 0,   11, 0}, /* PC1 */
-    {&gpioc,   NULL, &adc1,  2, 0,   12, 0}, /* PC2 */
-    {&gpioc,   NULL, &adc1,  3, 0,   13, 0}, /* PC3 */
-    {&gpioc,   NULL, &adc1,  4, 0,   14, 0}, /* PC4 */
-    {&gpioc,   NULL, &adc1,  5, 0,   15, 0}, /* PC5 */
-    {&gpioc, &timer8, NULL,  6, 1, ADCx, 0}, /* PC6 I2S2_MCK/SDIO_D6*/
-	{&gpioc, &timer8, NULL,  7, 2, ADCx, 0}, /* PC7 I2S3_MCK/SDIO_D7*/
-    {&gpioc, &timer8, NULL,  8, 3, ADCx, 0}, /* PC8 SDIO_D0*/
-    {&gpioc, &timer8, NULL,  9, 4, ADCx, 0}, /* PC9 SDIO_D1*/
-    {&gpioc,   NULL, NULL, 10, 0, ADCx, 0}, /* PC10 UART4_TX/SDIO_D2 */
-    {&gpioc,   NULL, NULL, 11, 0, ADCx, 0}, /* PC11 UART4_RX/SDIO_D3 */
-    {&gpioc,   NULL, NULL, 12, 0, ADCx, 0}, /* PC12 UART5_TX/SDIO_CK */
-    {&gpioc,   NULL, NULL, 13, 0, ADCx, 0}, /* PC13 TAMPER-RTC/ Limited output*/
-    {&gpioc,   NULL, NULL, 14, 0, ADCx, 0}, /* PC14 OSC32_IN/ Limited output*/
-    {&gpioc,   NULL, NULL, 15, 0, ADCx, 0}, /* PC15 OSC32_OUT/ Limited output*/
+    {&gpioc,   NULL, &adc1,  0, 0,   10}, /* PC0 */
+    {&gpioc,   NULL, &adc1,  1, 0,   11}, /* PC1 */
+    {&gpioc,   NULL, &adc1,  2, 0,   12}, /* PC2 */
+    {&gpioc,   NULL, &adc1,  3, 0,   13}, /* PC3 */
+    {&gpioc,   NULL, &adc1,  4, 0,   14}, /* PC4 */
+    {&gpioc,   NULL, &adc1,  5, 0,   15}, /* PC5 */
+    {&gpioc, &timer8, NULL,  6, 1, ADCx}, /* PC6 I2S2_MCK/SDIO_D6*/	
+	{&gpioc, &timer8, NULL,  7, 2, ADCx}, /* PC7 I2S3_MCK/SDIO_D7*/
+    {&gpioc, &timer8, NULL,  8, 3, ADCx}, /* PC8 SDIO_D0*/
+    {&gpioc, &timer8, NULL,  9, 4, ADCx}, /* PC9 SDIO_D1*/
+    {&gpioc,   NULL, NULL, 10, 0, ADCx}, /* PC10 UART4_TX/SDIO_D2 */
+    {&gpioc,   NULL, NULL, 11, 0, ADCx}, /* PC11 UART4_RX/SDIO_D3 */
+    {&gpioc,   NULL, NULL, 12, 0, ADCx}, /* PC12 UART5_TX/SDIO_CK */	
+    {&gpioc,   NULL, NULL, 13, 0, ADCx}, /* PC13 TAMPER-RTC/ Limited output*/
+    {&gpioc,   NULL, NULL, 14, 0, ADCx}, /* PC14 OSC32_IN/ Limited output*/
+    {&gpioc,   NULL, NULL, 15, 0, ADCx}, /* PC15 OSC32_OUT/ Limited output*/
 
-	{&gpiod,   NULL, NULL,   0, 0, ADCx, 0} , /* PD0 OSC_IN */
-	{&gpiod,   NULL, NULL,   1, 0, ADCx, 0} , /* PD1  OSC_OUT */
-	{&gpiod,   NULL, NULL,   2, 0, ADCx, 0} , /* PD2  TIM3_ETR/UART5_RX SDIO_CMD */
-	{&gpiod,   NULL, NULL,   3, 0, ADCx, 0} , /* PD3  FSMC_CLK */
-	{&gpiod,   NULL, NULL,   4, 0, ADCx, 0} , /* PD4  FSMC_NOE */
-	{&gpiod,   NULL, NULL,   5, 0, ADCx, 0} , /* PD5  FSMC_NWE */
-	{&gpiod,   NULL, NULL,   6, 0, ADCx, 0} , /* PD6  FSMC_NWAIT */
-	{&gpiod,   NULL, NULL,   7, 0, ADCx, 0} , /* PD7  FSMC_NE1/FSMC_NCE2 */
-	{&gpiod,   NULL, NULL,   8, 0, ADCx, 0} , /* PD8  FSMC_D13 */
-	{&gpiod,   NULL, NULL,   9, 0, ADCx, 0} , /* PD9  FSMC_D14 */
-	{&gpiod,   NULL, NULL,  10, 0, ADCx, 0} , /* PD10  FSMC_D15 */
-	{&gpiod,   NULL, NULL,  11, 0, ADCx, 0} , /* PD11  FSMC_A16 */
-	{&gpiod,   NULL, NULL,  12, 0, ADCx, 0} , /* PD12  FSMC_A17 */
-	{&gpiod,   NULL, NULL,  13, 0, ADCx, 0} , /* PD13  FSMC_A18 */	
-	{&gpiod,   NULL, NULL,  14, 0, ADCx, 0} , /* PD14  FSMC_D0 */
-	{&gpiod,   NULL, NULL,  15, 0, ADCx, 0} , /* PD15  FSMC_D1 */
+	{&gpiod,   NULL, NULL,   0, 0, ADCx} , /* PD0 OSC_IN */
+	{&gpiod,   NULL, NULL,   1, 0, ADCx} , /* PD1  OSC_OUT */
+	{&gpiod,   NULL, NULL,   2, 0, ADCx} , /* PD2  TIM3_ETR/UART5_RX SDIO_CMD */
+	{&gpiod,   NULL, NULL,   3, 0, ADCx} , /* PD3  FSMC_CLK */
+	{&gpiod,   NULL, NULL,   4, 0, ADCx} , /* PD4  FSMC_NOE */
+	{&gpiod,   NULL, NULL,   5, 0, ADCx} , /* PD5  FSMC_NWE */
+	{&gpiod,   NULL, NULL,   6, 0, ADCx} , /* PD6  FSMC_NWAIT */
+	{&gpiod,   NULL, NULL,   7, 0, ADCx} , /* PD7  FSMC_NE1/FSMC_NCE2 */
+	{&gpiod,   NULL, NULL,   8, 0, ADCx} , /* PD8  FSMC_D13 */
+	{&gpiod,   NULL, NULL,   9, 0, ADCx} , /* PD9  FSMC_D14 */
+	{&gpiod,   NULL, NULL,  10, 0, ADCx} , /* PD10  FSMC_D15 */
+	{&gpiod,   NULL, NULL,  11, 0, ADCx} , /* PD11  FSMC_A16 */
+	{&gpiod,   NULL, NULL,  12, 0, ADCx} , /* PD12  FSMC_A17 */
+	{&gpiod,   NULL, NULL,  13, 0, ADCx} , /* PD13  FSMC_A18 */	
+	{&gpiod,   NULL, NULL,  14, 0, ADCx} , /* PD14  FSMC_D0 */
+	{&gpiod,   NULL, NULL,  15, 0, ADCx} , /* PD15  FSMC_D1 */
 	
-	{&gpioe,   NULL, NULL,   0, 0, ADCx, 0} , /* PE0  TIM4_ETR / FSMC_NBL0 */
-	{&gpioe,   NULL, NULL,   1, 0, ADCx, 0} , /* PE1  FSMC_NBL1 */
-	{&gpioe,   NULL, NULL,   2, 0, ADCx, 0} , /* PE2  TRACECK/ FSMC_A23 */
-	{&gpioe,   NULL, NULL,   3, 0, ADCx, 0} , /* PE3  TRACED0/FSMC_A19 */
-	{&gpioe,   NULL, NULL,   4, 0, ADCx, 0} , /* PE4  TRACED1/FSMC_A20 */
-	{&gpioe,   NULL, NULL,   5, 0, ADCx, 0} , /* PE5  TRACED2/FSMC_A21 */
-	{&gpioe,   NULL, NULL,   6, 0, ADCx, 0} , /* PE6  TRACED3/FSMC_A22 */
-	{&gpioe,   NULL, NULL,   7, 0, ADCx, 0} , /* PE7  FSMC_D4 */
-	{&gpioe,   NULL, NULL,   8, 0, ADCx, 0} , /* PE8  FSMC_D5 */
-	{&gpioe,   NULL, NULL,   9, 0, ADCx, 0} , /* PE9  FSMC_D6 */
-	{&gpioe,   NULL, NULL,  10, 0, ADCx, 0} , /* PE10 FSMC_D7 */
-	{&gpioe,   NULL, NULL,  11, 0, ADCx, 0} , /* PE11 FSMC_D8 */
-	{&gpioe,   NULL, NULL,  12, 0, ADCx, 0} , /* PE12 FSMC_D9 */
-	{&gpioe,   NULL, NULL,  13, 0, ADCx, 0} , /* PE13 FSMC_D10 */	
-	{&gpioe,   NULL, NULL,  14, 0, ADCx, 0} , /* PE14 FSMC_D11 */
-	{&gpioe,   NULL, NULL,  15, 0, ADCx, 0} , /* PE15 FSMC_D12 */	
+	{&gpioe,   NULL, NULL,   0, 0, ADCx} , /* PE0  TIM4_ETR / FSMC_NBL0 */
+	{&gpioe,   NULL, NULL,   1, 0, ADCx} , /* PE1  FSMC_NBL1 */
+	{&gpioe,   NULL, NULL,   2, 0, ADCx} , /* PE2  TRACECK/ FSMC_A23 */
+	{&gpioe,   NULL, NULL,   3, 0, ADCx} , /* PE3  TRACED0/FSMC_A19 */
+	{&gpioe,   NULL, NULL,   4, 0, ADCx} , /* PE4  TRACED1/FSMC_A20 */
+	{&gpioe,   NULL, NULL,   5, 0, ADCx} , /* PE5  TRACED2/FSMC_A21 */
+	{&gpioe,   NULL, NULL,   6, 0, ADCx} , /* PE6  TRACED3/FSMC_A22 */
+	{&gpioe,   NULL, NULL,   7, 0, ADCx} , /* PE7  FSMC_D4 */
+	{&gpioe,   NULL, NULL,   8, 0, ADCx} , /* PE8  FSMC_D5 */
+	{&gpioe,   NULL, NULL,   9, 0, ADCx} , /* PE9  FSMC_D6 */
+	{&gpioe,   NULL, NULL,  10, 0, ADCx} , /* PE10 FSMC_D7 */
+	{&gpioe,   NULL, NULL,  11, 0, ADCx} , /* PE11 FSMC_D8 */
+	{&gpioe,   NULL, NULL,  12, 0, ADCx} , /* PE12 FSMC_D9 */
+	{&gpioe,   NULL, NULL,  13, 0, ADCx} , /* PE13 FSMC_D10 */	
+	{&gpioe,   NULL, NULL,  14, 0, ADCx} , /* PE14 FSMC_D11 */
+	{&gpioe,   NULL, NULL,  15, 0, ADCx} , /* PE15 FSMC_D12 */	
 	
 };
 
