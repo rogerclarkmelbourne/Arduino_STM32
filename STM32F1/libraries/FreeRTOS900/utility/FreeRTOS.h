@@ -948,6 +948,9 @@ typedef struct xSTATIC_TCB
 	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 		uint8_t			uxDummy20;
 	#endif
+	#if( INCLUDE_xTaskAbortDelay == 1 )
+		uint8_t ucDummy21;
+	#endif
 
 } StaticTask_t;
 
