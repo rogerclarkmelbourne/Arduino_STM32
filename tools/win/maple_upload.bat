@@ -1,4 +1,7 @@
 @echo off
+echo.
+echo YOU MAY NEED TO PRESS THE RESET BUTTON AT THIS POINT OR UNPLUG AND RE-PLUG YOUR BOARD.
+echo.
 rem: Note %~dp0 get path of this batch file
 rem: Need to change drive if My Documents is on a drive other than C:
 set driverLetter=%~dp0

@@ -33,6 +33,8 @@
  * the result made cleaner.
  */
 
+#ifdef USB_SERIAL
+
 #include <libmaple/usb_cdcacm.h>
 
 #include <libmaple/usb.h>
@@ -238,18 +240,18 @@ static const usb_descriptor_string usbVcomDescriptor_iProduct = {
     .bString = {'M', 0, 'a', 0, 'p', 0, 'l', 0, 'e', 0},
 };
 
-static ONE_DESCRIPTOR Device_Descriptor = {
+static ONE_DESCRIPTOR usbCDCACMDevice_Descriptor = {
     (uint8*)&usbVcomDescriptor_Device,
     sizeof(usb_descriptor_device)
 };
 
-static ONE_DESCRIPTOR Config_Descriptor = {
+static ONE_DESCRIPTOR usbCDCACMConfig_Descriptor = {
     (uint8*)&usbVcomDescriptor_Config,
     sizeof(usb_descriptor_config)
 };
 
 #define N_STRING_DESCRIPTORS 3
-static ONE_DESCRIPTOR String_Descriptor[N_STRING_DESCRIPTORS] = {
+static ONE_DESCRIPTOR usbCDCACMString_Descriptor[N_STRING_DESCRIPTORS] = {
     {(uint8*)&usbVcomDescriptor_LangID,       USB_DESCRIPTOR_STRING_LEN(1)},
     {(uint8*)&usbVcomDescriptor_iManufacturer,USB_DESCRIPTOR_STRING_LEN(8)},
     {(uint8*)&usbVcomDescriptor_iProduct,     USB_DESCRIPTOR_STRING_LEN(5)}
@@ -782,11 +784,11 @@ static RESULT usbGetInterfaceSetting(uint8 interface, uint8 alt_setting) {
 }
 
 static uint8* usbGetDeviceDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Device_Descriptor);
+    return Standard_GetDescriptorData(length, &usbCDCACMDevice_Descriptor);
 }
 
 static uint8* usbGetConfigDescriptor(uint16 length) {
-    return Standard_GetDescriptorData(length, &Config_Descriptor);
+    return Standard_GetDescriptorData(length, &usbCDCACMConfig_Descriptor);
 }
 
 static uint8* usbGetStringDescriptor(uint16 length) {
@@ -795,7 +797,7 @@ static uint8* usbGetStringDescriptor(uint16 length) {
     if (wValue0 > N_STRING_DESCRIPTORS) {
         return NULL;
     }
-    return Standard_GetDescriptorData(length, &String_Descriptor[wValue0]);
+    return Standard_GetDescriptorData(length, &usbCDCACMString_Descriptor[wValue0]);
 }
 
 static void usbSetConfiguration(void) {
@@ -807,3 +809,5 @@ static void usbSetConfiguration(void) {
 static void usbSetDeviceAddress(void) {
     USBLIB->state = USB_ADDRESSED;
 }
+
+#endif
