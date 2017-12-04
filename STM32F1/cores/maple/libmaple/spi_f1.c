@@ -54,7 +54,7 @@ spi_dev *SPI3 = &spi3;
  * Routines
  */
 
-void spi_config_gpios(spi_dev *ignored,
+void spi_config_gpios(spi_dev *ignored __attribute__((unused)),
                       uint8 as_master,
                       gpio_dev *nss_dev,
                       uint8 nss_bit,
