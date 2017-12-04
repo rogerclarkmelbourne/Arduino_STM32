@@ -99,14 +99,11 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
 
  public:
 
-  Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _RST,
-                       int8_t _MOSI, int8_t _SCLK, int8_t _MISO = -1);
   Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _RST = -1);
 
-  void     begin(SPIClass & spi);
+  void     begin(SPIClass & spi, uint32_t freq=48000000);
   void     begin(void) { begin(SPI); }
   void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
-           pushColor(uint16_t color),
            pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async=0),
            fillScreen(uint16_t color),
 		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
@@ -150,6 +147,8 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   inline void    writedata(uint8_t c)   { mSPI.write(c); }
   inline void    spiwrite(uint16_t c)   { mSPI.write(c); }
   inline void    spiwrite16(uint16_t c) { mSPI.write16(c); } // 8 bit mode
+  
+  inline void pushColor(uint16_t color) { cs_clear(); spiwrite(color); cs_set(); }
 
   void  writecommand(uint8_t c),
         commandList(uint8_t *addr);
