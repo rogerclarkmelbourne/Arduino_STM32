@@ -1,7 +1,7 @@
 #include "Wire.h"
 #define WIRE_WRITE HWIRE.write
 
- HardWire HWIRE(2,I2C_FAST_MODE); // stupid compiler
+ TwoWire WIRE(2,I2C_FAST_MODE); // stupid compiler
 
 void OLED::_convert_float(char *buf, double num, int width, byte prec)
 {
