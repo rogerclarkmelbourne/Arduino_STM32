@@ -120,6 +120,12 @@ static void usb_suspend(void) {
     USBLIB->state = USB_SUSPENDED;
 }
 
+void usb_power_off(void) {
+    USB_BASE->CNTR = USB_CNTR_FRES;
+    USB_BASE->ISTR = 0;
+    USB_BASE->CNTR = USB_CNTR_FRES + USB_CNTR_PDWN;
+}
+
 static void usb_resume_init(void) {
     uint16 cntr;
 

@@ -403,6 +403,7 @@ void usb_cdcacm_disable(gpio_dev *disc_dev, uint8 disc_bit) {
 	{
 		gpio_write_bit(disc_dev, disc_bit, 1);
 	}
+    usb_power_off();
 }
 
 void usb_cdcacm_putc(char ch) {
