@@ -25,7 +25,7 @@
  *****************************************************************************/
 
 /**
- * @file TwoWire.h
+ * @file Wire.h
  * @author Trystan Jones <crenn6977@gmail.com>
  * @brief Wire library, uses the hardware I2C available in the Maple to
  *        interact with I2C slave devices.
@@ -39,7 +39,7 @@
 #ifndef _TWOWIRE_H_
 #define _TWOWIRE_H_
 
-#include "WireBase.h"
+#include "utility/WireBase.h"
 #include "wirish.h"
 #include <libmaple/i2c.h>
 

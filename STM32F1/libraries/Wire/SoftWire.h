@@ -40,7 +40,7 @@
 #ifndef _SOFTWIRE_H_
 #define _SOFTWIRE_H_
 
-#include "WireBase.h"
+#include "utility/WireBase.h"
 #include "wirish.h"
 
 /*
