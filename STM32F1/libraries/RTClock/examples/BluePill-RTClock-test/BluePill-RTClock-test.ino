@@ -62,7 +62,8 @@ void ParseBuildTimestamp(tm_t & mt)
     char * token = strtok(s, delim); // get first token
     // walk through tokens
     while( token != NULL ) {
-        if ( (uint8_t m = str2month((const char*)token))>0 ) {
+		    uint8_t m = str2month((const char*)token);
+		    if ( m>0 ) {
             mt.month = m;
             //Serial.print(" month: "); Serial.println(mt.month);
             token = strtok(NULL, delim); // get next token
