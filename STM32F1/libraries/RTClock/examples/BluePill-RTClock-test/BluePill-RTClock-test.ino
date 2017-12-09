@@ -46,9 +46,9 @@ const char * months[] = {"Dummy", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul
 //-----------------------------------------------------------------------------
 uint8_t str2month(const char * d)
 {
-	uint8_t i = 13;
-	while ( (--i) && strcmp(months[i], d)!=0 );
-	return i;
+    uint8_t i = 13;
+    while ( (--i) && strcmp(months[i], d)!=0 );
+    return i;
 }
 //-----------------------------------------------------------------------------
 const char * delim = " :";
@@ -56,33 +56,33 @@ char s[128]; // for sprintf
 //-----------------------------------------------------------------------------
 void ParseBuildTimestamp(tm_t & mt)
 {
-	// Timestamp format: "Dec  8 2017, 22:57:54"
-	sprintf(s, "Timestamp: %s, %s\n", __DATE__, __TIME__);
-	//Serial.print(s);
-	char * token = strtok(s, delim); // get first token
-	// walk through tokens
-	while( token != NULL ) {
-		if ( (uint8_t m = str2month((const char*)token))>0 ) {
-			mt.month = m;
-			//Serial.print(" month: "); Serial.println(mt.month);
-			token = strtok(NULL, delim); // get next token
-			mt.day = atoi(token);
-			//Serial.print(" day: "); Serial.println(mt.day);
-			token = strtok(NULL, delim); // get next token
-			mt.year = atoi(token) - 1970;
-			//Serial.print(" year: "); Serial.println(mt.year);
-			token = strtok(NULL, delim); // get next token
-			mt.hour = atoi(token);
-			//Serial.print(" hour: "); Serial.println(mt.hour);
-			token = strtok(NULL, delim); // get next token
-			mt.minute = atoi(token);
-			//Serial.print(" minute: "); Serial.println(mt.minute);
-			token = strtok(NULL, delim); // get next token
-			mt.second = atoi(token);
-			//Serial.print(" second: "); Serial.println(mt.second);
-		}
-		token = strtok(NULL, delim);
-	}
+    // Timestamp format: "Dec  8 2017, 22:57:54"
+    sprintf(s, "Timestamp: %s, %s\n", __DATE__, __TIME__);
+    //Serial.print(s);
+    char * token = strtok(s, delim); // get first token
+    // walk through tokens
+    while( token != NULL ) {
+        if ( (uint8_t m = str2month((const char*)token))>0 ) {
+            mt.month = m;
+            //Serial.print(" month: "); Serial.println(mt.month);
+            token = strtok(NULL, delim); // get next token
+            mt.day = atoi(token);
+            //Serial.print(" day: "); Serial.println(mt.day);
+            token = strtok(NULL, delim); // get next token
+            mt.year = atoi(token) - 1970;
+            //Serial.print(" year: "); Serial.println(mt.year);
+            token = strtok(NULL, delim); // get next token
+            mt.hour = atoi(token);
+            //Serial.print(" hour: "); Serial.println(mt.hour);
+            token = strtok(NULL, delim); // get next token
+            mt.minute = atoi(token);
+            //Serial.print(" minute: "); Serial.println(mt.minute);
+            token = strtok(NULL, delim); // get next token
+            mt.second = atoi(token);
+            //Serial.print(" second: "); Serial.println(mt.second);
+        }
+        token = strtok(NULL, delim);
+    }
 }
 //-----------------------------------------------------------------------------
 // This function is called in the attachSecondsInterrpt
@@ -165,10 +165,10 @@ void loop()
   if (tt1 != tt && dispflag == true )
   {
     tt1 = tt;
-	// get and print actual RTC timestamp
+    // get and print actual RTC timestamp
     rtclock.breakTime(rtclock.now(), mtt);
-	sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
-		months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
+    sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
+    months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
     Serial.print(s);
   }
 }
