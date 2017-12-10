@@ -1,19 +1,23 @@
 Arduino STM32  
 =============  
 
-##Notice
+## Notice
 
 This software is experimental and a work in progress.
 Under no circumstances should these files be used in relation to any critical system(s).
 Use of these files is at your own risk.
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-##Summary:  
-This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.6.13 or 1.6.12 (some older versions may also work)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
+## Summary:  
+This repo contains, the "Hardware" files to support STM32 based boards on Arduino version 1.8.x (some older versions may also work)  including [LeafLabs Maple, and Maple mini](http://www.leaflabs.com/about-maple/), and other generic STM32F103 boards  
 
 ***PRIMARY SUPPORT FORUM: http://www.stm32duino.com/***
 
-##Background & Support:  
+***We are also on Gitter https://gitter.im/stm32duino/Lobby/***
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/stm32duino/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+## Background & Support:  
 * Based on https://github.com/bobc/maple-asp, which is in turn based on LibMaple by Leaflabs  
 * **Please read the wiki (https://github.com/rogerclarkmelbourne/Arduino_STM32/wiki) for full details**
 * See also my blog: http://www.rogerclark.net/stm32f103-and-maple-maple-mini-with-arduino-1-5-x-ide/  
@@ -26,11 +30,11 @@ This repo contains, the "Hardware" files to support STM32 based boards on Arduin
 * 20150413: [STM32 for Arduino 1.6.2 or newer (update)](https://www.youtube.com/watch?v=TePglhSkghg)
 * 20150419: [Uploading via USB to Serial to STM32F103 boards](https://www.youtube.com/watch?v=G_RF0a0hrak)
 
-##Additional Links & Info:  
+## Additional Links & Info:  
 * https://www.hackster.io/rayburne/4-dollar-90-mips-32-bit-72-mhz-arm-arduino  
 
-##Purchase info:  
-###Entry level boards
+## Purchase info:  
+### Entry level boards
 
 * [Ebay search for "arduino maple"](http://www.ebay.com/sch/i.html?_from=R40&_sacat=0&LH_BIN=1&_nkw=arduino+maple&_sop=15) (currently costs <$5 with shipping)
 * [AliExpress search for "leaflabs maple"] (http://www.aliexpress.com/wholesale?catId=0&initiative_id=SB_20150607085526&SearchText=leaflabs+maple)

@@ -177,7 +177,8 @@ public:
      * This interrupt handler will be called when the timer's counter
      * reaches the given channel compare value.
      *
-     * @param channel the channel to attach the ISR to, from 1 to 4.
+     * @param channel the channel to attach the ISR to, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @param handler The ISR to attach to the given channel.
      * @see voidFuncPtr
      */
@@ -189,7 +190,8 @@ public:
      *
      * The handler will no longer be called by this timer.
      *
-     * @param channel the channel whose interrupt to detach, from 1 to 4.
+     * @param channel the channel whose interrupt to detach, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @see HardwareTimer::attachInterrupt()
      */
     void detachInterrupt(int channel);
@@ -209,6 +211,23 @@ public:
      */
     void refresh(void);
 
+	// SYFRE
+    /**
+     * @brief Set the Master mode TRGO signal 
+     *        These bits allow to select the information to be sent in master mode to slave timers for 
+     *        synchronization (TRGO). 
+	 *	mode:
+	 * 		TIMER_CR2_MMS_RESET
+	 * 		TIMER_CR2_MMS_ENABLE
+	 * 		TIMER_CR2_MMS_UPDATE
+	 * 		TIMER_CR2_MMS_COMPARE_PULSE
+	 * 		TIMER_CR2_MMS_COMPARE_OC1REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC2REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC3REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC4REF
+     */
+	void setMasterModeTrGo(uint32_t mode);
+	
 //CARLOS.
 /*
     added these functions to make sense for the encoder mode. 
@@ -228,6 +247,12 @@ public:
 
     /* Escape hatch */
 
+	 /**
+     * @brief Enable/disable DMA request for the input channel.
+     */
+	void enableDMA(int channel);
+	void disableDMA(int channel);
+	
     /**
      * @brief Get a pointer to the underlying libmaple timer_dev for
      *        this HardwareTimer instance.

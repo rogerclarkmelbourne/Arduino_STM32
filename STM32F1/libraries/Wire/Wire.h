@@ -25,117 +25,54 @@
  *****************************************************************************/
 
 /**
- * @file Wire.h
+ * @file HardWire.h
  * @author Trystan Jones <crenn6977@gmail.com>
- * @brief Wire library, uses the WireBase to create the primary interface
- *        while keeping low level interactions invisible to the user.
+ * @brief Wire library, uses the hardware I2C available in the Maple to
+ *        interact with I2C slave devices.
  */
 
 /*
- * Library updated by crenn to follow new Wire system.
- * Code was derived from the original Wire for maple code by leaflabs and the
- * modifications by gke and ala42.
+ * Library created by crenn to use the new WireBase system and allow Arduino
+ * users easy interaction with the I2C Hardware in a familiar method.
  */
 
-#ifndef _WIRE_H_
-#define _WIRE_H_
+#ifndef _HARDWIRE_H_
+#define _HARDWIRE_H_
 
 #include "WireBase.h"
 #include "wirish.h"
+#include <libmaple/i2c.h>
 
-/*
- * On the Maple, let the default pins be in the same location as the Arduino
- * pins
- */
-#define SDA PB7
-#define SCL PB6
-
-#define SOFT_STANDARD 27
-#define SOFT_FAST 0
-
-
-//#define I2C_DELAY(x) {uint32 time=micros(); while(time>(micros()+x));}
-#define I2C_DELAY(x) do{for(int i=0;i<x;i++) {asm volatile("nop");}}while(0)
-
-#define BUFFER_LENGTH 32
-
-
-class TwoWire : public WireBase {
- public:
-    uint8 		i2c_delay;
-    uint8       scl_pin;
-    uint8       sda_pin;
-
+class HardWire : public WireBase {
+private:
+    i2c_dev* sel_hard;
+    uint8    dev_flags;
+protected:
     /*
-     * Sets the SCL line to HIGH/LOW and allow for clock stretching by slave
-     * devices
+     * Processes the incoming I2C message defined by WireBase to the
+     * hardware. If an error occured, restart the I2C device.
      */
-    void set_scl(bool);
-
-    /*
-     * Sets the SDA line to HIGH/LOW
-     */
-    void set_sda(bool);
-
-    /*
-     * Creates a Start condition on the bus
-     */
-    void i2c_start();
-
-    /*
-     * Creates a Stop condition on the bus
-     */
-    void  i2c_stop();
-
-    /*
-     * Gets an ACK condition from a slave device on the bus
-     */
-    bool i2c_get_ack();
-
-    /*
-     * Creates a ACK condition on the bus
-     */
-    void i2c_send_ack();
-
-    /*
-     * Creates a NACK condition on the bus
-     */
-    void i2c_send_nack();
-
-    /*
-     * Shifts in the data through SDA and clocks SCL for the slave device
-     */
-    uint8 i2c_shift_in();
-
-    /*
-     * Shifts out the data through SDA and clocks SCL for the slave device
-     */
-    void i2c_shift_out(uint8);
- protected:
-    /*
-     * Processes the incoming I2C message defined by WireBase
-     */
+    uint8 process(uint8);
     uint8 process();
- public:
+public:
     /*
-     * Accept pin numbers for SCL and SDA lines. Set the delay needed
-     * to create the timing for I2C's Standard Mode and Fast Mode.
+     * Check if devsel is within range and enable selected I2C interface with
+     * passed flags
      */
-    TwoWire(uint8 scl=SCL, uint8 sda=SDA, uint8 delay=SOFT_STANDARD);
+    HardWire(uint8, uint8 = 0);
+	
+	/*
+	 * Shuts down (disables) the hardware I2C
+	 */
+	void end();
 
+	void setClock(uint32_t frequencyHz);
     /*
-     * Sets pins SDA and SCL to OUPTUT_OPEN_DRAIN, joining I2C bus as
-     * master. This function overwrites the default behaviour of
-     * .begin(uint8) in WireBase
+     * Disables the I2C device and remove the device address.
      */
+    ~HardWire();
+
     void begin(uint8 = 0x00);
-
-    /*
-     * If object is destroyed, set pin numbers to 0.
-     */
-    ~TwoWire();
 };
-
-extern TwoWire Wire;
-
-#endif // _WIRE_H_
+extern HardWire Wire;
+#endif // _HARDWIRE_H_

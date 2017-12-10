@@ -1,27 +1,30 @@
-#include "usbd_cdc_core.h"
-#include "usbd_usr.h"
-#include "usbd_desc.h"
+#ifndef _USBF4_USB_H_
+#define _USBF4_USB_H_
+
+
+#include <STM32_USB_Device_Library/Class/cdc/inc/usbd_cdc_core.h>
+#include <STM32_USB_Device_Library/Core/inc/usbd_usr.h>
+#include <VCP/usbd_desc.h>
 #include "usb.h"
-#include <gpio.h>
-#include <rccF2.h>
-#include <usbd_cdc_vcp.h>
+#include <libmaple/gpio.h>
+#include <libmaple/rccF4.h>
+#include <VCP/usbd_cdc_vcp.h>
+#include <boards.h>
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
 
 
-void setupUSB (void) {
-    #define USB_DISC_DEV         GPIOD
-    #define USB_DISC_PIN         11
-
-	gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_OD); // ala42
+void setupUSB (void)
+{
+	gpio_set_mode(BOARD_USB_DP_PIN, GPIO_OUTPUT_OD); // ala42
 #ifdef USB_DISC_OD
   //gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_OD); // ala42
 #else
   //gpio_set_mode(USB_DISC_DEV, USB_DISC_PIN, GPIO_OUTPUT_PP); // ala42 for active pull-up on disconnect pin
 #endif
 
-  gpio_write_bit(USB_DISC_DEV, USB_DISC_PIN,0); // ala42
+  gpio_clear_pin(BOARD_USB_DP_PIN); // ala42
   delay_us(200000);
 
   /* setup the apb1 clock for USB */
@@ -29,7 +32,7 @@ void setupUSB (void) {
   //pRCC->APB1ENR |= RCC_APB1ENR_USBEN;
 
   /* initialize the usb application */
-  gpio_write_bit(USB_DISC_DEV, USB_DISC_PIN, 1); // ala42 // presents us to the host
+  gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
             &USR_desc,
@@ -93,7 +96,7 @@ RESULT usbPowerOff(void) {
 
 void usbDsbISR(void) {};
 
-#include "usb_dcd_int.h"
+#include <STM32_USB_OTG_Driver/inc/usb_dcd_int.h>
 void __irq_OTG_FS_IRQHandler(void)
 {
   USBD_OTG_ISR_Handler (&USB_OTG_dev);
@@ -102,3 +105,5 @@ void __irq_OTG_FS_IRQHandler(void)
 void x__irq_usbwakeup(void)
 {
 }
+
+#endif

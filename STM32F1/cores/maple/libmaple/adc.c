@@ -59,6 +59,7 @@ void adc_set_extsel(adc_dev *dev, adc_extsel_event event) {
     uint32 cr2 = dev->regs->CR2;
     cr2 &= ~ADC_CR2_EXTSEL;
     cr2 |= event;
+    cr2 |= ADC_CR2_EXTTRIG;
     dev->regs->CR2 = cr2;
 }
 

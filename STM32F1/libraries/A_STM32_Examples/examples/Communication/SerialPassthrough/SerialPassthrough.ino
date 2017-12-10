@@ -26,6 +26,6 @@ void loop() {
     // Read from Serial1, send over USB on Maple (or uses hardware serial 1 and hardware serial 2 on non-maple boards:
     if (Serial1.available()) {
         inByte = Serial1.read();
-        Serial.print(inByte, BYTE);
+        Serial.write(inByte);
     }
 }

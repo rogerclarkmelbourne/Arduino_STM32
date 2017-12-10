@@ -138,8 +138,22 @@ void HardwareTimer::detachInterrupt(int channel) {
     timer_detach_interrupt(this->dev, (uint8)channel);
 }
 
+
+void HardwareTimer::enableDMA(int channel) {
+    timer_dma_enable_req(this->dev, (uint8)channel);
+}
+
+void HardwareTimer::disableDMA(int channel) {
+    timer_dma_disable_req(this->dev, (uint8)channel);
+}
+
 void HardwareTimer::refresh(void) {
     timer_generate_update(this->dev);
+}
+
+void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
+	this->dev->regs.bas->CR2 &= ~TIMER_CR2_MMS;
+	this->dev->regs.bas->CR2 |= mode;
 }
 
 /*  CARLOS Changes to add encoder mode.*/

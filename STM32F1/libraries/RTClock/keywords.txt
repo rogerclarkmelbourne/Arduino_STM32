@@ -5,16 +5,36 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-RTClock	KEYWORD1
+
+RTClock			KEYWORD1
 
 
-setTime					KEYWORD2
-getTime					KEYWORD2
+setTime			KEYWORD2
+getTime			KEYWORD2
 
-createAlarm				KEYWORD2
+createAlarm		KEYWORD2
+removeAlarm		KEYWORD2
+setAlarmTime		KEYWORD2
+
 attachSecondsInterrupt	KEYWORD2
 detachSecondsInterrupt	KEYWORD2
-setAlarmTime			KEYWORD2
+
+attachAlarmInterrupt	KEYWORD2
+detachAlarmInterrupt	KEYWORD2
+
+breakTime		KEYWORD2
+makeTime		KEYWORD2
+
+TimeZone		KEYWORD2
+now			KEYWORD2
+year			KEYWORD2
+month			KEYWORD2
+day			KEYWORD2
+weekday			KEYWORD2
+hour			KEYWORD2
+minute			KEYWORD2
+second			KEYWORD2
+isPM			KEYWORD2
 
 
 #######################################

@@ -45,7 +45,7 @@ void enable_adc_irq(adc_dev* dev) {//ADC1 for now.
     Enable the reading of the internal variables (Temperature and Vref).
 */
 void enable_internal_reading(adc_dev *dev) {
-  dev->regs->CR2 |= ADC_CR2_TSEREFE;
+  dev->regs->CR2 |= ADC_CR2_TSVREFE;
   }
 
 /*
@@ -137,8 +137,8 @@ void adc_dma_enable(adc_dev * dev) {
   bb_peri_set_bit(&dev->regs->CR2, ADC_CR2_DMA_BIT, 1);
 }
 
-uint8 poll_adc_convert(adc_dev *dev) {
-  return bb_peri_get_bit(dev->regs->SR, ADC_SR_EOC_BIT);
+uint8 poll_adc_convert(adc_dev * dev) {
+  return bb_peri_get_bit(&dev->regs->SR, ADC_SR_EOC_BIT);
   }
 
 

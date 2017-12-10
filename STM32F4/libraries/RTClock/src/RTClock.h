@@ -1,28 +1,34 @@
-#include <libmaple/rcc.h>
-#include <libmaple/bitband.h>
-#include <libmaple/pwr.h>
-#include <libmaple/bkp.h>
-#include <libmaple/nvic.h>
-#include <libmaple/exti.h>
-#include <time.h>
-
 
 #ifndef _RTCLOCK_H_
 #define _RTCLOCK_H_
 
-//#define RTC_DEBUG
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+#include <sys/types.h> // for __time_t_defined
+#include <libmaple/rcc.h>
+#include <libmaple/bkp.h>
+#include <libmaple/exti.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//#define RTC_DEBUG
+
+
+#if !defined(__time_t_defined) // avoid conflict with newlib or other posix libc
+  #warning "Using private time_t definintion"
+  typedef uint32_t time_t;
+#endif
+
 #ifdef RTC_DEBUG
         extern void dbg_printf(const char *fmt, ... );
         #define rtc_debug_printf(fmt, ...) dbg_printf(fmt, ##__VA_ARGS__);
 #else
         #define rtc_debug_printf(...) 
-#endif
-#ifdef __cplusplus
-}
 #endif
 
 
@@ -33,7 +39,7 @@ extern "C" {
 #define SECS_PER_WEEK (SECS_PER_DAY * DAYS_PER_WEEK)
 #define SECS_PER_YEAR (SECS_PER_WEEK * 52UL)
 #define SECS_YR_2000  (946684800UL) // the time at the start of y2k
-#define LEAP_YEAR(Y)     ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
+#define LEAP_YEAR(Y)  ( ((1970+Y)>0) && !((1970+Y)%4) && ( ((1970+Y)%100) || !((1970+Y)%400) ) )
 
 static  const unsigned char monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31}; // API starts months from 1, this array starts from 0
 
@@ -91,6 +97,28 @@ typedef enum rtc_clk_src {
 	RTCSEL_HSE		= 0x13,
 } rtc_clk_src;
 
+// Time register
+#define RTC_TR_PM_BIT     22
+#define RTC_TR_HOUR_BIT   16
+#define RTC_TR_MINUTE_BIT  8
+#define RTC_TR_SECOND_BIT  0
+
+#define RTC_TR_PM_MASK     (0x01)//<<RTC_TR_PM_BIT)
+#define RTC_TR_HOUR_MASK   (0x3F)//<<RTC_TR_HOUR_BIT)
+#define RTC_TR_MINUTE_MASK (0x7F)//<<RTC_TR_MINUTE_BIT)
+#define RTC_TR_SECOND_MASK (0x7F)//<<RTC_TR_SECOND_BIT)
+
+// Date register
+#define RTC_DR_YEAR_BIT    16
+#define RTC_DR_WEEKDAY_BIT 13
+#define RTC_DR_MONTH_BIT    8
+#define RTC_DR_DAY_BIT      0
+
+#define RTC_DR_YEAR_MASK    (0xFF)//<<RTC_TR_YEAR_BIT)
+#define RTC_DR_WEEKDAY_MASK (0x07)//<<RTC_TR_WEEKDAY_BIT)
+#define RTC_DR_MONTH_MASK   (0x1F)//<<RTC_TR_MONTH_BIT)
+#define RTC_DR_DAY_MASK     (0x3F)//<<RTC_TR_DAY_BIT)
+
 
 /* Control Register */
 #define RTC_CR_TSIE_BIT 	15
@@ -118,24 +146,69 @@ typedef enum rtc_clk_src {
 #define RTC_ISR_ALRAWF_BIT 	0
 
 
+#define BUILD_TIME_REGISTER(h, m, s) ( ( bin2bcd((h&RTC_TR_HOUR_MASK)) << RTC_TR_HOUR_BIT ) | \
+                                       ( bin2bcd((m&RTC_TR_MINUTE_MASK)) << RTC_TR_MINUTE_BIT ) | \
+								       ( bin2bcd((s&RTC_TR_SECOND_MASK)) << RTC_TR_SECOND_BIT) )
+
+#define BUILD_DATE_REGISTER(y, m, d, wd) ( ( bin2bcd((y&RTC_DR_YEAR_MASK)) << RTC_DR_YEAR_BIT ) | \
+                                           ( bin2bcd((m&RTC_DR_MONTH_MASK)) << RTC_DR_MONTH_BIT) | \
+									       ( bin2bcd((d&RTC_DR_DAY_MASK)) << RTC_DR_DAY_BIT ) | \
+									       ( (wd&RTC_DR_WEEKDAY_MASK) << RTC_DR_WEEKDAY_BIT ) )
+
+typedef struct tm_t {
+	uint8_t  year;    // years since 1970
+	uint8_t  month;   // month of a year - [ 1 to 12 ]
+	uint8_t  day;     // day of a month - [ 1 to 31 ]
+	uint8_t  weekday; // day of a week (first day is Monday) - [ 1 to 7 ]
+	uint8_t  pm;      // AM: 0, PM: 1
+	uint8_t  hour;    // hour of a day - [ 0 to 23 ]
+	uint8_t  minute;  // minute of an hour - [ 0 to 59 ]
+	uint8_t  second;  // second of a minute - [ 0 to 59 ]
+} tm_t;
+
+static inline uint8_t bcd2bin(uint8_t b) { return ( (10*(b>>4)) + (b&0x0F) ); }
+static inline uint8_t bin2bcd(uint8_t b) { return ( ((b/10)<<4) + (b%10) ); }
 
 class RTClock {
- public:
- 	RTClock();
-        RTClock(rtc_clk_src src ); 
+  public:
+ 	RTClock() { RTClock(RTCSEL_LSE, 0, 0); }
+    RTClock(rtc_clk_src src ) { RTClock(src, 0, 0);	} 
 	RTClock(rtc_clk_src src, uint16 sync_prescaler, uint16 async_prescaler);
 	//~RTClock(); //to implement
+	
+	void breakTime(time_t epoch_time, tm_t & tm);
+	time_t makeTime(tm_t & tm);
 
 	void setTime (time_t time_stamp);
-	void setTime (struct tm * tm_ptr); 
+	void setTime (tm_t & tm); 
 	
-	struct tm* getTime(struct tm* tm_ptr); 
 	time_t getTime();
+	void getTime(tm_t & tm);
+	#define now getTime
+
+	uint8_t year(void)    { getTime(tm); return tm.year; }
+	uint8_t month(void)   { getTime(tm); return tm.month; }
+	uint8_t day(void)     { getTime(tm); return tm.day; }
+	uint8_t weekday(void) { getTime(tm); return tm.weekday; }
+	uint8_t hour(void)    { getTime(tm); return tm.hour; }
+	uint8_t minute(void)  { getTime(tm); return tm.minute; }
+	uint8_t second(void)  { getTime(tm); return tm.second; }
+	//uint8_t pm(void)      { return _pm(RTC_BASE->TR); }
+	uint8_t isPM(void)    { return ( hour()>=12 ); }
 	
-	void setAlarmATime (tm * tm_ptr, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false);
+	uint8_t year(time_t t)    { breakTime(t, tm); return tm.year; }
+	uint8_t month(time_t t)   { breakTime(t, tm); return tm.month; }
+	uint8_t day(time_t t)     { breakTime(t, tm); return tm.day; }
+	uint8_t weekday(time_t t) { breakTime(t, tm); return tm.weekday; }
+	uint8_t hour(time_t t)    { breakTime(t, tm); return tm.hour; }
+	uint8_t minute(time_t t)  { breakTime(t, tm); return tm.minute; }
+	uint8_t second(time_t t)  { breakTime(t, tm); return tm.second; }
+	uint8_t isPM(time_t t)    { return (hour(t)>=12); }
+	
+	void setAlarmATime (tm_t * tm_ptr, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false);
 	void setAlarmATime (time_t alarm_time, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false); 
 	void turnOffAlarmA();
-	void setAlarmBTime (tm * tm_ptr, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false);
+	void setAlarmBTime (tm_t * tm_ptr, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false);
 	void setAlarmBTime (time_t alarm_time, bool hours_match = true, bool mins_match = true, bool secs_match = true, bool date_match = false); 
 	void turnOffAlarmB();
 	
@@ -143,17 +216,29 @@ class RTClock {
 
 	void attachPeriodicWakeupInterrupt(voidFuncPtr function); 
 	void detachPeriodicWakeupInterrupt();
+	inline void attachSecondsInterrupt(voidFuncPtr function) { attachPeriodicWakeupInterrupt(function); }
+	inline void detachSecondsInterrupt() { detachPeriodicWakeupInterrupt(); }
 
 	void attachAlarmAInterrupt(voidFuncPtr function); 
 	void detachAlarmAInterrupt();
 	void attachAlarmBInterrupt(voidFuncPtr function); 
 	void detachAlarmBInterrupt();
 
- //private:
+  private:
+	inline uint8_t _year(uint32_t dr)    { return bcd2bin( (dr>>RTC_DR_YEAR_BIT) & RTC_DR_YEAR_MASK ); }
+	inline uint8_t _month(uint32_t dr)   { return bcd2bin( (dr>>RTC_DR_MONTH_BIT) & RTC_DR_MONTH_MASK ); }
+	inline uint8_t _day(uint32_t dr)     { return bcd2bin( (dr>>RTC_DR_DAY_BIT) & RTC_DR_DAY_MASK ); }
+	inline uint8_t _weekday(uint32_t dr) { return bcd2bin( (dr>>RTC_DR_WEEKDAY_BIT) & RTC_DR_WEEKDAY_MASK ); }
+	inline uint8_t _pm(uint32_t tr)      { return ( (tr>>RTC_TR_PM_BIT) & RTC_TR_PM_MASK ); }
+	inline uint8_t _hour(uint32_t tr)    { return bcd2bin( (tr>>RTC_TR_HOUR_BIT) & RTC_TR_HOUR_MASK ); }
+	inline uint8_t _minute(uint32_t tr)  { return bcd2bin( (tr>>RTC_TR_MINUTE_BIT) & RTC_TR_MINUTE_MASK ); }
+	inline uint8_t _second(uint32_t tr)  { return bcd2bin( (tr>>RTC_TR_SECOND_BIT) & RTC_TR_SECOND_MASK ); }
 
-} ;
+	tm_t tm;
+};
 
-
+inline uint32_t getTReg(void) { return (uint32_t)(RTC_BASE->TR); }
+inline uint32_t getDReg(void) { return (uint32_t)(RTC_BASE->DR); }
 
 /**
  * @brief Clear the register synchronized flag. The flag is then set by hardware after a write to PRL/DIV or CNT.
@@ -246,7 +331,8 @@ static inline void rtc_disable_wakeup_event() {
 	*bb_perip(&EXTI_BASE->RTSR, EXTI_RTC_WAKEUP_BIT) = 0;
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _RTCLOCK_H_
-                                                                                        

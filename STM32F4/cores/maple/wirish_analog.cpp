@@ -28,9 +28,7 @@
  *  @brief Arduino-compatible ADC implementation.
  */
 
-#include "libmaple.h"
 #include "wirish.h"
-#include "io.h"
 
 /* Assumes that the ADC has been initialized and that the pin is set
  * to INPUT_ANALOG */

@@ -3,7 +3,7 @@
 //
 //Thanks to Adafruit forums member Asteroid for the original sketch!
 //
-#include <Adafruit_GFX.h>
+#include <Adafruit_GFX_AS.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_ILI9341_STM.h>

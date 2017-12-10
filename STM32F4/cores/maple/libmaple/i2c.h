@@ -78,7 +78,7 @@ typedef struct i2c_msg {
  */
 typedef struct i2c_dev {
     i2c_reg_map *regs;          /**< Register map */
-    gpio_dev *gpio_port;        /**< SDA, SCL pins' GPIO port */
+    //gpio_dev *gpio_port;        /**< SDA, SCL pins' GPIO port */
     uint8 sda_pin;              /**< SDA bit on gpio_port */
     uint8 scl_pin;              /**< SCL bit on gpio_port */
     rcc_clk_id clk_id;          /**< RCC clock information */

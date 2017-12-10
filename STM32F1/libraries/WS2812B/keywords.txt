@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map For WS2812B
+# Class
+#######################################
+
+WS2812B	KEYWORD1
+
+#######################################
+# Methods and Functions 
+#######################################	
+
+setPixelColor	KEYWORD2
+numPixels		KEYWORD2
+Color			KEYWORD2
+show			KEYWORD2
+
+clear			KEYWORD2
+updateLength			KEYWORD2
+
+canShow			KEYWORD2
+
+
+#######################################
+# Constants
+#######################################
+
+

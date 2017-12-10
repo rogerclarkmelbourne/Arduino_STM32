@@ -24,7 +24,7 @@
 #define __USB_DEF_H__
 
 /* Includes ------------------------------------------------------------------*/
-#include  "usb_conf.h"
+#include  <VCP/usbd_conf.h>
 
 /** @addtogroup USB_OTG_DRIVER
   * @{

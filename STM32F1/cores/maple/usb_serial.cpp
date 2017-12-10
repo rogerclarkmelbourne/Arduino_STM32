@@ -54,6 +54,9 @@ static void ifaceSetupHook(unsigned, void*);
  */
 
 #define USB_TIMEOUT 50
+#if BOARD_HAVE_SERIALUSB
+bool USBSerial::_hasBegun = false;
+#endif
 
 USBSerial::USBSerial(void) {
 #if !BOARD_HAVE_SERIALUSB
@@ -62,8 +65,13 @@ USBSerial::USBSerial(void) {
 }
 
 void USBSerial::begin(void) {
+	
 #if BOARD_HAVE_SERIALUSB
-    usb_cdcacm_enable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
+    if (_hasBegun)
+        return;
+    _hasBegun = true;
+
+    usb_cdcacm_enable(BOARD_USB_DISC_DEV, (uint8_t)BOARD_USB_DISC_BIT);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_RX, rxHook);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_IFACE_SETUP, ifaceSetupHook);
 #endif
@@ -75,6 +83,7 @@ void USBSerial::begin(unsigned long ignoreBaud)
 volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
 
 	ignoreBaud=removeCompilerWarningsIgnoreBaud;
+	begin();
 }
 void USBSerial::begin(unsigned long ignoreBaud, uint8_t ignore)
 {
@@ -83,13 +92,16 @@ volatile uint8_t removeCompilerWarningsIgnore=ignore;
 
 	ignoreBaud=removeCompilerWarningsIgnoreBaud;
 	ignore=removeCompilerWarningsIgnore;
+	begin();
 }
 
 void USBSerial::end(void) {
 #if BOARD_HAVE_SERIALUSB
-    usb_cdcacm_disable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
+    usb_cdcacm_disable(BOARD_USB_DISC_DEV, (uint8_t)BOARD_USB_DISC_BIT);
     usb_cdcacm_remove_hooks(USB_CDCACM_HOOK_RX | USB_CDCACM_HOOK_IFACE_SETUP);
+	_hasBegun = false;
 #endif
+
 }
 
 size_t USBSerial::write(uint8 ch) {
@@ -107,8 +119,7 @@ size_t n = 0;
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
 size_t n = 0;
-// Roger Clark. 
-// Remove checking of isConnected for ZUMspot
+
     if (!buf || !usb_is_connected(USBLIB) || !usb_is_configured(USBLIB)) {
         return 0;
     }
@@ -158,6 +169,19 @@ uint32 USBSerial::read(uint8 * buf, uint32 len) {
     return rxed;
 }
 
+size_t USBSerial::readBytes(char *buf, const size_t& len)
+{
+    size_t rxed=0;
+    unsigned long startMillis;
+    startMillis = millis();
+    if (len <= 0) return 0;
+    do {
+        rxed += usb_cdcacm_rx((uint8 *)buf + rxed, len - rxed);
+        if (rxed == len) return rxed;
+    } while(millis() - startMillis < _timeout);
+    return rxed;
+}
+
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
@@ -180,16 +204,16 @@ uint8 USBSerial::pending(void) {
     return usb_cdcacm_get_pending();
 }
 
-uint8 USBSerial::isConnected(void) {
-    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
-}
-
 uint8 USBSerial::getDTR(void) {
     return usb_cdcacm_get_dtr();
 }
 
 uint8 USBSerial::getRTS(void) {
     return usb_cdcacm_get_rts();
+}
+
+USBSerial::operator bool() {
+    return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
 #if BOARD_HAVE_SERIALUSB
@@ -213,7 +237,7 @@ enum reset_state_t {
 
 static reset_state_t reset_state = DTR_UNSET;
 
-static void ifaceSetupHook(unsigned hook, void *requestvp) {
+static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestvp) {
     uint8 request = *(uint8*)requestvp;
 
     // Ignore requests we're not interested in.
@@ -267,7 +291,7 @@ static void wait_reset(void) {
 #define STACK_TOP 0x20000800
 #define EXC_RETURN 0xFFFFFFF9
 #define DEFAULT_CPSR 0x61000000
-static void rxHook(unsigned hook, void *ignored) {
+static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attribute__((unused))) {
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {

@@ -33,7 +33,7 @@
 #ifndef _BOARD_MAPLE_H_
 #define _BOARD_MAPLE_H_
 #define _BOARD_NUCLEOF103RB_ 1 // hack for HardwareSerial.cpp for a new order of serials
-#define CYCLES_PER_MICROSECOND  72
+#define CYCLES_PER_MICROSECOND	(F_CPU / 1000000U)
 #define SYSTICK_RELOAD_VAL     (F_CPU/1000) - 1 /* takes a cycle to reload */
 
 /* Roger clark. Removed defines for LED pin and Button pin as they are not Arduino API defines */
@@ -102,11 +102,8 @@
 /**
  * Note: there is no USB in this board.
  */
- // Roger Clark. These USB disconnect pin definitions have been added as a temporary fix in order that the this board compiles
- // following changes to add usb serial to other boards
- // I will remove them when the code in the core usb_serial.cpp has been tidied up so that they are no longer needed.
-#define BOARD_USB_DISC_DEV        GPIOB
-#define BOARD_USB_DISC_BIT        10
+#define BOARD_USB_DISC_DEV        NULL
+#define BOARD_USB_DISC_BIT        NULL
 
 /* Pin aliases: these give the GPIO port/bit for each pin as an
  * enum. These are optional, but recommended. They make it easier to

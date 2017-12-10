@@ -102,6 +102,16 @@
 #define BOARD_USB_DISC_DEV      GPIOC
 #define BOARD_USB_DISC_BIT      12
 
+/*
+ * SDIO Pins
+ */
+#define BOARD_SDIO_D0 			PC8
+#define BOARD_SDIO_D1 			PC9
+#define BOARD_SDIO_D2 			PC10
+#define BOARD_SDIO_D3 			PC11
+#define BOARD_SDIO_CLK 			PC12
+#define BOARD_SDIO_CMD 			PD2
+
 /* Pin aliases: these give the GPIO port/bit for each pin as an
  * enum. These are optional, but recommended. They make it easier to
  * write code using low-level GPIO functionality. */
