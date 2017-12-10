@@ -186,7 +186,8 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
       pinMode(tone_pin, INPUT);
 
    }
-   while(tone_nhw) ; // blocks till duration elapsed
+   
+   //while(tone_nhw) ; // blocks till duration elapsed
 }
 
 ////////////////////////////////////////////////////////////////////////////////

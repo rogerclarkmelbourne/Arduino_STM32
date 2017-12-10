@@ -1,7 +1,7 @@
 /*
 STM32 adaption by Matthias Diro, tested with maple mini and heltec OLED 12864 I2c; adress: 0x3C (SPI should work, but I didn't own one)
 Things to know:
- This adaption uses hardware I2C (hardwire.h), Port: I2c2. SDA=0, SCL=1 on maple mini
+ This adaption uses hardware I2C (now Wire.h), Port: I2c2. SDA=0, SCL=1 on maple mini
  further details: STM32_README.txt
 */
 /*********************************************************************
