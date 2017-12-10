@@ -85,14 +85,14 @@ void ParseBuildTimestamp(tm_t & mt)
     }
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachSecondsInterurpt
+// This function is called in the attachSecondsInterrupt
 //-----------------------------------------------------------------------------
 void SecondCount ()
 {
   tt++;
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachAlarmInterurpt
+// This function is called in the attachAlarmInterrupt
 //-----------------------------------------------------------------------------
 void blink ()
 {
