@@ -163,7 +163,7 @@ void loop()
     // get and print actual RTC timestamp
     rtclock.breakTime(rtclock.now(), mtt);
     sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
-    months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
+      months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
     Serial.print(s);
   }
 }
