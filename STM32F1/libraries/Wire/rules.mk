@@ -1,3 +1,7 @@
+#this makefile may not work since HardWire has been changed to the default Wire (TwoWire)
+#anyway this file should be useless
+
+
 # Standard things
 sp := $(sp).x
 dirstack_$(sp) := $(d)
