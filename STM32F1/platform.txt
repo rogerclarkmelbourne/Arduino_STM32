@@ -18,7 +18,7 @@ compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g {build.flags.optimize} {compiler.warning_flags} -std=gnu11 -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} 
 compiler.c.elf.cmd=arm-none-eabi-g++
-compiler.c.elf.flags={build.flags.optimize} -Wl,--gc-sections {build.flags.ldspecs}
+compiler.c.elf.flags={build.flags.optimize} -Wl,--gc-sections {build.flags.ldspecs} 
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
@@ -50,7 +50,7 @@ build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
-compiler.c.elf.extra_flags="-L{build.variant.path}/ld"
+compiler.c.elf.extra_flags="-L{build.variant.path}/ld" -specs=nosys.specs -specs=nano.specs 
 compiler.cpp.extra_flags= 
 compiler.S.extra_flags=
 compiler.ar.extra_flags=
@@ -87,7 +87,7 @@ recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mcpu={b
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group {object_files} "{build.path}/{archive_file}" -Wl,--end-group
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group "{build.path}/core/libmaple/syscalls.c.o" {object_files} "{build.path}/{archive_file}" -Wl,--end-group
 
 ## Create eeprom
 recipe.objcopy.eep.pattern=
