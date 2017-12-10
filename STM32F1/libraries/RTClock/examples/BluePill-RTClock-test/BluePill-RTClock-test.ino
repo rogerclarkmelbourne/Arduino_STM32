@@ -4,7 +4,7 @@
   based on https://github.com/rogerclarkmelbourne/Arduino_STM32
 
   1. Blink on PC13 per 4s or 7s by attachAlarmInterrupt for 10 times
-  2. Second counter by attachSecondsInterrpt
+  2. Second counter by attachSecondsInterrupt
   3. Serial output on(41s) or off(21s) by creatAlarm
   4. change to your timezone in the sketch;
   3. get Unix epoch time from https://www.epochconverter.com/ ;
@@ -35,7 +35,6 @@ int globAlmCount = 0;
 int lastGlobAlmCount;
 int SPECAlmCount = 0;
 int lastSPECAlmCount;
-int i = 0;
 int alarmcount = 3;
 uint8_t AlarmExchange = 0;
 bool dispflag = true;
@@ -86,14 +85,14 @@ void ParseBuildTimestamp(tm_t & mt)
     }
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachSecondsInterrpt
+// This function is called in the attachSecondsInterrupt
 //-----------------------------------------------------------------------------
 void SecondCount ()
 {
   tt++;
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachAlarmInterrpt
+// This function is called in the attachAlarmInterrupt
 //-----------------------------------------------------------------------------
 void blink ()
 {
@@ -115,8 +114,8 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   //while (!Serial); delay(1000);
   ParseBuildTimestamp(mtt);  // get the Unix epoch Time counted from 00:00:00 1 Jan 1970
-  tt = rtclock.makeTime(mtt);
-  rtclock.setTime(tt+25); // additional seconds to compensate build and upload delay
+  tt = rtclock.makeTime(mtt) + 25; // additional seconds to compensate build and upload delay
+  rtclock.setTime(tt);
   tt1 = tt;
   rtclock.attachAlarmInterrupt(blink);// Call blink
   rtclock.attachSecondsInterrupt(SecondCount);// Call SecondCount
@@ -124,18 +123,13 @@ void setup()
 //-----------------------------------------------------------------------------
 void loop()
 {
-  while (Serial.available())
-  { dateread[i] = Serial.read();
-    if (i < 11) {
-      i++;
+  if ( Serial.available()>10 ) {
+    for (uint8_t i = 0; i<11; i++) {
+	    dateread[i] = Serial.read();
     }
-    else {
-      i = 0;
-      tt = (dateread[0] - '0') * 1000000000 + (dateread[1] - '0') * 100000000 + (dateread[2] - '0') * 10000000 + (dateread[3] - '0') * 1000000 + (dateread[4] - '0') * 100000;
-      tt += (dateread[5] - '0') * 10000 + (dateread[6] - '0') * 1000 + (dateread[7] - '0') * 100 + (dateread[8] - '0') * 10 + (dateread[9] - '0');
-      rtclock.TimeZone(tt, timezone);    //adjust to your local date
-      rtclock.setTime(rtclock.TimeZone(tt, timezone));
-    }
+    Serial.flush();
+    tt = atol((char*)dateread);
+    rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
   }
   if (lastGlobAlmCount != globAlmCount || lastSPECAlmCount != SPECAlmCount ) {
     if (globAlmCount == 10) {        // to detachAlarmInterrupt and start creatAlarm after 10 times about 110s
