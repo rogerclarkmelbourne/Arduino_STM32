@@ -4,7 +4,7 @@
   based on https://github.com/rogerclarkmelbourne/Arduino_STM32
 
   1. Blink on PC13 per 4s or 7s by attachAlarmInterrupt for 10 times
-  2. Second counter by attachSecondsInterrpt
+  2. Second counter by attachSecondsInterrupt
   3. Serial output on(41s) or off(21s) by creatAlarm
   4. change to your timezone in the sketch;
   3. get Unix epoch time from https://www.epochconverter.com/ ;
@@ -35,7 +35,6 @@ int globAlmCount = 0;
 int lastGlobAlmCount;
 int SPECAlmCount = 0;
 int lastSPECAlmCount;
-int i = 0;
 int alarmcount = 3;
 uint8_t AlarmExchange = 0;
 bool dispflag = true;
@@ -56,43 +55,44 @@ char s[128]; // for sprintf
 //-----------------------------------------------------------------------------
 void ParseBuildTimestamp(tm_t & mt)
 {
-	// Timestamp format: "Dec  8 2017, 22:57:54"
-	sprintf(s, "Timestamp: %s, %s\n", __DATE__, __TIME__);
-	//Serial.print(s);
-	char * token = strtok(s, delim); // get first token
-	// walk through tokens
-	while( token != NULL ) {
-		if ( (uint8_t m = str2month((const char*)token))>0 ) {
-			mt.month = m;
-			//Serial.print(" month: "); Serial.println(mt.month);
-			token = strtok(NULL, delim); // get next token
-			mt.day = atoi(token);
-			//Serial.print(" day: "); Serial.println(mt.day);
-			token = strtok(NULL, delim); // get next token
-			mt.year = atoi(token) - 1970;
-			//Serial.print(" year: "); Serial.println(mt.year);
-			token = strtok(NULL, delim); // get next token
-			mt.hour = atoi(token);
-			//Serial.print(" hour: "); Serial.println(mt.hour);
-			token = strtok(NULL, delim); // get next token
-			mt.minute = atoi(token);
-			//Serial.print(" minute: "); Serial.println(mt.minute);
-			token = strtok(NULL, delim); // get next token
-			mt.second = atoi(token);
-			//Serial.print(" second: "); Serial.println(mt.second);
-		}
-		token = strtok(NULL, delim);
-	}
+    // Timestamp format: "Dec  8 2017, 22:57:54"
+    sprintf(s, "Timestamp: %s, %s\n", __DATE__, __TIME__);
+    //Serial.print(s);
+    char * token = strtok(s, delim); // get first token
+    // walk through tokens
+    while( token != NULL ) {
+        uint8_t m = str2month((const char*)token);
+        if ( m>0 ) {
+            mt.month = m;
+            //Serial.print(" month: "); Serial.println(mt.month);
+            token = strtok(NULL, delim); // get next token
+            mt.day = atoi(token);
+            //Serial.print(" day: "); Serial.println(mt.day);
+            token = strtok(NULL, delim); // get next token
+            mt.year = atoi(token) - 1970;
+            //Serial.print(" year: "); Serial.println(mt.year);
+            token = strtok(NULL, delim); // get next token
+            mt.hour = atoi(token);
+            //Serial.print(" hour: "); Serial.println(mt.hour);
+            token = strtok(NULL, delim); // get next token
+            mt.minute = atoi(token);
+            //Serial.print(" minute: "); Serial.println(mt.minute);
+            token = strtok(NULL, delim); // get next token
+            mt.second = atoi(token);
+            //Serial.print(" second: "); Serial.println(mt.second);
+        }
+        token = strtok(NULL, delim);
+    }
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachSecondsInterrpt
+// This function is called in the attachSecondsInterurpt
 //-----------------------------------------------------------------------------
 void SecondCount ()
 {
   tt++;
 }
 //-----------------------------------------------------------------------------
-// This function is called in the attachAlarmInterrpt
+// This function is called in the attachAlarmInterurpt
 //-----------------------------------------------------------------------------
 void blink ()
 {
@@ -114,27 +114,22 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   //while (!Serial); delay(1000);
   ParseBuildTimestamp(mtt);  // get the Unix epoch Time counted from 00:00:00 1 Jan 1970
-  tt = rtclock.makeTime(mtt);
-  rtclock.setTime(tt+25); // additional seconds to compensate build and upload delay
+  tt = rtclock.makeTime(mtt) + 25; // additional seconds to compensate build and upload delay
   tt1 = tt;
+  rtclock.setTime(tt);
   rtclock.attachAlarmInterrupt(blink);// Call blink
   rtclock.attachSecondsInterrupt(SecondCount);// Call SecondCount
 }
 //-----------------------------------------------------------------------------
 void loop()
 {
-  while (Serial.available())
-  { dateread[i] = Serial.read();
-    if (i < 11) {
-      i++;
+  if ( Serial.available()>10 ) {
+    for (uint8_t i = 0; i<11; i++) {
+      dateread[i] = Serial.read();
     }
-    else {
-      i = 0;
-      tt = (dateread[0] - '0') * 1000000000 + (dateread[1] - '0') * 100000000 + (dateread[2] - '0') * 10000000 + (dateread[3] - '0') * 1000000 + (dateread[4] - '0') * 100000;
-      tt += (dateread[5] - '0') * 10000 + (dateread[6] - '0') * 1000 + (dateread[7] - '0') * 100 + (dateread[8] - '0') * 10 + (dateread[9] - '0');
-      rtclock.TimeZone(tt, timezone);    //adjust to your local date
-      rtclock.setTime(rtclock.TimeZone(tt, timezone));
-    }
+    Serial.flush();
+    tt = atol((char*)dateread);
+    rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
   }
   if (lastGlobAlmCount != globAlmCount || lastSPECAlmCount != SPECAlmCount ) {
     if (globAlmCount == 10) {        // to detachAlarmInterrupt and start creatAlarm after 10 times about 110s
@@ -165,10 +160,10 @@ void loop()
   if (tt1 != tt && dispflag == true )
   {
     tt1 = tt;
-	// get and print actual RTC timestamp
+    // get and print actual RTC timestamp
     rtclock.breakTime(rtclock.now(), mtt);
-	sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
-		months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
+    sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
+        months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
     Serial.print(s);
   }
 }
