@@ -152,7 +152,11 @@ private:
     voidFuncPtr _DMA_int;
     voidFuncPtr _ADC_int;
     voidFuncPtr _AWD_int;
+#if __cplusplus >= 201103L
+    static constexpr float _AverageSlope = 4.3; // mV/oC   //4.0 to 4.6
+    static constexpr float _V25 = 1.43; //Volts //1.34 - 1.52
+#else
     static const float _AverageSlope = 4.3; // mV/oC   //4.0 to 4.6
     static const float _V25 = 1.43; //Volts //1.34 - 1.52
-
+#endif
 };
