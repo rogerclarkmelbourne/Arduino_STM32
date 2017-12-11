@@ -274,6 +274,7 @@ static void handle_out0(void);
 
 static void dispatch_ctr_lp() {
     uint16 istr;
+
     while (((istr = USB_BASE->ISTR) & USB_ISTR_CTR) != 0) {
         /* TODO WTF, figure this out: RM0008 says CTR is read-only,
          * but ST's firmware claims it's clear-only, and emphasizes
@@ -293,6 +294,7 @@ static void dispatch_ctr_lp() {
         }
     }
 }
+
 
 /* FIXME Dataflow on endpoint 0 RX/TX status is based off of ST's
  * code, and is ugly/confusing in its use of SaveRState/SaveTState.
