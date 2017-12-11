@@ -27,7 +27,7 @@ typedef struct tm_t {
 	uint8_t  year;    // years since 1970
 	uint8_t  month;   // month of a year - [ 1 to 12 ]
 	uint8_t  day;     // day of a month - [ 1 to 31 ]
-	uint8_t  weekday; // day of a week (first day is Sunday) - [ 0 to 6 ]
+	uint8_t  weekday; // day of a week (first day is Monday) - [ 0 to 6 ]
 	uint8_t  pm;      // AM: 0, PM: 1
 	uint8_t  hour;    // hour of a day - [ 0 to 23 ]
 	uint8_t  minute;  // minute of an hour - [ 0 to 59 ]

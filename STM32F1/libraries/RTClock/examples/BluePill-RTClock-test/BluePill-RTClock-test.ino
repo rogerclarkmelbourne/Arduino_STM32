@@ -40,7 +40,7 @@ uint8_t AlarmExchange = 0;
 bool dispflag = true;
 
 //-----------------------------------------------------------------------------
-const char * weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+const char * weekdays[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 const char * months[] = {"Dummy", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 //-----------------------------------------------------------------------------
 uint8_t str2month(const char * d)
