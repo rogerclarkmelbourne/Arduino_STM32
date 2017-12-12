@@ -26,7 +26,7 @@ void loop()
 
 // function that executes whenever data is received from master
 // this function is registered as an event, see setup()
-void receiveEvent(int howMany)
+void receiveEvent(int howMany __attribute__((unused)))
 {
   while(1 < Wire.available()) // loop through all but the last
   {
