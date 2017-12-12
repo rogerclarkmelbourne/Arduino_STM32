@@ -1,6 +1,8 @@
 /*
 * i2c_slave example.cpp
 *
+*  You can use this sketch in combination with master_writer.pde
+*
 *  Created on: 4 Sep 2012
 *      Author: Barry Carter <barry.carter@gmail.com>
 */
@@ -12,13 +14,10 @@
 i2c_msg msg;
 uint8 buffer[255];
 
-volatile uint8 value_to_print = 'A';
 volatile bool newMessage = false;
 
 void funcrx(i2c_msg *msg){
   // Received length will be in msg->length
-  char return_data = msg->data[0];
-  value_to_print = return_data;
   newMessage = true;
 }
 
@@ -56,7 +55,7 @@ void functx(i2c_msg *msg){
 void setup() {
   Serial.begin(115200);
   while(!Serial)
-  ;
+    ;
   Serial.println("I2C Slave example");
 
   // attach the buffer
@@ -90,16 +89,19 @@ void setup() {
 }
 
 void loop() {
+  static uint32_t lastMessage = millis();
+
   if (newMessage) {
-    Serial.println("");
-    Serial.print("Last byte: ");
-    Serial.println(value_to_print);
+    // This is potentially dangerous.
+    // We're reading from the live buffer, the content can change
+    // in the middle of Serial.println
+    Serial.print("Received: ");
     Serial.println((char*)buffer);
+    lastMessage = millis();
     newMessage = false;
   } else {
-    static uint32_t lastMessage = millis();
-    if(millis() -lastMessage > 2000){
-      Serial.print("n");
+    if(millis() - lastMessage > 3000){
+      Serial.println("Nothing received in 3 seconds.");
       lastMessage = millis();
     }
   }
