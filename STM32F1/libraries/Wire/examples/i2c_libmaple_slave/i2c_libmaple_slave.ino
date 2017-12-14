@@ -13,10 +13,11 @@
 
 i2c_msg msg;
 uint8 buffer[255];
+char* const bufferAsChar = (char*)buffer; // ready type casted alias
 
 volatile bool newMessage = false;
 
-void funcrx(i2c_msg *msg){
+void funcrx(i2c_msg *msg __attribute__((unused))){
   // Received length will be in msg->length
   newMessage = true;
 }
@@ -50,7 +51,7 @@ void functx(i2c_msg *msg){
 
 #endif
 
-#define Serial Serial1
+// #define Serial Serial1
 
 void setup() {
   Serial.begin(115200);
@@ -91,15 +92,28 @@ void setup() {
 void loop() {
   static uint32_t lastMessage = millis();
 
-  if (newMessage) {
-    // This is potentially dangerous.
-    // We're reading from the live buffer, the content can change
-    // in the middle of Serial.println
-    Serial.print("Received: ");
-    Serial.println((char*)buffer);
+  // This is potentially dangerous.
+  // We're reading from the live buffer, the content can change
+  // in the middle of Serial.println
+
+  if (newMessage && strlen(bufferAsChar)==6) {
+    for (int i=0; i<5; i++) {
+      // Print as char
+      Serial.print(bufferAsChar[i]);
+    }
+    // Print as byte
+    Serial.println(buffer[5]);
     lastMessage = millis();
     newMessage = false;
   } else {
+    if(newMessage && strlen(bufferAsChar)!=6) {
+      // this also happends on the line "x is 0"
+      Serial.print("Bad data received:");
+      Serial.println(bufferAsChar);
+      Serial.print("strlen:");
+      Serial.println(strlen(bufferAsChar));
+      newMessage = false;
+    } else
     if(millis() - lastMessage > 3000){
       Serial.println("Nothing received in 3 seconds.");
       lastMessage = millis();
