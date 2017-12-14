@@ -6,6 +6,7 @@
 *  Created on: 4 Sep 2012
 *      Author: Barry Carter <barry.carter@gmail.com>
 */
+#include <Wire_slave.h>
 #include <Arduino.h>
 #include <libmaple/i2c.h>
 
