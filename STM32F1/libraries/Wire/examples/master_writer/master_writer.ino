@@ -17,14 +17,15 @@ void setup()
   Wire.begin(); // join i2c bus (address optional for master)
 }
 
+byte x = 0;
+
 void loop()
 {
-  static byte x = '!';
   Wire.beginTransmission(4); // transmit to device #4
-  Wire.write("x is ");       // sends five bytes
-  Wire.write(x);             // sends one byte
+  Wire.write("x is ");        // sends five bytes
+  Wire.write(x);              // sends one byte  
   Wire.endTransmission();    // stop transmitting
 
-  x = x<126?x+1:'!'; // only write human readable ASCII
+  x++;
   delay(500);
 }
