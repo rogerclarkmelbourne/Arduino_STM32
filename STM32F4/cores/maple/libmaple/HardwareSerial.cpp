@@ -90,7 +90,6 @@ void HardwareSerial::begin(uint32 baud) {
         return;
     }
 
-#ifdef STM32F4
 	// int af = 7<<8;
     if (usart_device == UART4 || usart_device == UART5) {
         gpio_set_af_mode(tx_pin, 8);
@@ -104,10 +103,6 @@ void HardwareSerial::begin(uint32 baud) {
     gpio_set_mode(rx_pin, (gpio_pin_mode)(GPIO_AF_INPUT_PU | 0x700));
     //gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
     //gpio_set_mode(rxi->gpio_device, rxi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
-#else
-	gpio_set_mode(tx_pin, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(rx_pin, GPIO_INPUT_FLOATING);
-#endif
 #if 0
     if (txi->timer_device != NULL) {
         /* Turn off any PWM if there's a conflict on this GPIO bit. */

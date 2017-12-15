@@ -27,7 +27,7 @@ typedef struct tm_t {
 	uint8_t  year;    // years since 1970
 	uint8_t  month;   // month of a year - [ 1 to 12 ]
 	uint8_t  day;     // day of a month - [ 1 to 31 ]
-	uint8_t  weekday; // day of a week (first day is Sunday) - [ 0 to 6 ]
+	uint8_t  weekday; // day of a week (first day is Monday) - [ 0 to 6 ]
 	uint8_t  pm;      // AM: 0, PM: 1
 	uint8_t  hour;    // hour of a day - [ 0 to 23 ]
 	uint8_t  minute;  // minute of an hour - [ 0 to 59 ]
@@ -52,7 +52,7 @@ class RTClock {
 	
 	time_t getTime();
 	void getTime(tm_t & tmm );
-		#define now getTime
+	#define now getTime
 
 	uint8_t year(void)    { getTime(tmm); return tmm.year; }
 	uint8_t month(void)   { getTime(tmm); return tmm.month; }
@@ -71,13 +71,13 @@ class RTClock {
 	uint8_t minute(time_t t)  { breakTime(t, tmm); return tmm.minute; }
 	uint8_t second(time_t t)  { breakTime(t, tmm); return tmm.second; }
 	uint8_t isPM(time_t t)    { return (hour(t)>=12); }
-
+	
 	// Usage: localtime = TimeZone(UnixTime, 8); 
 	time_t TimeZone(time_t t, int TZ) { return ( t + (TZ * SECS_PER_HOUR)); } 
 	
 	// Usage:  1.  localtime = TimeZone(UnixTime, 9, 45)  ->   UTC +09:45 TimeZone; 
-	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60)); }    // HTZ = Hour offset, MTZ = Minute offset
-	
+	time_t TimeZone(time_t t, int HTZ, int MTZ)  { return ( t + (HTZ * SECS_PER_HOUR) + (MTZ * 60)); }    // HTZ = Hour offset, MTZ = Minute offset	
+
 	void createAlarm(voidFuncPtr function, time_t alarm_time_t); 
 	void createAlarm(voidFuncPtr function, struct tm_t & alarm_tm);
 	void removeAlarm();

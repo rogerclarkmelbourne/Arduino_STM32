@@ -14,25 +14,30 @@
  ****************************************************/
 
 
-#include "SPI.h"
-#include "Adafruit_GFX_AS.h"
-#include "Adafruit_ILI9341_STM.h"
+#include <Adafruit_ILI9341_STM.h>
+#include <Streaming.h>
 
-// For the Adafruit shield, these are the default.
-#define TFT_DC 9
-#define TFT_CS 10
+// Use hardware SPI
+Adafruit_ILI9341_STM tft(PA4, PA3, PA2); // input chip select, DC and reset pins
 
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
-// If using the breakout, change pins as desired
-//Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
+// For using software SPI, define pins as desired, MISO is optional, needed for reading only
+//Adafruit_ILI9341_STM tft(TFT_CS, TFT_DC, TFT_RST, TFT_MOSI, TFT_CLK, [TFT_MISO]);
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
-  Serial.println("ILI9341 Test!"); 
- 
-  tft.begin();
+  while ( !Serial );
+  delay(1000);
 
+  Serial.println("ILI9341 Test!"); 
+#if true
+  // use standard SPI port
+  tft.begin();
+#else
+  // use alternative SPI port
+static SPIClass _spi(2);
+  tft.begin(_spi);
+#endif
   // read diagnostics (optional but can help debug problems)
   uint8_t x = tft.readcommand8(ILI9341_RDMODE);
   Serial.print("Display Power Mode: 0x"); Serial.println(x, HEX);
@@ -43,8 +48,29 @@ void setup() {
   x = tft.readcommand8(ILI9341_RDIMGFMT);
   Serial.print("Image Format: 0x"); Serial.println(x, HEX);
   x = tft.readcommand8(ILI9341_RDSELFDIAG);
-  Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX); 
+  Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX);
   
+  tft.fillScreen(ILI9341_BLACK);
+  // read/write test
+  uint16_t pixels[4] = {0x1234, 0x5678, 0x9012, 0x3456};
+  Serial << "\nRead single pixel test\n------------------------------\n";
+  Serial << "Write pixel: 0x1234\n";
+  tft.writePixel(100, 100, pixels[0]);
+  // read back
+  Serial << "Read pixel: 0x" << _HEX(tft.readPixel(100,100)) << endl;
+  // write pixels
+  Serial << "\nRead multiple pixel test\n------------------------------\n";
+  Serial << "Write pixels: 0x1234, 0x5678, 0x9012, 0x3456\n";
+  tft.setAddrWindow(100,100,101,101);
+  tft.pushColors(pixels,4);
+  memset(pixels, 4, 0); // clear before read back
+  // read back
+  uint16_t nr=tft.readPixels(100,100,101,101, pixels);
+  Serial << "Read " << nr << " pixels: 0x" << _HEX(pixels[0]) << ", 0x" << _HEX(pixels[1]) << ", 0x" << _HEX(pixels[2]) << ", 0x" << _HEX(pixels[3]) << endl;
+}
+
+void do_test(void)
+{  
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.print(F("Screen fill              "));
@@ -53,7 +79,7 @@ void setup() {
 
   Serial.print(F("Text                     "));
   Serial.println(testText());
-  delay(3000);
+  delay(500);
 
   Serial.print(F("Lines                    "));
   Serial.println(testLines(ILI9341_CYAN));
@@ -95,16 +121,17 @@ void setup() {
   delay(500);
 
   Serial.println(F("Done!"));
-
 }
 
 
-void loop(void) {
+void loop(void)
+{
   for(uint8_t rotation=0; rotation<4; rotation++) {
     tft.setRotation(rotation);
     testText();
     delay(1000);
   }
+  do_test();
 }
 
 unsigned long testFillScreen() {

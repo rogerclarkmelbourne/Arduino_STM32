@@ -30,8 +30,6 @@
  * @brief  generic_f407v board file.
  */
 
-#ifdef BOARD_generic_f407v
-
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -205,6 +203,3 @@ const uint8 boardUsedPins[BOARD_NR_USED_PINS] = {
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif // BOARD_generic_f407v

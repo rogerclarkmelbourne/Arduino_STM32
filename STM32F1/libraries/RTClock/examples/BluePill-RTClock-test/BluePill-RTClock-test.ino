@@ -138,7 +138,7 @@ void loop()
     }
     Serial.flush();
     tt = atol((char*)dateread);
-	Serial.print("> received: "); Serial.println(tt);
+    Serial.print("> received: "); Serial.println(tt);
     //rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
     rtclock.setTime(	); //adjust to GMT+1
   }
