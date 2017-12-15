@@ -6,10 +6,14 @@
   1. Blink on PC13 per 4s or 7s by attachAlarmInterrupt for 10 times
   2. Second counter by attachSecondsInterrupt
   3. Serial output on(41s) or off(21s) by creatAlarm
-  4. change to your timezone in the sketch;
-  3. get Unix epoch time from https://www.epochconverter.com/ ;
-  4. last step input the 10 bits number( example: 1503945555) to Serialport ;
-  5. the clock will be reset to you wanted.
+  4. You can change to your timezone in the sketch;
+  5. get Unix epoch time from https://www.epochconverter.com/ ;
+  6. last step input the 10 bits number( example: 1503945555) to Serialport ;
+  7. the clock will be reset to you wanted.
+  
+  2017.12.15 - stevestrong
+  Alternatively, you can use the processing sketch from the bottom section of this file to update
+  the RTC to the PC system time over serial.
 
   ##  Why the 10 bits Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
@@ -40,14 +44,14 @@ uint8_t AlarmExchange = 0;
 bool dispflag = true;
 
 //-----------------------------------------------------------------------------
-const char * weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-const char * months[] = {"Dummy", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+const char * weekdays[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+const char * months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 //-----------------------------------------------------------------------------
-uint8_t str2month(const char * d)
+int8_t str2month(const char * d)
 {
-    uint8_t i = 13;
-    while ( (--i) && strcmp(months[i], d)!=0 );
-    return i;
+	int8_t i = 12;
+	while ( (--i)>=0 && strcmp(months[i], d)!=0 );
+	return i;
 }
 //-----------------------------------------------------------------------------
 const char * delim = " :";
@@ -61,9 +65,9 @@ void ParseBuildTimestamp(tm_t & mt)
     char * token = strtok(s, delim); // get first token
     // walk through tokens
     while( token != NULL ) {
-        uint8_t m = str2month((const char*)token);
-        if ( m>0 ) {
-            mt.month = m;
+        int8_t m = str2month((const char*)token);
+        if ( m>=0 ) {
+            mt.month = m+1;
             //Serial.print(" month: "); Serial.println(mt.month);
             token = strtok(NULL, delim); // get next token
             mt.day = atoi(token);
@@ -113,10 +117,15 @@ void setup()
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   //while (!Serial); delay(1000);
+  tt1 = rtclock.now();
+  Serial.print("Current RTC time: "); Serial.println(tt);
   ParseBuildTimestamp(mtt);  // get the Unix epoch Time counted from 00:00:00 1 Jan 1970
   tt = rtclock.makeTime(mtt) + 25; // additional seconds to compensate build and upload delay
-  rtclock.setTime(tt);
-  tt1 = tt;
+  if ( tt>tt1 ) { // is build time later then curent RTC time?
+    Serial.print("Setting RTC to: "); Serial.println(tt);
+    rtclock.setTime(tt);
+    tt1 = tt;
+  }
   rtclock.attachAlarmInterrupt(blink);// Call blink
   rtclock.attachSecondsInterrupt(SecondCount);// Call SecondCount
 }
@@ -125,11 +134,13 @@ void loop()
 {
   if ( Serial.available()>10 ) {
     for (uint8_t i = 0; i<11; i++) {
-	    dateread[i] = Serial.read();
+      dateread[i] = Serial.read();
     }
     Serial.flush();
     tt = atol((char*)dateread);
-    rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
+	Serial.print("> received: "); Serial.println(tt);
+    //rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
+    rtclock.setTime(	); //adjust to GMT+1
   }
   if (lastGlobAlmCount != globAlmCount || lastSPECAlmCount != SPECAlmCount ) {
     if (globAlmCount == 10) {        // to detachAlarmInterrupt and start creatAlarm after 10 times about 110s
@@ -163,7 +174,140 @@ void loop()
     // get and print actual RTC timestamp
     rtclock.breakTime(rtclock.now(), mtt);
     sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
-      months[mtt.month], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
+        months[mtt.month-1], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
     Serial.print(s);
   }
 }
+
+/* Processing sketch to update RTC over serial */
+/* Copy the following section and save it to a new file with extension ".pde" */
+
+/* file start >>>
+//
+// Write current system timestamp to one of the listed serial ports. 
+//
+
+import processing.serial.*;
+
+Serial myPort;  // Create object from Serial class
+String[] portArray;
+int len, stage, select;
+PFont f; // Declare PFont variable
+int x = 250;
+int y = 30;
+int dy = 30;
+boolean keyOn;
+String portName, buf;
+//-----------------------------------------------------------------------------
+void setup() 
+{
+    size(500, 300);
+    background(0);
+    // List all the available serial ports
+    f = createFont("Arial",20,true);
+    textFont(f);
+    stage = 0;
+    select = -1;
+    keyOn = false;
+    buf = "";
+    portName = "";
+}
+//-----------------------------------------------------------------------------
+void draw()
+{
+    background(0);
+    portArray = Serial.list();
+    len = portArray.length;
+    text("Detected serial ports: ", 10, y);
+    if (len<1) {
+        select = -1;
+        stage = 0;
+        return;
+    }
+    int i = 0;
+    for (; i<len; i++) {
+    
+        fill(255);
+        text(portArray[i], x+10, y+dy*i);
+    
+        if (mouseOverRect(i) == true) {  // If mouse is over square,
+    
+            if (keyOn && stage==0 ) stage = 1;
+            
+            if (stage==1) {
+                fill(255);
+                rect(x, 10+dy*i, 90, y-5);         // Draw a square
+                fill(0);
+                text(portArray[i], x+10, y+dy*i);
+            } else {
+                noFill();
+                stroke(255);
+                rect(x, 10+dy*i, 90, y-5);         // Draw a square
+                fill(255);
+                text(portArray[i], x+10, y+dy*i);
+            }
+            if ( stage==2 ) {
+                if ( select>=0 && select!=i ) {
+                    try {
+                        myPort.stop();
+                    } catch(Exception e) {
+                        println("> could not stop serial port " + portName);
+                    }
+                    select = -1;
+                }
+                if ( select<0 ) {
+                    // try to connect to serial port
+                    portName = Serial.list()[i];
+                    try {
+                        myPort = new Serial(this, portName, 115200);
+                    } catch(Exception e) {
+                        println("> Error opening serial port "+i);
+                        portName = "";
+                    }
+                    if ( portName!="" ) {
+                        select = i;
+                    }
+                }
+                // send the epoch time to serial port
+                if ( select==i ) {
+                    int t = GetEpochTime();
+                    println("> sending " + t);
+                    myPort.write(Integer.toString(t)+'\n');
+                }
+                stage = 0;
+            }
+        
+        } else {
+            stage = 0;
+        }
+
+    }
+    fill(255);
+    text("Click on the port to send the timestamp: "+GetEpochTime(), 10, 10+(len+1)*y);
+    if ( select<0 ) return;
+    text("- connected.", 350, y+dy*select);
+    if (myPort.available()>0) {
+        buf = "";
+        while (myPort.available()>0) {
+            buf += myPort.readString();
+        }
+        print(buf);
+    }
+}
+//-----------------------------------------------------------------------------
+void mousePressed() {
+    stage = 1;
+}
+void mouseReleased() {
+    if (stage==1) stage ++;
+}
+//-----------------------------------------------------------------------------
+boolean mouseOverRect(int i) {
+    return (mouseX >= x) && (mouseX <= x+100) && (mouseY > 10+dy*i) && (mouseY <= y+5+dy*i);
+}
+//-----------------------------------------------------------------------------
+int GetEpochTime()
+{
+    return (int)(System.currentTimeMillis()/1000);
+}
+<<< file end. */
