@@ -1,7 +1,7 @@
 /******************************************************************************
  * The MIT License
  *
- * Copyright (c) 2010 Perry Hung.
+ * Copyright (c) 2010 LeafLabs LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -25,34 +25,54 @@
  *****************************************************************************/
 
 /**
- *  @file libmaple.h
- *  @brief General include file for libmaple
+ * @file HardWire.h
+ * @author Trystan Jones <crenn6977@gmail.com>
+ * @brief Wire library, uses the hardware I2C available in the Maple to
+ *        interact with I2C slave devices.
  */
 
-#ifndef _LIBMAPLE_H_
-#define _LIBMAPLE_H_
-
-#include "util.h"
-
 /*
- * Where to put usercode, based on space reserved for bootloader.
- *
- * FIXME this has no business being here
+ * Library created by crenn to use the new WireBase system and allow Arduino
+ * users easy interaction with the I2C Hardware in a familiar method.
  */
-/*
-*/
-#ifndef USER_ADDR_ROM
-#define USER_ADDR_ROM 0x08000000
-#endif
-#define USER_ADDR_RAM 0x20000C00
-#define STACK_TOP     0x20000800
-/*
-#else
-#define USER_ADDR_ROM 0x08005000
-#define USER_ADDR_RAM 0x20000C00
-#define STACK_TOP     0x20000800
-#endif
-*/
 
-#endif
+#ifndef _HARDWIRE_H_
+#define _HARDWIRE_H_
 
+#include "WireBase.h"
+#include "wirish.h"
+#include <libmaple/i2c.h>
+
+class HardWire : public WireBase {
+private:
+    i2c_dev* sel_hard;
+    uint8    dev_flags;
+protected:
+    /*
+     * Processes the incoming I2C message defined by WireBase to the
+     * hardware. If an error occured, restart the I2C device.
+     */
+    uint8 process(uint8);
+    uint8 process();
+public:
+    /*
+     * Check if devsel is within range and enable selected I2C interface with
+     * passed flags
+     */
+    HardWire(uint8, uint8 = 0);
+	
+	/*
+	 * Shuts down (disables) the hardware I2C
+	 */
+	void end();
+
+	void setClock(uint32_t frequencyHz);
+    /*
+     * Disables the I2C device and remove the device address.
+     */
+    ~HardWire();
+
+    void begin(void);
+};
+extern HardWire Wire;
+#endif // _HARDWIRE_H_

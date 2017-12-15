@@ -71,13 +71,9 @@ const adc_dev ADC3 = {
  */
 void adc_init(const adc_dev *dev) {
     rcc_clk_enable(dev->clk_id);
-#ifdef STM32F4
     if(dev->clk_id == RCC_ADC1) {
     	rcc_reset_dev(dev->clk_id);
     }
-#else
-    rcc_reset_dev(dev->clk_id);
-#endif
 }
 
 /**

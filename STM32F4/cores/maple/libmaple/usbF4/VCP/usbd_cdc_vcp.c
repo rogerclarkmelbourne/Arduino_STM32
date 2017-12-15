@@ -52,11 +52,13 @@ extern volatile int APP_Rx_ptr_in;    /* Increment this pointer or roll it back 
 extern volatile int APP_Rx_ptr_out;
 
 #define UsbRecBufferSize 2048
-uint8_t UsbRecBuffer[UsbRecBufferSize];
+uint8_t __CCMRAM__ UsbRecBuffer[UsbRecBufferSize];
 volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
 uint8_t UsbTXBlock = 1;
+
+uint8_t VCPGetDTR(void) { return VCP_DTRHIGH; }
 
 uint32_t VCPBytesAvailable(void) {
 	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
@@ -182,6 +184,8 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 	linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8));
 	if(Buf[0] & 1) {
 		VCP_DTRHIGH = 1;
+	} else {
+		VCP_DTRHIGH = 0;
 	}
     /* Not  needed for this driver */
     break;
@@ -210,7 +214,7 @@ uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 	while(Len-- > 0) {
 		if(UsbTXBlock) {
 			while ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE)
-				;
+				if (!VCP_DTRHIGH) return USBD_BUSY;
 		} else {
 			if ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE) {
 				return USBD_BUSY;

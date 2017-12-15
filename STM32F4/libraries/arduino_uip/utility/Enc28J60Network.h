@@ -29,7 +29,7 @@
 #include "mempool.h"
 
 
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
 #define ENC28J60_CONTROL_CS     PC8 
 #else
 #define ENC28J60_CONTROL_CS     SPI.nssPin()
