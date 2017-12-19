@@ -70,6 +70,12 @@ static inline void i2c_send_slave_addr(i2c_dev *dev, uint32 addr, uint32 rw) {
 #ifdef I2C_DEBUG
 
 #define NR_CRUMBS       128
+struct crumb {
+    uint32 event;
+    uint32 arg0;
+    uint32 arg1;
+    uint32 arg2; // filler to make the data fit GDB memory dump screen
+};
 static struct crumb crumbs[NR_CRUMBS];
 static uint32 cur_crumb = 0;
 
@@ -79,6 +85,7 @@ static inline void i2c_drop_crumb(uint32 event, uint32 arg0, uint32 arg1) {
         crumb->event = event;
         crumb->arg0 = arg0;
         crumb->arg1 = arg1;
+        crumb->arg2 = cur_crumb-1;
     }
 }
 #define I2C_CRUMB(event, arg0, arg1) i2c_drop_crumb(event, arg0, arg1)
@@ -86,12 +93,6 @@ static inline void i2c_drop_crumb(uint32 event, uint32 arg0, uint32 arg1) {
 #else
 #define I2C_CRUMB(event, arg0, arg1)
 #endif
-
-struct crumb {
-    uint32 event;
-    uint32 arg0;
-    uint32 arg1;
-};
 
 enum {
     IRQ_ENTRY           = 1,
@@ -351,8 +352,8 @@ void _i2c_irq_handler(i2c_dev *dev) {
      * Add Slave support
      */
 
-    /* Check to see if MSL master slave bit is set */
-    if ((sr2 & I2C_SR2_MSL) != I2C_SR2_MSL) { /* 0 = slave mode 1 = master */
+    /* Check to see if in slave mode */
+    if (dev->config_flags&(I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL)) {
 
         /* Check for address match */
         if (sr1 & I2C_SR1_ADDR) {
