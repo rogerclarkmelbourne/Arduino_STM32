@@ -156,17 +156,6 @@ private:
 	friend class SPIClass;
 };
 
-
-/*
-    Should move this to within the class once tested out, just for tidyness
-*/
-static uint8_t __attribute__ ((unused)) ff = 0XFF;
-static void __attribute__ ((unused)) (*_spi1_this);
-static void __attribute__ ((unused)) (*_spi2_this);
-#if BOARD_NR_SPI >= 3
-static void __attribute__ ((unused)) (*_spi3_this);
-#endif
-
 /**
  * @brief Wirish SPI interface.
  *

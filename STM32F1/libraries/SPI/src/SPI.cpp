@@ -86,6 +86,11 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 #endif
 };
 
+static void (*_spi1_this);
+static void (*_spi2_this);
+#if BOARD_NR_SPI >= 3
+  static void (*_spi3_this);
+#endif
 
 /*
  * Constructor
@@ -399,8 +404,9 @@ void SPIClass::dmaTransferSet(const void *transmitBuf, void *receiveBuf) {
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                      receiveBuf, dma_bit_size, (DMA_MINC_MODE | DMA_TRNS_CMPLT ));// receive buffer DMA
     if (!transmitBuf) {
-    transmitBuf = &ff;
-    dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
+        static uint8_t ff = 0XFF;
+        transmitBuf = &ff;
+        dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                        (volatile void*)transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
     }
     else {
