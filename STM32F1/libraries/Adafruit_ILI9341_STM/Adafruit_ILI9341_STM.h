@@ -7,7 +7,7 @@ This library has been modified for the Maple Mini
 #define _ADAFRUIT_ILI9341H_
 
 #include "Arduino.h"
-#include <Adafruit_GFX_AS.h>
+#include <Adafruit_GFX.h>
 #include <SPI.h>
 
 #ifndef swap
