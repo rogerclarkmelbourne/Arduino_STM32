@@ -6,12 +6,12 @@
 
 // HACK ALERT. This definition may not match your processor
 // To Do. Work out correct value for EEPROM_PAGE_SIZE on the STM32F103CT6 etc 
-#define MCU_STM32F103RB
+//#define MCU_STM32F103RB
 
 #ifndef EEPROM_PAGE_SIZE
-	#if defined (MCU_STM32F103RB)
+	#if defined (STM32_MEDIUM_DENSITY)
 		#define EEPROM_PAGE_SIZE	(uint16)0x400  /* Page size = 1KByte */
-	#elif defined (MCU_STM32F103ZE) || defined (MCU_STM32F103RE) || defined (MCU_STM32F103RD)
+	#elif defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
 		#define EEPROM_PAGE_SIZE	(uint16)0x800  /* Page size = 2KByte */
 	#else
 		#error	"No MCU type specified. Add something like -DMCU_STM32F103RB to your compiler arguments (probably in a Makefile)."
@@ -19,11 +19,15 @@
 #endif
 
 #ifndef EEPROM_START_ADDRESS
-	#if defined (MCU_STM32F103RB)
+	#if defined (MCU_STM32F103C8
+		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 64 * 1024 - 2 * EEPROM_PAGE_SIZE))
+    #elif defined (MCU_STM32F103RB) || defined (MCU_STM32F103CB)
 		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 128 * 1024 - 2 * EEPROM_PAGE_SIZE))
-	#elif defined (MCU_STM32F103ZE) || defined (MCU_STM32F103RE)
+	#elif defined (MCU_STM32F103RC) || defined (MCU_STM32F103VC)
+		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 256 * 1024 - 2 * EEPROM_PAGE_SIZE))
+	#elif defined (MCU_STM32F103RE) || defined (MCU_STM32F103VE) || defined (MCU_STM32F103ZE)
 		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 512 * 1024 - 2 * EEPROM_PAGE_SIZE))
-	#elif defined (MCU_STM32F103RD)
+	#elif defined (MCU_STM32F103RD) || defined (MCU_STM32F103VD) || defined (MCU_STM32F103ZD)
 		#define EEPROM_START_ADDRESS	((uint32)(0x8000000 + 384 * 1024 - 2 * EEPROM_PAGE_SIZE))
 	#else
 		#error	"No MCU type specified. Add something like -DMCU_STM32F103RB to your compiler arguments (probably in a Makefile)."
