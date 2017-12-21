@@ -160,12 +160,7 @@ private:
 /*
     Should move this to within the class once tested out, just for tidyness
 */
-static uint8_t ff = 0XFF;
-static void (*_spi1_this);
-static void (*_spi2_this);
-#if BOARD_NR_SPI >= 3
-static void (*_spi3_this);
-#endif
+
 
 /**
  * @brief Wirish SPI interface.
@@ -416,7 +411,15 @@ private:
     #if BOARD_NR_SPI >= 3
     static void _spi3EventCallback(void);
     #endif
-	/*
+
+    static SPIClass *_spi1_this;
+    static SPIClass *_spi2_this;
+    #if BOARD_NR_SPI >= 3
+    static SPIClass *_spi3_this;
+    #endif
+
+    static const uint16_t ff;
+    /*
 	spi_dev *spi_d;
 	uint8_t _SSPin;
 	uint32_t clockDivider;

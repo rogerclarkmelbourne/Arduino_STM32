@@ -86,6 +86,13 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 #endif
 };
 
+SPIClass *SPIClass::_spi1_this = NULL;
+SPIClass *SPIClass::_spi2_this = NULL;
+#if BOARD_NR_SPI >= 3
+SPIClass *SPIClass::_spi3_this = NULL;
+#endif
+
+const uint16_t SPIClass::ff = 0xFFFF;
 
 /*
  * Constructor
@@ -99,19 +106,19 @@ SPIClass::SPIClass(uint32 spi_num)
 #if BOARD_NR_SPI >= 1
     case 1:
         _currentSetting->spi_d = SPI1;
-        _spi1_this = (void*) this;						  
+        _spi1_this = this;
         break;
 #endif
 #if BOARD_NR_SPI >= 2
     case 2:
         _currentSetting->spi_d = SPI2;
-        _spi2_this = (void*) this;								  
+        _spi2_this = this;
         break;
 #endif
 #if BOARD_NR_SPI >= 3
     case 3:
         _currentSetting->spi_d = SPI3;
-        _spi3_this = (void*) this;								  
+        _spi3_this = this;
         break;
 #endif
     default:
@@ -399,7 +406,7 @@ void SPIClass::dmaTransferSet(void *transmitBuf, void *receiveBuf) {
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                      receiveBuf, dma_bit_size, (DMA_MINC_MODE | DMA_TRNS_CMPLT ));// receive buffer DMA
     if (!transmitBuf) {
-    transmitBuf = &ff;
+    transmitBuf = (void *)&ff;
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                        transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
     }
