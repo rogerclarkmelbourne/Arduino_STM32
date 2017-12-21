@@ -7,7 +7,7 @@ MEMORY
 {
   ccmram (rw): ORIGIN = 0x10000000, LENGTH = 64K
   ram (rwx)  : ORIGIN = 0x20000000, LENGTH = 128K
-  rom (rx)   : ORIGIN = 0x08000000, LENGTH = 512K
+  rom (rx)   : ORIGIN = 0x08004000, LENGTH = 496K
 }
 
 /* GROUP(libcs3_stm32_high_density.a) */
