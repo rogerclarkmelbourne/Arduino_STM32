@@ -689,17 +689,16 @@ uint8 SPIClass::recv(void) {
     DMA call back functions, one per port.
 */
 
-void SPIClass::_spi1EventCallback()
-{
-    reinterpret_cast<class SPIClass*>(_spi1_this)->EventCallback();
+void SPIClass::_spi1EventCallback() {
+    _spi1_this->EventCallback();
 }
 
 void SPIClass::_spi2EventCallback() {
-    reinterpret_cast<class SPIClass*>(_spi2_this)->EventCallback();
+    _spi2_this->EventCallback();
 }
 #if BOARD_NR_SPI >= 3
 void SPIClass::_spi3EventCallback() {
-    reinterpret_cast<class SPIClass*>(_spi3_this)->EventCallback();
+    _spi3_this->EventCallback();
 }
 #endif
 /*
