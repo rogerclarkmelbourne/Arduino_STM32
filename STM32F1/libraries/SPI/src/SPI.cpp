@@ -357,10 +357,10 @@ void SPIClass::write(uint16 data, uint32 n)
     while ( (regs->SR & SPI_SR_BSY) != 0); // wait until BSY=0 before returning 
 }
 
-void SPIClass::write(void *data, uint32 length)
+void SPIClass::write(const void *data, uint32 length)
 {
     spi_dev * spi_d = _currentSetting->spi_d;
-    spi_tx(spi_d, (void*)data, length); // data can be array of bytes or words
+    spi_tx(spi_d, data, length); // data can be array of bytes or words
     while (spi_is_tx_empty(spi_d) == 0); // "5. Wait until TXE=1 ..."
     while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
 }
@@ -398,7 +398,7 @@ uint16_t SPIClass::transfer16(uint16_t data) const
 *	On exit TX buffer is not modified, and RX buffer cotains the received data.
 *	Still in progress.
 */
-void SPIClass::dmaTransferSet(void *transmitBuf, void *receiveBuf) {
+void SPIClass::dmaTransferSet(const void *transmitBuf, void *receiveBuf) {
     dma_init(_currentSetting->spiDmaDev);
     //spi_rx_dma_enable(_currentSetting->spi_d);
     //spi_tx_dma_enable(_currentSetting->spi_d);
@@ -408,11 +408,11 @@ void SPIClass::dmaTransferSet(void *transmitBuf, void *receiveBuf) {
     if (!transmitBuf) {
     transmitBuf = (void *)&ff;
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-                       transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
+                       (volatile void*)transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
     }
     else {
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-                       transmitBuf, dma_bit_size, (DMA_MINC_MODE |  DMA_FROM_MEM ));// Transmit buffer DMA
+                       (volatile void*)transmitBuf, dma_bit_size, (DMA_MINC_MODE |  DMA_FROM_MEM ));// Transmit buffer DMA
     }
     dma_set_priority(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, DMA_PRIORITY_LOW);
     dma_set_priority(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, DMA_PRIORITY_VERY_HIGH);
@@ -458,7 +458,7 @@ uint8 SPIClass::dmaTransferRepeat(uint16 length) {
 *	Still in progress.
 */
 
-uint8 SPIClass::dmaTransfer(void *transmitBuf, void *receiveBuf, uint16 length) {
+uint8 SPIClass::dmaTransfer(const void *transmitBuf, void *receiveBuf, uint16 length) {
     dmaTransferSet(transmitBuf, receiveBuf);
     return dmaTransferRepeat(length);
 }
@@ -470,12 +470,12 @@ uint8 SPIClass::dmaTransfer(void *transmitBuf, void *receiveBuf, uint16 length) 
 *	2016 - stevstrong - reworked to automatically detect bit size from SPI setting
 */
 
-void SPIClass::dmaSendSet(void * transmitBuf, bool minc) {
+void SPIClass::dmaSendSet(const void * transmitBuf, bool minc) {
    uint32 flags = ( (DMA_MINC_MODE*minc) | DMA_FROM_MEM | DMA_TRNS_CMPLT);
    dma_init(_currentSetting->spiDmaDev);
    dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_16BIT) ? DMA_SIZE_16BITS : DMA_SIZE_8BITS;
    dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-                       transmitBuf, dma_bit_size, flags);// Transmit buffer DMA
+                       (volatile void*)transmitBuf, dma_bit_size, flags);// Transmit buffer DMA
    dma_set_priority(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, DMA_PRIORITY_LOW);
 }
 
@@ -505,12 +505,12 @@ uint8 SPIClass::dmaSendRepeat(uint16 length) {
     return b;
 }
 
-uint8 SPIClass::dmaSend(void * transmitBuf, uint16 length, bool minc) {
+uint8 SPIClass::dmaSend(const void * transmitBuf, uint16 length, bool minc) {
     dmaSendSet(transmitBuf, minc);
     return dmaSendRepeat(length);
 }
 
-uint8 SPIClass::dmaSendAsync(void * transmitBuf, uint16 length, bool minc) {
+uint8 SPIClass::dmaSendAsync(const void * transmitBuf, uint16 length, bool minc) {
     uint8 b = 0;	
 
     if (_currentSetting->state != SPI_STATE_READY)
@@ -536,7 +536,7 @@ uint8 SPIClass::dmaSendAsync(void * transmitBuf, uint16 length, bool minc) {
     // TX
     dma_xfer_size dma_bit_size = (_currentSetting->dataSize==DATA_SIZE_16BIT) ? DMA_SIZE_16BITS : DMA_SIZE_8BITS;
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-    transmitBuf, dma_bit_size, flags);// Transmit buffer DMA 
+    (volatile void*)transmitBuf, dma_bit_size, flags);// Transmit buffer DMA 
     dma_set_num_transfers(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, length);
     dma_clear_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
     dma_enable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);// enable transmit

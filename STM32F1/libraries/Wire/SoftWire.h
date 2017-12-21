@@ -25,7 +25,7 @@
  *****************************************************************************/
 
 /**
- * @file Wire.h
+ * @file SoftWire.h
  * @author Trystan Jones <crenn6977@gmail.com>
  * @brief Wire library, uses the WireBase to create the primary interface
  *        while keeping low level interactions invisible to the user.
@@ -40,7 +40,7 @@
 #ifndef _SOFTWIRE_H_
 #define _SOFTWIRE_H_
 
-#include "WireBase.h"
+#include "utility/WireBase.h"
 #include "wirish.h"
 
 /*
@@ -57,10 +57,10 @@
 //#define I2C_DELAY(x) {uint32 time=micros(); while(time>(micros()+x));}
 #define I2C_DELAY(x) do{for(int i=0;i<x;i++) {asm volatile("nop");}}while(0)
 
-#define BUFFER_LENGTH 32
 
 
-class TwoWire : public WireBase {
+
+class SoftWire : public WireBase {
  public:
     uint8 		i2c_delay;
     uint8       scl_pin;
@@ -136,7 +136,7 @@ class TwoWire : public WireBase {
      * Accept pin numbers for SCL and SDA lines. Set the delay needed
      * to create the timing for I2C's Standard Mode and Fast Mode.
      */
-    TwoWire(uint8 scl=SCL, uint8 sda=SDA, uint8 delay=SOFT_STANDARD);
+    SoftWire(uint8 scl=SCL, uint8 sda=SDA, uint8 delay=SOFT_STANDARD);
 
     /*
      * Sets pins SDA and SCL to OUPTUT_OPEN_DRAIN, joining I2C bus as
@@ -155,9 +155,9 @@ class TwoWire : public WireBase {
     /*
      * If object is destroyed, set pin numbers to 0.
      */
-    ~TwoWire();
+    ~SoftWire();
 };
 
-//extern TwoWire Wire;
+//extern SoftWire Wire;
 
-#endif // _WIRE_H_
+#endif // _SOFTWIRE_H_

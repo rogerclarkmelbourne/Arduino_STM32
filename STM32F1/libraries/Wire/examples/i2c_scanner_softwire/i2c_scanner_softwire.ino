@@ -5,7 +5,7 @@
 
 #include <SoftWire.h>
 
-TwoWire SWire(PB6, PB7, SOFT_FAST);
+SoftWire SWire(PB6, PB7, SOFT_FAST);
 
 
 void setup() {

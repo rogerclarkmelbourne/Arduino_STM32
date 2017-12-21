@@ -26,6 +26,10 @@
 
 #include <Wire.h>
 
+//use IIC2
+//TwoWire WIRE2 (2,I2C_FAST_MODE);
+//#define Wire WIRE2
+
 
 void setup() {
 

@@ -2,6 +2,7 @@
 
 menu.usb_cfg=USB configuration
 menu.opt=Optimize
+menu.upload_method=Upload method
 
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
@@ -30,6 +31,7 @@ discovery_f407.build.density=STM32_HIGH_DENSITY
 discovery_f407.build.error_led_port=GPIOD
 discovery_f407.build.error_led_pin=14
 discovery_f407.build.board=STM32DiscoveryF407
+discovery_f407.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
 discovery_f407.menu.usb_cfg.usb_nc=USB inactive
 discovery_f407.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
@@ -92,15 +94,36 @@ generic_f407v.build.density=STM32_HIGH_DENSITY
 generic_f407v.build.error_led_port=GPIOA
 generic_f407v.build.error_led_pin=7
 generic_f407v.build.board=STM32GenericF407VET6
+generic_f407v.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
 generic_f407v.menu.usb_cfg.usb_nc=USB inactive
 generic_f407v.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
 
 generic_f407v.menu.usb_cfg.usb_serial=USB serial (CDC)
 generic_f407v.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
-
 generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
+
+#note STLink is the default from the main block of config above, so does not need settings for everything
+generic_f407v.menu.upload_method.STLinkMethod=STLink
+generic_f407v.menu.upload_method.STLinkMethod.upload.protocol=STLink
+generic_f407v.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+generic_f407v.menu.upload_method.STLinkMethod.upload.dfuse_addr=0x08004000
+generic_f407v.menu.upload_method.STLinkMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
+
+
+generic_f407v.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+generic_f407v.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+generic_f407v.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+generic_f407v.menu.upload_method.DFUUploadMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08004000
+generic_f407v.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_8004000.ld
+generic_f407v.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+generic_f407v.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+
+
+
+
 
 #-- Optimizations
 generic_f407v.menu.opt.osstd=Smallest (default)
@@ -158,6 +181,7 @@ stm32f4stamp.build.density=STM32_HIGH_DENSITY
 stm32f4stamp.build.error_led_port=GPIOD
 stm32f4stamp.build.error_led_pin=14
 stm32f4stamp.build.board=STM32F4StampF405
+stm32f4stamp.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
 stm32f4stamp.menu.usb_cfg.usb_nc=USB inactive
 stm32f4stamp.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC

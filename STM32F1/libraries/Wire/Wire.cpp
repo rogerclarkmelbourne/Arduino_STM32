@@ -25,7 +25,7 @@
  *****************************************************************************/
 
 /**
- * @file HardWire.cpp
+ * @file TwoWire.cpp
  * @author Trystan Jones <crenn6977@gmail.com>
  * @brief Wire library, uses the hardware I2C available in the Maple to
  *        interact with I2C slave devices.
@@ -38,7 +38,7 @@
 
 #include "Wire.h"
 
-uint8 HardWire::process(uint8 stop) {
+uint8 TwoWire::process(uint8 stop) {
     int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, 0);
     if (res == I2C_ERROR_PROTOCOL) {
         if (sel_hard->error_flags & I2C_SR1_AF) { /* NACK */
@@ -55,12 +55,12 @@ uint8 HardWire::process(uint8 stop) {
     return res;
 }
 
-uint8 HardWire::process(){
+uint8 TwoWire::process(){
 	return process(true);
 }
 
 // TODO: Add in Error Handling if devsel is out of range for other Maples
-HardWire::HardWire(uint8 dev_sel, uint8 flags) {
+TwoWire::TwoWire(uint8 dev_sel, uint8 flags) {
     if (dev_sel == 1) {
         sel_hard = I2C1;
     } else if (dev_sel == 2) {
@@ -71,21 +71,21 @@ HardWire::HardWire(uint8 dev_sel, uint8 flags) {
     dev_flags = flags;
 }
 
-HardWire::~HardWire() {
+TwoWire::~TwoWire() {
     i2c_disable(sel_hard);
     sel_hard = 0;
 }
 
-void HardWire::begin(uint8 self_addr) {
+void TwoWire::begin(uint8 self_addr) {
     i2c_master_enable(sel_hard, dev_flags);
 }
 
-void HardWire::end() {
+void TwoWire::end() {
     i2c_disable(sel_hard);
     sel_hard = 0;
 }
 
-void HardWire::setClock(uint32_t frequencyHz)
+void TwoWire::setClock(uint32_t frequencyHz)
 {
     if (frequencyHz<=40000)
     {
@@ -116,11 +116,11 @@ void HardWire::setClock(uint32_t frequencyHz)
     }
 }
 
-void HardWire::overClock(uint32_t frequencyHz)
+void TwoWire::overClock(uint32_t frequencyHz)
 {
     uint32 hz = (frequencyHz > 2000000) ? 2000000 : frequencyHz;
     i2c_overclock(sel_hard, hz);
 }
 
 
-HardWire Wire(1);
+TwoWire Wire(1);
