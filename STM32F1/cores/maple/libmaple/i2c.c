@@ -166,6 +166,7 @@ void i2c_init(i2c_dev *dev) {
  * @param dev Device to enable
  * @param flags Bitwise or of the following I2C options:
  *              I2C_FAST_MODE: 400 khz operation,
+ *              I2C_FAST_MODE_PLUS: 1 Mhz operation,
  *              I2C_DUTY_16_9: 16/9 Tlow/Thigh duty cycle (only applicable for
  *                             fast mode),
  *              I2C_BUS_RESET: Reset the bus and clock out any hung slaves on
@@ -491,7 +492,21 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
 
     i2c_set_input_clk(dev, clk_mhz);
 
-    if (flags & I2C_FAST_MODE) {
+    if (flags & I2C_FAST_MODE_PLUS) {
+        ccr |= I2C_CCR_FS;
+
+        if (flags & I2C_DUTY_16_9) {
+            /* Tlow/Thigh = 16/9 */
+            ccr |= I2C_CCR_DUTY_16_9;
+            ccr |= clk_hz / (1000000 * 25);
+        } else {
+            /* Tlow/Thigh = 2 */
+            ccr |= clk_hz / (1000000 * 3);
+        }
+        trise = (300 * clk_mhz / 1000) + 1;
+    }
+
+    else if (flags & I2C_FAST_MODE) {
         ccr |= I2C_CCR_FS;
 
         if (flags & I2C_DUTY_16_9) {
@@ -503,7 +518,7 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
             ccr |= clk_hz / (400000 * 3);
         }
 
-        trise = (300 * clk_mhz / 1000) + 1;
+        trise = (125 * clk_mhz / 1000) + 1;
     } else {
         /* Tlow/Thigh = 1 */
         ccr = clk_hz / (100000 * 2);
@@ -517,4 +532,30 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
 
     i2c_set_clk_control(dev, ccr);
     i2c_set_trise(dev, trise);
+}
+
+void i2c_overclock(i2c_dev *dev, uint32 hz){
+    uint32 ccr     = 0;
+    uint32 trise   = 0;
+    uint32 clk_mhz = _i2c_bus_clk(dev);
+    uint32 clk_hz  = clk_mhz * (1000 * 1000);
+    i2c_peripheral_disable(dev);
+
+    /* Force Fast speed mode and 16/9 duty mode */
+    //ccr |= I2C_CCR_DUTY_16_9;
+    ccr |= I2C_CCR_FS;
+
+    /* calculating new value */
+    //ccr |= clk_hz / (hz * 25);
+    ccr |= clk_hz / (hz * 3);
+    trise = (125 * clk_mhz / 1000) + 1;
+
+    /* Set minimum required value if CCR < 1*/
+    if ((ccr & I2C_CCR_CCR) == 0) {
+        ccr |= 0x1;
+    }
+
+    i2c_set_clk_control(dev, ccr);
+    i2c_set_trise(dev, trise);
+    i2c_peripheral_enable(dev);
 }

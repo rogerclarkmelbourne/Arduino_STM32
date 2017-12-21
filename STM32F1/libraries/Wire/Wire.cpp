@@ -87,17 +87,40 @@ void HardWire::end() {
 
 void HardWire::setClock(uint32_t frequencyHz)
 {
-	switch(frequencyHz)
-	{
-		case 400000:
-			dev_flags |= I2C_FAST_MODE;// set FAST_MODE bit
-			break;
-		case 100000:
-		default:
-			dev_flags &= ~I2C_FAST_MODE;// clear FAST_MODE bit
-			break;
-	}
-	
+    if (frequencyHz<=40000)
+    {
+        switch(frequencyHz)
+        {
+        case 1000000:
+            dev_flags &= ~(I2C_FAST_MODE);
+            dev_flags |= I2C_FAST_MODE_PLUS;// set FAST_MODE bit
+            break;
+        case 400000:
+            dev_flags &= ~(I2C_FAST_MODE_PLUS);
+            dev_flags |= I2C_FAST_MODE;// set FULL_SPEED bit
+            break;
+        case 100000:
+        default:
+            dev_flags &= ~(I2C_FAST_MODE | I2C_FAST_MODE_PLUS);// clear FAST_MODE and FULL_SPEED bits
+            break;
+        }
+        if (sel_hard->regs->CR1 & I2C_CR1_PE){
+            i2c_disable(sel_hard);
+            i2c_master_enable(sel_hard, dev_flags);
+        }
+    }
+    else
+    {
+        uint32 hz = (frequencyHz > 1200000) ? 1200000 : frequencyHz;
+        i2c_overclock(sel_hard, hz);
+    }
 }
+
+void HardWire::overClock(uint32_t frequencyHz)
+{
+    uint32 hz = (frequencyHz > 2000000) ? 2000000 : frequencyHz;
+    i2c_overclock(sel_hard, hz);
+}
+
 
 HardWire Wire(1);

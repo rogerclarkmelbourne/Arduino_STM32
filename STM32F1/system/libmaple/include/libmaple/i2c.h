@@ -198,11 +198,14 @@ typedef struct i2c_msg {
 #define I2C_DUTY_16_9           0x2           // 16/9 duty ratio
 /* Flag 0x4 is reserved; DO NOT USE. */
 #define I2C_BUS_RESET           0x8           // Perform a bus reset
+#define I2C_FAST_MODE_PLUS      0x10           // 1 Mhz
+
 void i2c_master_enable(i2c_dev *dev, uint32 flags);
 
 #define I2C_ERROR_PROTOCOL      (-1)
 #define I2C_ERROR_TIMEOUT       (-2)
 int32 i2c_master_xfer(i2c_dev *dev, i2c_msg *msgs, uint16 num, uint32 timeout);
+void i2c_overclock(i2c_dev *dev, uint32 hz);
 
 void i2c_bus_reset(const i2c_dev *dev);
 
@@ -392,7 +395,7 @@ static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq) {
  */
 static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val) {
     uint32 ccr = dev->regs->CCR;
-    ccr &= ~I2C_CCR_CCR;
+    ccr &= ~(I2C_CCR_CCR | I2C_CCR_FS | I2C_CCR_DUTY);
     ccr |= val;
     dev->regs->CCR = ccr;
 }
