@@ -8,3 +8,4 @@ other/maple-bootloader/*~
 *.o
 *.bak
 *.1
+*.exe
