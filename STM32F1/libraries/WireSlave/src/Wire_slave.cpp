@@ -69,7 +69,7 @@ void TwoWire::begin(uint8_t address){
   txBufferLength = 0;
   allocateTxBuffer(BUFFER_LENGTH);
 
-  transmitting = 0;
+  transmitting = false;
 
   master = (address == MASTER_ADDRESS);
 
@@ -220,7 +220,7 @@ uint8_t TwoWire::requestFrom(int address, int quantity,
 void TwoWire::beginTransmission(uint8_t address) {
 
   // indicate that we are transmitting
-  transmitting = 1;
+  transmitting = true;
 
   // reset tx buffer iterator vars
   txBufferIndex = 0;
@@ -270,7 +270,7 @@ uint8_t TwoWire::endTransmission(uint8_t sendStop) {
     txBufferLength = 0;
 
     // indicate that we are done transmitting
-    transmitting = 0;
+    transmitting = false;
   }
 
   return ret;

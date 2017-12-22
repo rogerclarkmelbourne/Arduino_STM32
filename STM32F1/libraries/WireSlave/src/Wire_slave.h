@@ -60,7 +60,7 @@ private:
   uint8_t txBufferIndex;
   uint8_t txBufferLength;
 
-  uint8_t transmitting;
+  bool transmitting;
 
   bool master;
 
