@@ -492,14 +492,20 @@ TwoWire& Wire1 = TwoWire::getInstance1(); //SCL: D1 SDA: D0
 // Static methods //////////////////////////////////////////////////////////////
 
 TwoWire& TwoWire::getInstance(){
-  static TwoWire instance(I2C1);
-  return instance;
+  static TwoWire* instance = nullptr;
+  if (!instance) {
+    instance = new TwoWire(I2C1);
+  }
+  return *instance;
 }
 
 #if WIRE_INTERFACES_COUNT > 1
 TwoWire& TwoWire::getInstance1(){
-  static TwoWire instance(I2C2);
-  return instance;
+  static TwoWire* instance = nullptr;
+  if (!instance) {
+    instance = new TwoWire(I2C2);
+  }
+  return *instance;
 }
 #endif
 
