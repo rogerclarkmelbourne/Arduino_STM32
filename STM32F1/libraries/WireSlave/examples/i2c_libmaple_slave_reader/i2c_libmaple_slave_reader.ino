@@ -8,7 +8,6 @@
 */
 #include <Wire_slave.h>
 #include <Arduino.h>
-#include <libmaple/i2c.h>
 
 #define USE_BUFFERED_EXAMPLE 1
 
@@ -52,12 +51,8 @@ void functx(i2c_msg *msg){
 
 #endif
 
-// #define Serial Serial1
-
 void setup() {
   Serial.begin(115200);
-  while(!Serial)
-    ;
   Serial.println("I2C Slave example");
 
   // attach the buffer

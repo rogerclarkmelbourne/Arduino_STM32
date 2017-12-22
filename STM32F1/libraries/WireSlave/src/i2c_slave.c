@@ -158,6 +158,7 @@ void i2c_bus_reset(const i2c_dev *dev) {
  * @param dev Device to initialize.
  */
 void i2c_init(i2c_dev *dev) {
+
     rcc_reset_dev(dev->clk_id);
     rcc_clk_enable(dev->clk_id);
     _i2c_irq_priority_fixup(dev);
@@ -197,8 +198,10 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     i2c_init(dev);
     i2c_config_gpios(dev);
 
-    /* Configure clock and rise time */
-    set_ccr_trise(dev, flags);
+    /* Configure clock and rise time, but only if in master mode */
+    if (!(flags & (I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL))) {
+        set_ccr_trise(dev, flags);
+    }
 
     /* Enable event and buffer interrupts */
     nvic_irq_enable(dev->ev_nvic_line);
@@ -245,8 +248,9 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
  *                                       Callback will be called before tx
  */
 void i2c_slave_enable(i2c_dev *dev, uint32 flags) {
+    // TODO: Figure out why i2c_disable(I2C2) causes a crash when I2C1 is enabled
     i2c_disable(dev);
-    i2c_master_enable(dev, dev->config_flags | flags);
+    i2c_master_enable(dev, flags);
 }
 
 /**
@@ -329,7 +333,8 @@ static inline int32 wait_for_state_change(i2c_dev *dev,
  */
 
 /*
- * IRQ handler for I2C master. Handles transmission/reception.
+ * IRQ handler for I2C master and slave.
+ * Handles transmission/reception.
  */
 void _i2c_irq_handler(i2c_dev *dev) {
     /* WTFs:
@@ -676,7 +681,7 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
                                          I2C_SR1_OVR);
 
     /* Are we in slave mode? */
-    if ((dev->regs->SR2 & I2C_SR2_MSL) != I2C_SR2_MSL) {
+    if (dev->config_flags & (I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL)) {
         /* Check to see if the master device did a NAK on the last bit
          * This is perfectly valid for a master to do this on the bus.
          * We ignore this. Any further error processing takes us into dead
