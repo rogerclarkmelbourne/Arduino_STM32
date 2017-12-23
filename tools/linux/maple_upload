@@ -28,6 +28,12 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 "${DIR}/upload-reset" ${dummy_port_fullpath} 750
 
+echo "Waiting for device in DFU mode"
+while ! lsusb | grep -i ${usbID}
+do
+  sleep 1
+  echo "."
+done
 
 #DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
 DFU_UTIL=/usr/bin/dfu-util
