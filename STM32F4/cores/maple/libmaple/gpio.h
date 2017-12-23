@@ -149,25 +149,11 @@ static inline void gpio_toggle_pin(uint8_t pin) {
 extern void gpio_init(const gpio_dev *dev);
 extern void gpio_init_all(void);
 extern void gpio_set_mode(uint8_t pin, gpio_pin_mode mode);
-extern void gpio_set_af_mode(uint8_t pin, int mode);
+extern void gpio_set_af_mode(uint8_t pin, gpio_af_mode mode);
+extern void gpio_cfg_debug_ports(gpio_debug_cfg config);
 
-/*
- * AFIO convenience routines
- */
-
-extern void afio_init(void);
 extern void afio_exti_select(afio_exti_num exti, afio_exti_port gpio_port);
-extern void afio_remap(afio_remap_peripheral p);
 
-/**
- * @brief Enable or disable the JTAG and SW debug ports.
- * @param config Desired debug port configuration
- * @see afio_debug_cfg
- */
-static inline void afio_cfg_debug_ports(afio_debug_cfg config) {
-    //__io uint32 *mapr = &AFIO_BASE->MAPR;
-    //*mapr = (*mapr & ~AFIO_MAPR_SWJ_CFG) | config;
-}
 
 #ifdef __cplusplus
 }

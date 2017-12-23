@@ -32,7 +32,7 @@
 #include "fsmc.h"
 #include "gpio.h"
 
-#if defined(STM32_HIGH_DENSITY) && defined(BOARD_generic_f407v) // pins not yet defined for disco F407
+#ifdef VARIANT_generic_f407v // pins not yet defined for disco F407
 
 /**
  * Configure FSMC GPIOs for use with LCDs.
@@ -56,7 +56,7 @@ void fsmc_lcd_init_gpios(void) {
 	for (i=0; i<sizeof(fsmc_pins); i++) {
 		uint8_t pin = fsmc_pins[i];
 		gpio_set_mode(pin, GPIO_AF_OUTPUT_PP);
-		gpio_set_af_mode(pin, 12);
+		gpio_set_af_mode(pin, GPIO_AFMODE_FSMC);
 	}
 }
 
@@ -84,4 +84,4 @@ void fsmc_lcd_init(void)
 }
 
 
-#endif  /* STM32_HIGH_DENSITY */
+#endif  /* VARIANT_generic_f407v */

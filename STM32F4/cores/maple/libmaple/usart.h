@@ -67,12 +67,10 @@ typedef struct usart_reg_map {
 #define USART2_BASE                     ((struct usart_reg_map*)0x40004400)
 /** USART3 register map base pointer */
 #define USART3_BASE                     ((struct usart_reg_map*)0x40004800)
-#ifdef STM32_HIGH_DENSITY
 /** UART4 register map base pointer */
 #define UART4_BASE                      ((struct usart_reg_map*)0x40004C00)
 /** UART5 register map base pointer */
 #define UART5_BASE                      ((struct usart_reg_map*)0x40005000)
-#endif
 
 /*
  * Register bit definitions
@@ -256,10 +254,8 @@ typedef struct usart_dev {
 extern usart_dev *USART1;
 extern usart_dev *USART2;
 extern usart_dev *USART3;
-#ifdef STM32_HIGH_DENSITY
 extern usart_dev *UART4;
 extern usart_dev *UART5;
-#endif
 
 void usart_init(usart_dev *dev);
 void usart_set_baud_rate(usart_dev *dev, uint32 baud);

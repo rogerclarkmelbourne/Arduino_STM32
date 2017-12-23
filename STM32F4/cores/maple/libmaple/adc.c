@@ -53,13 +53,13 @@ const adc_dev ADC2 = {
     .clk_id = RCC_ADC2
 };
 
-#ifdef STM32_HIGH_DENSITY
 /** ADC3 device. */
 const adc_dev ADC3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3
 };
-#endif
+
+adc_common_reg_map* const ADC_COMMON = ADC_COMMON_BASE;
 
 /**
  * @brief Initialize an ADC peripheral.
@@ -77,6 +77,26 @@ void adc_init(const adc_dev *dev) {
 }
 
 /**
+ * @brief Set external trigger for regular channels
+ * @param dev    ADC device
+ * @param adc_exten_trigger
+ */
+void adc_set_exttrig(const adc_dev *dev, adc_ext_trigger trigger) {
+    uint32 cr2 = dev->regs->CR2;
+    cr2 &= ~ADC_CR2_EXTEN;
+    cr2 |= ( trigger << ADC_CR2_EXTEN_SHIFT);
+    dev->regs->CR2 = cr2;
+}
+
+void adc_set_jexttrig(const adc_dev *dev, adc_ext_trigger trigger) {
+    uint32 cr2 = dev->regs->CR2;
+    cr2 &= ~ADC_CR2_JEXTEN;
+    cr2 |= ( trigger << ADC_CR2_JEXTEN_SHIFT);
+    dev->regs->CR2 = cr2;
+}
+
+
+/**
  * @brief Set external event select for regular group
  * @param dev ADC device
  * @param event Event used to trigger the start of conversion.
@@ -89,6 +109,13 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
     dev->regs->CR2 = cr2;
 }
 
+void adc_set_jextsel(const adc_dev *dev, adc_jextsel_event event) {
+    uint32 cr2 = dev->regs->CR2;
+    cr2 &= ~ADC_CR2_JEXTSEL;
+    cr2 |= event;
+    dev->regs->CR2 = cr2;
+}
+
 /**
  * @brief Call a function on all ADC devices.
  * @param fn Function to call on each ADC device.
@@ -96,9 +123,7 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
 void adc_foreach(void (*fn)(const adc_dev*)) {
     fn(&ADC1);
     fn(&ADC2);
-#ifdef STM32_HIGH_DENSITY
     fn(&ADC3);
-#endif
 }
 
 /**
@@ -123,28 +148,6 @@ void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
 
     dev->regs->SMPR1 = adc_smpr1_val;
     dev->regs->SMPR2 = adc_smpr2_val;
-}
-
-/**
- * @brief Calibrate an ADC peripheral
- * @param dev adc device
- */
-void adc_calibrate(const adc_dev *dev)
-{
-/*
-#ifndef STM32F2
-    __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
-    __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
-
-    *rstcal_bit = 1;
-    while (*rstcal_bit)
-        ;
-
-    *cal_bit = 1;
-    while (*cal_bit)
-        ;
-#endif
-*/
 }
 
 /**

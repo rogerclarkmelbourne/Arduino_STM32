@@ -39,6 +39,7 @@
 #include "rcc.h"
 #include "nvic.h"
 #include "bitband.h"
+#include "gpio_def.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -121,7 +122,6 @@ typedef struct timer_bas_reg_map {
 #define TIMER3_BASE        ((struct timer_gen_reg_map*)0x40000400)
 /** Timer 4 register map base pointer */
 #define TIMER4_BASE        ((struct timer_gen_reg_map*)0x40000800)
-#ifdef STM32_HIGH_DENSITY
 /** Timer 5 register map base pointer */
 #define TIMER5_BASE        ((struct timer_gen_reg_map*)0x40000C00)
 /** Timer 6 register map base pointer */
@@ -130,7 +130,19 @@ typedef struct timer_bas_reg_map {
 #define TIMER7_BASE        ((struct timer_bas_reg_map*)0x40001400)
 /** Timer 8 register map base pointer */
 #define TIMER8_BASE        ((struct timer_adv_reg_map*)0x40010400)
-#endif
+/** Timer 9 register map base pointer */
+#define TIMER9_BASE        ((struct timer_gen_reg_map*)0x40014000)
+/** Timer 10 register map base pointer */
+#define TIMER10_BASE       ((struct timer_gen_reg_map*)0x40014400)
+/** Timer 11 register map base pointer */
+#define TIMER11_BASE       ((struct timer_gen_reg_map*)0x40014800)
+/** Timer 12 register map base pointer */
+#define TIMER12_BASE       ((struct timer_gen_reg_map*)0x40001800)
+/** Timer 13 register map base pointer */
+#define TIMER13_BASE       ((struct timer_gen_reg_map*)0x40001C00)
+/** Timer 14 register map base pointer */
+#define TIMER14_BASE       ((struct timer_gen_reg_map*)0x40002000)
+
 
 /*
  * Timer devices
@@ -166,19 +178,38 @@ typedef struct timer_dev {
     timer_reg_map regs;         /**< Register map */
     rcc_clk_id clk_id;          /**< RCC clock information */
     timer_type type;            /**< Timer's type */
+    gpio_af_mode af_mode;       /**< Alternate function mode */
     voidFuncPtr handlers[];     /**< User IRQ handlers */
 } timer_dev;
 
-extern timer_dev *TIMER1;
-extern timer_dev *TIMER2;
-extern timer_dev *TIMER3;
-extern timer_dev *TIMER4;
-#ifdef STM32_HIGH_DENSITY
-extern timer_dev *TIMER5;
-extern timer_dev *TIMER6;
-extern timer_dev *TIMER7;
-extern timer_dev *TIMER8;
-#endif
+extern timer_dev timer1;
+extern timer_dev timer2;
+extern timer_dev timer3;
+extern timer_dev timer4;
+extern timer_dev timer5;
+extern timer_dev timer6;
+extern timer_dev timer7;
+extern timer_dev timer8;
+extern timer_dev timer9;
+extern timer_dev timer10;
+extern timer_dev timer11;
+extern timer_dev timer12;
+extern timer_dev timer13;
+extern timer_dev timer14;
+#define TIMER1 (&timer1)
+#define TIMER2 (&timer2)
+#define TIMER3 (&timer3)
+#define TIMER4 (&timer4)
+#define TIMER5 (&timer5)
+#define TIMER6 (&timer6)
+#define TIMER7 (&timer7)
+#define TIMER8 (&timer8)
+#define TIMER9 (&timer9)
+#define TIMER10 (&timer10)
+#define TIMER11 (&timer11)
+#define TIMER12 (&timer12)
+#define TIMER13 (&timer13)
+#define TIMER14 (&timer14)
 
 /*
  * Register bit definitions

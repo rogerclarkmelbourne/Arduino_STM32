@@ -60,8 +60,8 @@ static void configure_gpios(spi_dev *dev, bool as_master);
 
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq);
 
-#if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
-#error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
+#if (BOARD_NR_SPI > 3)
+#error "The SPI library is misconfigured: 3 SPI ports only available on foundation line STM32F4 devices"
 #endif
 
 static const spi_pins board_spi_pins[] __FLASH__ = {

@@ -204,9 +204,9 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     delay_us(2);
     gpio_set_mode(dev->scl_pin, GPIO_AF_OUTPUT_OD);
     delay_us(2);
-    gpio_set_af_mode(dev->scl_pin, 4);
+    gpio_set_af_mode(dev->scl_pin, GPIO_AFMODE_I2C1_3);
     delay_us(2);
-    gpio_set_af_mode(dev->sda_pin, 4);
+    gpio_set_af_mode(dev->sda_pin, GPIO_AFMODE_I2C1_3);
 
     i2c_init(dev);
 

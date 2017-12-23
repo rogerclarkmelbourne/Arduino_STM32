@@ -166,7 +166,7 @@ void InitMCO1()
     RCC->CFGR &= RCC_CFGR_MCO1_RESET_MASK;
     RCC->CFGR |= RCC_CFGR_MCO1Source_HSE | RCC_CFGR_MCO1Div_1;
     // PA8 Output the Master Clock MCO1
-    gpio_set_af_mode(PA8, 0);
+    gpio_set_af_mode(PA8, GPIO_AFMODE_SYSTEM);
     gpio_set_mode(PA8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
 }
 

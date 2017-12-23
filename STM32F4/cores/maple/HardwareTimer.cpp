@@ -29,14 +29,7 @@
 #include "wirish_math.h"
 
 // TODO [0.1.0] Remove deprecated pieces
-
-#ifdef STM32_MEDIUM_DENSITY
-#define NR_TIMERS 4
-#elif defined(STM32_HIGH_DENSITY)
-#define NR_TIMERS 8
-#else
-#error "Unsupported density"
-#endif
+#define NR_TIMERS 14
 
 #define MAX_RELOAD ((1 << 16) - 1)
 
@@ -49,12 +42,16 @@ HardwareTimer::HardwareTimer(uint8 timerNum) {
         TIMER2,
         TIMER3,
         TIMER4,
-#ifdef STM32_HIGH_DENSITY
         TIMER5,
         TIMER6,
         TIMER7,
         TIMER8,
-#endif
+        TIMER9,
+        TIMER10,
+        TIMER11,
+        TIMER12,
+        TIMER13,
+        TIMER14,
     };
     this->dev = devs[timerNum - 1];
 }
@@ -143,9 +140,7 @@ HardwareTimer Timer1(1);
 HardwareTimer Timer2(2);
 HardwareTimer Timer3(3);
 HardwareTimer Timer4(4);
-#ifdef STM32_HIGH_DENSITY
 HardwareTimer Timer5(5);
 HardwareTimer Timer6(6);
 HardwareTimer Timer7(7);
 HardwareTimer Timer8(8);
-#endif

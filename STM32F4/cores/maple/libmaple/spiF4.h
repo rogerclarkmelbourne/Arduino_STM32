@@ -58,9 +58,7 @@ struct spi_dev;
 
 extern struct spi_dev *SPI1;
 extern struct spi_dev *SPI2;
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
 extern struct spi_dev *SPI3;
-#endif
 
 
 #ifdef __cplusplus

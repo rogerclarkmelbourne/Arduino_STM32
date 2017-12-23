@@ -26,7 +26,6 @@
 extern "C"{
 #endif
 
-#ifdef STM32_HIGH_DENSITY
 
 /*
  * Register maps and devices
@@ -241,7 +240,6 @@ inline void sdio_setup_transfer(uint32_t dtimer, uint32_t dlen, uint16_t flags)
 	SDIO->DCTRL = flags;// | SDIO_DCTRL_DTEN; // enable data transfer
 }
 
-#endif /* STM32_HIGH_DENSITY */
 
 #ifdef __cplusplus
 } /* extern "C" */

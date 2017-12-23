@@ -44,79 +44,131 @@
 /* Update only. */
 #define NR_BAS_HANDLERS                 1
 
+/** Timer 1 device (advanced) */
 timer_dev timer1 = {
     .regs         = { .adv = TIMER1_BASE },
     .clk_id       = RCC_TIMER1,
     .type         = TIMER_ADVANCED,
+	.af_mode      = GPIO_AFMODE_TIM1_2,
     .handlers     = { [NR_ADV_HANDLERS - 1] = 0 },
 };
-/** Timer 1 device (advanced) */
-timer_dev *TIMER1 = &timer1;
 
+/** Timer 2 device (general-purpose) */
 timer_dev timer2 = {
     .regs         = { .gen = TIMER2_BASE },
     .clk_id       = RCC_TIMER2,
     .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM1_2,
     .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
 };
-/** Timer 2 device (general-purpose) */
-timer_dev *TIMER2 = &timer2;
 
+/** Timer 3 device (general-purpose) */
 timer_dev timer3 = {
     .regs         = { .gen = TIMER3_BASE },
     .clk_id       = RCC_TIMER3,
     .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM3_5,
     .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
 };
-/** Timer 3 device (general-purpose) */
-timer_dev *TIMER3 = &timer3;
 
+/** Timer 4 device (general-purpose) */
 timer_dev timer4 = {
     .regs         = { .gen = TIMER4_BASE },
     .clk_id       = RCC_TIMER4,
     .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM3_5,
     .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
 };
-/** Timer 4 device (general-purpose) */
-timer_dev *TIMER4 = &timer4;
 
-#ifdef STM32_HIGH_DENSITY
+/** Timer 5 device (general-purpose) */
 timer_dev timer5 = {
     .regs         = { .gen = TIMER5_BASE },
     .clk_id       = RCC_TIMER5,
     .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM3_5,
     .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
 };
-/** Timer 5 device (general-purpose) */
-timer_dev *TIMER5 = &timer5;
 
+/** Timer 6 device (basic) */
 timer_dev timer6 = {
     .regs         = { .bas = TIMER6_BASE },
     .clk_id       = RCC_TIMER6,
     .type         = TIMER_BASIC,
+	.af_mode      = GPIO_AFMODE_SYSTEM,
     .handlers     = { [NR_BAS_HANDLERS - 1] = 0 },
 };
-/** Timer 6 device (basic) */
-timer_dev *TIMER6 = &timer6;
 
+/** Timer 7 device (basic) */
 timer_dev timer7 = {
     .regs         = { .bas = TIMER7_BASE },
     .clk_id       = RCC_TIMER7,
     .type         = TIMER_BASIC,
+	.af_mode      = GPIO_AFMODE_SYSTEM,
     .handlers     = { [NR_BAS_HANDLERS - 1] = 0 },
 };
-/** Timer 7 device (basic) */
-timer_dev *TIMER7 = &timer7;
 
+/** Timer 8 device (advanced) */
 timer_dev timer8 = {
     .regs         = { .adv = TIMER8_BASE },
     .clk_id       = RCC_TIMER8,
     .type         = TIMER_ADVANCED,
+	.af_mode      = GPIO_AFMODE_TIM8_11,
     .handlers     = { [NR_ADV_HANDLERS - 1] = 0 },
 };
-/** Timer 8 device (advanced) */
-timer_dev *TIMER8 = &timer8;
-#endif
+
+/** Timer 9 device (general-purpose) */
+timer_dev timer9 = {
+    .regs         = { .gen = TIMER9_BASE },
+    .clk_id       = RCC_TIMER9,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM8_11,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+/** Timer 10 device (general-purpose) */
+timer_dev timer10 = {
+    .regs         = { .gen = TIMER10_BASE },
+    .clk_id       = RCC_TIMER10,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM8_11,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+
+/** Timer 11 device (general-purpose) */
+timer_dev timer11 = {
+    .regs         = { .gen = TIMER11_BASE },
+    .clk_id       = RCC_TIMER11,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM8_11,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+
+/** Timer 12 device (general-purpose) */
+timer_dev timer12 = {
+    .regs         = { .gen = TIMER12_BASE },
+    .clk_id       = RCC_TIMER12,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM12_14,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+
+/** Timer 13 device (general-purpose) */
+timer_dev timer13 = {
+    .regs         = { .gen = TIMER13_BASE },
+    .clk_id       = RCC_TIMER13,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM12_14,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+
+/** Timer 14 device (general-purpose) */
+timer_dev timer14 = {
+    .regs         = { .gen = TIMER14_BASE },
+    .clk_id       = RCC_TIMER14,
+    .type         = TIMER_GENERAL,
+	.af_mode      = GPIO_AFMODE_TIM12_14,
+    .handlers     = { [NR_GEN_HANDLERS - 1] = 0 },
+};
+
 
 /*
  * Convenience routines
@@ -170,7 +222,8 @@ void timer_disable(timer_dev *dev) {
  * @param mode New timer mode for channel
  */
 void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode) {
-    ASSERT_FAULT(channel > 0 && channel <= 4);
+    //ASSERT_FAULT(channel > 4);
+    if (channel>4) return;
 
     /* TODO decide about the basic timers */
     ASSERT(dev->type != TIMER_BASIC);
@@ -199,12 +252,16 @@ void timer_foreach(void (*fn)(timer_dev*)) {
     fn(TIMER2);
     fn(TIMER3);
     fn(TIMER4);
-#ifdef STM32_HIGH_DENSITY
     fn(TIMER5);
     fn(TIMER6);
     fn(TIMER7);
     fn(TIMER8);
-#endif
+    fn(TIMER9);
+    fn(TIMER10);
+    fn(TIMER11);
+    fn(TIMER12);
+    fn(TIMER13);
+    fn(TIMER14);
 }
 
 /**
@@ -278,8 +335,6 @@ void __irq_tim4(void) {
     dispatch_general(TIMER4);
 }
 
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-
 void __irq_tim5(void) {
     dispatch_general(TIMER5);
 }
@@ -307,7 +362,6 @@ void __irq_tim8_trg_com(void) {
 void __irq_tim8_cc(void) {
     dispatch_adv_cc(TIMER8);
 }
-#endif
 
 /* Note: the following dispatch routines make use of the fact that
  * DIER interrupt enable bits and SR interrupt flags have common bit
@@ -462,7 +516,6 @@ static void enable_nonmuxed_irq(timer_dev *dev) {
     case RCC_TIMER4:
         nvic_irq_enable(NVIC_TIMER4);
         break;
-#ifdef STM32_HIGH_DENSITY
     case RCC_TIMER5:
         nvic_irq_enable(NVIC_TIMER5);
         break;
@@ -472,7 +525,6 @@ static void enable_nonmuxed_irq(timer_dev *dev) {
     case RCC_TIMER7:
         nvic_irq_enable(NVIC_TIMER7);
         break;
-#endif
     default:
         ASSERT_FAULT(0);
         break;

@@ -82,10 +82,6 @@
 
     /**
      * @brief Number of interrupts in the NVIC.
-     *
-     * This define is automatically generated whenever the proper
-     * density is defined (currently, this is restricted to defining
-     * one of STM32_MEDIUM_DENSITY and STM32_HIGH_DENSITY).
      */
     #define STM32_NR_INTERRUPTS
 
@@ -94,13 +90,7 @@
 
 #endif
 
-#ifdef STM32_MEDIUM_DENSITY
-    #define STM32_NR_INTERRUPTS 43
-#elif defined(STM32_HIGH_DENSITY)
-    #define STM32_NR_INTERRUPTS 60
-#else
-#error "No STM32 board type defined!"
-#endif
+#define STM32_NR_INTERRUPTS 60
 
 #define NR_INTERRUPTS STM32_NR_INTERRUPTS
 

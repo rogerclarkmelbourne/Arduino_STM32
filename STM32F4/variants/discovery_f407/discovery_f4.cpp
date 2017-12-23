@@ -40,35 +40,36 @@
 //static void initSRAMChip(void);
 void boardInit(void) {
 	// remap TIMER8 to PC6-9
-	gpio_set_af_mode(PC6, 3);
-	gpio_set_af_mode(PC7, 3);
-	gpio_set_af_mode(PC8, 3);
-	gpio_set_af_mode(PC9, 3);
+	gpio_set_af_mode(PC6, GPIO_AFMODE_TIM8_11);
+	gpio_set_af_mode(PC7, GPIO_AFMODE_TIM8_11);
+	gpio_set_af_mode(PC8, GPIO_AFMODE_TIM8_11);
+	gpio_set_af_mode(PC9, GPIO_AFMODE_TIM8_11);
 
 	// remap TIMER1 to PE9,11,13,14
-	gpio_set_af_mode(PE9, 1);
-	gpio_set_af_mode(PE11, 1);
-	gpio_set_af_mode(PE13, 1);
-	gpio_set_af_mode(PE14, 1);
+	gpio_set_af_mode(PE9,  GPIO_AFMODE_TIM1_2);
+	gpio_set_af_mode(PE11, GPIO_AFMODE_TIM1_2);
+	gpio_set_af_mode(PE13, GPIO_AFMODE_TIM1_2);
+	gpio_set_af_mode(PE14, GPIO_AFMODE_TIM1_2);
 
 	// remap TIMER3 to PB4,5,0,1
-	gpio_set_af_mode(PB4, 2);
-	gpio_set_af_mode(PB5, 2);
-	gpio_set_af_mode(PB0, 2);
-	gpio_set_af_mode(PB1, 2);
+	gpio_set_af_mode(PB4, GPIO_AFMODE_TIM3_5);
+	gpio_set_af_mode(PB5, GPIO_AFMODE_TIM3_5);
+	gpio_set_af_mode(PB0, GPIO_AFMODE_TIM3_5);
+	gpio_set_af_mode(PB1, GPIO_AFMODE_TIM3_5);
 
-	//gpio_set_af_mode(GPIOA, 2, 7);
-	//gpio_set_af_mode(GPIOA, 3, 7);
+	//gpio_set_af_mode(GPIOA, 2, GPIO_AFMODE_UASRT1_3);
+	//gpio_set_af_mode(GPIOA, 3, GPIO_AFMODE_UASRT1_3);
 
 #ifdef BOARD_STM32F4_NETDUINO2PLUS
     // PA8 Output the Master Clock MCO1
-    gpio_set_af_mode(PA8, 0);
+    gpio_set_af_mode(PA8, GPIO_AFMODE_SYSTEM);
+    gpio_set_mode(PA8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
     // PB4 as alternate MISO Input
-    gpio_set_af_mode(PB4, 5);
+    gpio_set_af_mode(PB4, GPIO_AFMODE_SPI1_2);
     // PA5 as alternate SCK Output
-    gpio_set_af_mode(PA5, 5);
+    gpio_set_af_mode(PA5, GPIO_AFMODE_SPI1_2);
     // PA7 as alternate MOSI Output
-    gpio_set_af_mode(PA7, 5);
+    gpio_set_af_mode(PA7, GPIO_AFMODE_SPI1_2);
 #endif
 	return;
 }

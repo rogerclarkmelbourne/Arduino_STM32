@@ -49,7 +49,7 @@
 	#define RX3 BOARD_USART3_RX_PIN
 #endif
 
-#if defined STM32_HIGH_DENSITY && !defined(BOARD_maple_RET6)
+#if !defined(BOARD_maple_RET6)
 #define TX4 BOARD_UART4_TX_PIN
 #define RX4 BOARD_UART4_RX_PIN
 #define TX5 BOARD_UART5_TX_PIN
@@ -66,7 +66,7 @@ HardwareSerial Serial2(USART2, TX2, RX2);
 HardwareSerial Serial3(USART3, TX3, RX3);
 #endif
 
-#if defined(STM32_HIGH_DENSITY) && !defined(BOARD_maple_RET6)
+#if !defined(BOARD_maple_RET6)
 HardwareSerial Serial4(UART4,  TX4, RX4);
 HardwareSerial Serial5(UART5,  TX5, RX5);
 #endif
@@ -90,25 +90,16 @@ void HardwareSerial::begin(uint32 baud) {
         return;
     }
 
-	// int af = 7<<8;
     if (usart_device == UART4 || usart_device == UART5) {
-        gpio_set_af_mode(tx_pin, 8);
-        gpio_set_af_mode(rx_pin, 8);
+        gpio_set_af_mode(tx_pin, GPIO_AFMODE_UASRT4_6);
+        gpio_set_af_mode(rx_pin, GPIO_AFMODE_UASRT4_6);
     }
     else {
-        gpio_set_af_mode(tx_pin, 7);
-        gpio_set_af_mode(rx_pin, 7);
+        gpio_set_af_mode(tx_pin, GPIO_AFMODE_UASRT1_3);
+        gpio_set_af_mode(rx_pin, GPIO_AFMODE_UASRT1_3);
     }
     gpio_set_mode(tx_pin, (gpio_pin_mode)(GPIO_AF_OUTPUT_PP_PU | 0x700));
     gpio_set_mode(rx_pin, (gpio_pin_mode)(GPIO_AF_INPUT_PU | 0x700));
-    //gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
-    //gpio_set_mode(rxi->gpio_device, rxi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
-#if 0
-    if (txi->timer_device != NULL) {
-        /* Turn off any PWM if there's a conflict on this GPIO bit. */
-        timer_set_mode(txi->timer_device, txi->timer_channel, TIMER_DISABLED);
-    }
-#endif
 
     usart_init(usart_device);
     usart_set_baud_rate(usart_device, baud);
