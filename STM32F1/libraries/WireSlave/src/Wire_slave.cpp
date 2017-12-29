@@ -177,10 +177,6 @@ uint8 TwoWire::requestFrom(uint8_t address, uint8_t num_bytes,
   rxBufferIndex = 0;
   rxBufferLength = 0;
 
-  if (num_bytes > BUFFER_LENGTH) {
-    num_bytes = BUFFER_LENGTH;
-  }
-
   itc_msg.addr = address;
   itc_msg.flags = I2C_MSG_READ;
   itc_msg.length = num_bytes;
@@ -211,8 +207,7 @@ uint8_t TwoWire::requestFrom(int address, int quantity) {
       (uint8_t) 0, (uint8_t) true);
 }
 
-uint8_t TwoWire::requestFrom(int address, int quantity,
-    int sendStop) {
+uint8_t TwoWire::requestFrom(int address, int quantity, int sendStop) {
   return requestFrom((uint8_t) address, (uint8_t) quantity, (uint32_t) 0,
       (uint8_t) 0, (bool) sendStop);
 }
