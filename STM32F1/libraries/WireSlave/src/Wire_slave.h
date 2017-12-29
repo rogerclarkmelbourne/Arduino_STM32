@@ -69,7 +69,7 @@ private:
   i2c_msg itc_slave_msg;
 
   void (*user_onRequest)(void);
-  void (*user_onReceive)(int);
+  void (*user_onReceive)(int quantity);
 
   void allocateRxBuffer(size_t length);
   void allocateTxBuffer(size_t length);
@@ -96,47 +96,49 @@ private:
   TwoWire& operator=(TwoWire&&) = delete;
 
 public:
+  // return the 'Wire' instance (using I2C1)
   static TwoWire& getInstance();
   #if WIRE_INTERFACES_COUNT > 1
+  // return the 'Wire1' instance (using I2C2)
   static TwoWire& getInstance1();
   #endif
 
-  void begin();
-  void begin(uint8_t);
-  void begin(int);
+  void begin(); // master mode
+  void begin(uint8_t myAddress); //slave mode
+  void begin(int myAddress); //slave mode
   void end();
-  void setClock(uint32_t);
-  void beginTransmission(uint8_t);
-  void beginTransmission(int);
+  void setClock(uint32_t frequencyHz);
+  void beginTransmission(uint8_t slaveAddress);
+  void beginTransmission(int slaveAddress);
   uint8_t endTransmission(void);
-  uint8_t endTransmission(uint8_t);
+  uint8_t endTransmission(uint8_t sendStop);
 
-  uint8_t requestFrom(uint8_t, uint8_t);
-  uint8_t requestFrom(uint8_t, uint8_t, uint8_t);
-  uint8_t requestFrom(uint8_t, uint8_t, uint32_t, uint8_t, uint8_t);
-  uint8_t requestFrom(int, int);
-  uint8_t requestFrom(int, int, int);
+  uint8_t requestFrom(uint8_t slaveAddress, uint8_t quantity);
+  uint8_t requestFrom(uint8_t slaveAddress, uint8_t quantity, uint8_t sendStop);
+  uint8_t requestFrom(uint8_t slaveAddress, uint8_t num_bytes, uint32_t iaddress, uint8_t isize, uint8_t sendStop);
+  uint8_t requestFrom(int slaveAddress, int quantity);
+  uint8_t requestFrom(int slaveAddress, int quantity, int sendStop);
 
-  virtual size_t write(uint8_t);
-  virtual size_t write(const uint8_t *, size_t);
+  virtual size_t write(uint8_t data);
+  virtual size_t write(const uint8_t *data, size_t quantity);
   virtual int available(void);
   virtual int read(void);
   virtual int peek(void);
   virtual void flush(void);
-  void onReceive(void (*)(int));
+  void onReceive(void (*)(int quantity));
   void onRequest(void (*)(void));
 
-  inline size_t write(unsigned long n) {
-    return write((uint8_t) n);
+  inline size_t write(unsigned long data) {
+    return write((uint8_t) data);
   }
-  inline size_t write(long n) {
-    return write((uint8_t) n);
+  inline size_t write(long data) {
+    return write((uint8_t) data);
   }
-  inline size_t write(unsigned int n) {
-    return write((uint8_t) n);
+  inline size_t write(unsigned int data) {
+    return write((uint8_t) data);
   }
-  inline size_t write(int n) {
-    return write((uint8_t) n);
+  inline size_t write(int data) {
+    return write((uint8_t) data);
   }
   using Print::write;
 };
