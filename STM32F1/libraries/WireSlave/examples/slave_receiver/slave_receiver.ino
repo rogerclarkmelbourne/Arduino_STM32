@@ -11,7 +11,6 @@
 
 
 #include <Wire_slave.h>
-#define Serial Serial1
 
 void setup(){
   Serial.begin(115200);         // start serial for output

@@ -53,7 +53,7 @@ void functx(i2c_msg *msg){
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("I2C Slave example");
+  Serial.println("libmaple I2C slave reader example");
 
   // attach the buffer
   msg.data = buffer;
