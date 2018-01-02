@@ -109,7 +109,7 @@ void OLED::update()
 			twi->TWI_THR = scrbuf[b];
 			while ((twi->TWI_SR & TWI_SR_TXRDY) != TWI_SR_TXRDY) {};
              */
-            static byte aa=scrbuf[b];
+            byte aa=scrbuf[b];
             WIRE_WRITE(aa);
           
 		}
