@@ -130,6 +130,12 @@ static void setup_clocks(void) {
     wirish::priv::board_setup_clock_prescalers();
     rcc_configure_pll(&wirish::priv::w_board_pll_cfg);
 
+#ifdef XTAL16M
+    // 16MHz crystal (HSE)  
+    // in this case we additionally set the Bit 17 (PLLXTPRE=1)  =>  then HSE clock is divided by 2 before PLL entry
+    RCC_BASE->CFGR |= RCC_CFGR_PLLXTPRE;
+#endif
+    
     // Enable the PLL, and wait until it's ready.
     rcc_turn_on_clk(RCC_CLK_PLL);
     while(!rcc_is_clk_ready(RCC_CLK_PLL))
