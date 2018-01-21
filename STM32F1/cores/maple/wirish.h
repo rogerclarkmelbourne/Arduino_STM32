@@ -108,3 +108,27 @@ typedef unsigned int word;
 
 #endif
 
+class SREGemulation
+{
+public:
+   operator int () const __attribute__((always_inline)) {
+      uint32_t primask;
+      asm volatile("mrs %0, primask\n" : "=r" (primask)::);
+      if (primask) return 0;
+      return (1<<7);
+   }
+   inline SREGemulation & operator = (int val) __attribute__((always_inline)) {
+      if (val & (1<<7)) {
+         interrupts();
+      } else {
+         noInterrupts();
+      }
+      return *this;
+   }
+};
+extern SREGemulation SREG;
+
+inline unsigned char  digitalPinToInterrupt(unsigned char Interrupt_pin) { return Interrupt_pin; }
+
+#define sei() interrupts();
+#define cli() noInterrupts();
