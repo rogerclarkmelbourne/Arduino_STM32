@@ -80,7 +80,6 @@ static uint8* usbGetConfigDescriptor(uint16 length);
 static uint8* usbGetStringDescriptor(uint16 length);
 static void usbSetConfiguration(void);
 static void usbSetDeviceAddress(void);
-
 /*
  * Descriptors
  */
@@ -392,6 +391,8 @@ void usb_cdcacm_enable(gpio_dev *disc_dev, uint8 disc_bit) {
 	}
 	
     /* Initialize the USB peripheral. */
+    /* One of the callbacks that will automatically happen from this will be to usbInit(),
+       which will power up the USB peripheral. */
     usb_init_usblib(USBLIB, ep_int_in, ep_int_out);
 }
 
@@ -403,6 +404,9 @@ void usb_cdcacm_disable(gpio_dev *disc_dev, uint8 disc_bit) {
 	{
 		gpio_write_bit(disc_dev, disc_bit, 1);
 	}
+    /* Powerdown the USB peripheral. It gets powered up again with usbInit(), which
+       gets called when usb_cdcacm_enable() is called. */
+    usb_power_off(); 
 }
 
 void usb_cdcacm_putc(char ch) {
@@ -644,7 +648,8 @@ static uint8* vcomGetSetLineCoding(uint16 length) {
 static void usbInit(void) {
     pInformation->Current_Configuration = 0;
 
-    USB_BASE->CNTR = USB_CNTR_FRES;
+    // Reset and power up the peripheral.
+    USB_BASE->CNTR = USB_CNTR_FRES; 
 
     USBLIB->irq_mask = 0;
     USB_BASE->CNTR = USBLIB->irq_mask;

@@ -157,6 +157,8 @@ typedef struct usblib_dev {
 
 extern usblib_dev *USBLIB;
 
+void usb_power_off(void);
+
 void usb_init_usblib(usblib_dev *dev,
                      void (**ep_int_in)(void),
                      void (**ep_int_out)(void));
