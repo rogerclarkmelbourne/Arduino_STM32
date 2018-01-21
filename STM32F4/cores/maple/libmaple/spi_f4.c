@@ -41,12 +41,14 @@
 
 static spi_dev spi1 = SPI_DEV(1);
 static spi_dev spi2 = SPI_DEV(2);
-static spi_dev spi3 = SPI_DEV(3);
 
 spi_dev *SPI1 = &spi1;
 spi_dev *SPI2 = &spi2;
-spi_dev *SPI3 = &spi3;
 
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+static spi_dev spi3 = SPI_DEV(3);
+spi_dev *SPI3 = &spi3;
+#endif
 
 /*
  * Routines
@@ -69,8 +71,8 @@ void spi_config_gpios(spi_dev *dev,
         gpio_set_mode(mosi_pin, GPIO_INPUT_FLOATING);
     }
 
-	gpio_af_mode af_mode = GPIO_AFMODE_SPI3;
-	if(dev->clk_id <= RCC_SPI2) { af_mode = GPIO_AFMODE_SPI1_2; }
+	uint8_t af_mode = 6;
+	if(dev->clk_id <= RCC_SPI2) { af_mode = 5; }
 	if(!as_master) {
 		gpio_set_af_mode(nss_pin, af_mode);
 	}
@@ -82,5 +84,7 @@ void spi_config_gpios(spi_dev *dev,
 void spi_foreach(void (*fn)(spi_dev*)) {
     fn(SPI1);
     fn(SPI2);
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
     fn(SPI3);
+#endif
 }

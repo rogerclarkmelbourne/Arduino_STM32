@@ -22,7 +22,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <STM32_USB_Device_Library/Core/inc/usbd_usr.h>
 #include <STM32_USB_Device_Library/Core/inc/usbd_ioreq.h>
-#include "bits.h"
+
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
@@ -71,23 +71,11 @@ USBD_Usr_cb_TypeDef USR_cb =
   
   USBD_USR_DeviceConnected,
   USBD_USR_DeviceDisconnected,  
+  
+  
 };
 
-enum {
-	USB_CONFIGURED = BIT0,
-	USB_CONNECTED = BIT1,
-	USB_RESUMED = BIT2,
-};
 
-static volatile uint8_t usbd_status;
-
-uint8_t usb_isConfigured(void) { return (usbd_status&USB_CONFIGURED); }
-#ifdef VBUS_SENSING_ENABLED
-uint8_t usb_isConnected(void) { return (usbd_status&USB_CONNECTED); }
-#else
-uint8_t usb_isConnected(void) { return USB_CONNECTED; }
-#endif
-uint8_t usb_getStatus(void) { return usbd_status; }
 
 /**
 * @}
@@ -132,8 +120,6 @@ void USBD_USR_Init(void)
     while (1);
   }
 #endif
-
-	usbd_status = 0;
 }
 
 /**
@@ -155,7 +141,6 @@ void USBD_USR_DeviceReset(uint8_t speed )
      break;
      
  }
-	usbd_status = 0;
 }
 
 
@@ -167,7 +152,6 @@ void USBD_USR_DeviceReset(uint8_t speed )
 */
 void USBD_USR_DeviceConfigured (void)
 {
-	usbd_status |= USB_CONFIGURED;
 }
 
 
@@ -179,7 +163,6 @@ void USBD_USR_DeviceConfigured (void)
 */
 void USBD_USR_DeviceConnected (void)
 {
-	usbd_status |= USB_CONNECTED;
 }
 
 
@@ -191,7 +174,6 @@ void USBD_USR_DeviceConnected (void)
 */
 void USBD_USR_DeviceDisconnected (void)
 {
-	usbd_status &= ~USB_CONNECTED;
 }
 
 /**
@@ -203,7 +185,6 @@ void USBD_USR_DeviceDisconnected (void)
 void USBD_USR_DeviceSuspended(void)
 {
   /* Users can do their application actions here for the USB-Reset */
-	usbd_status &= ~USB_RESUMED;
 }
 
 
@@ -216,7 +197,6 @@ void USBD_USR_DeviceSuspended(void)
 void USBD_USR_DeviceResumed(void)
 {
   /* Users can do their application actions here for the USB-Reset */
-	usbd_status |= USB_RESUMED;
 }
 
 /**

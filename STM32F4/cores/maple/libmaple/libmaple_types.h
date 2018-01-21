@@ -52,9 +52,6 @@ typedef void (*voidFuncPtr)(void);
 #ifndef __attr_flash
   #define __attr_flash __attribute__((section (".USER_FLASH")))
 #endif
-#ifndef __attr_ccmram
-  #define __attr_ccmram __attribute__((section (".ccmdata")))
-#endif
 #ifndef __always_inline
   #define __always_inline inline __attribute__((always_inline))
 #endif

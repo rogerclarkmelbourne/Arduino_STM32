@@ -24,6 +24,8 @@
  * SOFTWARE.
  *****************************************************************************/
 
+#ifdef STM32F4
+ 
 /**
  * @file rcc.c
  * @brief Implements pretty much only the basic clock setup on the
@@ -41,8 +43,6 @@
 #define AHB1                            RCC_AHB1
 #define AHB2                            RCC_AHB2
 #define AHB3                            RCC_AHB3
-
-rcc_reg_map * const RCC = RCC_BASE;
 
 struct rcc_dev_info {
     const rcc_clk_domain clk_domain;
@@ -115,6 +115,13 @@ static const struct rcc_dev_info rcc_dev_table[] = {
  */
 
 #define HSE_STARTUP_TIMEOUT  ((uint16)0x0500)   /*!< Time out for HSE start up */
+#define  RCC_CFGR_HPRE_DIV1                  ((uint32)0x00000000)        /*!< SYSCLK not divided */
+#define  RCC_CFGR_PPRE1_DIV2                 ((uint32)0x00001000)        /*!< HCLK divided by 2 */
+#define  RCC_CFGR_PPRE1_DIV4                 ((uint32)0x00001400)        /*!< HCLK divided by 4 */
+#define  RCC_CFGR_PPRE2_DIV1                 ((uint32)0x00000000)        /*!< HCLK not divided */
+#define  RCC_CFGR_PPRE2_DIV2                 ((uint32)0x00008000)        /*!< HCLK divided by 2 */
+
+#define  RCC_PLLCFGR_PLLSRC_HSE              ((uint32)0x00400000)
 
 /*******************  Bits definition for FLASH_ACR register  *****************/
 //#define FLASH_ACR_LATENCY                    ((uint32_t)0x00000007)
@@ -162,11 +169,12 @@ typedef struct
 
 void InitMCO1()
 {
+    rcc_reg_map *RCC = RCC_BASE;
     // Turn MCO1 Master Clock Output mode
     RCC->CFGR &= RCC_CFGR_MCO1_RESET_MASK;
     RCC->CFGR |= RCC_CFGR_MCO1Source_HSE | RCC_CFGR_MCO1Div_1;
     // PA8 Output the Master Clock MCO1
-    gpio_set_af_mode(PA8, GPIO_AFMODE_SYSTEM);
+    gpio_set_af_mode(PA8, 0);
     gpio_set_mode(PA8, GPIO_MODE_AF | GPIO_OTYPE_PP | GPIO_OSPEED_100MHZ);
 }
 
@@ -191,6 +199,7 @@ void SetupClock72MHz()
 
 
 	uint32 StartUpCounter = 0, HSEStatus = 0;
+	rcc_reg_map *RCC = RCC_BASE;
 
 	/* Enable HSE */
 	RCC->CR |= ((uint32_t)RCC_CR_HSEON);
@@ -282,6 +291,7 @@ void SetupClock120MHz()
 
 
 	uint32 StartUpCounter = 0, HSEStatus = 0;
+	rcc_reg_map *RCC = RCC_BASE;
 
 	/* Enable HSE */
 	RCC->CR |= ((uint32_t)RCC_CR_HSEON);
@@ -362,12 +372,10 @@ void SetupClock168MHz()
 	/******************************************************************************/
 	/************************* PLL Parameters *************************************/
 	/* PLL_VCO = (HSE_VALUE or HSI_VALUE / PLL_M) * PLL_N */
-#if CRYSTAL_FREQ==25
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
 	int PLL_M = 25; // The NETDUINO has a 25MHz external oscillator
-#elif CRYSTAL_FREQ==8
-	int PLL_M = 8;
 #else
-	#error Crystal frequency not specified!
+	int PLL_M = 8;
 #endif
 	int PLL_N = 336;
 
@@ -379,8 +387,9 @@ void SetupClock168MHz()
 
 
 	uint32 StartUpCounter = 0, HSEStatus = 0;
+	rcc_reg_map *RCC = RCC_BASE;
 
-#ifdef BOARD_STM32F4_NETDUINO2PLUS
+#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
         InitMCO1();
 #endif
         
@@ -490,18 +499,19 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
 /*            PLL (clocked by HSE) used as System clock source                */
 /******************************************************************************/
   uint32 StartUpCounter = 0, HSEStatus = 0;
+  rcc_reg_map *pRCC = RCC_BASE;
 
   /* Enable HSE */
-  RCC->CR |= RCC_CR_HSEON;
+  pRCC->CR |= RCC_CR_HSEON;
 
   /* Wait till HSE is ready and if Time out is reached exit */
   do
   {
-    HSEStatus = RCC->CR & RCC_CR_HSERDY;
+    HSEStatus = pRCC->CR & RCC_CR_HSERDY;
     StartUpCounter++;
   } while((HSEStatus == 0) && (StartUpCounter != HSE_STARTUP_TIMEOUT));
 
-  if ((RCC->CR & RCC_CR_HSERDY) != 0)
+  if ((pRCC->CR & RCC_CR_HSERDY) != 0)
   {
     HSEStatus = 0x01;
   }
@@ -513,23 +523,23 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
   if (HSEStatus == 0x01)
   {
     /* HCLK = SYSCLK / 1*/
-    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;
+    pRCC->CFGR |= RCC_CFGR_HPRE_DIV1;
 
     /* PCLK2 = HCLK / 2*/
-    RCC->CFGR |= RCC_CFGR_PPRE2_DIV2;
+    pRCC->CFGR |= RCC_CFGR_PPRE2_DIV2;
 
     /* PCLK1 = HCLK / 4*/
-    RCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
+    pRCC->CFGR |= RCC_CFGR_PPRE1_DIV4;
 
     /* Configure the main PLL */
-    RCC->PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) |
+    pRCC->PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) |
                    (RCC_PLLCFGR_PLLSRC_HSE) | (PLL_Q << 24);
 
     /* Enable the main PLL */
-    RCC->CR |= RCC_CR_PLLON;
+    pRCC->CR |= RCC_CR_PLLON;
 
     /* Wait till the main PLL is ready */
-    while((RCC->CR & RCC_CR_PLLRDY) == 0)
+    while((pRCC->CR & RCC_CR_PLLRDY) == 0)
     {
     }
 
@@ -537,11 +547,11 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
     ((FLASH_TypeDef*)FLASH)->ACR = FLASH_ACR_PRFTEN |FLASH_ACR_ICEN |FLASH_ACR_DCEN |FLASH_ACR_LATENCY_3WS;
 
     /* Select the main PLL as system clock source */
-    RCC->CFGR &= ~RCC_CFGR_SW;
-    RCC->CFGR |= RCC_CFGR_SW_PLL;
+    pRCC->CFGR &= ~RCC_CFGR_SW;
+    pRCC->CFGR |= RCC_CFGR_SW_PLL;
 
     /* Wait till the main PLL is used as system clock source */
-    while ((RCC->CFGR & RCC_CFGR_SWS ) != RCC_CFGR_SWS_PLL);
+    while ((pRCC->CFGR & RCC_CFGR_SWS ) != RCC_CFGR_SWS_PLL);
     {
     }
   }
@@ -559,26 +569,26 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
     ASSERT(sysclk_src == RCC_CLKSRC_PLL &&
            pll_src    == RCC_PLLSRC_HSE);
 
-    RCC->CFGR = pll_src | pll_mul;
+    RCC_BASE->CFGR = pll_src | pll_mul;
 
     /* Turn on the HSE */
-    cr = RCC->CR;
+    cr = RCC_BASE->CR;
     cr |= RCC_CR_HSEON;
-    RCC->CR = cr;
-    while (!(RCC->CR & RCC_CR_HSERDY))
+    RCC_BASE->CR = cr;
+    while (!(RCC_BASE->CR & RCC_CR_HSERDY))
         ;
 
     /* Now the PLL */
     cr |= RCC_CR_PLLON;
-    RCC->CR = cr;
-    while (!(RCC->CR & RCC_CR_PLLRDY))
+    RCC_BASE->CR = cr;
+    while (!(RCC_BASE->CR & RCC_CR_PLLRDY))
         ;
 
     /* Finally, let's switch over to the PLL */
     cfgr &= ~RCC_CFGR_SW;
     cfgr |= RCC_CFGR_SW_PLL;
-    RCC->CFGR = cfgr;
-    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+    RCC_BASE->CFGR = cfgr;
+    while ((RCC_BASE->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
         ;
 #endif
 }
@@ -589,11 +599,11 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
  */
 void rcc_clk_enable(rcc_clk_id id) {
     static const __io uint32* enable_regs[] = {
-        [APB1] = &RCC->APB1ENR,
-        [APB2] = &RCC->APB2ENR,
-        [AHB1] = &RCC->AHB1ENR,
-        [AHB2] = &RCC->AHB2ENR,
-        [AHB3] = &RCC->AHB3ENR,
+        [APB1] = &RCC_BASE->APB1ENR,
+        [APB2] = &RCC_BASE->APB2ENR,
+        [AHB1] = &RCC_BASE->AHB1ENR,
+        [AHB2] = &RCC_BASE->AHB2ENR,
+        [AHB3] = &RCC_BASE->AHB3ENR,
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
@@ -609,11 +619,11 @@ void rcc_clk_enable(rcc_clk_id id) {
  */
 void rcc_clk_disable(rcc_clk_id id) {
     static const __io uint32* enable_regs[] = {
-        [APB1] = &RCC->APB1ENR,
-        [APB2] = &RCC->APB2ENR,
-        [AHB1] = &RCC->AHB1ENR,
-        [AHB2] = &RCC->AHB2ENR,
-        [AHB3] = &RCC->AHB3ENR,
+        [APB1] = &RCC_BASE->APB1ENR,
+        [APB2] = &RCC_BASE->APB2ENR,
+        [AHB1] = &RCC_BASE->AHB1ENR,
+        [AHB2] = &RCC_BASE->AHB2ENR,
+        [AHB3] = &RCC_BASE->AHB3ENR,
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
@@ -629,11 +639,11 @@ void rcc_clk_disable(rcc_clk_id id) {
  */
 void rcc_reset_dev(rcc_clk_id id) {
     static const __io uint32* reset_regs[] = {
-        [APB1] = &RCC->APB1RSTR,
-        [APB2] = &RCC->APB2RSTR,
-        [AHB1] = &RCC->AHB1RSTR,
-        [AHB2] = &RCC->AHB2RSTR,
-        [AHB3] = &RCC->AHB3RSTR,
+        [APB1] = &RCC_BASE->APB1RSTR,
+        [APB2] = &RCC_BASE->APB2RSTR,
+        [AHB1] = &RCC_BASE->AHB1RSTR,
+        [AHB2] = &RCC_BASE->AHB2RSTR,
+        [AHB3] = &RCC_BASE->AHB3RSTR,
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
@@ -686,9 +696,11 @@ void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider) {
         [RCC_PRESCALER_ADC] = RCC_CFGR_ADCPRE,
     };
 
-    uint32 cfgr = RCC->CFGR;
+    uint32 cfgr = RCC_BASE->CFGR;
     cfgr &= ~masks[prescaler];
     cfgr |= divider;
-    RCC->CFGR = cfgr;
+    RCC_BASE->CFGR = cfgr;
 #endif
 }
+
+#endif

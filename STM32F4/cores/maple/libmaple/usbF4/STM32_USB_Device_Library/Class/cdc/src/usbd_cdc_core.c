@@ -163,11 +163,8 @@ __ALIGN_BEGIN uint8_t USB_Rx_Buffer   [CDC_DATA_MAX_PACKET_SIZE] __ALIGN_END ;
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
-__ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ;
-#else 
-__ALIGN_BEGIN uint8_t __CCMRAM__ APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ;
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
- 
+__ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ; 
 
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED

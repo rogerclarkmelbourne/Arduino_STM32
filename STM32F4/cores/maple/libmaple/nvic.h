@@ -143,6 +143,7 @@ typedef enum nvic_irq_num {
     NVIC_TIMER8_UP      = 44,   /**< Timer 8 update */
     NVIC_TIMER8_TRG_COM = 45,   /**< Timer 8 trigger and commutation */
     NVIC_TIMER8_CC      = 46,   /**< Timer 8 capture/compare */
+#ifdef STM32_HIGH_DENSITY
     NVIC_ADC3           = 47,   /**< ADC3 */
     NVIC_FSMC           = 48,   /**< FSMC */
     NVIC_SDIO           = 49,   /**< SDIO */
@@ -156,6 +157,7 @@ typedef enum nvic_irq_num {
     NVIC_DMA2_CH2       = 57,   /**< DMA2 channel 2 */
     NVIC_DMA2_CH3       = 58,   /**< DMA2 channel 3 */
     NVIC_DMA2_CH_4_5    = 59,   /**< DMA2 channels 4 and 5 */
+#endif
 } nvic_irq_num;
 
 /*

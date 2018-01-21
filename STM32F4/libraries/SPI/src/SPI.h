@@ -42,6 +42,7 @@
 #include <libmaple/dma.h>
 #include <wirish.h>
 
+#define SPI_DMA
 
 // SPI_HAS_TRANSACTION means SPI has
 //   - beginTransaction()
@@ -138,9 +139,11 @@ private:
 	spi_dev *spi_d;
 	uint32_t clockDivider;
 
+#ifdef SPI_DMA
 	dma_dev* spiDmaDev;
 	dma_channel spiDmaChannel;
 	dma_stream spiRxDmaStream, spiTxDmaStream;
+#endif
 
 	friend class SPIClass;
 };
@@ -232,15 +235,14 @@ public:
      * @brief Transmit one byte/word.
      * @param data to transmit.
      */
-    void write(uint16 data);
-    void write16(uint16 data); // write 2 bytes in 8 bit mode (DFF=0)
-
+    void write(uint16 data);	
+	
     /**
      * @brief Transmit one byte/word a specified number of times.
      * @param data to transmit.
      */
     void write(uint16 data, uint32 n);	
-
+	
     /**
      * @brief Transmit multiple bytes/words.
      * @param buffer Bytes/words to transmit.
@@ -258,7 +260,8 @@ public:
      */
     uint8 transfer(uint8 data) const;
     uint16_t transfer16(uint16_t data) const;
-
+	
+#ifdef SPI_DMA
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
 	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
@@ -269,7 +272,7 @@ public:
      * @param receiveBuf buffer Bytes to save received data. 
      * @param length Number of bytes in buffer to transmit.
 	 */
-    uint8 dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length);
+	uint8 dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length);
 
 	/**
      * @brief Sets up a DMA Transmit for SPI 8 or 16 bit transfer mode.
@@ -280,7 +283,8 @@ public:
      * @param data buffer half words to transmit,
      * @param length Number of bytes in buffer to transmit.
      */
-    uint8 dmaSend(const void * transmitBuf, uint16 length, bool minc = 1);
+	uint8 dmaSend(const void * transmitBuf, uint16 length, bool minc = 1);
+#endif
 
     /*
      * Pin accessors
@@ -313,20 +317,23 @@ public:
      *        this HardwareSPI instance.
      */
     spi_dev* c_dev(void) { return _currentSetting->spi_d; }
-
-    spi_dev *dev(){ return _currentSetting->spi_d;}
-
-     /**
+	
+		
+	spi_dev *dev(){ return _currentSetting->spi_d;}
+	
+	 /**
      * @brief Sets the number of the SPI peripheral to be used by
      *        this HardwareSPI instance.
-     *
-     * @param spi_num Number of the SPI port. 1-2 in low density devices
-     *        or 1-3 in high density devices.
+	 *
+	 * @param spi_num Number of the SPI port. 1-2 in low density devices
+	 *			or 1-3 in high density devices.
      */
-    void setModule(int spi_num)
-    {
-        _currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
-    }
+	
+	void setModule(int spi_num)
+	{
+		_currentSetting=&_settings[spi_num-1];// SPI channels are called 1 2 and 3 but the array is zero indexed
+	}
+
 
     /* -- The following methods are deprecated --------------------------- */
 
@@ -359,15 +366,14 @@ public:
      * @see HardwareSPI::read()
      */
     uint8 recv(void);
-
+	
 private:
-
 	SPISettings _settings[BOARD_NR_SPI];
 	SPISettings *_currentSetting;
-
+	
 	void updateSettings(void);
 };
 
-extern SPIClass SPI;
+extern SPIClass SPI; // needed bx SdFat(EX) lib
 
 #endif

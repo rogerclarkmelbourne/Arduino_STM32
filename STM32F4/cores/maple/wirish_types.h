@@ -36,7 +36,6 @@
 #include <libmaple/gpio_def.h>
 #include <libmaple/timer.h>
 #include <libmaple/adc.h>
-#include <libmaple/libmaple_types.h>
 
 /**
  * Invalid stm32_pin_info adc_channel value.
@@ -48,7 +47,7 @@
  * @brief Stores STM32-specific information related to a given Maple pin.
  * @see PIN_MAP
  */
-#ifdef VARIANT_generic_f407v
+#ifdef BOARD_generic_f407v
 // restructure members to build consecutive pairs
 typedef struct stm32_pin_info {
     const gpio_dev * gpio_device;      /**< Maple pin's GPIO device */
@@ -74,6 +73,5 @@ typedef struct stm32_pin_info {
  * Variable attribute, instructs the linker to place the marked
  * variable in Flash instead of RAM. */
 #define __FLASH__ __attr_flash
-#define __CCMRAM__ __attr_ccmram
 
 #endif

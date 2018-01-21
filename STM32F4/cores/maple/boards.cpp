@@ -58,7 +58,11 @@ void init(void) {
 	systick_init(SYSTICK_RELOAD_VAL);
 	gpio_init_all();
 
+#ifdef STM32F4
 	rcc_clk_enable(RCC_SYSCFG);
+#else
+    afio_init();
+#endif
 
     boardInit();
     setupADC();
@@ -120,7 +124,11 @@ static void setupNVIC() {
 static void adcDefaultConfig(const adc_dev* dev);
 
 static void setupADC() {
+#ifdef STM32F4
 	setupADC_F4();
+#else
+	rcc_set_prescaler(RCC_PRESCALER_ADC, RCC_ADCPRE_PCLK_DIV_6);
+#endif
     adc_foreach(adcDefaultConfig);
 }
 
@@ -133,9 +141,11 @@ static void setupTimers() {
 static void adcDefaultConfig(const adc_dev *dev) {
     adc_init(dev);
 
-    adc_set_exttrig(dev, ADC_EXT_TRIGGER_DISABLE);
+    adc_set_extsel(dev, ADC_SWSTART);
+    adc_set_exttrig(dev, true);
 
     adc_enable(dev);
+    adc_calibrate(dev);
     adc_set_sample_rate(dev, ADC_SMPR_55_5);
 }
 

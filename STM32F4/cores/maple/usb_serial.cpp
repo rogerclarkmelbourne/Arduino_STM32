@@ -29,8 +29,9 @@
  */
 
 #include <string.h>
-#include "wirish.h"
 
+#include "wirish.h"
+#include "usb.h"
 
 #ifdef SERIAL_USB
 
@@ -66,7 +67,7 @@ size_t USBSerial::write(const char *str) {
 }
 
 size_t USBSerial::write(const void *buf, uint32 len) {
-    if (!(usbOK()) || !buf) {
+    if (!(usbIsConnected() && usbIsConfigured()) || !buf) {
         return 0;
     }
 
@@ -139,7 +140,7 @@ uint8 USBSerial::pending(void) {
 }
 
 USBSerial::operator bool() {
-    return usbOK();
+    return usbIsConnected() && usbIsConfigured();
 }
 
 uint8 USBSerial::getDTR(void) {

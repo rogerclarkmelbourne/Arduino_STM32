@@ -30,6 +30,8 @@
  * @brief  generic_f407v board file.
  */
 
+#ifdef BOARD_generic_f407v
+
 #include "generic_f407v.h"
 
 #include "wirish_types.h"
@@ -39,7 +41,27 @@
 //  Alternate functions, see DocID022152 Rev 8, Table 9. 
 /*****************************************************************************/
 void boardInit(void) {
+/*	// remap TIMER8 to PC6-9
+	gpio_set_af_mode(GPIOC, 6, 3);
+	gpio_set_af_mode(GPIOC, 7, 3);
+	gpio_set_af_mode(GPIOC, 8, 3);
+	gpio_set_af_mode(GPIOC, 9, 3);
 
+	// remap TIMER1 to PE9,11,13,14
+	gpio_set_af_mode(GPIOE,  9, 1);
+	gpio_set_af_mode(GPIOE, 11, 1);
+	gpio_set_af_mode(GPIOE, 13, 1);
+	gpio_set_af_mode(GPIOE, 14, 1);
+
+	// remap TIMER3 to PB4,5,0,1
+	gpio_set_af_mode(GPIOB,  4, 2);
+	gpio_set_af_mode(GPIOB,  5, 2);
+	gpio_set_af_mode(GPIOB,  0, 2);
+	gpio_set_af_mode(GPIOB,  1, 2);
+
+	//gpio_set_af_mode(GPIOA, 2, 7);
+	//gpio_set_af_mode(GPIOA, 3, 7);
+*/
 	return;
 }
 
@@ -56,3 +78,4 @@ static void initSRAMChip(void) {
     fsmc_nor_psram_set_datast(regs, 3);
 }
 */
+#endif

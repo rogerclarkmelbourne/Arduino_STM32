@@ -19,20 +19,24 @@ discovery_f407.upload.maximum_data_size=131072
 #discovery_f407.upload.altID=1
 #discovery_f407.upload.auto_reset=true
 
+discovery_f407.build.mcu=cortex-m4
+discovery_f407.build.f_cpu=168000000L
 discovery_f407.build.core=maple
-discovery_f407.build.extra_flags= -DLED_BUILTIN=PD14 -DCRYSTAL_FREQ=8
+discovery_f407.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -DSTM32F2 -DSTM32F4 -DBOARD_discovery_f4
 discovery_f407.build.ldscript=ld/jtag.ld
 discovery_f407.build.variant=discovery_f407
 discovery_f407.build.variant_system_lib=lib_f407.a
+discovery_f407.build.vect=VECT_TAB_BASE
 discovery_f407.build.density=STM32_HIGH_DENSITY
-discovery_f407.build.error_led_pin=PD14
-discovery_f407.build.board=discovery_f4
+discovery_f407.build.error_led_port=GPIOD
+discovery_f407.build.error_led_pin=14
+discovery_f407.build.board=STM32DiscoveryF407
 discovery_f407.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
-discovery_f407.menu.usb_cfg.usb_serial=USB serial (CDC)
-discovery_f407.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 discovery_f407.menu.usb_cfg.usb_nc=USB inactive
 discovery_f407.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
+discovery_f407.menu.usb_cfg.usb_serial=USB serial (CDC)
+discovery_f407.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 discovery_f407.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 discovery_f407.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
@@ -67,6 +71,9 @@ discovery_f407.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
 generic_f407v.name=Generic STM32F407V series
 
+generic_f407v.upload.tool=stlink_upload
+generic_f407v.upload.protocol=stlink
+
 generic_f407v.upload.file_type=bin
 generic_f407v.upload.maximum_size=514288
 generic_f407v.upload.maximum_data_size=131072
@@ -75,18 +82,25 @@ generic_f407v.upload.maximum_data_size=131072
 #generic_f407v.upload.altID=1
 #generic_f407v.upload.auto_reset=true
 
+generic_f407v.build.mcu=cortex-m4
+generic_f407v.build.f_cpu=168000000L
 generic_f407v.build.core=maple
-generic_f407v.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PA6
+generic_f407v.build.extra_flags=-mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_generic_f407v
 generic_f407v.build.ldscript=ld/jtag.ld
 generic_f407v.build.variant=generic_f407v
 generic_f407v.build.variant_system_lib=lib_f407.a
-generic_f407v.build.error_led_pin=PA7
-generic_f407v.build.board=generic_f407v
+generic_f407v.build.vect=VECT_TAB_BASE
+generic_f407v.build.density=STM32_HIGH_DENSITY
+generic_f407v.build.error_led_port=GPIOA
+generic_f407v.build.error_led_pin=7
+generic_f407v.build.board=STM32GenericF407VET6
+generic_f407v.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
+
+generic_f407v.menu.usb_cfg.usb_nc=USB inactive
+generic_f407v.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
 
 generic_f407v.menu.usb_cfg.usb_serial=USB serial (CDC)
 generic_f407v.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
-generic_f407v.menu.usb_cfg.usb_nc=USB inactive
-generic_f407v.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
 generic_f407v.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 generic_f407v.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
@@ -97,6 +111,7 @@ generic_f407v.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 generic_f407v.menu.upload_method.STLinkMethod.upload.dfuse_addr=0x08004000
 generic_f407v.menu.upload_method.STLinkMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
+
 generic_f407v.menu.upload_method.DFUUploadMethod=STM32duino bootloader
 generic_f407v.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 generic_f407v.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
@@ -104,6 +119,11 @@ generic_f407v.menu.upload_method.DFUUploadMethod.build.vect_flags=-DVECT_TAB_FLA
 generic_f407v.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_8004000.ld
 generic_f407v.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
 generic_f407v.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+
+
+
+
 
 #-- Optimizations
 generic_f407v.menu.opt.osstd=Smallest (default)
@@ -134,75 +154,6 @@ generic_f407v.menu.opt.ogstd=Debug (-g)
 generic_f407v.menu.opt.ogstd.build.flags.optimize=-Og
 generic_f407v.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
-generic_f407v_mini.name=Generic STM32F407V mini series
-
-generic_f407v_mini.upload.file_type=bin
-generic_f407v_mini.upload.maximum_size=514288
-generic_f407v_mini.upload.maximum_data_size=131072
-
-#generic_f407v_mini.upload.usbID=0483:3748
-#generic_f407v_mini.upload.altID=1
-#generic_f407v_mini.upload.auto_reset=true
-
-generic_f407v_mini.build.core=maple
-generic_f407v_mini.build.extra_flags= -DCRYSTAL_FREQ=25 -DLED_BUILTIN=PB9
-generic_f407v_mini.build.ldscript=ld/jtag.ld
-generic_f407v_mini.build.variant=generic_f407v
-generic_f407v_mini.build.variant_system_lib=lib_f407.a
-generic_f407v_mini.build.error_led_pin=PB9
-generic_f407v_mini.build.board=generic_f407v_mini
-
-generic_f407v_mini.menu.usb_cfg.usb_serial=USB serial (CDC)
-generic_f407v_mini.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
-generic_f407v_mini.menu.usb_cfg.usb_nc=USB inactive
-generic_f407v_mini.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
-generic_f407v_mini.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
-generic_f407v_mini.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
-
-#note STLink is the default from the main block of config above, so does not need settings for everything
-generic_f407v_mini.menu.upload_method.STLinkMethod=STLink
-generic_f407v_mini.menu.upload_method.STLinkMethod.upload.protocol=STLink
-generic_f407v_mini.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
-generic_f407v_mini.menu.upload_method.STLinkMethod.upload.dfuse_addr=0x08004000
-generic_f407v_mini.menu.upload_method.STLinkMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
-
-generic_f407v_mini.menu.upload_method.DFUUploadMethod=STM32duino bootloader
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08004000
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_8004000.ld
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
-generic_f407v_mini.menu.upload_method.DFUUploadMethod.upload.altID=2
-
-#-- Optimizations
-generic_f407v_mini.menu.opt.osstd=Smallest (default)
-generic_f407v_mini.menu.opt.osstd.build.flags.optimize=-Os
-generic_f407v_mini.menu.opt.osstd.build.flags.ldspecs=
-generic_f407v_mini.menu.opt.oslto=Smallest Code with LTO
-generic_f407v_mini.menu.opt.oslto.build.flags.optimize=-Os -flto
-generic_f407v_mini.menu.opt.oslto.build.flags.ldspecs=-flto
-generic_f407v_mini.menu.opt.o1std=Fast (-O1)
-generic_f407v_mini.menu.opt.o1std.build.flags.optimize=-O1
-generic_f407v_mini.menu.opt.o1std.build.flags.ldspecs=
-generic_f407v_mini.menu.opt.o1lto=Fast (-O1) with LTO
-generic_f407v_mini.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-generic_f407v_mini.menu.opt.o1lto.build.flags.ldspecs=-flto
-generic_f407v_mini.menu.opt.o2std=Faster (-O2)
-generic_f407v_mini.menu.opt.o2std.build.flags.optimize=-O2
-generic_f407v_mini.menu.opt.o2std.build.flags.ldspecs=
-generic_f407v_mini.menu.opt.o2lto=Faster (-O2) with LTO
-generic_f407v_mini.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-generic_f407v_mini.menu.opt.o2lto.build.flags.ldspecs=-flto
-generic_f407v_mini.menu.opt.o3std=Fastest (-O3)
-generic_f407v_mini.menu.opt.o3std.build.flags.optimize=-O3
-generic_f407v_mini.menu.opt.o3std.build.flags.ldspecs=
-generic_f407v_mini.menu.opt.o3lto=Fastest (-O3) with LTO
-generic_f407v_mini.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-generic_f407v_mini.menu.opt.o3lto.build.flags.ldspecs=-flto
-generic_f407v_mini.menu.opt.ogstd=Debug (-g)
-generic_f407v_mini.menu.opt.ogstd.build.flags.optimize=-Og
-generic_f407v_mini.menu.opt.ogstd.build.flags.ldspecs=
-##############################################################
 stm32f4stamp.name=STM32F4Stamp F405
 
 stm32f4stamp.upload.tool=maple_upload
@@ -218,19 +169,24 @@ stm32f4stamp.upload.altID=0
 #stm32f4stamp.upload.auto_reset=true
 stm32f4stamp.upload.dfuse_addr=0x8000000
 
+stm32f4stamp.build.mcu=cortex-m4
+stm32f4stamp.build.f_cpu=168000000L
 stm32f4stamp.build.core=maple
-stm32f4stamp.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PD14
+stm32f4stamp.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_discovery_f4
 stm32f4stamp.build.ldscript=ld/jtag.ld
 stm32f4stamp.build.variant=discovery_f407
 stm32f4stamp.build.variant_system_lib=lib_f407.a
-stm32f4stamp.build.error_led_pin=PD14
+stm32f4stamp.build.vect=VECT_TAB_BASE
+stm32f4stamp.build.density=STM32_HIGH_DENSITY
+stm32f4stamp.build.error_led_port=GPIOD
+stm32f4stamp.build.error_led_pin=14
 stm32f4stamp.build.board=STM32F4StampF405
 stm32f4stamp.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
-stm32f4stamp.menu.usb_cfg.usb_serial=USB serial (CDC)
-stm32f4stamp.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 stm32f4stamp.menu.usb_cfg.usb_nc=USB inactive
 stm32f4stamp.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
+stm32f4stamp.menu.usb_cfg.usb_serial=USB serial (CDC)
+stm32f4stamp.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 stm32f4stamp.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 stm32f4stamp.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
@@ -278,19 +234,23 @@ netduino2plus.upload.altID=0
 #netduino2plus.upload.auto_reset=true
 netduino2plus.upload.dfuse_addr=0x8000000
 
+netduino2plus.build.mcu=cortex-m4
+netduino2plus.build.f_cpu=168000000L
 netduino2plus.build.core=maple
-netduino2plus.build.extra_flags= -DLED_BUILTIN=PD14 -DCRYSTAL_FREQ=25
+netduino2plus.build.extra_flags=-DMCU_STM32F406VG -mthumb -DSTM32_HIGH_DENSITY -DSTM32F4 -DBOARD_discovery_f4 -DARDUINO_STM32F4_NETDUINO2PLUS
 netduino2plus.build.ldscript=ld/jtag.ld
 netduino2plus.build.variant=discovery_f407
 netduino2plus.build.variant_system_lib=lib_f407.a
-netduino2plus.build.error_led_pin=PD14
-netduino2plus.build.board=STM32F4_NETDUINO2PLUS
-netduino2plus.build.vect_flags=-DVECT_TAB_BASE
+netduino2plus.build.vect=VECT_TAB_BASE
+netduino2plus.build.density=STM32_HIGH_DENSITY
+netduino2plus.build.error_led_port=GPIOD
+netduino2plus.build.error_led_pin=14
+netduino2plus.build.board=Netduino2F405
 
-netduino2plus.menu.usb_cfg.usb_serial=USB serial (CDC)
-netduino2plus.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 netduino2plus.menu.usb_cfg.usb_nc=USB inactive
 netduino2plus.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
+netduino2plus.menu.usb_cfg.usb_serial=USB serial (CDC)
+netduino2plus.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
 netduino2plus.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
 netduino2plus.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 

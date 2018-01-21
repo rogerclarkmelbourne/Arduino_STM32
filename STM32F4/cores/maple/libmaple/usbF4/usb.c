@@ -13,8 +13,7 @@
 
 USB_OTG_CORE_HANDLE  USB_OTG_dev;
 
-extern uint8_t usb_isConnected(void);
-extern uint8_t usb_isConfigured(void);
+
 
 void setupUSB (void)
 {
@@ -29,6 +28,8 @@ void setupUSB (void)
   delay_us(200000);
 
   /* setup the apb1 clock for USB */
+  //rcc_reg_map *pRCC = RCC_BASE;
+  //pRCC->APB1ENR |= RCC_APB1ENR_USBEN;
 
   /* initialize the usb application */
   gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host
@@ -43,7 +44,6 @@ extern uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len);
 extern void     VCP_SetUSBTxBlocking(uint8_t mode);
 extern uint32_t VCPBytesAvailable(void);
 extern uint8_t  VCPGetByte(void);
-extern uint8_t  VCPGetDTR(void);
 
 uint32_t usbSendBytes(const uint8_t* sendBuf, uint32_t len) {
 	VCP_DataTx((uint8_t*)sendBuf, len);
@@ -78,15 +78,11 @@ uint32_t usbReceiveBytes(uint8_t* recvBuf, uint32_t len) {
 }
 
 uint8 usbIsConfigured() {
-  return usb_isConfigured();
+  return 1; //(bDeviceState == CONFIGURED);
 }
 
 uint8 usbIsConnected() {
-  return usb_isConnected();
-}
-
-uint8_t usbGetDTR(void) {
-  return VCPGetDTR();
+  return 1; //(bDeviceState != UNCONNECTED);
 }
 
 RESULT usbPowerOn(void) {

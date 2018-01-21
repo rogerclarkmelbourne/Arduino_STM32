@@ -55,7 +55,7 @@
 #endif
 
 #ifndef STM32_PCLK1
-#define STM32_PCLK1   42000000U
+#define STM32_PCLK1   36000000U
 #endif
 #ifndef PCLK1
 #define PCLK1 STM32_PCLK1
@@ -65,7 +65,7 @@
 #endif
 
 #ifndef STM32_PCLK2
-#define STM32_PCLK2   84000000U
+#define STM32_PCLK2   72000000U
 #endif
 #ifndef PCLK2
 #define PCLK2 STM32_PCLK2
@@ -82,6 +82,10 @@
 
     /**
      * @brief Number of interrupts in the NVIC.
+     *
+     * This define is automatically generated whenever the proper
+     * density is defined (currently, this is restricted to defining
+     * one of STM32_MEDIUM_DENSITY and STM32_HIGH_DENSITY).
      */
     #define STM32_NR_INTERRUPTS
 
@@ -90,7 +94,13 @@
 
 #endif
 
-#define STM32_NR_INTERRUPTS 60
+#ifdef STM32_MEDIUM_DENSITY
+    #define STM32_NR_INTERRUPTS 43
+#elif defined(STM32_HIGH_DENSITY)
+    #define STM32_NR_INTERRUPTS 60
+#else
+#error "No STM32 board type defined!"
+#endif
 
 #define NR_INTERRUPTS STM32_NR_INTERRUPTS
 
@@ -128,6 +138,8 @@
 
 #endif
 
+
+#if defined( STM32F4 )
 	#define STM32_TICKS_PER_US          168
     #define STM32_NR_GPIO_PORTS          5
     #define STM32_DELAY_US_MULT         (STM32_TICKS_PER_US/3)
@@ -136,5 +148,12 @@
 
     #define NR_GPIO_PORTS               STM32_NR_GPIO_PORTS
     #define DELAY_US_MULT               STM32_DELAY_US_MULT
+
+#else
+
+#error "No MCU type specified. Add something like -DMCU_STM32F103RB "   \
+       "to your compiler arguments (probably in a Makefile)."
+
+#endif
 
 #endif  /* _STM32_H_ */

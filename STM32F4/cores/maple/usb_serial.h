@@ -31,7 +31,6 @@
 #ifndef _USB_SERIAL_H_
 #define _USB_SERIAL_H_
 
-#include "usb.h"
 #include "Stream.h"
 
 #ifdef SERIAL_USB
@@ -60,10 +59,8 @@ public:
 
     uint8 getRTS();
     uint8 getDTR();
-	uint8 usbOK(void) { return usbIsConnected() && usbIsConfigured() && usbGetDTR(); }
 	operator bool();
-	uint8 isConnected() __attribute__((deprecated("Use !Serial instead"))) { return usbOK(); }
-    uint8 isConfigured() { return usbIsConfigured(); }
+	uint8 isConnected() { return (bool) *this; }
     uint8 pending();
 
     void enableBlockingTx(void);

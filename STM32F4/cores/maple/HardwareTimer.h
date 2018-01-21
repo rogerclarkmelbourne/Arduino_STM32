@@ -319,6 +319,7 @@ extern HardwareTimer Timer3;
  * Pre-instantiated timer.
  */
 extern HardwareTimer Timer4;
+#ifdef STM32_HIGH_DENSITY
 /**
  * @brief Deprecated.
  *
@@ -331,5 +332,6 @@ extern HardwareTimer Timer5;
  * Pre-instantiated timer.
  */
 extern HardwareTimer Timer8;
+#endif
 
 #endif

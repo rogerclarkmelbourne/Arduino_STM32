@@ -975,14 +975,13 @@ typedef struct
 /** \ingroup  CMSIS_core_register
   @{
  */
-#include <libmaple/nvic.h>
 
 /* Memory mapping of Cortex-M4 Hardware */
 #define SCS_BASE            (0xE000E000UL)                            /*!< System Control Space Base Address  */
 #define ITM_BASE            (0xE0000000UL)                            /*!< ITM Base Address                   */
 #define CoreDebug_BASE      (0xE000EDF0UL)                            /*!< Core Debug Base Address            */
 #define SysTick_BASE        (SCS_BASE +  0x0010UL)                    /*!< SysTick Base Address               */
-//#define NVIC_BASE           (SCS_BASE +  0x0100UL)                    /*!< NVIC Base Address                  */
+#define NVIC_BASE           (SCS_BASE +  0x0100UL)                    /*!< NVIC Base Address                  */
 #define SCB_BASE            (SCS_BASE +  0x0D00UL)                    /*!< System Control Block Base Address  */
 
 #define SCnSCB              ((SCnSCB_Type    *)     SCS_BASE      )   /*!< System control Register not in SCB */

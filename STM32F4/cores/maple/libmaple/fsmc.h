@@ -47,6 +47,7 @@
 extern "C"{
 #endif
 
+#ifdef STM32_HIGH_DENSITY
 
 /*
  * Register maps and devices
@@ -336,6 +337,7 @@ static inline void fsmc_nor_psram_set_addset(fsmc_nor_psram_reg_map *regs,
     regs->BTR |= addset & 0xF;
 }
 
+#endif /* STM32_HIGH_DENSITY */
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -46,9 +46,12 @@
 #define ERROR_TX_PIN           2
 #endif
 
-/* If you define ERROR_LED_PIN, then a failed
+/* If you define ERROR_LED_PORT and ERROR_LED_PIN, then a failed
  * ASSERT() will also throb() an LED connected to that port and pin.
  */
+#if defined(ERROR_LED_PORT) && defined(ERROR_LED_PIN)
+#define HAVE_ERROR_LED
+#endif
 
 /**
  * @brief Disables all peripheral interrupts except USB and fades the
@@ -119,7 +122,7 @@ void _fail(const char* file, int line, const char* exp) {
  * @sideeffect Sets output push-pull on ERROR_LED_PIN.
  */
 void throb(void) {
-#ifdef ERROR_LED_PIN
+#ifdef HAVE_ERROR_LED
     int32  slope   = 1;
     uint32 CC      = 0x0000;
     uint32 TOP_CNT = 0x0800;

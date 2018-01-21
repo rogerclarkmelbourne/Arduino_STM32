@@ -24,6 +24,8 @@
  * SOFTWARE.
  *****************************************************************************/
 
+#ifdef STM32F4
+ 
 /**
  * @file dmaF4.c
  * @brief Direct Memory Access peripheral support
@@ -218,3 +220,5 @@ void __irq_DMA2_Stream6_IRQHandler(void) {
 void __irq_DMA2_Stream7_IRQHandler(void) {
     dispatch_handler(DMA2, DMA_STREAM7);
 }
+
+#endif

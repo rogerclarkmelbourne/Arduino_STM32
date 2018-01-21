@@ -40,12 +40,12 @@ static void sdio_gpios_init(void)
 	gpio_set_mode(BOARD_SDIO_CLK, GPIO_AF_OUTPUT_PP);
 	gpio_set_mode(BOARD_SDIO_CMD, GPIO_AF_OUTPUT_PP_PU);
 	//
-	gpio_set_af_mode(BOARD_SDIO_D0,  GPIO_AFMODE_SDIO);
-	gpio_set_af_mode(BOARD_SDIO_D1,  GPIO_AFMODE_SDIO);
-	gpio_set_af_mode(BOARD_SDIO_D2,  GPIO_AFMODE_SDIO);
-	gpio_set_af_mode(BOARD_SDIO_D3,  GPIO_AFMODE_SDIO);
-	gpio_set_af_mode(BOARD_SDIO_CLK, GPIO_AFMODE_SDIO);
-	gpio_set_af_mode(BOARD_SDIO_CMD, GPIO_AFMODE_SDIO);
+	gpio_set_af_mode(BOARD_SDIO_D0, 12);
+	gpio_set_af_mode(BOARD_SDIO_D1, 12);
+	gpio_set_af_mode(BOARD_SDIO_D2, 12);
+	gpio_set_af_mode(BOARD_SDIO_D3, 12);
+	gpio_set_af_mode(BOARD_SDIO_CLK, 12);
+	gpio_set_af_mode(BOARD_SDIO_CMD, 12);
 }
 
 static void sdio_gpios_deinit(void)
@@ -57,12 +57,12 @@ static void sdio_gpios_deinit(void)
 	gpio_set_mode(BOARD_SDIO_CLK, GPIO_INPUT_FLOATING);
 	gpio_set_mode(BOARD_SDIO_CMD, GPIO_INPUT_FLOATING);
 	//
-	gpio_set_af_mode(BOARD_SDIO_D0,  GPIO_AFMODE_SYSTEM);
-	gpio_set_af_mode(BOARD_SDIO_D1,  GPIO_AFMODE_SYSTEM);
-	gpio_set_af_mode(BOARD_SDIO_D2,  GPIO_AFMODE_SYSTEM);
-	gpio_set_af_mode(BOARD_SDIO_D3,  GPIO_AFMODE_SYSTEM);
-	gpio_set_af_mode(BOARD_SDIO_CLK, GPIO_AFMODE_SYSTEM);
-	gpio_set_af_mode(BOARD_SDIO_CMD, GPIO_AFMODE_SYSTEM);
+	gpio_set_af_mode(BOARD_SDIO_D0, 0);
+	gpio_set_af_mode(BOARD_SDIO_D1, 0);
+	gpio_set_af_mode(BOARD_SDIO_D2, 0);
+	gpio_set_af_mode(BOARD_SDIO_D3, 0);
+	gpio_set_af_mode(BOARD_SDIO_CLK, 0);
+	gpio_set_af_mode(BOARD_SDIO_CMD, 0);
 }
 
 /**

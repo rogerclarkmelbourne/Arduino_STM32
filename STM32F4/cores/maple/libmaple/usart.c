@@ -65,6 +65,7 @@ static usart_dev usart3 = {
 /** USART3 device */
 usart_dev *USART3 = &usart3;
 
+#ifdef STM32_HIGH_DENSITY
 static usart_dev uart4 = {
     .regs     = UART4_BASE,
     .max_baud = 2250000UL,
@@ -82,6 +83,7 @@ static usart_dev uart5 = {
 };
 /** UART5 device */
 usart_dev *UART5 = &uart5;
+#endif
 
 /**
  * @brief Initialize a serial port.
@@ -184,8 +186,10 @@ void usart_foreach(void (*fn)(usart_dev*)) {
     fn(USART1);
     fn(USART2);
     fn(USART3);
+#ifdef STM32_HIGH_DENSITY
     fn(UART4);
     fn(UART5);
+#endif
 }
 
 /**
@@ -263,6 +267,7 @@ static inline void usart_irq(usart_dev *dev) {
 		    asm volatile("nop");
 		}
 #endif
+
 	}
 }
 
@@ -278,6 +283,7 @@ void __irq_usart3(void) {
     usart_irq(USART3);
 }
 
+#ifdef STM32_HIGH_DENSITY
 void __irq_uart4(void) {
     usart_irq(UART4);
 }
@@ -285,3 +291,4 @@ void __irq_uart4(void) {
 void __irq_uart5(void) {
     usart_irq(UART5);
 }
+#endif

@@ -35,7 +35,7 @@ typedef unsigned char		u8;
 
 /* Includes ------------------------------------------------------------------*/
 //#include "stm32f4xx.h"
-#include <wirish_types.h>
+
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
