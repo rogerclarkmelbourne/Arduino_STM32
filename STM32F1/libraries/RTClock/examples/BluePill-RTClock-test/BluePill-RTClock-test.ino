@@ -4,12 +4,16 @@
   based on https://github.com/rogerclarkmelbourne/Arduino_STM32
 
   1. Blink on PC13 per 4s or 7s by attachAlarmInterrupt for 10 times
-  2. Second counter by attachSecondsInterrpt
+  2. Second counter by attachSecondsInterrupt
   3. Serial output on(41s) or off(21s) by creatAlarm
-  4. change to your timezone in the sketch; .
-  3. get Unix epoch time from https://www.epochconverter.com/ ;
-  4. last step input the 10 bits number( example: 1503945555) to Serialport ;
-  5. the clock will be reset to you wanted.
+  4. You can change to your timezone in the sketch;
+  5. get Unix epoch time from https://www.epochconverter.com/ ;
+  6. last step input the 10 bits number( example: 1503945555) to Serialport ;
+  7. the clock will be reset to you wanted.
+  
+  2017.12.15 - stevestrong
+  Alternatively, you can use the processing sketch from the bottom section of this file to update
+  the RTC to the PC system time over serial.
 
   ##  Why the 10 bits Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
@@ -28,70 +32,117 @@
 
 RTClock rtclock (RTCSEL_LSE); // initialise
 int timezone = 8;      // change to your timezone
-time_t tt;
-time_t tt1;
-tm_t mtt = { 47, 9, 13, 3, 11, 22, 30, 30 };    // init time 47+1970 = 2017  Unix epoch Time counted from 00:00:00 1 Jan 1970  
-char weekday1[][7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};  // 0,1,2,3,4,5,6
+time_t tt, tt1;
+tm_t mtt;
 uint8_t dateread[11];
 int globAlmCount = 0;
 int lastGlobAlmCount;
 int SPECAlmCount = 0;
 int lastSPECAlmCount;
-int i = 0;
 int alarmcount = 3;
 uint8_t AlarmExchange = 0;
 bool dispflag = true;
 
-#define LED_PIN PC13
-
-// This function is called in the attachSecondsInterrpt
+//-----------------------------------------------------------------------------
+const char * weekdays[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+const char * months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+//-----------------------------------------------------------------------------
+int8_t str2month(const char * d)
+{
+	int8_t i = 12;
+	while ( (--i)>=0 && strcmp(months[i], d)!=0 );
+	return i;
+}
+//-----------------------------------------------------------------------------
+const char * delim = " :";
+char s[128]; // for sprintf
+//-----------------------------------------------------------------------------
+void ParseBuildTimestamp(tm_t & mt)
+{
+    // Timestamp format: "Dec  8 2017, 22:57:54"
+    sprintf(s, "Timestamp: %s, %s\n", __DATE__, __TIME__);
+    //Serial.print(s);
+    char * token = strtok(s, delim); // get first token
+    // walk through tokens
+    while( token != NULL ) {
+        int8_t m = str2month((const char*)token);
+        if ( m>=0 ) {
+            mt.month = m+1;
+            //Serial.print(" month: "); Serial.println(mt.month);
+            token = strtok(NULL, delim); // get next token
+            mt.day = atoi(token);
+            //Serial.print(" day: "); Serial.println(mt.day);
+            token = strtok(NULL, delim); // get next token
+            mt.year = atoi(token) - 1970;
+            //Serial.print(" year: "); Serial.println(mt.year);
+            token = strtok(NULL, delim); // get next token
+            mt.hour = atoi(token);
+            //Serial.print(" hour: "); Serial.println(mt.hour);
+            token = strtok(NULL, delim); // get next token
+            mt.minute = atoi(token);
+            //Serial.print(" minute: "); Serial.println(mt.minute);
+            token = strtok(NULL, delim); // get next token
+            mt.second = atoi(token);
+            //Serial.print(" second: "); Serial.println(mt.second);
+        }
+        token = strtok(NULL, delim);
+    }
+}
+//-----------------------------------------------------------------------------
+// This function is called in the attachSecondsInterrupt
+//-----------------------------------------------------------------------------
 void SecondCount ()
 {
   tt++;
 }
-// This function is called in the attachAlarmInterrpt
+//-----------------------------------------------------------------------------
+// This function is called in the attachAlarmInterrupt
+//-----------------------------------------------------------------------------
 void blink ()
 {
-  digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
   globAlmCount++;
-  //tt++;
 }
-
+//-----------------------------------------------------------------------------
 void OnOffSerial ()
 {
   dispflag = !dispflag;
   SPECAlmCount++;
 }
-
+//-----------------------------------------------------------------------------
 void setup()
 {
   lastGlobAlmCount = ~globAlmCount;
   lastSPECAlmCount = ~SPECAlmCount;
   Serial.begin(115200);
-  pinMode(LED_PIN, OUTPUT);
-  tt = rtclock.makeTime(mtt); 
-  rtclock.setTime(tt);  
-  tt1 = tt;
+  pinMode(LED_BUILTIN, OUTPUT);
+  //while (!Serial); delay(1000);
+  tt1 = rtclock.now();
+  Serial.print("Current RTC time: "); Serial.println(tt);
+  ParseBuildTimestamp(mtt);  // get the Unix epoch Time counted from 00:00:00 1 Jan 1970
+  tt = rtclock.makeTime(mtt) + 25; // additional seconds to compensate build and upload delay
+  if ( tt>tt1 ) { // is build time later then curent RTC time?
+    Serial.print("Setting RTC to: "); Serial.println(tt);
+    rtclock.setTime(tt);
+    tt1 = tt;
+  }
   rtclock.attachAlarmInterrupt(blink);// Call blink
   rtclock.attachSecondsInterrupt(SecondCount);// Call SecondCount
 }
-
+//-----------------------------------------------------------------------------
 void loop()
 {
-  while (Serial.available())
-  { dateread[i] = Serial.read();
-    if (i < 11) {
-      i++;
+  if ( Serial.available()>10 ) {
+    for (uint8_t i = 0; i<11; i++) {
+      dateread[i] = Serial.read();
     }
-    else {
-      i = 0;
-      tt = (dateread[0] - '0') * 1000000000 + (dateread[1] - '0') * 100000000 + (dateread[2] - '0') * 10000000 + (dateread[3] - '0') * 1000000 + (dateread[4] - '0') * 100000;
-      tt += (dateread[5] - '0') * 10000 + (dateread[6] - '0') * 1000 + (dateread[7] - '0') * 100 + (dateread[8] - '0') * 10 + (dateread[9] - '0');
-      rtclock.TimeZone(tt, timezone);    //adjust to your local date
-      rtclock.setTime(rtclock.TimeZone(tt, timezone));
-    }
+    Serial.flush();
+    tt = atol((char*)dateread);
+    Serial.print("> received: "); Serial.println(tt);
+    //rtclock.setTime(rtclock.TimeZone(tt, timezone)); //adjust to your local date
+    rtclock.setTime(	); //adjust to GMT+1
   }
-  if (lastGlobAlmCount != globAlmCount | lastSPECAlmCount != SPECAlmCount ) {
+  if (lastGlobAlmCount != globAlmCount || lastSPECAlmCount != SPECAlmCount ) {
     if (globAlmCount == 10) {        // to detachAlarmInterrupt and start creatAlarm after 10 times about 110s
       rtclock.detachAlarmInterrupt();
       globAlmCount = 0;
@@ -117,23 +168,146 @@ void loop()
       }
     }
   }
-  if (tt1 != tt & dispflag == true )
+  if (tt1 != tt && dispflag == true )
   {
     tt1 = tt;
-    //rtclock.breakTime(tt, mtt);
-    Serial.print("Date:  ");
-    Serial.print(rtclock.day());
-    Serial.print("- ");
-    Serial.print(rtclock.month());
-    Serial.print("  ");
-    Serial.print(rtclock.year() + 1970);
-    Serial.print("  ");
-    Serial.print(weekday1[rtclock.weekday()]);
-    Serial.print("  Time: ");
-    Serial.print(rtclock.hour());
-    Serial.print(" : ");
-    Serial.print(rtclock.minute());
-    Serial.print(" : ");
-    Serial.println(rtclock.second());
+    // get and print actual RTC timestamp
+    rtclock.breakTime(rtclock.now(), mtt);
+    sprintf(s, "RTC timestamp: %s %u %u, %s, %02u:%02u:%02u\n",
+        months[mtt.month-1], mtt.day, mtt.year+1970, weekdays[mtt.weekday], mtt.hour, mtt.minute, mtt.second);
+    Serial.print(s);
   }
 }
+
+/* Processing sketch to update RTC over serial */
+/* Copy the following section and save it to a new file with extension ".pde" */
+
+/* file start >>>
+//
+// Write current system timestamp to one of the listed serial ports. 
+//
+
+import processing.serial.*;
+
+Serial myPort;  // Create object from Serial class
+String[] portArray;
+int len, stage, select;
+PFont f; // Declare PFont variable
+int x = 250;
+int y = 30;
+int dy = 30;
+boolean keyOn;
+String portName, buf;
+//-----------------------------------------------------------------------------
+void setup() 
+{
+    size(500, 300);
+    background(0);
+    // List all the available serial ports
+    f = createFont("Arial",20,true);
+    textFont(f);
+    stage = 0;
+    select = -1;
+    keyOn = false;
+    buf = "";
+    portName = "";
+}
+//-----------------------------------------------------------------------------
+void draw()
+{
+    background(0);
+    portArray = Serial.list();
+    len = portArray.length;
+    text("Detected serial ports: ", 10, y);
+    if (len<1) {
+        select = -1;
+        stage = 0;
+        return;
+    }
+    int i = 0;
+    for (; i<len; i++) {
+    
+        fill(255);
+        text(portArray[i], x+10, y+dy*i);
+    
+        if (mouseOverRect(i) == true) {  // If mouse is over square,
+    
+            if (keyOn && stage==0 ) stage = 1;
+            
+            if (stage==1) {
+                fill(255);
+                rect(x, 10+dy*i, 90, y-5);         // Draw a square
+                fill(0);
+                text(portArray[i], x+10, y+dy*i);
+            } else {
+                noFill();
+                stroke(255);
+                rect(x, 10+dy*i, 90, y-5);         // Draw a square
+                fill(255);
+                text(portArray[i], x+10, y+dy*i);
+            }
+            if ( stage==2 ) {
+                if ( select>=0 && select!=i ) {
+                    try {
+                        myPort.stop();
+                    } catch(Exception e) {
+                        println("> could not stop serial port " + portName);
+                    }
+                    select = -1;
+                }
+                if ( select<0 ) {
+                    // try to connect to serial port
+                    portName = Serial.list()[i];
+                    try {
+                        myPort = new Serial(this, portName, 115200);
+                    } catch(Exception e) {
+                        println("> Error opening serial port "+i);
+                        portName = "";
+                    }
+                    if ( portName!="" ) {
+                        select = i;
+                    }
+                }
+                // send the epoch time to serial port
+                if ( select==i ) {
+                    int t = GetEpochTime();
+                    println("> sending " + t);
+                    myPort.write(Integer.toString(t)+'\n');
+                }
+                stage = 0;
+            }
+        
+        } else {
+            stage = 0;
+        }
+
+    }
+    fill(255);
+    text("Click on the port to send the timestamp: "+GetEpochTime(), 10, 10+(len+1)*y);
+    if ( select<0 ) return;
+    text("- connected.", 350, y+dy*select);
+    if (myPort.available()>0) {
+        buf = "";
+        while (myPort.available()>0) {
+            buf += myPort.readString();
+        }
+        print(buf);
+    }
+}
+//-----------------------------------------------------------------------------
+void mousePressed() {
+    stage = 1;
+}
+void mouseReleased() {
+    if (stage==1) stage ++;
+}
+//-----------------------------------------------------------------------------
+boolean mouseOverRect(int i) {
+    return (mouseX >= x) && (mouseX <= x+100) && (mouseY > 10+dy*i) && (mouseY <= y+5+dy*i);
+}
+//-----------------------------------------------------------------------------
+int GetEpochTime()
+{
+    return (int)(System.currentTimeMillis()/1000);
+}
+<<< file end. */
