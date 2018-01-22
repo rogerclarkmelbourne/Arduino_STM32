@@ -177,7 +177,8 @@ public:
      * This interrupt handler will be called when the timer's counter
      * reaches the given channel compare value.
      *
-     * @param channel the channel to attach the ISR to, from 1 to 4.
+     * @param channel the channel to attach the ISR to, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @param handler The ISR to attach to the given channel.
      * @see voidFuncPtr
      */
@@ -189,7 +190,8 @@ public:
      *
      * The handler will no longer be called by this timer.
      *
-     * @param channel the channel whose interrupt to detach, from 1 to 4.
+     * @param channel the channel whose interrupt to detach, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @see HardwareTimer::attachInterrupt()
      */
     void detachInterrupt(int channel);

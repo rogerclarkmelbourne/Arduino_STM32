@@ -1,0 +1,18 @@
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+TwoWire		KEYWORD1
+SoftWire	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+SOFT_STANDARD	LITERAL1
+SOFT_FAST	LITERAL1
+I2C_FAST_MODE	LITERAL1

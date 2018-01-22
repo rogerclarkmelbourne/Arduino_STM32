@@ -22,10 +22,10 @@ All text above, and the splash screen below must be included in any redistributi
 //#endif
 #include <stdlib.h>
 
-//#include <HWIRE.h>
-#include <HardWire.h>
-//HardWire HWIRE(1,I2C_FAST_MODE); // I2c1
-HardWire HWIRE(2,I2C_FAST_MODE); // I2c2
+
+#include <Wire.h>
+//TwoWire WIRE(1,I2C_FAST_MODE); // I2c1
+//TwoWire WIRE(2,I2C_FAST_MODE); // I2c2
 #include "Adafruit_GFX.h"
 #include "Adafruit_SSD1306_STM32.h"
 
@@ -197,7 +197,7 @@ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
   else
   {
     // I2C Init
-    HWIRE.begin();
+    Wire.begin();
       
 #ifdef __SAM3X8E__
     // Force 400 KHz I2C, rawr! (Uses pins 20, 21 for SDA, SCL)
@@ -359,10 +359,10 @@ void Adafruit_SSD1306::ssd1306_command(uint8_t c) {
   {
     // I2C
     uint8_t control = 0x00;   // Co = 0, D/C = 0
-    HWIRE.beginTransmission(_i2caddr);
+    Wire.beginTransmission(_i2caddr);
     WIRE_WRITE(control);
     WIRE_WRITE(c);
-    HWIRE.endTransmission();
+    Wire.endTransmission();
   }
 }
 
@@ -473,10 +473,10 @@ void Adafruit_SSD1306::ssd1306_data(uint8_t c) {
   {
     // I2C
     uint8_t control = 0x40;   // Co = 0, D/C = 1
-    HWIRE.beginTransmission(_i2caddr);
+    Wire.beginTransmission(_i2caddr);
     WIRE_WRITE(control);
     WIRE_WRITE(c);
-    HWIRE.endTransmission();
+    Wire.endTransmission();
   }
 }
 
@@ -525,14 +525,14 @@ void Adafruit_SSD1306::display(void) {
     // I2C
     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
       // send a bunch of data in one xmission
-      HWIRE.beginTransmission(_i2caddr);
+      Wire.beginTransmission(_i2caddr);
       WIRE_WRITE(0x40);
       for (uint8_t x=0; x<16; x++) {
   WIRE_WRITE(buffer[i]);
   i++;
       }
       i--;
-      HWIRE.endTransmission();
+      Wire.endTransmission();
     }
 /*
 #ifndef __SAM3X8E__
