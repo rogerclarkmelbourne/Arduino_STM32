@@ -66,13 +66,13 @@ void setup() {
   pinMode(D3, INPUT_PULLUP);  //channel B
 
 //configure timer as encoder
-  timer.setMode(0, TIMER_ENCODER); //set mode, the channel is not used when in this mode. 
+  timer.setMode(1, TIMER_ENCODER); //set mode, the channel is not used when in this mode (but it must be [1..4]). 
   timer.pause(); //stop... 
   timer.setPrescaleFactor(1); //normal for encoder to have the lowest or no prescaler. 
   timer.setOverflow(PPR);    //use this to match the number of pulse per revolution of the encoder. Most industrial use 1024 single channel steps. 
   timer.setCount(0);          //reset the counter. 
   timer.setEdgeCounting(TIMER_SMCR_SMS_ENCODER3); //or TIMER_SMCR_SMS_ENCODER1 or TIMER_SMCR_SMS_ENCODER2. This uses both channels to count and ascertain direction. 
-  timer.attachInterrupt(0, func); //channel doesn't mean much here either.  
+  timer.attachInterrupt(0, func); //channel must be 0 here 
   timer.resume();                 //start the encoder... 
   
 //Setup encoder simulator  
