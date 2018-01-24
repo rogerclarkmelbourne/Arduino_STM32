@@ -56,6 +56,6 @@ enum dma_atype {
     DMA_ATYPE_OTHER,
 };
 
-enum dma_atype _dma_addr_type(__io void *addr);
+enum dma_atype _dma_addr_type(__IO void *addr);
 
 #endif

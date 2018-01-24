@@ -47,17 +47,17 @@ extern "C"{
 
 /** I2C register map type */
 typedef struct i2c_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 OAR1;           /**< Own address register 1 */
-    __io uint32 OAR2;           /**< Own address register 2 */
-    __io uint32 TIMINGR;        /**< Timing register */
-    __io uint32 TIMEOUTR;       /**< Timeout register */
-    __io uint32 ISR;            /**< Interrupt and status register */
-    __io uint32 ICR;            /**< Interrupt clear register */
-    __io uint32 PECR;           /**< PEC register */
-    __io uint32 RXDR;           /**< Receive data register */
-    __io uint32 TXDR;           /**< Transmit data register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 OAR1;           /**< Own address register 1 */
+    __IO uint32 OAR2;           /**< Own address register 2 */
+    __IO uint32 TIMINGR;        /**< Timing register */
+    __IO uint32 TIMEOUTR;       /**< Timeout register */
+    __IO uint32 ISR;            /**< Interrupt and status register */
+    __IO uint32 ICR;            /**< Interrupt clear register */
+    __IO uint32 PECR;           /**< PEC register */
+    __IO uint32 RXDR;           /**< Receive data register */
+    __IO uint32 TXDR;           /**< Transmit data register */
 } i2c_reg_map;
 
 extern i2c_dev* const I2C1;

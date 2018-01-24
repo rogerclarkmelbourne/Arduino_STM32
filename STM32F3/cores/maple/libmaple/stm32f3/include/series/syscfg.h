@@ -47,10 +47,10 @@ extern "C" {
  * @brief SYSCFG register map type.
  */
 typedef struct syscfg_reg_map {
-    __io uint32 CFGR1;    		/**< Configuration register 1*/
-    __io uint32 RCR;    			/**< CCM SRAM protection register */
-    __io uint32 EXTICR[4];    /**< External Interrupt configuration register */
-    __io uint32 CFGR2;    		/**< Configuration register 2 */
+    __IO uint32 CFGR1;    		/**< Configuration register 1*/
+    __IO uint32 RCR;    			/**< CCM SRAM protection register */
+    __IO uint32 EXTICR[4];    /**< External Interrupt configuration register */
+    __IO uint32 CFGR2;    		/**< Configuration register 2 */
 } syscfg_reg_map;
 
 /** SYSCFG register map base pointer */

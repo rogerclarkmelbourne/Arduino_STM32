@@ -34,7 +34,7 @@
 #include "rcc.h"
 #include "bitband.h"
 
-static inline __io uint32* data_register(uint8 reg);
+static inline __IO uint32* data_register(uint8 reg);
 
 bkp_dev bkp = {
     .regs = BKP_BASE,
@@ -78,7 +78,7 @@ void bkp_disable_writes(void) {
  *            medium-density devices, 42 on high-density devices).
  */
 uint16 bkp_read(uint8 reg) {
-    __io uint32* dr = data_register(reg);
+    __IO uint32* dr = data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return 0;
@@ -97,7 +97,7 @@ uint16 bkp_read(uint8 reg) {
  * @see bkp_enable_writes()
  */
 void bkp_write(uint8 reg, uint16 val) {
-    __io uint32* dr = data_register(reg);
+    __IO uint32* dr = data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return;
@@ -112,7 +112,7 @@ void bkp_write(uint8 reg, uint16 val) {
  */
 #define NR_LOW_DRS 10
 
-static inline __io uint32* data_register(uint8 reg) {
+static inline __IO uint32* data_register(uint8 reg) {
     if (reg < 1 || reg > BKP_NR_DATA_REGS) {
         return 0;
     }

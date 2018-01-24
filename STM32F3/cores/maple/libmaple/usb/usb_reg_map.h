@@ -42,13 +42,13 @@
 
 /** USB register map type */
 typedef struct usb_reg_map {
-    __io uint32 EP[USB_NR_EP_REGS]; /**< Endpoint registers */
+    __IO uint32 EP[USB_NR_EP_REGS]; /**< Endpoint registers */
     const uint32 RESERVED[8];       /**< Reserved */
-    __io uint32 CNTR;               /**< Control register */
-    __io uint32 ISTR;               /**< Interrupt status register */
-    __io uint32 FNR;                /**< Frame number register */
-    __io uint32 DADDR;              /**< Device address */
-    __io uint32 BTABLE;             /**< @brief Buffer table address
+    __IO uint32 CNTR;               /**< Control register */
+    __IO uint32 ISTR;               /**< Interrupt status register */
+    __IO uint32 FNR;                /**< Frame number register */
+    __IO uint32 DADDR;              /**< Device address */
+    __IO uint32 BTABLE;             /**< @brief Buffer table address
                                      *
                                      * Address offset within the USB
                                      * packet memory area which points
@@ -340,7 +340,7 @@ static inline void usb_clear_status_out(uint8 ep) {
  *
  * The USB PMA is SRAM shared between USB and CAN.  The USB peripheral
  * accesses this memory directly via the packet buffer interface.  */
-#define USB_PMA_BASE                    ((__io void*)0x40006000)
+#define USB_PMA_BASE                    ((__IO void*)0x40006000)
 
 /*
  * PMA conveniences
@@ -367,42 +367,42 @@ union usb_btable_ent;
 
 /* Bidirectional endpoint BTABLE entry */
 typedef struct usb_btable_bidi {
-    __io uint16 addr_tx;     const uint16 PAD1;
-    __io uint16 count_tx;    const uint16 PAD2;
-    __io uint16 addr_rx;     const uint16 PAD3;
-    __io uint16 count_rx;    const uint16 PAD4;
+    __IO uint16 addr_tx;     const uint16 PAD1;
+    __IO uint16 count_tx;    const uint16 PAD2;
+    __IO uint16 addr_rx;     const uint16 PAD3;
+    __IO uint16 count_rx;    const uint16 PAD4;
 } usb_btable_bidi;
 
 /* Unidirectional receive-only endpoint BTABLE entry */
 typedef struct usb_btable_uni_rx {
-    __io uint16 empty1;      const uint16 PAD1;
-    __io uint16 empty2;      const uint16 PAD2;
-    __io uint16 addr_rx;     const uint16 PAD3;
-    __io uint16 count_rx;    const uint16 PAD4;
+    __IO uint16 empty1;      const uint16 PAD1;
+    __IO uint16 empty2;      const uint16 PAD2;
+    __IO uint16 addr_rx;     const uint16 PAD3;
+    __IO uint16 count_rx;    const uint16 PAD4;
 } usb_btable_uni_rx;
 
 /* Unidirectional transmit-only endpoint BTABLE entry */
 typedef struct usb_btable_uni_tx {
-    __io uint16 addr_tx;     const uint16 PAD1;
-    __io uint16 count_tx;    const uint16 PAD2;
-    __io uint16 empty1;      const uint16 PAD3;
-    __io uint16 empty2;      const uint16 PAD4;
+    __IO uint16 addr_tx;     const uint16 PAD1;
+    __IO uint16 count_tx;    const uint16 PAD2;
+    __IO uint16 empty1;      const uint16 PAD3;
+    __IO uint16 empty2;      const uint16 PAD4;
 } usb_btable_uni_tx;
 
 /* Double-buffered transmission endpoint BTABLE entry */
 typedef struct usb_btable_dbl_tx {
-    __io uint16 addr_tx0;     const uint16 PAD1;
-    __io uint16 count_tx0;    const uint16 PAD2;
-    __io uint16 addr_tx1;     const uint16 PAD3;
-    __io uint16 count_tx1;    const uint16 PAD4;
+    __IO uint16 addr_tx0;     const uint16 PAD1;
+    __IO uint16 count_tx0;    const uint16 PAD2;
+    __IO uint16 addr_tx1;     const uint16 PAD3;
+    __IO uint16 count_tx1;    const uint16 PAD4;
 } usb_btable_dbl_tx;
 
 /* Double-buffered reception endpoint BTABLE entry */
 typedef struct usb_btable_dbl_rx {
-    __io uint16 addr_rx0;     const uint16 PAD1;
-    __io uint16 count_rx0;    const uint16 PAD2;
-    __io uint16 addr_rx1;     const uint16 PAD3;
-    __io uint16 count_rx1;    const uint16 PAD4;
+    __IO uint16 addr_rx0;     const uint16 PAD1;
+    __IO uint16 count_rx0;    const uint16 PAD2;
+    __IO uint16 addr_rx1;     const uint16 PAD3;
+    __IO uint16 count_rx1;    const uint16 PAD4;
 } usb_btable_dbl_rx;
 
 /* TODO isochronous endpoint entries */

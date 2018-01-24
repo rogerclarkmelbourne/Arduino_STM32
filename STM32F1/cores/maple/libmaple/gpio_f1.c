@@ -123,7 +123,7 @@ void gpio_init_all(void) {
  */
 void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
     gpio_reg_map *regs = dev->regs;
-    __io uint32 *cr = &regs->CRL + (pin >> 3);
+    __IO uint32 *cr = &regs->CRL + (pin >> 3);
     uint32 shift = (pin & 0x7) * 4;
     uint32 tmp = *cr;
 
@@ -140,7 +140,7 @@ void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
 
 gpio_pin_mode gpio_get_mode(gpio_dev *dev, uint8 pin) {
     gpio_reg_map *regs = dev->regs;
-    __io uint32 *cr = &regs->CRL + (pin >> 3);
+    __IO uint32 *cr = &regs->CRL + (pin >> 3);
     uint32 shift = (pin & 0x7) * 4;
 
 	uint32 crMode = (*cr>>shift) & 0x0F;

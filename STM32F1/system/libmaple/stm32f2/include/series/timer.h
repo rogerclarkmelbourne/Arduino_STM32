@@ -47,27 +47,27 @@
  * registers. Consult your chip's reference manual for the details.
  */
 typedef struct timer_gen_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 SMCR;           /**< Slave mode control register */
-    __io uint32 DIER;           /**< DMA/Interrupt enable register */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 EGR;            /**< Event generation register  */
-    __io uint32 CCMR1;          /**< Capture/compare mode register 1 */
-    __io uint32 CCMR2;          /**< Capture/compare mode register 2 */
-    __io uint32 CCER;           /**< Capture/compare enable register */
-    __io uint32 CNT;            /**< Counter */
-    __io uint32 PSC;            /**< Prescaler */
-    __io uint32 ARR;            /**< Auto-reload register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 SMCR;           /**< Slave mode control register */
+    __IO uint32 DIER;           /**< DMA/Interrupt enable register */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 EGR;            /**< Event generation register  */
+    __IO uint32 CCMR1;          /**< Capture/compare mode register 1 */
+    __IO uint32 CCMR2;          /**< Capture/compare mode register 2 */
+    __IO uint32 CCER;           /**< Capture/compare enable register */
+    __IO uint32 CNT;            /**< Counter */
+    __IO uint32 PSC;            /**< Prescaler */
+    __IO uint32 ARR;            /**< Auto-reload register */
     const uint32 RESERVED1;     /**< Reserved */
-    __io uint32 CCR1;           /**< Capture/compare register 1 */
-    __io uint32 CCR2;           /**< Capture/compare register 2 */
-    __io uint32 CCR3;           /**< Capture/compare register 3 */
-    __io uint32 CCR4;           /**< Capture/compare register 4 */
+    __IO uint32 CCR1;           /**< Capture/compare register 1 */
+    __IO uint32 CCR2;           /**< Capture/compare register 2 */
+    __IO uint32 CCR3;           /**< Capture/compare register 3 */
+    __IO uint32 CCR4;           /**< Capture/compare register 4 */
     const uint32 RESERVED2;     /**< Reserved */
-    __io uint32 DCR;            /**< DMA control register */
-    __io uint32 DMAR;           /**< DMA address for full transfer */
-    __io uint32 OR;             /**< Option register. */
+    __IO uint32 DCR;            /**< DMA control register */
+    __IO uint32 DMAR;           /**< DMA address for full transfer */
+    __IO uint32 OR;             /**< Option register. */
 } timer_gen_reg_map;
 
 struct timer_adv_reg_map;

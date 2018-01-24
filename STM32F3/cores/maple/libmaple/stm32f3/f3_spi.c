@@ -119,10 +119,10 @@ void spi_reconfigure(spi_dev *dev, uint32 cr1_config) {
 uint16 spi_rx_reg(spi_dev *dev) {
     uint8 byte_frame = (dev->regs->CR2 & SPI_CR2_DS) <= SPI_DATA_SIZE_8_BIT;
     if (byte_frame) {
-			__io uint8 *dr8 = (__io uint8 *)&dev->regs->DR; /* we need to access as byte */
+			__IO uint8 *dr8 = (__IO uint8 *)&dev->regs->DR; /* we need to access as byte */
 			return (uint16)*dr8;
 		} else {
-			__io uint16 *dr16 = (__io uint16 *)&dev->regs->DR; /* we need to access as half-word */
+			__IO uint16 *dr16 = (__IO uint16 *)&dev->regs->DR; /* we need to access as half-word */
 			return (uint16)*dr16;
 		}
 }
@@ -132,10 +132,10 @@ uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len) {
     uint8 byte_frame = (dev->regs->CR2 & SPI_CR2_DS) <= SPI_DATA_SIZE_8_BIT;
     while (spi_is_tx_empty(dev) && (txed < len)) {
         if (byte_frame) {
-						__io uint8 *dr8 = (__io uint8 *)&dev->regs->DR; /* we need to access as byte */
+						__IO uint8 *dr8 = (__IO uint8 *)&dev->regs->DR; /* we need to access as byte */
 						*dr8 = ((const uint8 *)buf)[txed++];
         } else {
-						__io uint16 *dr16 = (__io uint16 *)&dev->regs->DR; /* we need to access as half-word */
+						__IO uint16 *dr16 = (__IO uint16 *)&dev->regs->DR; /* we need to access as half-word */
 						*dr16 = ((const uint16 *)buf)[txed++];
         }
     }

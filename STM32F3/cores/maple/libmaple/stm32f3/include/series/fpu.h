@@ -46,10 +46,10 @@ extern "C"{
 
 /** FPU register map type */
 typedef struct fpu_reg_map {
-    __io uint32 CPACR;          /**< coprocessor access control register */
-    __io uint32 FPCCR;          /**< floating-point context control register */
-    __io uint32 FPCAR;          /**< floating-point context address register */
-    __io uint32 FPDSCR;         /**< floating-point default status control register */
+    __IO uint32 CPACR;          /**< coprocessor access control register */
+    __IO uint32 FPCCR;          /**< floating-point context control register */
+    __IO uint32 FPCAR;          /**< floating-point context address register */
+    __IO uint32 FPDSCR;         /**< floating-point default status control register */
 } fpu_reg_map;
 
 #define FPU_BASE			((struct fpu_reg_map*)(SCB_BASE + 0x88))

@@ -139,12 +139,12 @@ void dma_init(dma_dev *dev);
  */
 typedef struct dma_tube_config {
     /** Source of data */
-    __io void     *tube_src;
+    __IO void     *tube_src;
     /** Source transfer size */
     dma_xfer_size  tube_src_size;
 
     /** Destination of data */
-    __io void     *tube_dst;
+    __IO void     *tube_dst;
     /** Destination transfer size */
     dma_xfer_size  tube_dst_size;
 
@@ -283,7 +283,7 @@ extern void dma_set_num_transfers(dma_dev *dev, dma_tube tube,
  * @param tube Tube whose base memory address to set.
  * @param address Memory base address to use.
  */
-extern void dma_set_mem_addr(dma_dev *dev, dma_tube tube, __io void *address);
+extern void dma_set_mem_addr(dma_dev *dev, dma_tube tube, __IO void *address);
 
 /**
  * @brief Set the base peripheral address where data will be read from
@@ -299,7 +299,7 @@ extern void dma_set_mem_addr(dma_dev *dev, dma_tube tube, __io void *address);
  * @param tube Tube whose peripheral data register base address to set.
  * @param address Peripheral memory base address to use.
  */
-extern void dma_set_per_addr(dma_dev *dev, dma_tube tube, __io void *address);
+extern void dma_set_per_addr(dma_dev *dev, dma_tube tube, __IO void *address);
 
 /* Interrupt handling */
 

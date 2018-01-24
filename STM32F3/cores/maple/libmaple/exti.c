@@ -200,7 +200,7 @@ void exti_detach_interrupt(exti_num num) {
  * Private routines
  */
 
-void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
+void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port) {
     uint32 shift = 4 * (num % 4);
     uint32 cr = *exti_cr;
     cr &= ~(0xF << shift);

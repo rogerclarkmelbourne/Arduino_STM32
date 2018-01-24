@@ -52,7 +52,7 @@ void dma_init(dma_dev *dev) {
  * Private API
  */
 
-enum dma_atype _dma_addr_type(__io void *addr) {
+enum dma_atype _dma_addr_type(__IO void *addr) {
     switch (stm32_block_purpose((void*)addr)) {
     /* Notice we're treating the code block as memory here.  That's
      * correct for addresses in Flash and in [0x0, 0x7FFFFFF]

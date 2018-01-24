@@ -43,12 +43,12 @@ extern "C"{
 
 /** CRC register map type */
 typedef struct crc_reg_map {
-    __io uint32 DR;	            /**< Data register */
-    __io uint32 IDR;            /**< Independent data register */
-    __io uint32 CR;	            /**< Control register */
+    __IO uint32 DR;	            /**< Data register */
+    __IO uint32 IDR;            /**< Independent data register */
+    __IO uint32 CR;	            /**< Control register */
     uint32 reserved;
-    __io uint32 INIT;           /**< Initial data register */
-    __io uint32 POL;           	/**< Polynomial register */
+    __IO uint32 INIT;           /**< Initial data register */
+    __IO uint32 POL;           	/**< Polynomial register */
 } crc_reg_map;
 
 /*

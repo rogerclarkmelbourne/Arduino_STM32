@@ -52,16 +52,16 @@ extern "C" {
 #endif
 
 typedef struct rtc_reg_map {
-	__io uint32 CRH;		/**< Control register high */
-	__io uint32 CRL;		/**< Control register high */
-	__io uint32 PRLH;		/**< Prescaler load register high */
-	__io uint32 PRLL;		/**< Prescaler load register low */
-	__io uint32 DIVH;		/**< Prescaler divider register high */
-	__io uint32 DIVL;		/**< Prescaler divider register low */
-	__io uint32 CNTH;		/**< Counter register high */
-	__io uint32 CNTL;		/**< Counter register low */
-	__io uint32 ALRH;		/**< Alarm register high */
-	__io uint32 ALRL;		/**< Alarm register low */
+	__IO uint32 CRH;		/**< Control register high */
+	__IO uint32 CRL;		/**< Control register high */
+	__IO uint32 PRLH;		/**< Prescaler load register high */
+	__IO uint32 PRLL;		/**< Prescaler load register low */
+	__IO uint32 DIVH;		/**< Prescaler divider register high */
+	__IO uint32 DIVL;		/**< Prescaler divider register low */
+	__IO uint32 CNTH;		/**< Counter register high */
+	__IO uint32 CNTL;		/**< Counter register low */
+	__IO uint32 ALRH;		/**< Alarm register high */
+	__IO uint32 ALRL;		/**< Alarm register low */
 } rtc_reg_map;
 		
 /** RTC register map base pointer */
