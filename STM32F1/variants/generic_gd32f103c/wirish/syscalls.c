@@ -156,7 +156,7 @@ __weak void cgets(char *s, int bufsize) {
 }
 
 __weak int _write(int fd __attribute__((unused)), const char *buf, size_t cnt) {
-    int i;
+    size_t i;
 
     for (i = 0; i < cnt; i++)
         putch(buf[i]);

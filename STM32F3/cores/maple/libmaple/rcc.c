@@ -61,7 +61,7 @@ void rcc_switch_sysclk(rcc_sysclk_src sysclk_src) {
     RCC_BASE->CFGR = cfgr;
 
     /* Wait for new source to come into use. */
-    while ((RCC_BASE->CFGR & RCC_CFGR_SWS) != (sysclk_src << 2))
+    while ((RCC_BASE->CFGR & RCC_CFGR_SWS) != (unsigned int)(sysclk_src << 2))
         ;
 }
 
