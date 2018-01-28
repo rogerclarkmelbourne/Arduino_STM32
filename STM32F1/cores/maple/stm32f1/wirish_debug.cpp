@@ -37,5 +37,5 @@ void disableDebugPorts(void) {
 }
 
 void enableDebugPorts(void) {
-    afio_cfg_debug_ports(AFIO_DEBUG_FULL_SWJ);
+    afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY);
 }

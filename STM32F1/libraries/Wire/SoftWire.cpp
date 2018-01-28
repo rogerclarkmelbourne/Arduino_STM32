@@ -25,7 +25,7 @@
  *****************************************************************************/
 
 /**
- * @file Wire.cpp
+ * @file SoftWire.cpp
  * @author Trystan Jones <crenn6977@gmail.com>
  * @brief Wire library, uses the WireBase to create the primary interface
  *        while keeping low level interactions invisible to the user.
@@ -54,7 +54,7 @@
  * - always start with i2c_delay rather than end
  */
 
-void TwoWire::set_scl(bool state) {
+void SoftWire::set_scl(bool state) {
     I2C_DELAY(this->i2c_delay);
 
 	gpio_write_bit(sclDevice,sclBit, state);
@@ -65,30 +65,30 @@ void TwoWire::set_scl(bool state) {
     }
 }
 
-void TwoWire::set_sda(bool state) {
+void SoftWire::set_sda(bool state) {
 	I2C_DELAY(this->i2c_delay);
 	gpio_write_bit(sdaDevice,sdaBit, state);
     //digitalWrite(this->sda_pin, state);
 }
 
-void TwoWire::i2c_start() {
+void SoftWire::i2c_start() {
     set_sda(LOW);
     set_scl(LOW);
 }
 
-void TwoWire::i2c_stop() {
+void SoftWire::i2c_stop() {
     set_sda(LOW);
     set_scl(HIGH);
     set_sda(HIGH);
 }
 
-void TwoWire::i2c_repeated_start() {
+void SoftWire::i2c_repeated_start() {
     set_sda(HIGH);
     set_scl(HIGH);
     set_sda(LOW);
 }
 
-bool TwoWire::i2c_get_ack() {
+bool SoftWire::i2c_get_ack() {
     set_scl(LOW);
     set_sda(HIGH);
     set_scl(HIGH);
@@ -98,19 +98,19 @@ bool TwoWire::i2c_get_ack() {
     return ret;
 }
 
-void TwoWire::i2c_send_ack() {
+void SoftWire::i2c_send_ack() {
     set_sda(LOW);
     set_scl(HIGH);
     set_scl(LOW);
 }
 
-void TwoWire::i2c_send_nack() {
+void SoftWire::i2c_send_nack() {
     set_sda(HIGH);
     set_scl(HIGH);
     set_scl(LOW);
 }
 
-uint8 TwoWire::i2c_shift_in() {
+uint8 SoftWire::i2c_shift_in() {
     uint8 data = 0;
     set_sda(HIGH);
 
@@ -124,7 +124,7 @@ uint8 TwoWire::i2c_shift_in() {
     return data;
 }
 
-void TwoWire::i2c_shift_out(uint8 val) {
+void SoftWire::i2c_shift_out(uint8 val) {
     int i;
     for (i = 0; i < 8; i++) {
         set_sda(!!(val & (1 << (7 - i)) ) );
@@ -134,7 +134,7 @@ void TwoWire::i2c_shift_out(uint8 val) {
 }
 
 //process needs to be updated for repeated start.
-uint8 TwoWire::process(uint8 stop) {
+uint8 SoftWire::process(uint8 stop) {
     itc_msg.xferred = 0;
 
     uint8 sla_addr = (itc_msg.addr << 1);
@@ -183,18 +183,18 @@ uint8 TwoWire::process(uint8 stop) {
 }
 
 // For compatibility with legacy code
-uint8 TwoWire::process(){
+uint8 SoftWire::process(){
 	return process(true);
 }
 
 // TODO: Add in Error Handling if pins is out of range for other Maples
 // TODO: Make delays more capable
-TwoWire::TwoWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
+SoftWire::SoftWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
     this->scl_pin=scl;
     this->sda_pin=sda;
 }
 
-void TwoWire::begin(uint8 self_addr) {
+void SoftWire::begin(uint8 self_addr) {
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
@@ -210,7 +210,7 @@ void TwoWire::begin(uint8 self_addr) {
     set_sda(HIGH);
 }
 
-void TwoWire::end()
+void SoftWire::end()
 {
 	if (this->scl_pin)
 	{
@@ -222,7 +222,7 @@ void TwoWire::end()
 	}
 }
 
-void TwoWire::setClock(uint32_t frequencyHz)
+void SoftWire::setClock(uint32_t frequencyHz)
 {
 	switch(frequencyHz)
 	{
@@ -236,11 +236,11 @@ void TwoWire::setClock(uint32_t frequencyHz)
 	}
 }
 
-TwoWire::~TwoWire() {
+SoftWire::~SoftWire() {
     this->scl_pin=0;
     this->sda_pin=0;
 }
 
 // Declare the instance that the users of the library can use
-//TwoWire Wire(SCL, SDA, SOFT_STANDARD);
-//TwoWire Wire(PB6, PB7, SOFT_FAST);
+//SoftWire Wire(SCL, SDA, SOFT_STANDARD);
+//SoftWire Wire(PB6, PB7, SOFT_FAST);

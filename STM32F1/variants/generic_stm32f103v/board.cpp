@@ -98,7 +98,7 @@ extern const stm32_pin_info PIN_MAP[BOARD_NR_GPIO_PINS] = {
 	
 	{&gpiob, &timer3, &adc1,  0, 3,    8}, /* PB0 */ 
 	{&gpiob, &timer3, &adc1,  1, 4,    9}, /* PB1 */
-	/* NOTE PB2 is not included as its Boot 1 */
+	{&gpiob,   NULL, NULL,  2, 0, ADCx}, /* PB2  */	// Boot1 pin. It affects boot mode (flash, RAM, ROM)
 	{&gpiob,   NULL, NULL,  3, 0, ADCx}, /* PB3  */ //JTDO, SPI3_SCK / I2S3_CK/
     {&gpiob,   NULL, NULL,  4, 0, ADCx}, /* PB4  */ //NJTRST, SPI3_MISO
     {&gpiob,   NULL, NULL,  5, 0, ADCx}, /* PB5 */ //I2C1_SMBA/ SPI3_MOSI
