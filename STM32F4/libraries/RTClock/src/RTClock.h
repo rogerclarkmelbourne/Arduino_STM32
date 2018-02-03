@@ -184,7 +184,9 @@ class RTClock {
 	
 	time_t getTime();
 	void getTime(tm_t & tm);
-	#define now getTime
+
+	time_t now() { return getTime(); }
+	void now(tm_t & tmm ) { getTime(tmm); }  // non-standard use of now() function, added for compatibility with previous versions of the library
 
 	uint8_t year(void)    { getTime(tm); return tm.year; }
 	uint8_t month(void)   { getTime(tm); return tm.month; }
