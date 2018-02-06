@@ -11,17 +11,7 @@
  *
  *
  *
- * Terminal control code by Heiko Noordhof (see copyright below)
- */
-
-
-
-/* Copyright (C) 2003 Heiko Noordhof <heikyAusers.sf.net>
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * Terminal control code by Kir Kolyshkin <kolyshkin@gmail.com>
  */
 
 #include <stdio.h>
@@ -32,130 +22,73 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <stdbool.h>
 
-/* Function prototypes (belong in a seperate header file) */
-int   openserial(char *devicename);
-void  closeserial(void);
-int   setDTR(unsigned short level);
-int   setRTS(unsigned short level); 
-
-
-/* Two globals for use by this module only */
-static int fd;
-static struct termios oldterminfo;
-
-
-void closeserial(void)
-{
-     tcsetattr(fd, TCSANOW, &oldterminfo);
-     close(fd);
-}
-
+static int fd = -1;
 
 int openserial(char *devicename) 
 {
-     struct termios attr;
+	if ((fd = open(devicename, O_RDWR | O_NOCTTY)) == -1) {
+		fprintf(stderr, "Can't open %s: %m\n\r", devicename);
+		return -1;
+	}
 
-     if ((fd = open(devicename, O_RDWR)) == -1) return 0; /* Error */ 
-     atexit(closeserial);
-
-     if (tcgetattr(fd, &oldterminfo) == -1) return 0; /* Error */
-     attr = oldterminfo;
-     attr.c_cflag |= CRTSCTS | CLOCAL;
-     attr.c_oflag = 0;
-     if (tcflush(fd, TCIOFLUSH) == -1) return 0; /* Error */
-     if (tcsetattr(fd, TCSANOW, &attr) == -1) return 0; /* Error */ 
-
-     /* Set the lines to a known state, and */
-     /* finally return non-zero is successful. */
-     return setRTS(0) && setDTR(0);
+	return 0; // all good
 }
 
 
-/* For the two functions below:
- *     level=0 to set line to LOW
- *     level=1 to set line to HIGH
+/* flag can be TIOCM_RTS or TIOCM_DTR
+ * level can be 1 (set) or 0 (clear)
  */
-
-int setRTS(unsigned short level)
+int setFlag(int flag, short level)
 {
-     int status;
+	int op = TIOCMBIC;
+	if (level)
+		op = TIOCMBIS;
 
-     if (ioctl(fd, TIOCMGET, &status) == -1) {
-	  perror("setRTS(): TIOCMGET");
-	  return 0;
-     }
-     if (level) status |= TIOCM_RTS;
-     else status &= ~TIOCM_RTS;
-     if (ioctl(fd, TIOCMSET, &status) == -1) {
-	  perror("setRTS(): TIOCMSET");
-	  return 0;
-     }
-     return 1;
+	if (ioctl(fd, op, &flag) == -1) {
+		perror("setFlag(): ioctl failed");
+		return -1;
+	}
+
+	return 0; // all good
 }
 
-
-int setDTR(unsigned short level)
-{
-     int status;
-
-     if (ioctl(fd, TIOCMGET, &status) == -1) {
-	  perror("setDTR(): TIOCMGET");
-	  return 0;
-     }
-     if (level) status |= TIOCM_DTR;
-     else status &= ~TIOCM_DTR;
-     if (ioctl(fd, TIOCMSET, &status) == -1) {
-	  perror("setDTR: TIOCMSET");
-	  return 0;
-     }
-     return 1;
-}
-
-/* This portion of code was written by Roger Clark
- * It was informed by various other pieces of code written by Leaflabs to reset their 
- * Maple and Maple mini boards 
+/* This portion of code was written by Roger Clark.
+ * It was informed by various other pieces of code written
+ * by Leaflabs to reset their Maple and Maple mini boards.
+ * For example, see https://goo.gl/qJi16x
  */
-
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
- 	
-	if (argc<2 || argc >3)
-	{
-		printf("Usage upload-reset <serial_device> <Optional_delay_in_milliseconds>\n\r");
-		return;
+	if (argc < 2 || argc > 3) {
+		printf("Usage: upload-reset <serial_device> [<delay_in_milliseconds>]\n\r");
+		return 1;
 	}
 
- 	if (openserial(argv[1]))
-	{
-		// Send magic sequence of DTR and RTS followed by the magic word "1EAF"
-		setRTS(false);
- 		setDTR(false);
- 		setDTR(true);
-
-		usleep(50000L);
-
-		setDTR(false);
-		setRTS(true);
-		setDTR(true);
-
-		usleep(50000L);
-
-		setDTR(false);
-
-		usleep(50000L);
-
-		write(fd,"1EAF",4);
- 		
-		closeserial();
-		if (argc==3)
-		{
-			usleep(atol(argv[2])*1000L);
-		}
+	if (openserial(argv[1]) < 0) {
+		fprintf(stderr, "Can't open serial %s\n\r", argv[1]);
+		return 1;
 	}
-	else
-	{
-		printf("Failed to open serial device.\n\r");
+
+	// Old style magic sequence
+	setFlag(TIOCM_RTS, 0);
+	setFlag(TIOCM_DTR, 0);
+	setFlag(TIOCM_DTR, 1);
+	usleep(50000L);
+	setFlag(TIOCM_DTR, 0);
+
+	// New style
+	setFlag(TIOCM_RTS, 1);
+	setFlag(TIOCM_DTR, 1);
+	usleep(50000L);
+	setFlag(TIOCM_DTR, 0);
+	if (write(fd, "1EAF", 4) != 4) {
+		perror("write()");
 	}
+
+	if (argc == 3) {
+		usleep(atol(argv[2])*1000L);
+	}
+
+	return 0;
 }
