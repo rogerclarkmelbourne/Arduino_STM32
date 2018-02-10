@@ -14,25 +14,29 @@
  ****************************************************/
 
 
-#include "SPI.h"
-#include "Adafruit_GFX_AS.h"
-#include "Adafruit_ILI9341_STM.h"
+#include <Adafruit_ILI9341_STM.h>
 
-// For the Adafruit shield, these are the default.
-#define TFT_DC 9
-#define TFT_CS 10
+// Use hardware SPI
+Adafruit_ILI9341_STM tft(PA4, PA3, PA2); // input chip select, DC and reset pins
 
-// Use hardware SPI (on Uno, #13, #12, #11) and the above for CS/DC
-Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC);
-// If using the breakout, change pins as desired
-//Adafruit_ILI9341_STM tft = Adafruit_ILI9341_STM(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
+// For using software SPI, define pins as desired, MISO is optional, needed for reading only
+//Adafruit_ILI9341_STM tft(TFT_CS, TFT_DC, TFT_RST, TFT_MOSI, TFT_CLK, [TFT_MISO]);
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
-  Serial.println("ILI9341 Test!"); 
- 
-  tft.begin();
+  while ( !Serial );
+  delay(1000);
 
+  Serial.println("ILI9341 Test!"); 
+#if true
+  // use standard SPI port
+  tft.begin();
+#else
+  // use alternative SPI port
+static SPIClass _spi(2);
+  tft.begin(_spi);
+#endif
   // read diagnostics (optional but can help debug problems)
   uint8_t x = tft.readcommand8(ILI9341_RDMODE);
   Serial.print("Display Power Mode: 0x"); Serial.println(x, HEX);
@@ -43,8 +47,13 @@ void setup() {
   x = tft.readcommand8(ILI9341_RDIMGFMT);
   Serial.print("Image Format: 0x"); Serial.println(x, HEX);
   x = tft.readcommand8(ILI9341_RDSELFDIAG);
-  Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX); 
+  Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX);
   
+  tft.fillScreen(ILI9341_BLACK);
+}
+
+void do_test(void)
+{  
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.print(F("Screen fill              "));
@@ -95,16 +104,17 @@ void setup() {
   delay(500);
 
   Serial.println(F("Done!"));
-
 }
 
 
-void loop(void) {
+void loop(void)
+{
   for(uint8_t rotation=0; rotation<4; rotation++) {
     tft.setRotation(rotation);
     testText();
     delay(1000);
   }
+  do_test();
 }
 
 unsigned long testFillScreen() {

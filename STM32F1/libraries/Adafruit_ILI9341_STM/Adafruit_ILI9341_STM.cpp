@@ -228,6 +228,7 @@ void Adafruit_ILI9341_STM::setAddrWindow(uint16_t x0, uint16_t y0,
   spiwrite(y1);
 
   writecommand(ILI9341_RAMWR); // write to RAM
+  cs_set();
 }
 
 
@@ -243,22 +244,12 @@ void Adafruit_ILI9341_STM::pushColors(void * colorBuffer, uint16_t nr_pixels, ui
   }
 }
 
-void Adafruit_ILI9341_STM::pushColor(uint16_t color)
-{
-  cs_clear();
-  spiwrite(color);
-  cs_set();
-}
-
 void Adafruit_ILI9341_STM::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
   if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height)) return;
 
   setAddrWindow(x, y, x + 1, y + 1);
-
-  spiwrite(color);
-
-  cs_set();
+  pushColor(color);
 }
 
 
@@ -276,6 +267,7 @@ void Adafruit_ILI9341_STM::drawFastVLine(int16_t x, int16_t y, int16_t h,
 
   setAddrWindow(x, y, x, y + h - 1);
 
+  cs_clear();
   if (h>DMA_ON_LIMIT) {
     lineBuffer[0] = color;
     mSPI.dmaSend(lineBuffer, h, 0);
@@ -299,6 +291,7 @@ void Adafruit_ILI9341_STM::drawFastHLine(int16_t x, int16_t y, int16_t w,
 
   setAddrWindow(x, y, x + w - 1, y);
 
+  cs_clear();
   if (w>DMA_ON_LIMIT) {
     lineBuffer[0] = color;
     mSPI.dmaSend(lineBuffer, w, 0);
@@ -312,6 +305,7 @@ void Adafruit_ILI9341_STM::fillScreen(uint16_t color)
 {
   lineBuffer[0] = color;
   setAddrWindow(0, 0, _width - 1, _height - 1);
+  cs_clear();
   uint32_t nr_bytes = _width * _height;
   while ( nr_bytes>65535 ) {
     nr_bytes -= 65535;
@@ -336,6 +330,7 @@ void Adafruit_ILI9341_STM::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
   }
 
   setAddrWindow(x, y, x + w - 1, y + h - 1);
+  cs_clear();
   uint32_t nr_bytes = w * h;
   if ( nr_bytes>DMA_ON_LIMIT ) {
     while ( nr_bytes>65535 ) {
@@ -574,10 +569,8 @@ uint16_t Adafruit_ILI9341_STM::readPixelsRGB24(int16_t x1, int16_t y1, int16_t x
   spiwrite16(y2);
   writecommand(ILI9341_RAMRD); // read GRAM
   (void)spiread();             //dummy read
-  uint8_t r, g, b;
   uint16_t len = (x2-x1+1)*(y2-y1+1);
   uint16_t ret = len;
-
   mSPI.dmaTransfer(buf, buf, len*3);
   cs_set();
 
