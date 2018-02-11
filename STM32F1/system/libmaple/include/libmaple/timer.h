@@ -564,8 +564,11 @@ typedef enum timer_mode {
      * values, the corresponding interrupt is fired. */
     TIMER_OUTPUT_COMPARE,
 
-    /* TIMER_INPUT_CAPTURE, TODO: In this mode, the timer can measure the
-     *                            pulse lengths of input signals */
+    /**
+     * In this mode, the timer can measure the
+     * pulse lengths of input signals */
+    TIMER_INPUT_CAPTURE,
+    
     /* TIMER_ONE_PULSE, TODO: In this mode, the timer can generate a single
      *                        pulse on a GPIO pin for a specified amount of
      *                        time. */
@@ -901,6 +904,16 @@ static inline void timer_cc_set_pol(timer_dev *dev, uint8 channel, uint8 pol) {
     *bb_perip(&(dev->regs).gen->CCER, 4 * (channel - 1) + 1) = pol;
 }
 
+/**
+ * @brief Get a channel's overcapture flag.
+ * @param dev Timer device, must have type TIMER_ADVANCED or TIMER_GENERAL.
+ * @param channel Channel whose overcapture flag to get.
+ * @return Overcapture flag, either 0 or 1.
+ */
+static inline uint8 timer_cc_get_overcapture(timer_dev *dev, uint8 channel) {
+    return *bb_perip(&(dev->regs).gen->SR, (channel-1) + 9);
+}
+    
 /**
  * @brief Get a timer's DMA burst length.
  * @param dev Timer device, must have type TIMER_ADVANCED or TIMER_GENERAL.

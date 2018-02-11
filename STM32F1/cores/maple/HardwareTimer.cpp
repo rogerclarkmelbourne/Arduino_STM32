@@ -176,7 +176,17 @@ void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
     
 
 //set the polarity of counting... not sure how interesting this is.. 
-    void HardwareTimer::setPolarity(){} 
+    void HardwareTimer::setPolarity(){}
+
+
+bool HardwareTimer::getInputOvercapture(int channel) {
+    return timer_cc_get_overcapture(this->dev, (uint8)channel) == 1;
+}
+
+void HardwareTimer::setInputCapturePolarity(int channel, ExtIntTriggerMode polarity) {
+    timer_cc_set_pol(this->dev, (uint8)channel, polarity == FALLING ? 1 : 0);
+}
+
 
 /* -- Deprecated predefined instances -------------------------------------- */
 

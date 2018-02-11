@@ -34,6 +34,7 @@
 // TODO [0.1.0] Remove deprecated pieces, pick a better API
 
 #include <libmaple/timer.h>
+#include "ext_interrupts.h"
 
 /** Timer mode. */
 typedef timer_mode TimerMode;
@@ -243,6 +244,24 @@ public:
     void setPolarity();
     
 //add the filtering definition for the input channel.
+    
+    
+    /**
+     * @brief Get the overcapture flag of the
+     *        corresponding input capture channel.
+     * @param channel Timer channel, from 1 to 4.
+     * @return true if overcapture occured, false otherwise.
+     */
+    bool getInputOvercapture(int channel);
+    
+    /**
+     * @brief Set the capture polarity for the
+     *        corresponding input capture channel.
+     * @param channel Timer channel, from 1 to 4.
+     * @param polarity RISING to capture on rising edge,
+     *                 FALLING to capture on falling edge.
+     */
+    void setInputCapturePolarity(int channel, ExtIntTriggerMode polarity);
     
 
     /* Escape hatch */

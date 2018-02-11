@@ -39,6 +39,7 @@ static void disable_channel(timer_dev *dev, uint8 channel);
 static void pwm_mode(timer_dev *dev, uint8 channel);
 static void output_compare_mode(timer_dev *dev, uint8 channel);
 static void encoder_mode(timer_dev *dev, uint8 channel) ;//CARLOS
+static void input_capture_mode(timer_dev *dev, uint8 channel);
 
 
 static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
@@ -236,6 +237,9 @@ void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode) {
     case TIMER_ENCODER: 
         encoder_mode(dev, channel); //find a way to pass all the needed stuff on the 8bit var
         break;
+    case TIMER_INPUT_CAPTURE:
+        input_capture_mode(dev, channel);
+        break;
     }
 }
 
@@ -304,6 +308,11 @@ uint8 get_direction(timer_dev *dev){
     return *bb_perip(&(dev->regs).gen->CR1, TIMER_CR1_DIR_BIT);
 }
 
+// Enable default input capture mode
+static void input_capture_mode(timer_dev *dev, uint8 channel) {
+    timer_oc_set_mode(dev, channel, 0, TIMER_CCMR_CCS_INPUT_TI1);
+    timer_cc_enable(dev, channel);
+}
 
 
 /*
