@@ -564,15 +564,13 @@ typedef enum timer_mode {
      * values, the corresponding interrupt is fired. */
     TIMER_OUTPUT_COMPARE,
 
-
-    /* TIMER_INPUT_CAPTURE, UNDER DEVELOPMENT: In this mode, the timer can measure the
+    /* TIMER_INPUT_CAPTURE, TODO: In this mode, the timer can measure the
      *                            pulse lengths of input signals */
     /* TIMER_ONE_PULSE, TODO: In this mode, the timer can generate a single
      *                        pulse on a GPIO pin for a specified amount of
      *                        time. */
      
      TIMER_ENCODER,  //CARLOS Change
-	 TIMER_INPUT_CAPTURE,// code from @cesco
 } timer_mode;
 
 /** Timer channel numbers */

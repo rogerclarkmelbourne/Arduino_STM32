@@ -351,8 +351,7 @@ typedef enum afio_remap_peripheral {
      * Timer 2 partial remapping 2 (CH1 and ETR on PA0, CH2 on PA1,
      * CH3 on                                      PB10, CH4 on PB11) */
     AFIO_REMAP_TIM2_PARTIAL_2 = AFIO_MAPR_TIM2_REMAP_PA0_PA1_PB10_PB11,
-    /** Timer 2 full remapping 
-	(CH1/ETR/PA15, CH2/PB3, CH3/PB10, CH4/PB11) */
+    /** Timer 2 full remapping */
     AFIO_REMAP_TIM2_FULL      = AFIO_MAPR_TIM2_REMAP_FULL,
      /** USART 3 part remapping */
     AFIO_REMAP_USART3_PARTIAL = AFIO_MAPR_USART3_REMAP_PARTIAL,    
