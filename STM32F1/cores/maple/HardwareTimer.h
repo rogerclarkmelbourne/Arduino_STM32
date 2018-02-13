@@ -227,32 +227,53 @@ public:
 	 * 		TIMER_CR2_MMS_COMPARE_OC4REF
      */
 	void setMasterModeTrGo(uint32_t mode);
-	
+
+    void setSlaveFlags(uint32 flags) {
+        ((this->dev)->regs).gen->SMCR = flags;
+    }
+
 //CARLOS.
 /*
     added these functions to make sense for the encoder mode. 
 */
 //direction of movement. (to be better described). 
-    uint8 getDirection();
-    
+    uint8 getDirection() {
+        return get_direction(this->dev);
+    }
+
 //set if the encoder will count edges on one, which or both channels. 
-    void setEdgeCounting(uint32 counting);
-    uint8 getEdgeCounting(); //not sure if needed. 
+    void setEdgeCounting(uint32 counting) {
+        setSlaveFlags(counting);
+    }
 
 //set the polarity of counting... not sure how interesting this is.. 
-    void setPolarity();
-    
+    void setPolarity(uint8 channel, uint8 pol) {
+        timer_cc_set_pol(this->dev, channel, pol);
+    }
+
+    void setInputCaptureMode(uint8 channel, timer_ic_input_select input) {
+        input_capture_mode(this->dev, channel, input);
+    }
+
+    uint8_t getInputCaptureFlag(uint8 channel) {
+        return ( timer_get_status(this->dev) >> channel ) & 0x1;
+    }
+
+    uint8_t getInputCaptureFlagOverflow(uint8 channel) {
+		uint8 ret = ( timer_get_status(this->dev) >> (8+channel) ) & 0x1;
+		if ( ret ) timer_reset_status_bit(this->dev, (8+channel)); // clear flag
+        return ret;
+    }
+
 //add the filtering definition for the input channel.
     
 
-    /* Escape hatch */
-
-	 /**
+    /**
      * @brief Enable/disable DMA request for the input channel.
      */
-	void enableDMA(int channel);
-	void disableDMA(int channel);
-	
+    void enableDMA(int channel);
+    void disableDMA(int channel);
+
     /**
      * @brief Get a pointer to the underlying libmaple timer_dev for
      *        this HardwareTimer instance.
