@@ -8,12 +8,12 @@
   3. Serial output on(41s) or off(21s) by creatAlarm
   4. change to your timezone in the sketch; .
   3. get Unix epoch time from https://www.epochconverter.com/ ;
-  4. last step input the 10 bits number( example: 1503945555) to Serialport ;
+  4. last step input the 10 digit number( example: 1503945555) to Serialport ;
   5. the clock will be reset to you wanted.
 
-  ##  Why the 10 bits Unix epoch time be used?
+  ##  Why the 10 digit Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
-****in the <NTPClient.h> library. getNtpTime() will return this 10 bits Unix epoch time.
+****in the <NTPClient.h> library. getNtpTime() will return this 10 digit Unix epoch time.
 *
 *  嗨！朋友们， 这是一个STM32F10x系列的RTC应用的例子，希望对你的编码有所帮助
 *  这个程序基于https://github.com/rogerclarkmelbourne/Arduino_STM32 ， 感谢所有贡献者的付出。
