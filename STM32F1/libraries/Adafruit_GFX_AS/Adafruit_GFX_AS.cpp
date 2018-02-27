@@ -469,13 +469,25 @@ void Adafruit_GFX::setTextWrap(boolean w) {
 /***************************************************************************************
 ** Function name:           getTextWidth
 ** Descriptions:            Calculate the height of text for a given font
-**                          font_id indicates the font in use: 1 (default), 2,4,6,7 (extra)
+**                          font_id indicates the font in use: 0 (default), 2,4,6,7 (extra)
 ***************************************************************************************/
-int16_t Adafruit_GFX::getTextHeight(int16_t font_id)
+int16_t Adafruit_GFX::getTextHeight(char *string, int16_t font_id)
 {
     uint16_t height = 0;
 
-    if (font_id == 1) {
+    // Note that the font height is fixed for a given font
+    // (ie. it is not dependent upon the individual characters).
+
+    // Determine the number of lines (no wrap support)
+    size_t    str_pos = 0;
+    uint16_t  num_lines = 1;
+    char      ch;
+    while (ch = string[str_pos++]) {
+      if (ch == '\n') num_lines++;
+    }
+
+    // Extract the font height
+    if (font_id == 0) {
         // Default Adafruit font (5x7)
         height = 8;
     }
@@ -502,6 +514,7 @@ int16_t Adafruit_GFX::getTextHeight(int16_t font_id)
 
     // Add scaling factor
     height *= textsize;
+    height *= num_lines;
 
     return height;
 }
@@ -509,21 +522,23 @@ int16_t Adafruit_GFX::getTextHeight(int16_t font_id)
 /***************************************************************************************
 ** Function name:           getTextWidth
 ** Descriptions:            Calculate the width of a string for a given font
-**                          font_id indicates the font in use: 1 (default), 2,4,6,7 (extra)
+**                          font_id indicates the font in use: 0 (default), 2,4,6,7 (extra)
 ***************************************************************************************/
 int16_t Adafruit_GFX::getTextWidth(char *string, int16_t font_id)
 {
     int16_t len         = 0;    // Total string length
-    int16_t width       = 0;    // Curent character width
+    int16_t width       = 0;    // Current character width
     char    *pointer    = string;
     char    ascii;
+
+    // TODO: Support multi-line text / wrap
 
     while(*pointer)
     {
         ascii = *pointer;
 
         // Default font (5x7) has width of 6 before scaling
-        if (font_id == 1) width = 6;
+        if (font_id == 0) width = 6;
 
 #ifdef LOAD_FONT2
         if (font_id == 2) width = pgm_read_byte(widtbl_f16+ascii-32)+1;

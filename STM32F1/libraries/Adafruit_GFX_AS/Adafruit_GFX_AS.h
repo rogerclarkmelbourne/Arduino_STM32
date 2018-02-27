@@ -58,7 +58,7 @@ class Adafruit_GFX : public Print {
     setTextSize(uint8_t s),
     setTextWrap(boolean w),
     setRotation(uint8_t r);
-    int16_t getTextHeight(int16_t font_id);
+    int16_t getTextHeight(char *string, int16_t font_id);
     int16_t getTextWidth(char *string, int16_t font_id);
 
     int16_t drawUnicode(uint16_t uniCode, int16_t x, int16_t y, int16_t size);
