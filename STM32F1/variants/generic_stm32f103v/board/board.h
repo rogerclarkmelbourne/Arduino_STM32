@@ -90,8 +90,9 @@
 #define BOARD_SPI3_MOSI_PIN     PB5
 
 
-/* GPIO A to E = 5 * 16  - BOOT1 not used = 79*/
-#define BOARD_NR_GPIO_PINS      79
+/* GPIO A to E = 5 * 16  = 80*/
+/* value is now 80 as boo1 was added via PR to the pinmap but this value was not increased*/
+#define BOARD_NR_GPIO_PINS      80
 /* Note: NOT 19. The missing one is D38 a.k.a. BOARD_BUTTON_PIN, which
  * isn't broken out to a header and is thus unusable for PWM. */
 #define BOARD_NR_PWM_PINS       19
