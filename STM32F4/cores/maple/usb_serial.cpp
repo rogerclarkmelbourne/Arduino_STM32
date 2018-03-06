@@ -54,7 +54,7 @@ void USBSerial::begin(int) {
 
 void USBSerial::end(void) {
     disableUSB();
-	_hasBegun = false;
+    _hasBegun = false;
 }
 
 size_t USBSerial::write(uint8 ch) {
@@ -88,6 +88,22 @@ size_t USBSerial::write(const void *buf, uint32 len) {
 int USBSerial::available(void) {
     return usbBytesAvailable();
 }
+
+size_t USBSerial::readBytes(char *buf, const size_t& len)
+{
+    size_t rxed=0;
+    unsigned long startMillis;
+    startMillis = millis();
+    if (len <= 0) return 0;
+    do {
+        rxed += usbReceiveBytes((uint8 *)buf + rxed, len - rxed);
+        if (rxed == len) return rxed;
+    } while(millis() - startMillis < _timeout);
+    return rxed;
+}
+/*
+*   This blocks until len number of bytes have been received.
+*/
 
 int USBSerial::read(void *buf, uint32 len) {
     if (!buf) {

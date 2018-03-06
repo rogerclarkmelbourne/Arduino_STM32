@@ -50,6 +50,7 @@ public:
     virtual int peek(void);
     virtual void flush(void);
 
+    size_t readBytes(char *buf, const size_t& len);
     virtual int read(void *buf, uint32 len);
     virtual int read(void);
 
@@ -59,8 +60,8 @@ public:
 
     uint8 getRTS();
     uint8 getDTR();
-	operator bool();
-	uint8 isConnected() { return (bool) *this; }
+    operator bool();
+    uint8 isConnected() { return (bool) *this; }
     uint8 pending();
 
     void enableBlockingTx(void);

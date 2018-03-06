@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_vcp.h"
+#include "wirish_types.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -51,31 +52,90 @@ extern volatile int APP_Rx_ptr_in;    /* Increment this pointer or roll it back 
                                      in the buffer APP_Rx_Buffer. */
 extern volatile int APP_Rx_ptr_out;
 
-#define UsbRecBufferSize 2048
-uint8_t UsbRecBuffer[UsbRecBufferSize];
+#define UsbRecBufferSize 256 /* This value needs to be a power of 2 */
+#define UsbRecBufferSizeMask (UsbRecBufferSize-1)
+uint8_t __CCMRAM__ UsbRecBuffer[UsbRecBufferSize];
+
 volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
 volatile int VCP_DTRHIGH = 0;
 uint8_t UsbTXBlock = 1;
+USB_OTG_CORE_HANDLE *UsbHandle;
 
 uint32_t VCPBytesAvailable(void) {
 	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
 }
 
 uint8_t VCPGetByte(void) {
+    /*uint32 rx_unread = (UsbRecWrite - UsbRecRead) & UsbRecBufferSizeMask;
+    if ((rx_unread <= UsbRecBufferSize - CDC_DATA_MAX_PACKET_SIZE) && UsbHandle ){
+        usbd_cdc_PrepareRx(UsbHandle);
+    }
+    */
+
 	if(UsbRecWrite == UsbRecRead) {
 		return 0;
 	} else {
-		uint8_t c = UsbRecBuffer[UsbRecRead++];
-		if(UsbRecRead == UsbRecBufferSize) {
-			UsbRecRead = 0;
-		}
+		uint8_t c = UsbRecBuffer[UsbRecRead];
+		UsbRecRead = (UsbRecRead + 1) % UsbRecBufferSize;
+
+	    int32 rx_unread = (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
+/*	    if (UsbRecWrite < UsbRecRead) {
+	            rx_unread += UsbRecBufferSize;
+	    }
+*/
+	    if (rx_unread < UsbRecBufferSize - CDC_DATA_MAX_PACKET_SIZE) {
+	        usbd_cdc_PrepareRx(UsbHandle);
+	    }
+
 		return c;
 	}
 }
 
+uint32_t VCPGetBytes(uint8_t* buf, uint32_t len) {
+    // If head and tail are equal, buffer is empty.
+    if(UsbRecWrite == UsbRecRead) {
+        return 0;
+    }
+    int32 rx_unread = (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
+/*    int32 rx_unread = UsbRecWrite - UsbRecRead;
+    if (UsbRecWrite < UsbRecRead) {
+            rx_unread += UsbRecBufferSize;
+    }
+*/
+    if (len > rx_unread) {
+        len = rx_unread;
+    }
+    for (uint16 i = 0; i < len; i++) {
+        buf[i] = UsbRecBuffer[UsbRecRead];
+        UsbRecRead = (UsbRecRead + 1) % UsbRecBufferSize;
+    }
+
+    rx_unread -= len;
+    // If we have space for CDC_DATA_MAX_PACKET_SIZE + 1, enable the endpoint to receive again
+    if (rx_unread < UsbRecBufferSize - CDC_DATA_MAX_PACKET_SIZE) {
+        usbd_cdc_PrepareRx(UsbHandle);
+    }
+ /*   DCD_EP_PrepareRx(UsbHandle,
+                     CDC_OUT_EP,
+                     (uint8_t*)(USB_Rx_Buffer),
+                     CDC_DATA_OUT_PACKET_SIZE);
+    }
+   */
+
+    //UsbRecRead = (UsbRecRead + len) % UsbRecBufferSize;
+/*
+    for (i = 0; i < len; i++) {
+        buf[i] = UsbRecBuffer[tail];
+        tail = (tail + 1) % UsbRecBufferSize;
+    }
+    UsbRecRead = (UsbRecRead + len) % UsbRecBufferSize;
+*/
+    return len;
+}
+
 /* Private function prototypes -----------------------------------------------*/
-static uint16_t VCP_Init     (void);
+static uint16_t VCP_Init     (void *pdev);
 static uint16_t VCP_DeInit   (void);
 static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
 uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
@@ -97,11 +157,12 @@ CDC_IF_Prop_TypeDef VCP_fops =
   * @brief  VCP_Init
   *         Initializes the Media on the STM32
   * @param  None
-  * @retval Result of the opeartion (USBD_OK in all cases)
+  * @retval Result of the operation (USBD_OK in all cases)
   */
-static uint16_t VCP_Init(void)
+static uint16_t VCP_Init(void *pdev)
 {
-  return USBD_OK;
+    UsbHandle = (USB_OTG_CORE_HANDLE *)pdev;
+    return USBD_OK;
 }
 
 /**
@@ -278,7 +339,7 @@ void systemHardReset(void) {
   *
   * @param  Buf: Buffer of data to be received
   * @param  Len: Number of data received (in bytes)
-  * @retval Result of the opeartion: USBD_OK if all operations are OK else VCP_FAIL
+  * @retval Result of the operation: USBD_OK if all operations are OK else VCP_FAIL
   */
 static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
@@ -294,14 +355,16 @@ static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 	VCP_DTRHIGH = 0;
 	while(Len-- > 0) {
 		UsbRecBuffer[UsbRecWrite] = *Buf++;
-		if(UsbRecWrite == UsbRecBufferSize) {
-			UsbRecWrite = 0;
-		} else {
-			UsbRecWrite ++;
-		}
+		UsbRecWrite = (UsbRecWrite + 1) % UsbRecBufferSize;
 	}
 
-  return USBD_OK;
+	int32 rx_unread = (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
+
+  if (rx_unread < UsbRecBufferSize - CDC_DATA_MAX_PACKET_SIZE) {
+        return USBD_OK;
+	}
+
+	else return USBD_FAIL;
 }
 
 /**

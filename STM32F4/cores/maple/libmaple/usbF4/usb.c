@@ -25,14 +25,17 @@ void setupUSB (void)
 #endif
 
   gpio_clear_pin(BOARD_USB_DP_PIN); // ala42
-  delay_us(200000);
+  delay_us(50000);
 
   /* setup the apb1 clock for USB */
   //rcc_reg_map *pRCC = RCC_BASE;
   //pRCC->APB1ENR |= RCC_APB1ENR_USBEN;
 
   /* initialize the usb application */
-  gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host
+  // Changing this to force a reenumeration, currently not happening all the time.
+  USBD_DeInitFull(&USB_OTG_dev);
+  //gpio_set_pin(BOARD_USB_DP_PIN); // ala42 // presents us to the host
+
   USBD_Init(&USB_OTG_dev,
             USB_OTG_FS_CORE_ID,
             &USR_desc,
@@ -44,6 +47,7 @@ extern uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len);
 extern void     VCP_SetUSBTxBlocking(uint8_t mode);
 extern uint32_t VCPBytesAvailable(void);
 extern uint8_t  VCPGetByte(void);
+extern uint32_t VCPGetBytes(uint8_t* buf, const uint32_t len);
 
 uint32_t usbSendBytes(const uint8_t* sendBuf, uint32_t len) {
 	VCP_DataTx((uint8_t*)sendBuf, len);
@@ -61,13 +65,16 @@ void usbDisableBlockingTx(void) {
 
 uint32_t usbBytesAvailable(void) {
 	return VCPBytesAvailable();
-
 }
+
+
 uint32_t usbReceiveBytes(uint8_t* recvBuf, uint32_t len) {
-	  int newBytes = usbBytesAvailable();
+	  int newBytes = VCPBytesAvailable();
 	  if (len > newBytes) {
 	      len = newBytes;
 	  }
+	  return VCPGetBytes(recvBuf, len);
+/*
 
 	  int i;
 	  for (i=0;i<len;i++) {
@@ -75,6 +82,7 @@ uint32_t usbReceiveBytes(uint8_t* recvBuf, uint32_t len) {
 	  }
 
 	  return len;
+*/
 }
 
 uint8 usbIsConfigured() {

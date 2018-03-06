@@ -38,9 +38,9 @@ EXTERN(start_c)
 /* main entry point */
 EXTERN(main)
 
-/* Initial stack pointer value. */
+/* Initial stack pointer value. Relocated to CCMRAM */
 EXTERN(__msp_init)
-PROVIDE(__msp_init = ORIGIN(ram) + LENGTH(ram));
+PROVIDE(__msp_init = ORIGIN(ccmram) + LENGTH(ccmram));
 
 /* Reset vector and chip reset entry point */
 EXTERN(__start__)
@@ -129,6 +129,32 @@ SECTIONS
     __exidx_end = .;
 
     /*
+     * Read-only data
+     */
+    .rodata :
+      {
+        *(.rodata .rodata.* .gnu.linkonce.r.*)
+        /* .USER_FLASH: We allow users to allocate into Flash here */
+        *(.USER_FLASH)
+        /* ROM image configuration; for C startup */
+        . = ALIGN(4);
+        _lm_rom_img_cfgp = .;
+        LONG(LOADADDR(.data));
+	      LONG(LOADADDR(.ccmdata));
+        /*
+         * Heap: Linker scripts may choose a custom heap by overriding
+         * _lm_heap_start and _lm_heap_end. Otherwise, the heap is in
+         * internal SRAM, beginning after .bss, and growing towards
+         * the stack.
+         *
+         * I'm shoving these here naively; there's probably a cleaner way
+         * to go about this. [mbolivar]
+         */
+        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : __ccmdata_end__;
+        _lm_heap_end   = DEFINED(_lm_heap_end) ? _lm_heap_end : __msp_init;
+      } > REGION_RODATA
+
+    /*
      * .data
      */
     .data :
@@ -143,30 +169,22 @@ SECTIONS
         __data_end__ = .;
       } > REGION_DATA AT> REGION_RODATA
 
-    /*
-     * Read-only data
-     */
-    .rodata :
+    /* CCM-RAM section 
+    * 
+    * IMPORTANT NOTE! 
+    * The startup code is modified to copy the init-values from flash to ccmram 
+    * at startup
+    */
+    .ccmdata :
       {
-        *(.rodata .rodata.* .gnu.linkonce.r.*)
-        /* .USER_FLASH: We allow users to allocate into Flash here */
-        *(.USER_FLASH)
-        /* ROM image configuration; for C startup */
         . = ALIGN(4);
-        _lm_rom_img_cfgp = .;
-        LONG(LOADADDR(.data));
-        /*
-         * Heap: Linker scripts may choose a custom heap by overriding
-         * _lm_heap_start and _lm_heap_end. Otherwise, the heap is in
-         * internal SRAM, beginning after .bss, and growing towards
-         * the stack.
-         *
-         * I'm shoving these here naively; there's probably a cleaner way
-         * to go about this. [mbolivar]
-         */
-        _lm_heap_start = DEFINED(_lm_heap_start) ? _lm_heap_start : _end;
-        _lm_heap_end   = DEFINED(_lm_heap_end) ? _lm_heap_end : __msp_init;
-      } > REGION_RODATA
+        __ccmdata_start__ = .;       /* create a global symbol at ccmram start */
+        *(.ccmdata)
+        *(.ccmram*)
+    
+        . = ALIGN(4);
+        __ccmdata_end__ = .;       /* create a global symbol at ccmram end */
+      } >REGION_CCMRAM AT> REGION_RODATA
 
     /*
      * .bss
@@ -182,16 +200,7 @@ SECTIONS
         _end = __bss_end__;
       } > REGION_BSS
 
-    /*
-     * .ccmram
-     */
-	.ccmram (NOLOAD):
-		{
-			. = ALIGN(8);
-			*(.ccmram .ccmram.*)
-		} > ccmram
-
-	/*
+     /*
      * Debugging sections
      */
     .stab 0 (NOLOAD) : { *(.stab) }

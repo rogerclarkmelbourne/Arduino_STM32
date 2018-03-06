@@ -62,6 +62,7 @@
 #include <STM32_USB_Device_Library/Class/cdc/inc/usbd_cdc_core.h>
 #include <VCP/usbd_desc.h>
 #include <STM32_USB_Device_Library/Core/inc/usbd_req.h>
+#include "wirish_types.h"
 
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -111,6 +112,7 @@ static uint8_t  usbd_cdc_Setup       (void  *pdev, USB_SETUP_REQ *req);
 static uint8_t  usbd_cdc_EP0_RxReady  (void *pdev);
 static uint8_t  usbd_cdc_DataIn      (void *pdev, uint8_t epnum);
 static uint8_t  usbd_cdc_DataOut     (void *pdev, uint8_t epnum);
+void   usbd_cdc_PrepareRx            (void *pdev);
 static uint8_t  usbd_cdc_SOF         (void *pdev);
 
 /*********************************************
@@ -156,15 +158,19 @@ __ALIGN_BEGIN static __IO uint32_t  usbd_cdc_AltSet  __ALIGN_END = 0;
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
-#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 __ALIGN_BEGIN uint8_t USB_Rx_Buffer   [CDC_DATA_MAX_PACKET_SIZE] __ALIGN_END ;
+#else
+__ALIGN_BEGIN __CCMRAM__ uint8_t USB_Rx_Buffer   [CDC_DATA_MAX_PACKET_SIZE] __ALIGN_END ;
+#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
+__ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ;
+#else 
+__ALIGN_BEGIN uint8_t __CCMRAM__ APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ;
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ; 
 
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
@@ -449,7 +455,7 @@ static uint8_t  usbd_cdc_Init (void  *pdev,
   pbuf[5] = DEVICE_SUBCLASS_CDC;
   
   /* Initialize the Interface physical components */
-  APP_FOPS.pIf_Init();
+  APP_FOPS.pIf_Init(pdev);
 
   /* Prepare Out endpoint to receive next packet */
   DCD_EP_PrepareRx(pdev,
@@ -730,17 +736,26 @@ static uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
   
   /* USB data will be immediately processed, this allow next USB traffic being 
      NAKed till the end of the application Xfer */
-  APP_FOPS.pIf_DataRx(USB_Rx_Buffer, USB_Rx_Cnt);
+  if (APP_FOPS.pIf_DataRx(USB_Rx_Buffer, USB_Rx_Cnt) == USBD_OK)
+  {
   
   /* Prepare Out endpoint to receive next packet */
   DCD_EP_PrepareRx(pdev,
                    CDC_OUT_EP,
                    (uint8_t*)(USB_Rx_Buffer),
                    CDC_DATA_OUT_PACKET_SIZE);
+  }
 
   return USBD_OK;
 }
 
+void usbd_cdc_PrepareRx (void *pdev)
+{
+    DCD_EP_PrepareRx((USB_OTG_CORE_HANDLE*)pdev,
+                     CDC_OUT_EP,
+                     (uint8_t*)(USB_Rx_Buffer),
+                     CDC_DATA_OUT_PACKET_SIZE);
+}
 /**
   * @brief  usbd_audio_SOF
   *         Start Of Frame event management
