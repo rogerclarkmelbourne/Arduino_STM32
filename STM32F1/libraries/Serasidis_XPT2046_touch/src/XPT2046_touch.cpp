@@ -29,13 +29,13 @@
     digitalWrite(cs_pin, LOW);
 
     //Check if touch screen is pressed.
-    SPI.transfer(B10110011); // Z1
+    my_SPI.transfer(B10110011); // Z1
     delay(10);
     tmpH = (my_SPI.transfer(0) << 5);
     tmpL = (my_SPI.transfer(0) >> 3);
     z1 = tmpH | tmpL;
 
-    SPI.transfer(B11000011); // Z2
+    my_SPI.transfer(B11000011); // Z2
     delay(10);
     tmpH = (my_SPI.transfer(0) << 5);
     tmpL = (my_SPI.transfer(0) >> 3);
