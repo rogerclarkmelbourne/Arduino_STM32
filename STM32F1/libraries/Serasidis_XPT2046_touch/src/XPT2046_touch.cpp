@@ -54,18 +54,18 @@ TS_Point XPT2046_touch::getPoint() {
     TS_Point ret;
 
     //Check if touch screen is pressed.
-    SPI.transfer(B10110011); // trigger Z1 reading
+    my_SPI.transfer(B10110011); // trigger Z1 reading
     z1 = my_SPI.transfer16(B11000011) >> 3; // read Z1, and trigger Z2 reading
     z2 = my_SPI.transfer16(B10010011) >> 3; // read Z2, and trigger Y reading
     ret.z = z1 + 4095 - z2;
 
     if(ret.z >= threshold){ //If the touch screen is pressed, read the X,Y  coordinates from XPT2046.
-        ret.z = z1 + 4095 - z2;
         ret.x = gatherSamples(B10010011);
         ret.y = gatherSamples(B11010011);
     } else {
         ret.z = 0;
     }
+    my_SPI.transfer(B00000000); // enter power saving (and IRQ enable)
 
     digitalWrite(cs_pin, HIGH);
     my_SPI.endTransaction();
