@@ -324,7 +324,7 @@ void _i2c_irq_handler(i2c_dev *dev) {
     /*
      * EV6: Slave address sent
      */
-    if (sr1 & I2C_SR1_ADDR) {
+    if (sr1 & (I2C_SR1_ADDR|I2C_SR1_ADD10)) {
         /*
          * Special case event EV6_1 for master receiver.
          * Generate NACK and restart/stop condition after ADDR
