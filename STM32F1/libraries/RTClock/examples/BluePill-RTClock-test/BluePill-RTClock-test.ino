@@ -12,6 +12,10 @@
   5. the clock will be reset to you wanted.
   6. RTC calibration for better accuracy. If enabled via rtc_enable_calibration(); on PA13 will be 512Hz signal. 
      For safe use, disable or remap LED_PIN.
+     more details
+     http://www.st.com/resource/en/application_note/cd00167326.pdf
+     and in Russian 
+     http://uc.org.ru/node/27
   ##  Why the 10 bits Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
 ****in the <NTPClient.h> library. getNtpTime() will return this 10 bits Unix epoch time.
