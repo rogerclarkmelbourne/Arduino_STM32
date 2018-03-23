@@ -151,7 +151,7 @@ void tone(uint32_t pin, uint32_t freq, uint32_t duration) {
       tone_ncount = tone_n = (count>>16)+1; // number of 16-bit count chunk
       tone_tcount = count/tone_ncount;      // size of count chunk
       if(duration > 0) // number of half waves to be generated
-         tone_nhw = (2*duration*freq)/1000;
+         tone_nhw = duration*freq*2/1000;
       else  // no duration specified, continuous sound until noTone() called
          tone_nhw = 0;
 
