@@ -10,7 +10,8 @@
   3. get Unix epoch time from https://www.epochconverter.com/ ;
   4. last step input the 10 bits number( example: 1503945555) to Serialport ;
   5. the clock will be reset to you wanted.
-
+  6. RTC calibration for better accuracy. If enabled via rtc_enable_calibration(); on PA13 will be 512Hz signal. 
+     For safe use, disable or remap LED_PIN.
   ##  Why the 10 bits Unix epoch time be used?
 ****Because I wanna connect to NTP server by ESP-8266.
 ****in the <NTPClient.h> library. getNtpTime() will return this 10 bits Unix epoch time.
@@ -53,6 +54,7 @@ void SecondCount ()
 void blink ()
 {
   digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+  //FOR SAFE USE DISABLE LED_PIN OUTPUT!
   globAlmCount++;
   //tt++;
 }
@@ -69,6 +71,9 @@ void setup()
   lastSPECAlmCount = ~SPECAlmCount;
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
+  //FOR SAFE USE DISABLE LED_PIN INIT!
+  //rtc_enable_calibration();
+  //rtc_disable_calibration();
   tt = rtclock.makeTime(mtt); 
   rtclock.setTime(tt);  
   tt1 = tt;
