@@ -140,6 +140,8 @@ void rtc_detach_interrupt(uint8 interrupt);
 uint32 rtc_get_count();
 void rtc_set_count(uint32 value);
 void rtc_set_prescaler_load(uint32 value);
+void rtc_enable_calibration(void);
+void rtc_disable_calibration(void);
 uint32 rtc_get_divider();
 void rtc_set_alarm(uint32 value);
 

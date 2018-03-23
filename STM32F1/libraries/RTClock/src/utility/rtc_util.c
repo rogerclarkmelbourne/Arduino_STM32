@@ -53,7 +53,8 @@ void rtc_init(rtc_clk_src src) {
 					// (we reset the backup domain here because we must in order to change the rtc clock source).
 
 	bkp_enable_writes();	// enable writes to the backup registers and the RTC registers via the DBP bit in the PWR control register
-
+	//////////////////////   flush backup area
+	RCC_BASE->BDCR |= RCC_BDCR_RTCSEL;
 	RCC_BASE->BDCR &= ~RCC_BDCR_RTCSEL;
 	switch (src) {
 		case RTCSEL_NONE:
@@ -202,6 +203,26 @@ void rtc_set_prescaler_load(uint32 value) {
 	rtc_exit_config_mode();
 	rtc_wait_finished();
 }
+
+void rtc_enable_calibration(void){
+	rtc_clear_sync();
+	rtc_wait_sync();
+	rtc_wait_finished();
+	rtc_enter_config_mode();
+	bb_peri_set_bit(&BKP_BASE->RTCCR, BKP_RTCCR_CCO_BIT, 1);
+	rtc_exit_config_mode();
+	rtc_wait_finished();
+}
+void rtc_disable_calibration(void){
+	rtc_clear_sync();
+	rtc_wait_sync();
+	rtc_wait_finished();
+	rtc_enter_config_mode();
+	bb_peri_set_bit(&BKP_BASE->RTCCR, BKP_RTCCR_CCO_BIT, 0);
+	rtc_exit_config_mode();
+	rtc_wait_finished();
+}
+
 
 /**
  * @brief Returns the rtc's prescaler divider (i.e. current divider count) value.
