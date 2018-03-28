@@ -149,4 +149,11 @@ double sqrt(double x);
  */
 double pow(double x, double y);
 
+inline uint16_t makeWord( uint16_t w ) { return w; }
+
+inline uint16_t makeWord( uint8_t h, uint8_t l ) { return (h << 8) | l; }
+
+#define word(...) makeWord(__VA_ARGS__)
+
+
 #endif
