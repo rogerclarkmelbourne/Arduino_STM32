@@ -53,8 +53,8 @@ void rtc_init(rtc_clk_src src) {
 					// (we reset the backup domain here because we must in order to change the rtc clock source).
 
 	bkp_enable_writes();	// enable writes to the backup registers and the RTC registers via the DBP bit in the PWR control register
-	//////////////////////   flush backup area
-	RCC_BASE->BDCR |= RCC_BDCR_RTCSEL;
+	
+	
 	RCC_BASE->BDCR &= ~RCC_BDCR_RTCSEL;
 	switch (src) {
 		case RTCSEL_NONE:
