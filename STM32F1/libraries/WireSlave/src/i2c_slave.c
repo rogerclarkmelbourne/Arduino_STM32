@@ -28,18 +28,23 @@
 /**
  * @file libmaple/i2c.c
  * @author Perry Hung <perry@leaflabs.com>
+ * @author Barry Carter <barry.carter@gmail.com>
  * @brief Inter-Integrated Circuit (I2C) support.
  *
- * Currently, only master mode is supported.
+ * Master and Slave supported
+ * I2C slave support added 2012 by Barry Carter. barry.carter@gmail.com, headfuzz.co.uk
  */
+
+#include "libmaple/i2c_common_slave.h"
 
 #include "i2c_private.h"
 
+
+#include "libmaple/i2c_slave.h"
 #include <libmaple/libmaple.h>
 #include <libmaple/rcc.h>
 #include <libmaple/gpio.h>
 #include <libmaple/nvic.h>
-#include <libmaple/i2c.h>
 #include <libmaple/systick.h>
 
 #include <string.h>
@@ -65,6 +70,12 @@ static inline void i2c_send_slave_addr(i2c_dev *dev, uint32 addr, uint32 rw) {
 #ifdef I2C_DEBUG
 
 #define NR_CRUMBS       128
+struct crumb {
+    uint32 event;
+    uint32 arg0;
+    uint32 arg1;
+    uint32 arg2; // filler to make the data fit GDB memory dump screen
+};
 static struct crumb crumbs[NR_CRUMBS];
 static uint32 cur_crumb = 0;
 
@@ -74,6 +85,7 @@ static inline void i2c_drop_crumb(uint32 event, uint32 arg0, uint32 arg1) {
         crumb->event = event;
         crumb->arg0 = arg0;
         crumb->arg1 = arg1;
+        crumb->arg2 = cur_crumb-1;
     }
 }
 #define I2C_CRUMB(event, arg0, arg1) i2c_drop_crumb(event, arg0, arg1)
@@ -81,12 +93,6 @@ static inline void i2c_drop_crumb(uint32 event, uint32 arg0, uint32 arg1) {
 #else
 #define I2C_CRUMB(event, arg0, arg1)
 #endif
-
-struct crumb {
-    uint32 event;
-    uint32 arg0;
-    uint32 arg1;
-};
 
 enum {
     IRQ_ENTRY           = 1,
@@ -152,8 +158,10 @@ void i2c_bus_reset(const i2c_dev *dev) {
  * @param dev Device to initialize.
  */
 void i2c_init(i2c_dev *dev) {
+
     rcc_reset_dev(dev->clk_id);
     rcc_clk_enable(dev->clk_id);
+    _i2c_irq_priority_fixup(dev);
 }
 
 /* Hack for deprecated bit of STM32F1 functionality */
@@ -166,7 +174,6 @@ void i2c_init(i2c_dev *dev) {
  * @param dev Device to enable
  * @param flags Bitwise or of the following I2C options:
  *              I2C_FAST_MODE: 400 khz operation,
- *              I2C_FAST_MODE_PLUS: 1 Mhz operation,
  *              I2C_DUTY_16_9: 16/9 Tlow/Thigh duty cycle (only applicable for
  *                             fast mode),
  *              I2C_BUS_RESET: Reset the bus and clock out any hung slaves on
@@ -191,18 +198,59 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     i2c_init(dev);
     i2c_config_gpios(dev);
 
-    /* Configure clock and rise time */
-    set_ccr_trise(dev, flags);
+    /* Configure clock and rise time, but only if in master mode */
+    if (!(flags & (I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL))) {
+        set_ccr_trise(dev, flags);
+    }
 
     /* Enable event and buffer interrupts */
     nvic_irq_enable(dev->ev_nvic_line);
     nvic_irq_enable(dev->er_nvic_line);
     i2c_enable_irq(dev, I2C_IRQ_EVENT | I2C_IRQ_BUFFER | I2C_IRQ_ERROR);
 
+    /* Configure the slave unit */
+    if (flags & I2C_SLAVE_DUAL_ADDRESS) {
+        i2c_slave_dual_address_enable(dev);
+    }
+
+    if (flags & I2C_SLAVE_GENERAL_CALL) {
+        i2c_slave_general_call_enable(dev);
+    }
+
+    /* store all of the flags */
+    dev->config_flags = flags;
+
     /* Make it go! */
     i2c_peripheral_enable(dev);
+    i2c_enable_ack(dev);
 
     dev->state = I2C_STATE_IDLE;
+}
+
+/**
+ * @brief Initialize an I2C device as slave (and master)
+ * @param dev Device to enable
+ * @param flags Bitwise or of the following I2C options:
+ *              I2C_FAST_MODE: 400 khz operation,
+ *              I2C_DUTY_16_9: 16/9 Tlow/Thigh duty cycle (only applicable for
+ *                             fast mode),
+ *              I2C_BUS_RESET: Reset the bus and clock out any hung slaves on
+ *                             initialization,
+ *              I2C_10BIT_ADDRESSING: Enable 10-bit addressing,
+ *              I2C_REMAP: (deprecated, STM32F1 only) Remap I2C1 to SCL/PB8
+ *                         SDA/PB9.
+ *              I2C_SLAVE_DUAL_ADDRESS: Slave can respond on 2 i2C addresses
+ *              I2C_SLAVE_GENERAL_CALL: SLA+W broadcast to all general call
+ *                                      listeners on bus. Addr 0x00
+ *              I2C_SLAVE_USE_RX_BUFFER: Use a buffer to receive the incoming
+ *                                       data. Callback at end of recv
+ *              I2C_SLAVE_USE_TX_BUFFER: Use a buffer to transmit data.
+ *                                       Callback will be called before tx
+ */
+void i2c_slave_enable(i2c_dev *dev, uint32 flags) {
+    // TODO: Figure out why i2c_disable(I2C2) causes a crash when I2C1 is enabled
+    i2c_disable(dev);
+    i2c_master_enable(dev, flags);
 }
 
 /**
@@ -236,7 +284,7 @@ int32 i2c_master_xfer(i2c_dev *dev,
 
     i2c_enable_irq(dev, I2C_IRQ_EVENT);
     i2c_start_condition(dev);
-    
+
     rc = wait_for_state_change(dev, I2C_STATE_XFER_DONE, timeout);
     if (rc < 0) {
         goto out;
@@ -285,7 +333,8 @@ static inline int32 wait_for_state_change(i2c_dev *dev,
  */
 
 /*
- * IRQ handler for I2C master. Handles transmission/reception.
+ * IRQ handler for I2C master and slave.
+ * Handles transmission/reception.
  */
 void _i2c_irq_handler(i2c_dev *dev) {
     /* WTFs:
@@ -303,6 +352,164 @@ void _i2c_irq_handler(i2c_dev *dev) {
      * Reset timeout counter
      */
     dev->timestamp = systick_uptime();
+
+    /*
+     * Add Slave support
+     */
+
+    /* Check to see if in slave mode */
+    if (dev->config_flags&(I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL)) {
+
+        /* Check for address match */
+        if (sr1 & I2C_SR1_ADDR) {
+            /* Find out which address was matched */
+            /* Check the general call address first */
+            if (sr2 & I2C_SR2_GENCALL) {
+                dev->i2c_slave_msg->addr = 0;
+            }
+            /* We matched the secondary address */
+            else if (sr2 & I2C_SR2_DUALF) {
+                dev->i2c_slave_msg->addr = dev->regs->OAR2 & 0xFE;
+            }
+            /* We matched the primary address */
+            else if ((sr2 & I2C_SR2_DUALF) != I2C_SR2_DUALF) {
+                dev->i2c_slave_msg->addr = dev->regs->OAR1 & 0xFE;
+            }
+            /* Shouldn't get here */
+            else {
+                dev->i2c_slave_msg->addr = -1; /* uh oh */
+            }
+
+            /* if we have buffered io */
+            if ((dev->config_flags & I2C_SLAVE_USE_RX_BUFFER) ||
+                (dev->config_flags & I2C_SLAVE_USE_TX_BUFFER)) {
+
+                /* if receiving then this would be a repeated start
+                 *
+                 *if we have some bytes already
+                 */
+                if ((dev->state == I2C_STATE_SL_RX) &&
+                    (dev->i2c_slave_msg->xferred > 0)  &&
+                    (dev->config_flags & I2C_SLAVE_USE_RX_BUFFER)) {
+                    /* Call the callback with the contents of the data */
+                    if (dev->i2c_slave_recv_callback != NULL) {
+                        (*(dev->i2c_slave_recv_callback))(dev->i2c_slave_msg);
+                    }
+                }
+
+                /* Reset the message back to defaults.
+                 * We are starting a new message
+                 */
+                dev->i2c_slave_msg->flags = 0;
+                dev->i2c_slave_msg->length = 0;
+                dev->i2c_slave_msg->xferred = 0;
+                dev->msgs_left = 0;
+                dev->timestamp = systick_uptime();
+
+                /* We have been addressed with SLA+R so
+                 * the master wants us to transmit
+                 */
+                if ((sr1 & I2C_SR1_TXE) &&
+                    (dev->config_flags & I2C_SLAVE_USE_TX_BUFFER)) {
+                    /* Call the transmit callback so it can populate the msg
+                     * data with the bytes to go
+                     */
+                    if (dev->i2c_slave_transmit_callback != NULL) {
+                        (*(dev->i2c_slave_transmit_callback))(dev->i2c_slave_msg);
+                    }
+                }
+                dev->state = I2C_STATE_BUSY;
+            }
+
+            sr1 = sr2 = 0;
+        }
+
+         /* EV3: Master requesting data from slave. Transmit a byte*/
+        if (sr1 & I2C_SR1_TXE) {
+            if (dev->config_flags & I2C_SLAVE_USE_TX_BUFFER) {
+                if (dev->i2c_slave_msg->xferred >= dev->i2c_slave_msg->length) {
+                    /* End of the transmit buffer? If so we NACK */
+                    i2c_disable_ack(dev);
+                    /* We have to either issue a STOP or write something here.
+                     * STOP here seems to screw up some masters,
+                     * For now padding with 0
+                     */
+                    i2c_write(dev, 0);
+                    /*i2c_stop_condition(dev); // This is causing bus lockups way more than it should !? Seems some I2C master devices freak out here*/
+                }
+                else
+                {
+                    /* NACk the last byte */
+                    if (dev->i2c_slave_msg->xferred == dev->i2c_slave_msg->length-1) {
+                        i2c_disable_ack(dev);
+                    }
+                    else {
+                        i2c_enable_ack(dev);
+                    }
+                    i2c_write(dev, dev->i2c_slave_msg->data[dev->i2c_slave_msg->xferred++]);
+                }
+            }
+            else
+            {
+                /* Call the callback to get the data we need.
+                 * The callback is expected to write using i2c_write(...)
+                 * If the slave is going to terminate the transfer, this function should
+                 * also do a NACK on the last byte!
+                 */
+                if (dev->i2c_slave_transmit_callback != NULL) (*(dev->i2c_slave_transmit_callback))(dev->i2c_slave_msg);
+            }
+
+            dev->state = I2C_STATE_BUSY;
+            sr1 = sr2 = 0;
+        }
+
+        /* EV2: Slave received data from a master. Get from DR */
+        if (sr1 & I2C_SR1_RXNE) {
+            if (dev->config_flags & I2C_SLAVE_USE_RX_BUFFER) {
+                /* Fill the buffer with the contents of the data register */
+                /* These is potential for buffer overflow here, so we should
+                 * really store the size of the array. This is expensive in
+                 * the ISR so left out for now. We must trust the implementor!
+                 */
+                dev->i2c_slave_msg->data[dev->i2c_slave_msg->xferred++] = dev->regs->DR;
+                dev->i2c_slave_msg->length++;
+            }
+            else  {
+                /* Call the callback with the contents of the data */
+                dev->i2c_slave_msg->data[0] = dev->regs->DR;
+                if (dev->i2c_slave_recv_callback != NULL) (*(dev->i2c_slave_recv_callback))(dev->i2c_slave_msg);
+            }
+            dev->state = I2C_STATE_SL_RX;
+            sr1 = sr2 = 0;
+        }
+
+        /* EV4: Slave has detected a STOP condition on the bus */
+        if (sr1 & I2C_SR1_STOPF) {
+            dev->regs->CR1 |= I2C_CR1_PE;
+
+            if ((dev->config_flags & I2C_SLAVE_USE_RX_BUFFER) ||
+                (dev->config_flags & I2C_SLAVE_USE_TX_BUFFER)) {
+
+                /* The callback with the data will happen on a NACK of the last data byte.
+                 * This is handled in the error IRQ (AF bit)
+                 */
+                /* Handle the case where the master misbehaves by sending no NACK */
+                if (dev->state != I2C_STATE_IDLE) {
+                    if (dev->state == I2C_STATE_SL_RX) {
+                        if (dev->i2c_slave_recv_callback != NULL) (*(dev->i2c_slave_recv_callback))(dev->i2c_slave_msg);
+                    }
+                    else {
+                        if (dev->i2c_slave_transmit_callback != NULL) (*(dev->i2c_slave_transmit_callback))(dev->i2c_slave_msg);
+                    }
+                }
+            }
+
+            sr1 = sr2 = 0;
+            dev->state = I2C_STATE_IDLE;
+        }
+
+        return;
+    }
 
     /*
      * EV5: Start condition sent
@@ -325,7 +532,7 @@ void _i2c_irq_handler(i2c_dev *dev) {
     /*
      * EV6: Slave address sent
      */
-    if (sr1 & (I2C_SR1_ADDR|I2C_SR1_ADD10)) {
+    if (sr1 & I2C_SR1_ADDR) {
         /*
          * Special case event EV6_1 for master receiver.
          * Generate NACK and restart/stop condition after ADDR
@@ -472,6 +679,45 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
                                          I2C_SR1_ARLO |
                                          I2C_SR1_AF |
                                          I2C_SR1_OVR);
+
+    /* Are we in slave mode? */
+    if (dev->config_flags & (I2C_SLAVE_DUAL_ADDRESS|I2C_SLAVE_GENERAL_CALL)) {
+        /* Check to see if the master device did a NAK on the last bit
+         * This is perfectly valid for a master to do this on the bus.
+         * We ignore this. Any further error processing takes us into dead
+         * loop waiting for the stop condition that will never arrive
+         */
+        if (dev->regs->SR1 & I2C_SR1_AF) {
+            /* Clear flags */
+            dev->regs->SR1 = 0;
+            dev->regs->SR2 = 0;
+            /* We need to write something to CR1 to clear the flag.
+             * This isn't really mentioned but seems important */
+            i2c_enable_ack(dev);
+
+            if (dev->state == I2C_STATE_SL_RX &&
+                dev->config_flags & I2C_SLAVE_USE_RX_BUFFER &&
+                dev->i2c_slave_msg->xferred > 0) {
+                /* Call the callback with the contents of the data */
+                if (dev->i2c_slave_recv_callback != NULL) (*(dev->i2c_slave_recv_callback))(dev->i2c_slave_msg);
+            }
+
+            dev->state = I2C_STATE_IDLE;
+            return;
+        }
+        /* Catch any other strange errors while in slave mode.
+         * I have seen BERR caused by an over fast master device
+         * as well as several overflows and arbitration failures.
+         * We are going to reset SR flags and carry on at this point which
+         * is not the best thing to do, but stops the bus locking up completely
+         * If we carry on below and send the stop bit, the code spins forever */
+        /* Clear flags */
+        dev->regs->SR1 = 0;
+        dev->regs->SR2 = 0;
+        dev->state = I2C_STATE_IDLE;
+        return;
+    }
+
     /* Clear flags */
     dev->regs->SR1 = 0;
     dev->regs->SR2 = 0;
@@ -492,21 +738,7 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
 
     i2c_set_input_clk(dev, clk_mhz);
 
-    if (flags & I2C_FAST_MODE_PLUS) {
-        ccr |= I2C_CCR_FS;
-
-        if (flags & I2C_DUTY_16_9) {
-            /* Tlow/Thigh = 16/9 */
-            ccr |= I2C_CCR_DUTY_16_9;
-            ccr |= clk_hz / (1000000 * 25);
-        } else {
-            /* Tlow/Thigh = 2 */
-            ccr |= clk_hz / (1000000 * 3);
-        }
-        trise = (300 * clk_mhz / 1000) + 1;
-    }
-
-    else if (flags & I2C_FAST_MODE) {
+    if (flags & I2C_FAST_MODE) {
         ccr |= I2C_CCR_FS;
 
         if (flags & I2C_DUTY_16_9) {
@@ -518,7 +750,7 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
             ccr |= clk_hz / (400000 * 3);
         }
 
-        trise = (125 * clk_mhz / 1000) + 1;
+        trise = (300 * clk_mhz / 1000) + 1;
     } else {
         /* Tlow/Thigh = 1 */
         ccr = clk_hz / (100000 * 2);
@@ -534,28 +766,30 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
     i2c_set_trise(dev, trise);
 }
 
-void i2c_overclock(i2c_dev *dev, uint32 hz){
-    uint32 ccr     = 0;
-    uint32 trise   = 0;
-    uint32 clk_mhz = _i2c_bus_clk(dev);
-    uint32 clk_hz  = clk_mhz * (1000 * 1000);
-    i2c_peripheral_disable(dev);
 
-    /* Force Fast speed mode and 16/9 duty mode */
-    //ccr |= I2C_CCR_DUTY_16_9;
-    ccr |= I2C_CCR_FS;
+/**
+ * @brief callback for when the device acts as a slave. If using an rx buffer, this is triggered
+ * after the last byte, otherwise it is called for every incoming packet.
+ * @param dev I2C device
+ * @param msg The dev_msg to pass to the slave init code
+ * @param func The function pointer to call
+ */
+void i2c_slave_attach_recv_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_recv_callback_func func) {
+    dev->i2c_slave_recv_callback = func;
+    dev->i2c_slave_msg = msg;
+    msg->xferred = 0;
+}
 
-    /* calculating new value */
-    //ccr |= clk_hz / (hz * 25);
-    ccr |= clk_hz / (hz * 3);
-    trise = (125 * clk_mhz / 1000) + 1;
 
-    /* Set minimum required value if CCR < 1*/
-    if ((ccr & I2C_CCR_CCR) == 0) {
-        ccr |= 0x1;
-    }
-
-    i2c_set_clk_control(dev, ccr);
-    i2c_set_trise(dev, trise);
-    i2c_peripheral_enable(dev);
+/**
+ * @brief callback for when the device acts as a slave. If using a tx buffer, this is triggered
+ * after the device is successsfully addressed with SLA+R.
+ * @param dev I2C device
+ * @param msg The dev_msg to pass to the slave init code
+ * @param func The function pointer to call
+ */
+void i2c_slave_attach_transmit_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_transmit_callback_func func) {
+    dev->i2c_slave_transmit_callback = func;
+    dev->i2c_slave_msg = msg;
+    msg->xferred = 0;
 }

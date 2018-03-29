@@ -346,6 +346,8 @@ genericSTM32F103C.build.variant=generic_stm32f103c
 genericSTM32F103C.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103C.build.core=maple
 genericSTM32F103C.build.board=GENERIC_STM32F103C
+genericSTM32F103C.build.error_led_port=GPIOC
+genericSTM32F103C.build.error_led_pin=13
 genericSTM32F103C.upload.use_1200bps_touch=false
 genericSTM32F103C.upload.file_type=bin
 genericSTM32F103C.upload.auto_reset=true

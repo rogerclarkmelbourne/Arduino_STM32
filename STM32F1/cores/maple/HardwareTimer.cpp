@@ -30,6 +30,7 @@
 #include "ext_interrupts.h" // for noInterrupts(), interrupts()
 #include "wirish_math.h"
 #include <board/board.h>           // for CYCLES_PER_MICROSECOND
+#include <libmaple/dma.h>
 
 // TODO [0.1.0] Remove deprecated pieces
 
@@ -138,7 +139,6 @@ void HardwareTimer::detachInterrupt(int channel) {
     timer_detach_interrupt(this->dev, (uint8)channel);
 }
 
-
 void HardwareTimer::enableDMA(int channel) {
     timer_dma_enable_req(this->dev, (uint8)channel);
 }
@@ -156,28 +156,7 @@ void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
 	this->dev->regs.bas->CR2 |= mode;
 }
 
-/*  CARLOS Changes to add encoder mode.*/
-
-//direction of movement. (to be better described). 
-    uint8 HardwareTimer::getDirection(){
-        return get_direction(this->dev);
-    }
     
-//set if the encoder will count edges on one, which or both channels. 
-    void HardwareTimer::setEdgeCounting(uint32 counting) {
-        (dev->regs).gen->SMCR = counting;//TIMER_SMCR_SMS_ENCODER3; //choose encoder 3, counting on 
-    
-    }
-    
-    uint8 HardwareTimer::getEdgeCounting() {
-        return (dev->regs).gen->SMCR;
-    }
-    
-    
-
-//set the polarity of counting... not sure how interesting this is.. 
-    void HardwareTimer::setPolarity(){} 
-
 /* -- Deprecated predefined instances -------------------------------------- */
 
 HardwareTimer Timer1(1);
