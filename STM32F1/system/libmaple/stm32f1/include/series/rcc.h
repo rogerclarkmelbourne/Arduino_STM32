@@ -447,7 +447,8 @@ typedef enum rcc_clk_id {
  */
 typedef enum rcc_pllsrc {
     RCC_PLLSRC_HSE = (0x1 << 16),
-    RCC_PLLSRC_HSI_DIV_2 = (0x0 << 16)
+    RCC_PLLSRC_HSI_DIV_2 = (0x0 << 16),
+    RCC_PLLSRC_HSE_DIV_2 =(0x3 << 16)
 } rcc_pllsrc;
 
 /**

@@ -57,11 +57,17 @@
 	#endif
 #endif
 
+#ifdef HSE_16M
+    #define RCC_PLLSRC RCC_PLLSRC_HSE_DIV_2
+#else
+    #define RCC_PLLSRC RCC_PLLSRC_HSE
+#endif
+
 namespace wirish {
     namespace priv {
 
         static stm32f1_rcc_pll_data pll_data = {BOARD_RCC_PLLMUL};
-        __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSE, &pll_data};
+        __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC, &pll_data};
         __weak adc_prescaler w_adc_pre = ADC_PRE_PCLK2_DIV_6;
         __weak adc_smp_rate w_adc_smp = ADC_SMPR_55_5;
 

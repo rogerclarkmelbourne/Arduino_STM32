@@ -519,6 +519,9 @@ genericSTM32F103R.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 genericSTM32F103R.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 genericSTM32F103R.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
+genericSTM32F103R.menu.cpu_speed.speed_16m_crystal=72Mhz with 16Mhz HSE crystal
+genericSTM32F103R.menu.cpu_speed.speed_16m_crystal.build.f_cpu=72000000L
+genericSTM32F103R.menu.cpu_speed.speed_16m_crystal.build.hs_flag=-DHSE_16M
 
 #-- Optimizations
 genericSTM32F103R.menu.opt.osstd=Smallest (default)
