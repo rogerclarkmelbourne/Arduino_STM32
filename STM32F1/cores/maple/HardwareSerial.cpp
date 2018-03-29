@@ -187,7 +187,7 @@ int HardwareSerial::availableForWrite(void)
   return 1;
 }
 
-size_t HardwareSerial::write(uint8_t ch) {
+size_t HardwareSerial::write(unsigned char ch) {
 
     usart_putc(this->usart_device, ch);
 	return 1;
