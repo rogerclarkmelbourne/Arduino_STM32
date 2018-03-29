@@ -61,12 +61,6 @@
 #define CMD38_XFERTYP   (uint16_t)( CMD38  | CMD_RESP_R1b  )
 #define ACMD41_XFERTYP  (uint16_t)( ACMD41 | CMD_RESP_R3   )
 
-/*
- * AMD42 to enable disable CD/D3 pull up. Needed for 4bit mode.
- */
-const uint8_t ACMD42 = 0X2A;
-#define ACMD42_XFERTYP  (uint16_t)( ACMD41 | CMD_RESP_R1   )
-
 #define CMD55_XFERTYP   (uint16_t)( CMD55  | CMD_RESP_R1   )
 
 //=============================================================================
@@ -75,27 +69,14 @@ const uint8_t ACMD42 = 0X2A;
 static void initSDHC(void);
 static bool isBusyCMD13(void);
 static bool isBusyTransferComplete(void);
-static bool isBusyTransferCRC(void);
 //static bool isBusyCommandComplete();
 //static bool isBusyCommandInhibit();
 static bool readReg16(uint32_t xfertyp, void* data);
 //static void setSdclk(uint32_t kHzMax);
 static bool yieldTimeout(bool (*fcn)(void));
-static bool yieldDmaStatus(void);
 static bool waitDmaStatus(void);
 static bool waitTimeout(bool (*fcn)(void));
 //-----------------------------------------------------------------------------
-static const uint32_t IDLE_STATE = 0;
-static const uint32_t READ_STATE = 1;
-static const uint32_t WRITE_STATE = 2;
-volatile uint32_t m_curLba;
-volatile uint32_t m_limitLba;
-volatile uint8_t m_curState;
-volatile uint64_t m_totalReadLbas = 0;
-volatile uint64_t m_readErrors = 0;
-volatile uint64_t m_writeErrors = 0;
-volatile uint64_t m_totalWriteLbas = 0;
-
 #define TRX_RD 0
 #define TRX_WR 1
 static uint8_t m_dir = TRX_RD;
@@ -116,26 +97,27 @@ static cid_t m_cid;
 static csd_t m_csd;
 static uint32_t t = 0;
 //=============================================================================
-
+/*
+ *  Todo Remove this or change it, but rather remove since this can be checked with debugger.
+ */
 #if USE_DEBUG_MODE
 #define DBG_PRINT() { \
 	Serial.write('_'); Serial.print(__FUNCTION__); Serial.write('_'); Serial.print(__LINE__); Serial.print(": "); \
-	Serial.print("DMA->ISR: 0x"); Serial.print(SDIO_DMA_DEV->regs->ISR, HEX); \
+	Serial.print("DMA->LISR: "); Serial.print(SDIO_DMA_DEV->regs->LISR, HEX); \
 	/*Serial.print("DMA->HISR: "); Serial.println(SDIO_DMA_DEV->regs->HISR, HEX);*/ \
-	Serial.print(", DMA->CCR: 0x"); Serial.print(SDIO_DMA_DEV->regs->CCR4, HEX); \
-	Serial.print(", DMA->CNDTR: "); Serial.print(SDIO_DMA_DEV->regs->CNDTR4,DEC); \
-	/**/Serial.print(", DMA->CPAR: 0x"); Serial.print(SDIO_DMA_DEV->regs->CPAR4, HEX); \
-	/**/Serial.print(", DMA->CMAR: 0x"); Serial.print(SDIO_DMA_DEV->regs->CMAR4, HEX); \
-	Serial.print(", DMA->IFCR: 0x"); Serial.print(SDIO_DMA_DEV->regs->IFCR, HEX); \
+	Serial.print(", DMA->CR: "); Serial.print(SDIO_DMA_DEV->regs->STREAM[SDIO_DMA_CHANNEL].CR, HEX); \
+	Serial.print(", DMA->NDTR: "); Serial.print(SDIO_DMA_DEV->regs->STREAM[SDIO_DMA_CHANNEL].NDTR, HEX); \
+	/**/Serial.print(", DMA->PAR: "); Serial.print(SDIO_DMA_DEV->regs->STREAM[SDIO_DMA_CHANNEL].PAR, HEX); \
+	/**/Serial.print(", DMA->M0AR: "); Serial.print(SDIO_DMA_DEV->regs->STREAM[SDIO_DMA_CHANNEL].M0AR, HEX); \
+	Serial.print(", DMA->FCR: "); Serial.print(SDIO_DMA_DEV->regs->STREAM[SDIO_DMA_CHANNEL].FCR, HEX); \
  \
 	/*Serial.print(" SDIO->POWER: "); Serial.println(SDIO->POWER, HEX);*/ \
-	Serial.print(", SDIO->CLKCR: 0x"); Serial.print(SDIO->CLKCR, HEX); \
-	Serial.print(", SDIO->DTIMER: 0x"); Serial.print(SDIO->DTIMER, HEX); \
-	Serial.print(", SDIO->DCTRL: 0x"); Serial.print(SDIO->DCTRL, HEX); \
+	Serial.print(", SDIO->CLKCR: "); Serial.print(SDIO->CLKCR, HEX); \
+	Serial.print(", SDIO->DTIMER: "); Serial.print(SDIO->DTIMER, HEX); \
+	Serial.print(", SDIO->DCTRL: "); Serial.print(SDIO->DCTRL, HEX); \
 	/**/Serial.print(", SDIO->DLEN: "); Serial.print(SDIO->DLEN); \
 	Serial.print(", SDIO->DCOUNT: "); Serial.print(SDIO->DCOUNT); \
-	Serial.print(", SDIO->STA: 0x"); Serial.println(SDIO->STA, HEX); \
-	Serial.print(", SDIO->FIFOCNT: "); Serial.println(SDIO->FIFOCNT); \
+	Serial.print(", SDIO->STA: "); Serial.println(SDIO->STA, HEX); \
 	/*delay(1);*/ \
 }
 #define DBG_PIN PD0
@@ -149,7 +131,7 @@ static void _panic(const char *message, uint32_t code)
 {
 	Serial.print(message); Serial.println(code, HEX);
 	//Block the execution with blinky leds
-	while (1) {delay (1);};
+	while (1);
 /*
 	pinMode(BOARD_LED_PIN, OUTPUT);
 	//pinMode(BOARD_LED2_PIN, OUTPUT);
@@ -189,14 +171,13 @@ void yield(void)
 	}
 
 	val = dma_get_isr_bits(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-/*	if ( val & DMA_ISR_FEIF ) {
+	if ( val & DMA_ISR_FEIF ) {
 		val ^= DMA_ISR_FEIF;
 		dma_clear_isr_bits(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
 	}
-*/
 	if ( val ) {
 		if (val & DMA_ISR_TEIF) Serial.print(" TEIF");
-		//if (val & DMA_ISR_DMEIF) Serial.print(" DMEIF");
+		if (val & DMA_ISR_DMEIF) Serial.print(" DMEIF");
 		//if (val & DMA_ISR_FEIF) Serial.print(" FEIF");
 		_panic(" - DMA: Data Transmission Error ", val);
 	}
@@ -227,7 +208,7 @@ static bool cardCommand(uint16_t xfertyp, uint32_t arg)
 #if USE_DEBUG_MODE==2
 	Serial.print("cardCommand: "); Serial.print(xfertyp&SDIO_CMD_CMDINDEX); Serial.print(", arg: "); Serial.print(arg, HEX);
 #endif
-	uint8_t resp = sdio_cmd_send(xfertyp, arg); // returns non-zero if OK, zero if it fails
+	uint8_t resp = sdio_cmd_send(xfertyp, arg); // returns non-zero if fails, zero if OK
 #if USE_DEBUG_MODE==2
 	Serial.print(", resp: "); Serial.print(resp, HEX);
 	Serial.print(", SDIO->STA: "); Serial.print(SDIO->STA, HEX); Serial.print(", cmd_resp: "); Serial.print(SDIO->RESP[0], HEX);
@@ -283,38 +264,19 @@ static bool isBusyCMD13(void) {
   }
   return !(SDIO->RESP[0] & CARD_STATUS_READY_FOR_DATA);
 }
-
-/*
- * Returns False if DMA transfer disabled.
- * True otherwise
- */
-static bool inline isEnabledDMA(void)
-{
-    return dma_is_enabled(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-}
-
-/*
- * Returns False if DMA transfer is completed or in error.
- * True otherwise
- */
+/*---------------------------------------------------------------------------*/
 static bool isBusyDMA(void)
 {
-  if (!isEnabledDMA()) return false;
 	uint8_t isr = dma_get_isr_bits(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-  isr &= DMA_ISR_TCIF | DMA_ISR_TEIF;
+    isr &= DMA_ISR_TCIF | DMA_ISR_TEIF;
 	//if (isr&DMA_ISR_TCIF) dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
 	return !(isr); // ignore transfer error flag
 }
-
 /*---------------------------------------------------------------------------*/
-/*
- * Returns true while the transfer has not completed
- * False when it has completed.
- */
 static bool isBusyTransferComplete(void)
 {
 	uint32_t mask = SDIO->STA &(SDIO_STA_DATAEND | SDIO_STA_TRX_ERROR_FLAGS);
-//#if USE_DEBUG_MODE
+#if USE_DEBUG_MODE
 	if ( mask & SDIO_STA_TRX_ERROR_FLAGS ) {
 		Serial.print("XFER ERROR: SDIO->STA: "); Serial.print(SDIO->STA, HEX);
 		if (mask & SDIO_STA_STBITERR) Serial.print(" STBITERR");
@@ -324,43 +286,13 @@ static bool isBusyTransferComplete(void)
 		if (mask & SDIO_STA_DCRCFAIL) Serial.print(" DCRCFAIL");
 		Serial.println();
 	}
-//#endif
+#endif
 	if (mask) {
 		dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
 		return false;
 	}
 	return true;
 }
-
-
-/*
- * New function, to follow Reference Manual sequence.
- * Returns true if still not confirmed DBCKEND: Data block sent/received (CRC check passed)
- * False when it has completed the transfer with CRC check.
- */
-static bool isBusyTransferCRC(void)
-{
-    uint32_t mask = SDIO->STA &(SDIO_STA_DBCKEND | SDIO_STA_TRX_ERROR_FLAGS);
-#if USE_DEBUG_MODE
-    if ( mask & SDIO_STA_TRX_ERROR_FLAGS ) {
-        Serial.print("XFER ERROR: SDIO->STA: "); Serial.print(SDIO->STA, HEX);
-        if (mask & SDIO_STA_STBITERR) Serial.print(" STBITERR");
-        if (mask & SDIO_STA_RXOVERR)  Serial.print(" RXOVERR");
-        if (mask & SDIO_STA_TXUNDERR) Serial.print(" TXUNDERR");
-        if (mask & SDIO_STA_DTIMEOUT) Serial.print(" DTIMEOUT");
-        if (mask & SDIO_STA_DCRCFAIL) Serial.print(" DCRCFAIL");
-        Serial.println();
-    }
-#endif
-    if (mask) {
-        //dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-        //Serial.print("SDIO->STA SDIO_STA_DBCKEND"); Serial.println(SDIO->STA && SDIO_STA_DBCKEND, HEX);
-        return false;
-    }
-    return true;
-}
-
-
 /*---------------------------------------------------------------------------*/
 static void trxStart(uint8_t* buf, uint32_t n, uint8_t dir)
 {
@@ -376,12 +308,6 @@ static bool trxStop()
 	if (!cardCommand(CMD12_XFERTYP, 0)) {
 		return sdError(SD_CARD_ERROR_CMD12);
 	}
-	/*
-	 * Added this to wait to complete on sync.
-	 */
-   if (waitTimeout(isBusyCMD13)) {
-	 return sdError(SD_CARD_ERROR_CMD13);
-   }
 	if ( t ) {
 		Serial.print(", in "); Serial.println(millis()-t);
 		t = 0;
@@ -389,70 +315,52 @@ static bool trxStop()
 	return true;
 }
 /*---------------------------------------------------------------------------*/
-static bool dmaTrxStart(uint32_t n, uint8_t dir)
+static bool dmaTrxStart(uint8_t* buf, uint32_t n, uint8_t dir)
 {
-    uint32_t flags = (SDIO_BLOCKSIZE_512 | SDIO_DCTRL_DMAEN | SDIO_DCTRL_DTEN);
+	m_dir = dir;
+	if ((3 & (uint32_t)buf) || n == 0) { // check alignment
+		_panic("- transferStart: unaligned buffer address ", (uint32_t)buf);
+		return sdError(SD_CARD_ERROR_DMA);
+	}
+	if (dir==TRX_RD && yieldTimeout(isBusyCMD13)) {
+		return sdError(SD_CARD_ERROR_CMD13);
+	}
+	uint32_t flags = (SDIO_BLOCKSIZE_512 | SDIO_DCTRL_DMAEN | SDIO_DCTRL_DTEN);
 	if (dir==TRX_RD) flags |= SDIO_DIR_RX;
 	// setup SDIO to transfer n blocks of 512 bytes
 	sdio_setup_transfer(0x00FFFFFF, n, flags);
-
+	// setup SDIO_DMA_DEV stream 3 channel 4
+	/*
+	 * Moved to begin.
+	 */
+	//dma_init(SDIO_DMA_DEV);
+	/*
+	* Todo. Check this, channel must be disabled to change DMA priority, and seems like channel is not completing transfers
+	 */
+	//dma_set_priority(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, DMA_PRIORITY_VERY_HIGH);
+	flags = (DMA_MINC_MODE);
+	// not extra flag if read
+	if (dir!=TRX_RD) flags |= DMA_FROM_MEM;// write
+	dma_setup_transfer(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, &SDIO->FIFO, DMA_SIZE_32BITS,  buf, DMA_SIZE_32BITS, flags);
+	dma_set_num_transfers(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, n>>2); // F1 DMA controller counts each word as 1 data item.
+	//dma_set_fifo_flags(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, (DMA_FCR_DMDIS | DMA_FCR_FTH_FULL)); // disable direct mode | threshold FULL
+	dma_clear_isr_bits(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
+	dma_enable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
 	return true;
 }
-
-/*
- * This one replaces dmaTrxStart, and will just prepare the DMA part, then a new
- * one will enable the DMA reception as per the RM.
- */
-static bool dmaTrxPrepare(uint8_t* buf, uint32_t n, uint8_t dir)
-{
-    uint32_t flags;
-    m_dir = dir;
-    if ((3 & (uint32_t)buf) || n == 0) { // check alignment
-        _panic("- transferStart: unaligned buffer address ", (uint32_t)buf);
-        return sdError(SD_CARD_ERROR_DMA);
-    }
-    /*
-     * No point to wait here again if we always wait before calling this.
-    if (dir==TRX_RD && yieldTimeout(isBusyCMD13)) {
-        return sdError(SD_CARD_ERROR_CMD13);
-    }
-    */
-
-    /*
-     * Following RM 22.3.2. Setup DMA first, SDIO peripheral next
-     *
-     */
-    flags = (DMA_MINC_MODE);
-    // not extra flag if read
-    if (dir!=TRX_RD) flags |= DMA_FROM_MEM;// write
-    dma_setup_transfer(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, &SDIO->FIFO, DMA_SIZE_32BITS,  buf, DMA_SIZE_32BITS, flags);
-    dma_set_num_transfers(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, n>>2); // F1 DMA controller counts each word as 1 data item.
-    //dma_set_fifo_flags(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, (DMA_FCR_DMDIS | DMA_FCR_FTH_FULL)); // disable direct mode | threshold FULL
-    dma_clear_isr_bits(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-    dma_enable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-
-    return true;
-}
-
-
 /*---------------------------------------------------------------------------*/
 static bool dmaTrxEnd(bool multi_block)
 {
-    if(m_curState != READ_STATE){
-        if ( yieldTimeout(isBusyTransferComplete) ) {
-            DBG_PRINT();
-            if (m_dir==TRX_RD)
-                return sdError(SD_CARD_ERROR_READ_CRC);
-            else
-                return sdError(SD_CARD_ERROR_WRITE);
-        }
-    }
-
-	if ( !yieldDmaStatus() ) {
+	if ( !waitDmaStatus() ) {
 		DBG_PRINT();
 		return sdError(SD_CARD_ERROR_DMA);
 	}
-
+	if ( waitTimeout(isBusyTransferComplete) ) {
+		if (m_dir==TRX_RD)
+			return sdError(SD_CARD_ERROR_READ_TIMEOUT);
+		else
+			return sdError(SD_CARD_ERROR_WRITE_TIMEOUT);
+	}
 	if (multi_block) {
 		return trxStop();
 	} else {
@@ -481,38 +389,21 @@ static bool readReg16(uint32_t xfertyp, void* data)
 /*---------------------------------------------------------------------------*/
 // Return true if timeout occurs.
 static bool yieldTimeout(bool (*fcn)()) {
-  m_busyFcn = fcn;
   uint32_t m = millis();
   while (fcn()) {
     if ((millis() - m) > BUSY_TIMEOUT_MILLIS) {
-      m_busyFcn = 0;
       return true;
     }
     yield();
   }
-  m_busyFcn = 0;
   return false;  // Caller will set errorCode.
-}
-/*---------------------------------------------------------------------------*/
-static bool yieldDmaStatus(void)
-{
-  if (yieldTimeout(isBusyDMA)) {
-    dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-    return false;  // Caller will set errorCode.
-  }
-  // Did not time out. Disable it and return true.
-  dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-  return true;
 }
 /*---------------------------------------------------------------------------*/
 static bool waitDmaStatus(void)
 {
-  if (waitTimeout(isBusyDMA)) {
-    dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
+  if (yieldTimeout(isBusyDMA)) {
     return false;  // Caller will set errorCode.
   }
-  // Did not time out. Disable it and return true
-  dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
   return true;
 }
 /*---------------------------------------------------------------------------*/
@@ -532,8 +423,6 @@ uint32_t aligned[128]; // temporary buffer for misaligned buffers
 //=============================================================================
 bool SdioCard::begin(void)
 {
-
-  uint32_t arg;
   m_initDone = false;
   m_errorCode = SD_CARD_ERROR_NONE;
   m_highCapacity = false;
@@ -558,7 +447,6 @@ delay(100);
   if (!cardCommand(CMD0_XFERTYP, 0)) {
     return sdError(SD_CARD_ERROR_CMD0);
   }
-  delay(50); //small pause after reset command
   // Try several times for case of reset delay.
   for (uint32_t i = 0; i < CMD8_RETRIES; i++) {
     if (cardCommand(CMD8_XFERTYP, 0X1AA)) {
@@ -569,7 +457,7 @@ delay(100);
       break;
     }
   }
-  arg = m_version2 ? 0X50300000 : 0x00300000;
+  uint32_t arg = m_version2 ? 0X40300000 : 0x00300000;
   uint32_t m = millis();
   do {
     if (!cardAcmd(0, ACMD41_XFERTYP, arg) ||
@@ -590,7 +478,6 @@ delay(100);
     return sdError(SD_CARD_ERROR_CMD3);
   }
   m_rca = SDIO->RESP[0] & 0xFFFF0000;
-
   if (!readReg16(CMD9_XFERTYP, &m_csd)) {
     return sdError(SD_CARD_ERROR_CMD9);
   }
@@ -600,21 +487,14 @@ delay(100);
   if (!cardCommand(CMD7_XFERTYP, m_rca)) {
     return sdError(SD_CARD_ERROR_CMD7);
   }
-
-  arg = 0x00; //bit 0, Connect[1]/Disconnect[0] the 50 KOhm pull-up resistor on CD/DAT3
-  if (!cardAcmd(m_rca, ACMD42_XFERTYP, arg)) {
-      _panic("*** ACMD42 to disconnect D3 pullup failed! ***", 0);
-  }
-
   // Set card to bus width four.
+  /*
   if (!cardAcmd(m_rca, ACMD6_XFERTYP, 2)) {
     return sdError(SD_CARD_ERROR_ACMD6);
   }
-
-  // Set SDHC to bus width four.
   sdio_set_dbus_width(SDIO_CLKCR_WIDBUS_4BIT);
+	*/
 
-/*
   // Determine if High Speed mode is supported and set frequency.
   uint8_t status[64];
   // see "Physical Layer Simplified Specification Version 6.00", chapter 4.3.10, Table 4-13.
@@ -622,16 +502,15 @@ delay(100);
   // Function Selection of Function Group 1: bits 379:376, which is low nibble of byte [16]
   if (cardCMD6(0X00FFFFFF, status) && (2 & status[13]) &&
       cardCMD6(0X80FFFFF1, status) && (status[16] & 0XF) == 1) {
-	Serial.println("\n*** 50MHz clock supported ***");
-	  m_sdClkKhz = 24000;    // set clock to 24MHz
+	//Serial.println("\n*** 50MHz clock supported ***");
   } else {
 	//_panic("*** Only 25MHz clock supported! ***", 0);
-      m_sdClkKhz = 8000;  // set clock to 24MHz
   }
-  // delay seems to be needed for cards that take some time to adjust
-  delay(1);
-*/
-  m_sdClkKhz = 18000;    // set clock to 24MHz
+
+  /*
+   * Todo Raise clock to 24Mhz once transfers work
+   */
+  m_sdClkKhz = 24000;	// set clock to 24MHz
   sdio_set_clock(m_sdClkKhz*1000);
 
   m_initDone = true;
@@ -691,160 +570,55 @@ uint32_t SdioCard::kHzSdClk() {
   return m_sdClkKhz;
 }
 /*---------------------------------------------------------------------------*/
-bool __attribute__((optimize("0"))) SdioCard::readBlock(uint32_t lba, uint8_t* buf)
+bool SdioCard::readBlock(uint32_t lba, uint8_t* buf)
 {
 #if USE_DEBUG_MODE
-  Serial.print("readBlock: ");  Serial.println(lba); //Serial.print(", buf: "); Serial.println((uint32_t)buf, HEX);
+	Serial.print("readBlock: ");  Serial.println(lba); //Serial.print(", buf: "); Serial.println((uint32_t)buf, HEX);
 #endif
-  volatile bool _state = false;
-  volatile uint16_t retries = 3;
-  while ( retries-- ){
-    /*if (yieldTimeout(isBusyCMD13)) { // wait for previous transmission end
-	        return sdError(SD_CARD_ERROR_CMD13);
-	    }
-     */
-
-    if (m_curState != READ_STATE || m_curLba != lba) {
-#if USE_DEBUG_MODE
-      Serial.print("New lba, syncing :");
-      Serial.println(lba);
-#endif
-      _state = syncBlocks();
-      DBG_PRINT();
-      if (!_state) {
-        return false;
-      }
-      m_limitLba = (lba + 1024); //arbitrary limit, tested with 32KB before and worked fine.
-      // prepare DMA for data read transfer
-      _state = dmaTrxPrepare((uint32_t)buf & 3 ? (uint8_t*)aligned : buf, 512, TRX_RD);
-      DBG_PRINT();
-
-      // prepare SDIO data read transfer 0x8000 = 64*512
-      _state = dmaTrxStart(512, TRX_RD);
-      DBG_PRINT();
-
-      // send command to start data transfer
-      _state = cardCommand(CMD18_XFERTYP, (m_highCapacity ? lba : 512*lba));
-      DBG_PRINT();
-      if ( !_state ) {
-        return sdError(SD_CARD_ERROR_CMD18);
-      }
-
-      m_curLba = lba;
-      m_curState = READ_STATE;
-    }
-    else {
-      // prepare DMA for data read transfer
-      _state = dmaTrxPrepare((uint32_t)buf & 3 ? (uint8_t*)aligned : buf, 512, TRX_RD);
-
-      // prepare SDIO data read transfer
-      _state = dmaTrxStart(512, TRX_RD);
-    }
-
-
-    _state = dmaTrxEnd(0);
-
-    if ( _state ) {
-      if ( (uint32_t)buf & 3 ) {
-        //memcpy(buf, aligned, 512);
-        register uint8_t * dst = buf;
-        register uint8_t * src = (uint8_t *)aligned;
-        register uint16_t i = 64;
-        while ( i-- ) { // do 8 byte copies, is much faster than single byte copy
-          *dst++ = *src++; *dst++ = *src++; *dst++ = *src++; *dst++ = *src++;
-          *dst++ = *src++; *dst++ = *src++; *dst++ = *src++; *dst++ = *src++;
-        }
-      }
-      m_totalReadLbas++;
-      m_curLba++;
-      if (m_curLba >= m_limitLba) {
-        syncBlocks();
-      }
-      sdError(SD_CARD_ERROR_NONE);
-      return true;
-    }
-    syncBlocks();
-    m_readErrors++;
-
-  }
-  DBG_PRINT()
-  syncBlocks();
-  m_readErrors++;
-  return false;
+	// prepare SDIO and DMA for data read transfer
+	dmaTrxStart((uint32_t)buf & 3 ? (uint8_t*)aligned : buf, 512, TRX_RD);
+	// send command to start data transfer
+	if ( !cardCommand(CMD17_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
+		return sdError(SD_CARD_ERROR_CMD17);
+	}
+	if ( dmaTrxEnd(0)) {
+		if ( (uint32_t)buf & 3 ) {
+			//memcpy(buf, aligned, 512);
+			register uint8_t * dst = buf;
+			register uint8_t * src = (uint8_t *)aligned;
+			register uint16_t i = 64;
+			while ( i-- ) { // do 8 byte copies, is much faster than single byte copy
+				*dst++ = *src++; *dst++ = *src++; *dst++ = *src++; *dst++ = *src++;
+				*dst++ = *src++; *dst++ = *src++; *dst++ = *src++; *dst++ = *src++;
+			}
+		}
+		return true;
+	}
+	return false;
 }
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readBlocks(uint32_t lba, uint8_t* buf, size_t n)
 {
 #if USE_DEBUG_MODE
-    Serial.print("readBlocks: ");  Serial.print(lba);
-    //Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
-    Serial.print(", "); Serial.println(n);
+	Serial.print("readBlocks: ");  Serial.print(lba);
+	//Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
+	Serial.print(", "); Serial.println(n);
 #endif
-    volatile bool _state = false;
-    volatile uint16_t retries = 3;
-    while ( retries-- ){
-
-      if ((uint32_t)buf & 3) {
-          for (size_t i = 0; i < n; i++, lba++, buf += 512) {
-              if (!readBlock(lba, buf)) {
-                  return false;  // readBlock will set errorCode.
-              }
-          }
-          return true;
-      }
-
-      if (m_curState != READ_STATE || m_curLba != lba) {
-  #if USE_DEBUG_MODE
-        Serial.print("New lba, syncing :");
-        Serial.println(lba);
-  #endif
-        _state = syncBlocks();
-        DBG_PRINT();
-        if (!_state) {
-          return false;
-        }
-        m_limitLba = (lba + 1024); //arbitrary limit
-        // prepare DMA for data read transfer
-        _state = dmaTrxPrepare(buf, 512*n, TRX_RD);
-
-        // prepare SDIO for data read transfer
-        _state = dmaTrxStart(512*n, TRX_RD);
-
-        // send command to start data transfer
-        _state = cardCommand(CMD18_XFERTYP, (m_highCapacity ? lba : 512*lba));
-        if ( !_state ) {
-            return sdError(SD_CARD_ERROR_CMD18);
-        }
-        m_curLba = lba;
-        m_curState = READ_STATE;
-      }
-
-      else {
-        // prepare DMA for data read transfer
-        _state = dmaTrxPrepare(buf, 512*n, TRX_RD);
-
-        // prepare SDIO data read transfer
-        _state = dmaTrxStart(512*n, TRX_RD);
-      }
-
-      _state = dmaTrxEnd(0);
-
-        if (_state){
-          m_totalReadLbas += n;
-          m_curLba += n;
-          if (m_curLba >= m_limitLba) {
-            syncBlocks();
-          }
-          sdError(SD_CARD_ERROR_NONE);
-          return true;
-        }
-        syncBlocks();
-        m_readErrors++;
-    }
-    DBG_PRINT()
-    syncBlocks();
-    m_readErrors++;
-    return false;
+	if ((uint32_t)buf & 3) {
+		for (size_t i = 0; i < n; i++, lba++, buf += 512) {
+			if (!readBlock(lba, buf)) {
+				return false;  // readBlock will set errorCode.
+			}
+		}
+		return true;
+	}
+	// prepare SDIO and DMA for data read transfer
+	dmaTrxStart(buf, 512*n, TRX_RD);
+	// send command to start data transfer
+	if ( !cardCommand(CMD18_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
+		return sdError(SD_CARD_ERROR_CMD18);
+	}
+	return dmaTrxEnd(1);
 }
 //-----------------------------------------------------------------------------
 bool SdioCard::readCID(void* cid) {
@@ -925,36 +699,13 @@ bool SdioCard::readStart(uint32_t lba, uint32_t count)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readStop()
 {
-
-    sdio_setup_transfer(0x00FFFFFF, 0, 0);
-    while ( SDIO->STA & SDIO_STA_RXDAVL) {
-         volatile uint32 _unused = SDIO->FIFO;
-    }
 	//Serial.println("readStop.");
-    m_lba = 0;
-    if (!trxStop()) {
-      return false;
-    }
-    return true;
+  m_lba = 0;
+  m_cnt = 0;
+  return true;
 }
 //-----------------------------------------------------------------------------
-inline bool SdioCard::syncBlocks() {
-  if ( isEnabledDMA()){
-    waitDmaStatus();
-  }
-  if (m_curState == READ_STATE) {
-    /*      if ( isEnabledDMA()){
-          waitDmaStatus();
-        }
-     */
-    m_curState = IDLE_STATE;
-    if (!readStop()) {
-      return false;
-    }
-  } else if (m_curState == WRITE_STATE) {
-    m_curState = IDLE_STATE;
-    return writeStop();
-  }
+bool SdioCard::syncBlocks() {
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -982,48 +733,17 @@ bool SdioCard::writeBlock(uint32_t lba, const uint8_t* buf)
 			*dst++ = *src++; *dst++ = *src++; *dst++ = *src++; *dst++ = *src++;
 		}
 	}
-
-
-
-	if (m_curState != WRITE_STATE || m_curLba != lba) {
-	    if (!syncBlocks()) {
-	        return false;
-	    }
-
-	    m_limitLba = (lba + 1024); //arbitrary limit
-
-	    // prepare DMA for data transfer
-	    dmaTrxPrepare(ptr, 512, TRX_WR); // 1 block, write transfer
-
-	    // send command to start data transfer
-	    if ( !cardCommand(CMD25_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
-	        return sdError(SD_CARD_ERROR_CMD25);
-	    }
-	    m_curLba = lba;
-	    m_curState = WRITE_STATE;
-
+	if (yieldTimeout(isBusyCMD13)) { // wait for previous transmission end
+		return sdError(SD_CARD_ERROR_CMD13);
 	}
-	else {
-	    if (yieldTimeout(isBusyCMD13)) { // wait for previous transmission end
-	        return sdError(SD_CARD_ERROR_CMD13);
-	    }
-        // prepare DMA for data transfer
-        dmaTrxPrepare(ptr, 512, TRX_WR); // 1 block, write transfer
+	// send command to start data transfer
+	if ( !cardCommand(CMD24_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
+		return sdError(SD_CARD_ERROR_CMD24);
 	}
+	// prepare SDIO and DMA for data transfer
+	dmaTrxStart(ptr, 512, TRX_WR); // 1 block, write transfer
 
-	// prepare SDIO for data transfer
-	dmaTrxStart(512, TRX_WR); // 1 block, write transfer
-
-    if (!dmaTrxEnd(0)){
-        m_curState = IDLE_STATE;
-        m_writeErrors++;
-        return false;
-    }
-    m_curLba++;
-    if (m_curLba >= m_limitLba) {
-      syncBlocks();
-    }
-	return true;
+	return dmaTrxEnd(0);
 }
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeBlocks(uint32_t lba, const uint8_t* buf, size_t n)
@@ -1050,43 +770,14 @@ bool SdioCard::writeBlocks(uint32_t lba, const uint8_t* buf, size_t n)
 		return sdError(SD_CARD_ERROR_ACMD23);
 	}
 #endif
+	// send command to start data transfer
+	if ( !cardCommand(CMD25_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
+		return sdError(SD_CARD_ERROR_CMD25);
+	}
+	// prepare SDIO and DMA for data transfer
+	dmaTrxStart((uint8_t *)buf, 512*n, TRX_WR); // n blocks, write transfer
 
-    if (m_curState != WRITE_STATE || m_curLba != lba) {
-        if (!syncBlocks()) {
-            return false;
-        }
-
-        m_limitLba = (lba + 1024); //arbitrary limit, 512KB
-        // prepare DMA for data transfer
-        dmaTrxPrepare((uint8_t *)buf, 512*n, TRX_WR); // n blocks, write transfer
-
-        // send command to start data transfer
-        if ( !cardCommand(CMD25_XFERTYP, (m_highCapacity ? lba : 512*lba)) ) {
-            return sdError(SD_CARD_ERROR_CMD25);
-        }
-        m_curLba = lba;
-        m_curState = WRITE_STATE;
-
-    }
-    else {
-        // prepare DMA for data transfer
-        dmaTrxPrepare((uint8_t *)buf, 512*n, TRX_WR); // n blocks, write transfer
-    }
-
-    // prepare SDIO for data transfer
-    dmaTrxStart(512*n, TRX_WR); // n blocks, write transfer
-
-    if (!dmaTrxEnd(0)){
-        m_writeErrors++;
-        m_curState = IDLE_STATE;
-        return false;
-    }
-    m_curLba += n;
-    if (m_curLba >= m_limitLba) {
-      syncBlocks();
-    }
-    return true;
-
+	return dmaTrxEnd(1);
 }
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeData(const uint8_t* src)
@@ -1154,14 +845,8 @@ bool SdioCard::writeStart(uint32_t lba, uint32_t count)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeStop()
 {
-    if ( isEnabledDMA()){
-        if ( !waitDmaStatus() ) {
-            DBG_PRINT();
-            return sdError(SD_CARD_ERROR_DMA);
-        }
-    }
-    m_lba = 0;
-    m_curState = IDLE_STATE;
-    return trxStop();
-    //Serial.println("writeStop.");
+	//Serial.println("writeStop.");
+  m_lba = 0;
+  m_cnt = 0;
+  return true;
 }

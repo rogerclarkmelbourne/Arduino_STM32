@@ -1,6 +1,6 @@
 
-#ifndef _SDIOF1_H_
-#define _SDIOF1_H_
+#ifndef _SDIOF4_H_
+#define _SDIOF4_H_
 
 #include <SdFat.h>
 
