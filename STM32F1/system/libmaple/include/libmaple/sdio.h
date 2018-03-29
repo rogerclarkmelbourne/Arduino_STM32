@@ -57,7 +57,7 @@ typedef struct sdio_reg_map {
     __io uint32 ARG;      // 0x08
     __io uint32 CMD;      // 0x0C
     __io uint32 RESPCMD;  // 0x10 (0x3F)
-    const uint32 RESP[4]; // 0x14 - contain the card status, which is part of the received response.
+    __io const uint32 RESP[4]; // 0x14 - contain the card status, which is part of the received response.
     __io uint32 DTIMER;   // 0x24 - contains the data timeout period, in card bus clock periods.
     __io uint32 DLEN;     // 0x28 (0x01FF FFFF) - contains the number of data bytes to be transferred
     __io uint32 DCTRL;    // 0x2C
@@ -95,7 +95,7 @@ extern sdio_dev * SDIO;
 // After a data write, data cannot be written to this register for three SDIOCLK clock periods
 // plus two PCLK2 clock periods. SDIO_CK can also be stopped during the read wait interval
 // for SD I/O cards: in this case the SDIO_CLKCR register does not control SDIO_CK.
-#define SDIO_CLKCR_HWFC_EN          (1<<14) // HW Flow Control enable - DON'T USE!!! (see errata sheet 2.12.1)
+#define SDIO_CLKCR_HWFC_EN          (1<<14) // HW Flow Control enable - DON'T USE in F4!!! (see errata sheet 2.12.1)
                                             // Overrun errors (Rx mode) and FIFO underrun (Tx mode)
 											// should be managed by the application software.
 #define SDIO_CLKCR_NEGEDGE          (1<<13) // SDIO_CK de-phasing selection bit - DON'T USE!!! (see errata sheet 2.12.4)
@@ -106,7 +106,7 @@ extern sdio_dev * SDIO;
 #define SDIO_CLKCR_PWRSAV           (1<<9)  // 0: SDIO_CK clock is always enabled, 1: SDIO_CK is only enabled when the bus is active
 #define SDIO_CLKCR_CLKEN            (1<<8)  // Clock enable
 #define SDIO_CLKCR_CLKDIV           (0xFF)  // SDIO_CK = SDIOCLK / [CLKDIV + 2]
-#define SDIOCLK 					72000000UL // SDIO master clock frequency
+#define SDIOCLK 					PCLK2 // SDIO master clock frequency
 
 // SDIO_CMD register bits
 // After a data write, data cannot be written to this register for three SDIOCLK clock periods
