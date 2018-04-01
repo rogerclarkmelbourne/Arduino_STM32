@@ -418,7 +418,7 @@ extern timer_dev timer14;
 #define TIMER_CCMR2_OC3FE_BIT           2
 
 #define TIMER_CCMR2_OC4CE               (1U << TIMER_CCMR2_OC4CE_BIT)
-#define TIMER_CCMR2_OC4M                (0x3 << 12)
+#define TIMER_CCMR2_OC4M                (0x7 << 12)
 #define TIMER_CCMR2_IC4F                (0xF << 12)
 #define TIMER_CCMR2_OC4PE               (1U << TIMER_CCMR2_OC4PE_BIT)
 #define TIMER_CCMR2_OC4FE               (1U << TIMER_CCMR2_OC4FE_BIT)
@@ -429,7 +429,7 @@ extern timer_dev timer14;
 #define TIMER_CCMR2_CC4S_INPUT_TI3      (0x2 << 8)
 #define TIMER_CCMR2_CC4S_INPUT_TRC      (0x3 << 8)
 #define TIMER_CCMR2_OC3CE               (1U << TIMER_CCMR2_OC3CE_BIT)
-#define TIMER_CCMR2_OC3M                (0x3 << 4)
+#define TIMER_CCMR2_OC3M                (0x7 << 4)
 #define TIMER_CCMR2_IC3F                (0xF << 4)
 #define TIMER_CCMR2_OC3PE               (1U << TIMER_CCMR2_OC3PE_BIT)
 #define TIMER_CCMR2_OC3FE               (1U << TIMER_CCMR2_OC3FE_BIT)
