@@ -1,6 +1,22 @@
 #include "EEPROM.h"
 // See http://www.st.com/web/en/resource/technical/document/application_note/CD00165693.pdf
 
+static const uint32_t flashSize =
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 768*1024 ? 1024*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 512*1024 ? 768*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 384*1024 ? 512*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 256*1024 ? 384*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 128*1024 ? 256*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 64*1024 ? 128*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 32*1024 ? 64*1024 : 
+    ARDUINO_UPLOAD_MAXIMUM_SIZE > 16*1024 ? 32*1024 : 
+    16*1024;
+    
+static const uint32_t eepromPageSize = flashSize <= 128*1024 ? 1024 : 2048;
+static const uint32_t eepromStartAddress = 0x8000000 + flashSize - 2 * eepromPageSize;
+static const uint32_t eepromPage0Base = eepromStartAddress;
+static const uint32_t eepromPage1Base = eepromStartAddress + eepromPageSize;
+
 /**
   * @brief  Check page for blank
   * @param  page base address
@@ -281,9 +297,9 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 
 EEPROMClass::EEPROMClass(void)
 {
-	PageBase0 = EEPROM_PAGE0_BASE;
-	PageBase1 = EEPROM_PAGE1_BASE;
-	PageSize = EEPROM_PAGE_SIZE;
+	PageBase0 = eepromPage0Base;
+	PageBase1 = eepromPage1Base;
+	PageSize = eepromPageSize;
 	Status = EEPROM_NOT_INIT;
 }
 
