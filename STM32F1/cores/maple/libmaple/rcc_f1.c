@@ -69,10 +69,12 @@ const struct rcc_dev_info rcc_dev_table[] = {
     [RCC_FLITF]  = { .clk_domain = AHB,  .line_num = 4},
     [RCC_SRAM]   = { .clk_domain = AHB,  .line_num = 2},
     [RCC_USB]    = { .clk_domain = APB1, .line_num = 23},
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+#if STM32_NR_GPIO_PORTS > 4
     [RCC_GPIOE]  = { .clk_domain = APB2, .line_num = 6 },
     [RCC_GPIOF]  = { .clk_domain = APB2, .line_num = 7 },
     [RCC_GPIOG]  = { .clk_domain = APB2, .line_num = 8 },
+#endif
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
     [RCC_UART4]  = { .clk_domain = APB1, .line_num = 19 },
     [RCC_UART5]  = { .clk_domain = APB1, .line_num = 20 },
     [RCC_TIMER5] = { .clk_domain = APB1, .line_num = 3 },
