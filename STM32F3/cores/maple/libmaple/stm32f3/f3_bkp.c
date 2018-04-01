@@ -41,7 +41,7 @@ void bkp_init(void) {
     rcc_clk_enable(RCC_PWR);
 }
 
-inline __io uint32* bkp_data_register(uint8 reg) {
+inline __IO uint32* bkp_data_register(uint8 reg) {
     if (reg < 1 || reg > BKP_NR_DATA_REGS)
 			return NULL;
 		else

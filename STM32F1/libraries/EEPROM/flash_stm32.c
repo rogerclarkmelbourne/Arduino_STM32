@@ -17,7 +17,7 @@
   */
 static void delay(void)
 {
-	__io uint32 i = 0;
+	__IO uint32 i = 0;
 	for(i = 0xFF; i != 0; i--) { }
 }
 
@@ -122,7 +122,7 @@ FLASH_Status FLASH_ProgramHalfWord(uint32 Address, uint16 Data)
 		{
 			/* if the previous operation is completed, proceed to program the new data */
 			FLASH_BASE->CR |= FLASH_CR_PG;
-			*(__io uint16*)Address = Data;
+			*(__IO uint16*)Address = Data;
 			/* Wait for last operation to be completed */
 			status = FLASH_WaitForLastOperation(ProgramTimeout);
 			if(status != FLASH_TIMEOUT)

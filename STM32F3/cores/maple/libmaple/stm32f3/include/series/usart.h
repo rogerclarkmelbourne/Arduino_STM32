@@ -45,18 +45,18 @@ extern "C"{
 
 /** USART register map type */
 typedef struct usart_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 CR3;            /**< Control register 3 */
-    __io uint32 BRR;            /**< Baud rate register */
-    __io uint32 GTPR;           /**< Guard time and prescaler register */
-    __io uint32 RTOR;           /**< Receiver timeout register */
-    __io uint32 RQR;            /**< Request register */
-    __io uint32 SR;             /**< ISR Interrupt and status register */
-    __io uint32 ICR;            /**< Interrupt clear register */
-    __io uint16 RDR;            /**< Receive data register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 CR3;            /**< Control register 3 */
+    __IO uint32 BRR;            /**< Baud rate register */
+    __IO uint32 GTPR;           /**< Guard time and prescaler register */
+    __IO uint32 RTOR;           /**< Receiver timeout register */
+    __IO uint32 RQR;            /**< Request register */
+    __IO uint32 SR;             /**< ISR Interrupt and status register */
+    __IO uint32 ICR;            /**< Interrupt clear register */
+    __IO uint16 RDR;            /**< Receive data register */
 		uint16 RESERVED1;
-    __io uint16 TDR;            /**< Transmit data register */
+    __IO uint16 TDR;            /**< Transmit data register */
 		uint16 RESERVED2;
 } usart_reg_map;
 

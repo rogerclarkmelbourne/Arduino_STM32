@@ -47,7 +47,7 @@ extern "C"{
  * OpAmp individual register map type.
  */
 typedef struct opamp_reg_map {
-	__io uint32 CSR;				/**< */
+	__IO uint32 CSR;				/**< */
 } opamp_reg_map;
 
 /** OpAmp device type. */

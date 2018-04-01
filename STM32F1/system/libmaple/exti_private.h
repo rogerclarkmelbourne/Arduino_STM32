@@ -29,6 +29,6 @@
 
 #include <libmaple/exti.h>
 
-void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port);
+void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port);
 
 #endif

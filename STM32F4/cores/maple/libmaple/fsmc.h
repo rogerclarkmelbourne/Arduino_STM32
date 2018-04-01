@@ -55,42 +55,42 @@ extern "C"{
 
 /** FSMC register map type */
 typedef struct fsmc_reg_map {
-    __io uint32 BCR1; /**< SRAM/NOR-Flash chip-select control register 1 */
-    __io uint32 BTR1; /**< SRAM/NOR-Flash chip-select timing register 1 */
-    __io uint32 BCR2; /**< SRAM/NOR-Flash chip-select control register 2 */
-    __io uint32 BTR2; /**< SRAM/NOR-Flash chip-select timing register 2 */
-    __io uint32 BCR3; /**< SRAM/NOR-Flash chip-select control register 3 */
-    __io uint32 BTR3; /**< SRAM/NOR-Flash chip-select timing register 3 */
-    __io uint32 BCR4; /**< SRAM/NOR-Flash chip-select control register 4 */
-    __io uint32 BTR4; /**< SRAM/NOR-Flash chip-select timing register 4 */
+    __IO uint32 BCR1; /**< SRAM/NOR-Flash chip-select control register 1 */
+    __IO uint32 BTR1; /**< SRAM/NOR-Flash chip-select timing register 1 */
+    __IO uint32 BCR2; /**< SRAM/NOR-Flash chip-select control register 2 */
+    __IO uint32 BTR2; /**< SRAM/NOR-Flash chip-select timing register 2 */
+    __IO uint32 BCR3; /**< SRAM/NOR-Flash chip-select control register 3 */
+    __IO uint32 BTR3; /**< SRAM/NOR-Flash chip-select timing register 3 */
+    __IO uint32 BCR4; /**< SRAM/NOR-Flash chip-select control register 4 */
+    __IO uint32 BTR4; /**< SRAM/NOR-Flash chip-select timing register 4 */
     const uint32 RESERVED1[16];  /**< Reserved */
-    __io uint32 PCR2;  /**< PC Card/NAND Flash control register 2 */
-    __io uint32 SR2;   /**< FIFO status and interrupt register 2 */
-    __io uint32 PMEM2; /**< Common memory space timing register 2 */
-    __io uint32 PATT2; /**< Attribute memory space timing register 2 */
+    __IO uint32 PCR2;  /**< PC Card/NAND Flash control register 2 */
+    __IO uint32 SR2;   /**< FIFO status and interrupt register 2 */
+    __IO uint32 PMEM2; /**< Common memory space timing register 2 */
+    __IO uint32 PATT2; /**< Attribute memory space timing register 2 */
     const uint32 RESERVED2;   /**< Reserved */
-    __io uint32 ECCR2; /**< ECC result register 2 */
+    __IO uint32 ECCR2; /**< ECC result register 2 */
     const uint32 RESERVED3[2];   /**< Reserved */
-    __io uint32 PCR3;  /**< PC Card/NAND Flash control register 3 */
-    __io uint32 SR3;   /**< FIFO status and interrupt register 3 */
-    __io uint32 PMEM3; /**< Common memory space timing register 3 */
-    __io uint32 PATT3; /**< Attribute memory space timing register 3 */
+    __IO uint32 PCR3;  /**< PC Card/NAND Flash control register 3 */
+    __IO uint32 SR3;   /**< FIFO status and interrupt register 3 */
+    __IO uint32 PMEM3; /**< Common memory space timing register 3 */
+    __IO uint32 PATT3; /**< Attribute memory space timing register 3 */
     const uint32 RESERVED4;     /**< Reserved */
-    __io uint32 ECCR3; /**< ECC result register 3 */
+    __IO uint32 ECCR3; /**< ECC result register 3 */
     const uint32 RESERVED5[2];   /**< Reserved */
-    __io uint32 PCR4;  /**< PC Card/NAND Flash control register 4 */
-    __io uint32 SR4;   /**< FIFO status and interrupt register 4 */
-    __io uint32 PMEM4; /**< Common memory space timing register 4 */
-    __io uint32 PATT4; /**< Attribute memory space timing register 4 */
-    __io uint32 PIO4;  /**< I/O space timing register 4 */
+    __IO uint32 PCR4;  /**< PC Card/NAND Flash control register 4 */
+    __IO uint32 SR4;   /**< FIFO status and interrupt register 4 */
+    __IO uint32 PMEM4; /**< Common memory space timing register 4 */
+    __IO uint32 PATT4; /**< Attribute memory space timing register 4 */
+    __IO uint32 PIO4;  /**< I/O space timing register 4 */
     const uint32 RESERVED6[20];  /**< Reserved */
-    __io uint32 BWTR1; /**< SRAM/NOR-Flash write timing register 1 */
+    __IO uint32 BWTR1; /**< SRAM/NOR-Flash write timing register 1 */
     const uint32 RESERVED7;     /**< Reserved */
-    __io uint32 BWTR2; /**< SRAM/NOR-Flash write timing register 2 */
+    __IO uint32 BWTR2; /**< SRAM/NOR-Flash write timing register 2 */
     const uint32 RESERVED8;     /**< Reserved */
-    __io uint32 BWTR3; /**< SRAM/NOR-Flash write timing register 3 */
+    __IO uint32 BWTR3; /**< SRAM/NOR-Flash write timing register 3 */
     const uint32 RESERVED9;     /**< Reserved */
-    __io uint32 BWTR4; /**< SRAM/NOR-Flash write timing register 4 */
+    __IO uint32 BWTR4; /**< SRAM/NOR-Flash write timing register 4 */
 } __attribute__((packed)) fsmc_reg_map;
 
 #define __FSMCB                         0xA0000000
@@ -100,10 +100,10 @@ typedef struct fsmc_reg_map {
 
 /** FSMC NOR/PSRAM register map type */
 typedef struct fsmc_nor_psram_reg_map {
-    __io uint32 BCR;            /**< Chip-select control register */
-    __io uint32 BTR;            /**< Chip-select timing register */
+    __IO uint32 BCR;            /**< Chip-select control register */
+    __IO uint32 BTR;            /**< Chip-select timing register */
     const uint32 RESERVED[63];  /**< Reserved */
-    __io uint32 BWTR;           /**< Write timing register */
+    __IO uint32 BWTR;           /**< Write timing register */
 } fsmc_nor_psram_reg_map;
 
 /** FSMC NOR/PSRAM base pointer 1 */

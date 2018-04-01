@@ -13,10 +13,10 @@ uint16 EEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
 	uint32 pageEnd = pageBase + (uint32)PageSize;
 
 	// Page Status not EEPROM_ERASED and not a "state"
-	if ((*(__io uint16*)pageBase) != EEPROM_ERASED && (*(__io uint16*)pageBase) != status)
+	if ((*(__IO uint16*)pageBase) != EEPROM_ERASED && (*(__IO uint16*)pageBase) != status)
 		return EEPROM_BAD_FLASH;
 	for(pageBase += 4; pageBase < pageEnd; pageBase += 4)
-		if ((*(__io uint32*)pageBase) != 0xFFFFFFFF)	// Verify if slot is empty
+		if ((*(__IO uint32*)pageBase) != 0xFFFFFFFF)	// Verify if slot is empty
 			return EEPROM_BAD_FLASH;
 	return EEPROM_OK;
 }
@@ -31,9 +31,9 @@ uint16 EEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
 FLASH_Status EEPROMClass::EE_ErasePage(uint32 pageBase)
 {
 	FLASH_Status FlashStatus;
-	uint16 data = (*(__io uint16*)(pageBase));
+	uint16 data = (*(__IO uint16*)(pageBase));
 	if ((data == EEPROM_ERASED) || (data == EEPROM_VALID_PAGE) || (data == EEPROM_RECEIVE_DATA))
-		data = (*(__io uint16*)(pageBase + 2)) + 1;
+		data = (*(__IO uint16*)(pageBase + 2)) + 1;
 	else
 		data = 0;
 
@@ -73,8 +73,8 @@ uint16 EEPROMClass::EE_CheckErasePage(uint32 pageBase, uint16 status)
   */
 uint32 EEPROMClass::EE_FindValidPage(void)
 {
-	uint16 status0 = (*(__io uint16*)PageBase0);		// Get Page0 actual status
-	uint16 status1 = (*(__io uint16*)PageBase1);		// Get Page1 actual status
+	uint16 status0 = (*(__IO uint16*)PageBase0);		// Get Page0 actual status
+	uint16 status1 = (*(__IO uint16*)PageBase1);		// Get Page1 actual status
 
 	if (status0 == EEPROM_VALID_PAGE && status1 == EEPROM_ERASED)
 		return PageBase0;
@@ -100,14 +100,14 @@ uint16 EEPROMClass::EE_GetVariablesCount(uint32 pageBase, uint16 skipAddress)
 
 	for (pageBase += 6; pageBase < pageEnd; pageBase += 4)
 	{
-		varAddress = (*(__io uint16*)pageBase);
+		varAddress = (*(__IO uint16*)pageBase);
 		if (varAddress == 0xFFFF || varAddress == skipAddress)
 			continue;
 
 		count++;
 		for(idx = pageBase + 4; idx < pageEnd; idx += 4)
 		{
-			nextAddress = (*(__io uint16*)idx);
+			nextAddress = (*(__IO uint16*)idx);
 			if (nextAddress == varAddress)
 			{
 				count--;
@@ -140,7 +140,7 @@ uint16 EEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipA
 
 	// Find first free element in new page
 	for (newIdx = newPage + 4; newIdx < newEnd; newIdx += 4)
-		if ((*(__io uint32*)newIdx) == 0xFFFFFFFF)	// Verify if element
+		if ((*(__IO uint32*)newIdx) == 0xFFFFFFFF)	// Verify if element
 			break;									//  contents are 0xFFFFFFFF
 	if (newIdx >= newEnd)
 		return EEPROM_OUT_SIZE;
@@ -150,13 +150,13 @@ uint16 EEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipA
 
 	for (; oldIdx > oldEnd; oldIdx -= 4)
 	{
-		address = *(__io uint16*)oldIdx;
+		address = *(__IO uint16*)oldIdx;
 		if (address == 0xFFFF || address == SkipAddress)
 			continue;						// it's means that power off after write data
 
 		found = 0;
 		for (idx = newPage + 6; idx < newIdx; idx += 4)
-			if ((*(__io uint16*)(idx)) == address)
+			if ((*(__IO uint16*)(idx)) == address)
 			{
 				found = 1;
 				break;
@@ -167,7 +167,7 @@ uint16 EEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipA
 
 		if (newIdx < newEnd)
 		{
-			data = (*(__io uint16*)(oldIdx - 2));
+			data = (*(__IO uint16*)(oldIdx - 2));
 
 			FlashStatus = FLASH_ProgramHalfWord(newIdx, data);
 			if (FlashStatus != FLASH_COMPLETE)
@@ -223,9 +223,9 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 
 	for (idx = pageEnd - 2; idx > pageBase; idx -= 4)
 	{
-		if ((*(__io uint16*)idx) == Address)		// Find last value for address
+		if ((*(__IO uint16*)idx) == Address)		// Find last value for address
 		{
-			count = (*(__io uint16*)(idx - 2));	// Read last data
+			count = (*(__IO uint16*)(idx - 2));	// Read last data
 			if (count == Data)
 				return EEPROM_OK;
 			if (count == 0xFFFF)
@@ -240,7 +240,7 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 
 	// Check each active page address starting from begining
 	for (idx = pageBase + 4; idx < pageEnd; idx += 4)
-		if ((*(__io uint32*)idx) == 0xFFFFFFFF)				// Verify if element 
+		if ((*(__IO uint32*)idx) == 0xFFFFFFFF)				// Verify if element 
 		{													//  contents are 0xFFFFFFFF
 			FlashStatus = FLASH_ProgramHalfWord(idx, Data);	// Set variable data
 			if (FlashStatus != FLASH_COMPLETE)
@@ -303,8 +303,8 @@ uint16 EEPROMClass::init(void)
 	FLASH_Unlock();
 	Status = EEPROM_NO_VALID_PAGE;
 
-	status0 = (*(__io uint16 *)PageBase0);
-	status1 = (*(__io uint16 *)PageBase1);
+	status0 = (*(__IO uint16 *)PageBase0);
+	status1 = (*(__IO uint16 *)PageBase1);
 
 	switch (status0)
 	{
@@ -407,7 +407,7 @@ uint16 EEPROMClass::format(void)
 	status = EE_CheckErasePage(PageBase0, EEPROM_VALID_PAGE);
 	if (status != EEPROM_OK)
 		return status;
-	if ((*(__io uint16*)PageBase0) == EEPROM_ERASED)
+	if ((*(__IO uint16*)PageBase0) == EEPROM_ERASED)
 	{
 		// Set Page0 as valid page: Write VALID_PAGE at Page0 base address
 		FlashStatus = FLASH_ProgramHalfWord(PageBase0, EEPROM_VALID_PAGE);
@@ -437,7 +437,7 @@ uint16 EEPROMClass::erases(uint16 *Erases)
 	if (pageBase == 0)
 		return  EEPROM_NO_VALID_PAGE;
 
-	*Erases = (*(__io uint16*)pageBase+2);
+	*Erases = (*(__IO uint16*)pageBase+2);
 	return EEPROM_OK;
 }
 
@@ -485,9 +485,9 @@ uint16 EEPROMClass::read(uint16 Address, uint16 *Data)
 	
 	// Check each active page address starting from end
 	for (pageBase += 6; pageEnd >= pageBase; pageEnd -= 4)
-		if ((*(__io uint16*)pageEnd) == Address)		// Compare the read address with the virtual address
+		if ((*(__IO uint16*)pageEnd) == Address)		// Compare the read address with the virtual address
 		{
-			*Data = (*(__io uint16*)(pageEnd - 2));		// Get content of Address-2 which is variable value
+			*Data = (*(__IO uint16*)(pageEnd - 2));		// Get content of Address-2 which is variable value
 			return EEPROM_OK;
 		}
 

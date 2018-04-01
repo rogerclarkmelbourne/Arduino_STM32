@@ -81,7 +81,7 @@ static inline void rb_init(ring_buffer *rb, uint16 size, uint8 *buf) {
  * @param rb Buffer whose elements to count.
  */
 static inline uint16 rb_full_count(ring_buffer *rb) {
-    __io ring_buffer *arb = rb;
+    __IO ring_buffer *arb = rb;
     int32 size = arb->tail - arb->head;
     if (arb->tail < arb->head) {
         size += arb->size + 1;

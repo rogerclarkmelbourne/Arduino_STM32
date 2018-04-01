@@ -41,14 +41,14 @@ extern "C"{
 
 /** Flash register map type */
 typedef struct flash_reg_map {
-    __io uint32 ACR;            /**< Access control register */
-    __io uint32 KEYR;           /**< Key register */
-    __io uint32 OPTKEYR;        /**< OPTKEY register */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 CR;             /**< Control register */
-    __io uint32 AR;             /**< Address register */
-    __io uint32 OBR;            /**< Option byte register */
-    __io uint32 WRPR;           /**< Write protection register */
+    __IO uint32 ACR;            /**< Access control register */
+    __IO uint32 KEYR;           /**< Key register */
+    __IO uint32 OPTKEYR;        /**< OPTKEY register */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 CR;             /**< Control register */
+    __IO uint32 AR;             /**< Address register */
+    __IO uint32 OBR;            /**< Option byte register */
+    __IO uint32 WRPR;           /**< Write protection register */
 } flash_reg_map;
 
 /** Flash register map base pointer */

@@ -49,37 +49,37 @@ extern "C" {
 
 /** System control block register map type */
 typedef struct scb_reg_map {
-    __io uint32 CPUID;   /**< CPU ID Base Register */
-    __io uint32 ICSR;    /**< Interrupt Control State Register */
-    __io uint32 VTOR;    /**< Vector Table Offset Register */
-    __io uint32 AIRCR;   /**< Application Interrupt / Reset Control Register */
-    __io uint32 SCR;     /**< System Control Register */
-    __io uint32 CCR;     /**< Configuration and Control Register */
-    __io uint8  SHP[12]; /**< System Handler Priority Registers
+    __IO uint32 CPUID;   /**< CPU ID Base Register */
+    __IO uint32 ICSR;    /**< Interrupt Control State Register */
+    __IO uint32 VTOR;    /**< Vector Table Offset Register */
+    __IO uint32 AIRCR;   /**< Application Interrupt / Reset Control Register */
+    __IO uint32 SCR;     /**< System Control Register */
+    __IO uint32 CCR;     /**< Configuration and Control Register */
+    __IO uint8  SHP[12]; /**< System Handler Priority Registers
                               (4-7, 8-11, 12-15) */
-    __io uint32 SHCSR;   /**< System Handler Control and State Register */
-    __io uint32 CFSR;    /**< Configurable Fault Status Register */
-    __io uint32 HFSR;    /**< Hard Fault Status Register */
+    __IO uint32 SHCSR;   /**< System Handler Control and State Register */
+    __IO uint32 CFSR;    /**< Configurable Fault Status Register */
+    __IO uint32 HFSR;    /**< Hard Fault Status Register */
     /* DFSR is not documented by ST in PM0056 (as of Revision 4), but
      * there's a 4 byte hole in the SCB register map docs right where
      * it belongs.  Since it's specified as "always implemented" in
      * the ARM v7-M ARM, I'm assuming its absence is a bug in the ST
      * doc, but I haven't proven it. [mbolivar] */
-    __io uint32 DFSR;    /**< Debug Fault Status Register */
-    __io uint32 MMFAR;   /**< Mem Manage Address Register */
-    __io uint32 BFAR;    /**< Bus Fault Address Register */
+    __IO uint32 DFSR;    /**< Debug Fault Status Register */
+    __IO uint32 MMFAR;   /**< Mem Manage Address Register */
+    __IO uint32 BFAR;    /**< Bus Fault Address Register */
 #if 0
     /* The following registers are implementation-defined according to
      * ARM v7-M, and I can't find evidence of their existence in ST's
      * docs.  I'm removing them.  Feel free to yell at me if they do
      * exist. [mbolivar]
      */
-    __io uint32 AFSR;    /**< Auxiliary Fault Status Register */
-    __io uint32 PFR[2];  /**< Processor Feature Register */
-    __io uint32 DFR;     /**< Debug Feature Register */
-    __io uint32 AFR;     /**< Auxiliary Feature Register */
-    __io uint32 MMFR[4]; /**< Memory Model Feature Register */
-    __io uint32 ISAR[5]; /**< ISA Feature Register */
+    __IO uint32 AFSR;    /**< Auxiliary Fault Status Register */
+    __IO uint32 PFR[2];  /**< Processor Feature Register */
+    __IO uint32 DFR;     /**< Debug Feature Register */
+    __IO uint32 AFR;     /**< Auxiliary Feature Register */
+    __IO uint32 MMFR[4]; /**< Memory Model Feature Register */
+    __IO uint32 ISAR[5]; /**< ISA Feature Register */
 #endif
 } scb_reg_map;
 

@@ -47,7 +47,7 @@ extern "C"{
  * COMP individual register map type.
  */
 typedef struct comp_reg_map {
-	__io uint32 CSR;				/**< */
+	__IO uint32 CSR;				/**< */
 } comp_reg_map;
 
 /** COMP device type. */

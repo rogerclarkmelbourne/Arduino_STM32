@@ -86,7 +86,7 @@ static int cfg_dev_ok(dma_dev *dev, dma_tube_config *cfg) {
 }
 
 /* Is addr acceptable for use as DMA src/dst? */
-static int cfg_mem_ok(__io void *addr) {
+static int cfg_mem_ok(__IO void *addr) {
     enum dma_atype atype = _dma_addr_type(addr);
     return atype == DMA_ATYPE_MEM || atype == DMA_ATYPE_PER;
 }
@@ -293,7 +293,7 @@ dma_irq_cause dma_get_irq_cause(dma_dev *dev, dma_channel channel) {
     return DMA_TRANSFER_ERROR;
 }
 
-void dma_set_mem_addr(dma_dev *dev, dma_channel channel, __io void *addr) {
+void dma_set_mem_addr(dma_dev *dev, dma_channel channel, __IO void *addr) {
     dma_channel_reg_map *chan_regs;
 
     ASSERT_FAULT(!dma_is_channel_enabled(dev, channel));
@@ -302,7 +302,7 @@ void dma_set_mem_addr(dma_dev *dev, dma_channel channel, __io void *addr) {
     chan_regs->CMAR = (uint32)addr;
 }
 
-void dma_set_per_addr(dma_dev *dev, dma_channel channel, __io void *addr) {
+void dma_set_per_addr(dma_dev *dev, dma_channel channel, __IO void *addr) {
     dma_channel_reg_map *chan_regs;
 
     ASSERT_FAULT(!dma_is_channel_enabled(dev, channel));
@@ -343,9 +343,9 @@ void dma_set_per_addr(dma_dev *dev, dma_channel channel, __io void *addr) {
  */
 void dma_setup_transfer(dma_dev       *dev,
                         dma_channel    channel,
-                        __io void     *peripheral_address,
+                        __IO void     *peripheral_address,
                         dma_xfer_size  peripheral_size,
-                        __io void     *memory_address,
+                        __IO void     *memory_address,
                         dma_xfer_size  memory_size,
                         uint32         mode) {
     dma_channel_reg_map *channel_regs = dma_channel_regs(dev, channel);

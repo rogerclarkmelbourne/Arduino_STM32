@@ -43,8 +43,8 @@ extern "C" {
 
 /** Power interface register map. */
 typedef struct pwr_reg_map {
-    __io uint32 CR;      /**< Control register */
-    __io uint32 CSR;     /**< Control and status register */
+    __IO uint32 CR;      /**< Control register */
+    __IO uint32 CSR;     /**< Control and status register */
 } pwr_reg_map;
 
 /** Power peripheral register map base pointer. */
