@@ -68,7 +68,7 @@ gpio_dev gpiod = {
 /** GPIO port D device. */
 gpio_dev* const GPIOD = &gpiod;
 
-#ifdef STM32_HIGH_DENSITY
+#if STM32_NR_GPIO_PORTS > 4
 gpio_dev gpioe = {
     .regs      = GPIOE_BASE,
     .clk_id    = RCC_GPIOE,
@@ -106,7 +106,7 @@ void gpio_init_all(void) {
     gpio_init(GPIOB);
     gpio_init(GPIOC);
     gpio_init(GPIOD);
-#ifdef STM32_HIGH_DENSITY
+#if STM32_NR_GPIO_PORTS > 4
     gpio_init(GPIOE);
     gpio_init(GPIOF);
     gpio_init(GPIOG);

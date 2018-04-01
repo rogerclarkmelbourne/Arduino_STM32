@@ -31,6 +31,7 @@
  * General purpose I/O (GPIO) and Alternate Function I/O (AFIO).
  */
 
+
 #ifndef _LIBMAPLE_STM32F1_GPIO_H_
 #define _LIBMAPLE_STM32F1_GPIO_H_
 
@@ -57,6 +58,7 @@ typedef struct gpio_reg_map {
     __IO uint32 LCKR;     /**< Port configuration lock register */
 } gpio_reg_map;
 
+
 struct gpio_dev;
 extern struct gpio_dev gpioa;
 extern struct gpio_dev* const GPIOA;
@@ -66,7 +68,7 @@ extern struct gpio_dev gpioc;
 extern struct gpio_dev* const GPIOC;
 extern struct gpio_dev gpiod;
 extern struct gpio_dev* const GPIOD;
-#ifdef STM32_HIGH_DENSITY
+#if STM32_NR_GPIO_PORTS > 4
 extern struct gpio_dev gpioe;
 extern struct gpio_dev* const GPIOE;
 extern struct gpio_dev gpiof;
