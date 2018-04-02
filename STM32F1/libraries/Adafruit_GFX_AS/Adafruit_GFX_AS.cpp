@@ -6,7 +6,7 @@ paired with a hardware-specific library for each display device we carry
 
 Adafruit invests time and resources providing this open source code, please
 support Adafruit & open-source hardware by purchasing products from Adafruit!
- 
+
 Copyright (c) 2013 Adafruit Industries.  All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -94,7 +94,7 @@ void Adafruit_GFX::drawCircle(int16_t x0, int16_t y0, int16_t r,
     x++;
     ddF_x += 2;
     f += ddF_x;
-  
+
     drawPixel(x0 + x, y0 + y, color);
     drawPixel(x0 - x, y0 + y, color);
     drawPixel(x0 + x, y0 - y, color);
@@ -126,7 +126,7 @@ void Adafruit_GFX::drawCircleHelper( int16_t x0, int16_t y0,
     if (cornername & 0x4) {
       drawPixel(x0 + x, y0 + y, color);
       drawPixel(x0 + y, y0 + x, color);
-    } 
+    }
     if (cornername & 0x2) {
       drawPixel(x0 + x, y0 - y, color);
       drawPixel(x0 + y, y0 - x, color);
@@ -418,9 +418,9 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
 
   for (int8_t i=0; i<6; i++ ) {
     uint8_t line;
-    if (i == 5) 
+    if (i == 5)
       line = 0x0;
-    else 
+    else
       line = pgm_read_byte(font+(c*5)+i);
     for (int8_t j = 0; j<8; j++) {
       if (line & 0x1) {
@@ -428,7 +428,7 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
           drawPixel(x+i, y+j, color);
         else {  // big size
           fillRect(x+(i*size), y+(j*size), size, size, color);
-        } 
+        }
       } else if (bg != color) {
         if (size == 1) // default size
           drawPixel(x+i, y+j, bg);
@@ -452,18 +452,111 @@ void Adafruit_GFX::setTextSize(uint8_t s) {
 }
 
 void Adafruit_GFX::setTextColor(uint16_t c) {
-  // For 'transparent' background, we'll set the bg 
+  // For 'transparent' background, we'll set the bg
   // to the same as fg instead of using a flag
   textcolor = textbgcolor = c;
 }
 
 void Adafruit_GFX::setTextColor(uint16_t c, uint16_t b) {
   textcolor   = c;
-  textbgcolor = b; 
+  textbgcolor = b;
 }
 
 void Adafruit_GFX::setTextWrap(boolean w) {
   wrap = w;
+}
+
+/***************************************************************************************
+** Function name:           getTextWidth
+** Descriptions:            Calculate the height of text for a given font
+**                          font_id indicates the font in use: 0 (default), 2,4,6,7 (extra)
+***************************************************************************************/
+int16_t Adafruit_GFX::getTextHeight(char *string, int16_t font_id)
+{
+    uint16_t height = 0;
+
+    // Note that the font height is fixed for a given font
+    // (ie. it is not dependent upon the individual characters).
+
+    // Determine the number of lines (no wrap support)
+    size_t    str_pos = 0;
+    uint16_t  num_lines = 1;
+    char      ch;
+    while (ch = string[str_pos++]) {
+      if (ch == '\n') num_lines++;
+    }
+
+    // Extract the font height
+    if (font_id == 0) {
+        // Default Adafruit font (5x7)
+        height = 8;
+    }
+    #ifdef LOAD_FONT2
+    if (font_id == 2) {
+        height = chr_hgt_f16;
+    }
+    #endif
+    #ifdef LOAD_FONT4
+    if (font_id == 4) {
+        height = chr_hgt_f32;
+    }
+    #endif
+    #ifdef LOAD_FONT6
+    if (font_id == 6) {
+        height = chr_hgt_f64;
+    }
+    #endif
+    #ifdef LOAD_FONT7
+    if (font_id == 7) {
+        height = chr_hgt_f7s;
+    }
+    #endif
+
+    // Add scaling factor
+    height *= textsize;
+    height *= num_lines;
+
+    return height;
+}
+
+/***************************************************************************************
+** Function name:           getTextWidth
+** Descriptions:            Calculate the width of a string for a given font
+**                          font_id indicates the font in use: 0 (default), 2,4,6,7 (extra)
+***************************************************************************************/
+int16_t Adafruit_GFX::getTextWidth(char *string, int16_t font_id)
+{
+    int16_t len         = 0;    // Total string length
+    int16_t width       = 0;    // Current character width
+    char    *pointer    = string;
+    char    ascii;
+
+    // TODO: Support multi-line text / wrap
+
+    while(*pointer)
+    {
+        ascii = *pointer;
+
+        // Default font (5x7) has width of 6 before scaling
+        if (font_id == 0) width = 6;
+
+#ifdef LOAD_FONT2
+        if (font_id == 2) width = pgm_read_byte(widtbl_f16+ascii-32)+1;
+#endif
+#ifdef LOAD_FONT4
+        if (font_id == 4) width = pgm_read_byte(widtbl_f32+ascii-32)-3;
+#endif
+#ifdef LOAD_FONT6
+        if (font_id == 6) width = pgm_read_byte(widtbl_f64+ascii-32)-3;
+#endif
+#ifdef LOAD_FONT7
+        if (font_id == 7) width = pgm_read_byte(widtbl_f7s+ascii-32)+2;
+#endif
+        *pointer++;
+        len += width;
+    }
+    len = len * textsize;
+    return len;
 }
 
 uint8_t Adafruit_GFX::getRotation(void) {
@@ -490,7 +583,7 @@ void Adafruit_GFX::setRotation(uint8_t x) {
 int16_t Adafruit_GFX::width(void) {
   return _width;
 }
- 
+
 int16_t Adafruit_GFX::height(void) {
   return _height;
 }
@@ -505,7 +598,7 @@ void Adafruit_GFX::invertDisplay(boolean i) {
 ***************************************************************************************/
 int16_t Adafruit_GFX::drawUnicode(uint16_t uniCode, int16_t x, int16_t y, int16_t size)
 {
-    
+
    if (size) uniCode -= 32;
 
    uint16_t width = 0;
@@ -579,7 +672,7 @@ for(int16_t i=0; i<height; i++)
     else fillRect(x, pY, (width+gap)*textsize, textsize, textbgcolor);
   }
   for (int16_t k = 0;k < w; k++)
-  { 
+  {
     line = pgm_read_byte(flash_address+w*i+k);
     if(line) {
       if (textsize==1){
@@ -658,44 +751,20 @@ int16_t Adafruit_GFX::drawCentreString(char *string, int16_t dX, int16_t poY, in
 {
     int16_t sumX = 0;
     int16_t len = 0;
-    char *pointer = string;
-    char ascii;
 
-    while(*pointer)
-    {
-        ascii = *pointer;
-        //if (size==0)len += 1+pgm_read_byte(widtbl_log+ascii);
-        //if (size==1)len += 1+pgm_read_byte(widtbl_f8+ascii-32);
-#ifdef LOAD_FONT2
-        if (size==2)len += 1+pgm_read_byte(widtbl_f16+ascii-32);
-#endif
-        //if (size==3)len += 1+pgm_read_byte(widtbl_f48+ascii-32)/2;
-#ifdef LOAD_FONT4
-        if (size==4)len += pgm_read_byte(widtbl_f32+ascii-32)-3;
-#endif
-        //if (size==5) len += pgm_read_byte(widtbl_f48+ascii-32)-3;
-#ifdef LOAD_FONT6
-        if (size==6) len += pgm_read_byte(widtbl_f64+ascii-32)-3;
-#endif
-#ifdef LOAD_FONT7
-        if (size==7) len += pgm_read_byte(widtbl_f7s+ascii-32)+2;
-#endif
-        *pointer++;
-    }
-    len = len*textsize;
+    len = getTextWidth(string,size);
     int16_t poX = dX - len/2;
 
     if (poX < 0) poX = 0;
 
     while(*string)
     {
-        
         int16_t xPlus = drawChar(*string, poX, poY, size);
         sumX += xPlus;
         *string++;
         poX += xPlus;                  /* Move cursor right            */
     }
-    
+
     return sumX;
 }
 
@@ -707,46 +776,20 @@ int16_t Adafruit_GFX::drawRightString(char *string, int16_t dX, int16_t poY, int
 {
     int16_t sumX = 0;
     int16_t len = 0;
-    char *pointer = string;
-    char ascii;
 
-    while(*pointer)
-    {
-        ascii = *pointer;
-        //if (size==0)len += 1+pgm_read_byte(widtbl_log+ascii);
-        //if (size==1)len += 1+pgm_read_byte(widtbl_f8+ascii-32);
-#ifdef LOAD_FONT2
-        if (size==2)len += 1+pgm_read_byte(widtbl_f16+ascii-32);
-#endif
-        //if (size==3)len += 1+pgm_read_byte(widtbl_f48+ascii-32)/2;
-#ifdef LOAD_FONT4
-        //if (size==4)len += pgm_read_byte(widtbl_f32+ascii-32)-3;
-		if (size==4)len += pgm_read_byte(widtbl_f32+ascii-32);
-#endif
-        //if (size==5) len += pgm_read_byte(widtbl_f48+ascii-32)-3;
-#ifdef LOAD_FONT6
-        if (size==6) len += pgm_read_byte(widtbl_f64+ascii-32)-3;
-#endif
-#ifdef LOAD_FONT7
-        if (size==7) len += pgm_read_byte(widtbl_f7s+ascii-32)+2;
-#endif
-        *pointer++;
-    }
-    
-    len = len*textsize;
+    len = getTextWidth(string,size);
     int16_t poX = dX - len;
 
     if (poX < 0) poX = 0;
 
     while(*string)
     {
-        
         int16_t xPlus = drawChar(*string, poX, poY, size);
         sumX += xPlus;
         *string++;
         poX += xPlus;          /* Move cursor right            */
     }
-    
+
     return sumX;
 }
 
@@ -759,34 +802,34 @@ int16_t Adafruit_GFX::drawFloat(float floatNumber, int16_t decimal, int16_t poX,
     unsigned long temp=0;
     float decy=0.0;
     float rounding = 0.5;
-    
+
     float eep = 0.000001;
-    
+
     int16_t sumX    = 0;
     int16_t xPlus   = 0;
-    
+
     if(floatNumber-0.0 < eep)       // floatNumber < 0
     {
         xPlus = drawChar('-',poX, poY, size);
         floatNumber = -floatNumber;
 
-        poX  += xPlus; 
+        poX  += xPlus;
         sumX += xPlus;
     }
-    
+
     for (unsigned char i=0; i<decimal; ++i)
     {
         rounding /= 10.0;
     }
-    
+
     floatNumber += rounding;
 
     temp = (long)floatNumber;
-    
-    
+
+
     xPlus = drawNumber(temp,poX, poY, size);
 
-    poX  += xPlus; 
+    poX  += xPlus;
     sumX += xPlus;
 
     if(decimal>0)
@@ -799,14 +842,14 @@ int16_t Adafruit_GFX::drawFloat(float floatNumber, int16_t decimal, int16_t poX,
     {
         return sumX;
     }
-    
+
     decy = floatNumber - temp;
-    for(unsigned char i=0; i<decimal; i++)                                      
+    for(unsigned char i=0; i<decimal; i++)
     {
         decy *= 10;                                /* for the next decimal         */
         temp = decy;                               /* get the decimal              */
         xPlus = drawNumber(temp,poX, poY, size);
-        
+
         poX += xPlus;                              /* Move cursor right            */
         sumX += xPlus;
         decy -= temp;
