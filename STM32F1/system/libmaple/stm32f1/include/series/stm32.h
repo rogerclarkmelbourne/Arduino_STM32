@@ -187,6 +187,8 @@ extern "C" {
 #       define STM32_TIMER_MASK         0x1FE /* TIMER1--TIMER8 */
 #       if STM32_NR_GPIO_PORTS > 4
 #           define STM32_HAVE_FSMC      1
+#       else
+#           define STM32_HAVE_FSMC      0
 #       endif
 #       define STM32_HAVE_DAC           1
 #    elif defined(STM32_XL_DENSITY)
@@ -194,6 +196,8 @@ extern "C" {
 #       define STM32_TIMER_MASK         0x7FFE /* TIMER1--TIMER14 */
 #       if STM32_NR_GPIO_PORTS > 4
 #           define STM32_HAVE_FSMC      1
+#       else
+#           define STM32_HAVE_FSMC      0
 #       endif
 #       define STM32_HAVE_DAC           1
 #    endif
