@@ -95,7 +95,7 @@ This library has been modified for the Maple Mini
 #define ILI9341_GREENYELLOW 0xAFE5      /* 173, 255,  47 */
 #define ILI9341_PINK        0xF81F
 
-class Adafruit_ILI9341_STM : public Adafruit_GFX {
+class Adafruit_ILI9341_STM : public Adafruit_GFX_AS {
 
  public:
 
