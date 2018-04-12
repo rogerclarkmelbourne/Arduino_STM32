@@ -47,12 +47,8 @@
  */
 
 size_t Print::write(const char *str) {
-	size_t n = 0;
-    while (*str) {
-        write(*str++);
-		n++;
-    }
-	return n;
+    if (str == NULL) return 0;
+	return write((const uint8_t *)str, strlen(str));
 }
 
 size_t Print::write(const void *buffer, uint32 size) {
