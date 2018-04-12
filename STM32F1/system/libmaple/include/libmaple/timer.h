@@ -842,7 +842,9 @@ static inline void timer_dma_disable_req(timer_dev *dev, uint8 channel) {
  * @see timer_channel
  */
 static inline void timer_enable_irq(timer_dev *dev, uint8 interrupt) {
-    *bb_perip(&(dev->regs).adv->SR, interrupt) = 0; // clear interrupt flag
+    // clear interrupt flag, use different masks for reserved bits
+    dev->regs->SR = (~BIT(interrupt)) & ( (dev->type==TIMER_ADVANCED) ? 0x1EFF : 
+                         ( (dev->type==TIMER_GENERAL) ? 0x1E5F : 0x0001) );
     *bb_perip(&(dev->regs).adv->DIER, interrupt) = 1;
 }
 
