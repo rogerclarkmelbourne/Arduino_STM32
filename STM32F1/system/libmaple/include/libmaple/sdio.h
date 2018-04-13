@@ -52,19 +52,19 @@ extern "C" {
 
 // SDIO register map type
 typedef struct sdio_reg_map {
-    __io uint32 POWER;    // 0x00
-    __io uint32 CLKCR;    // 0x04
-    __io uint32 ARG;      // 0x08
-    __io uint32 CMD;      // 0x0C
-    __io uint32 RESPCMD;  // 0x10 (0x3F)
-    __io const uint32 RESP[4]; // 0x14 - contain the card status, which is part of the received response.
-    __io uint32 DTIMER;   // 0x24 - contains the data timeout period, in card bus clock periods.
-    __io uint32 DLEN;     // 0x28 (0x01FF FFFF) - contains the number of data bytes to be transferred
-    __io uint32 DCTRL;    // 0x2C
-    __io uint32 DCOUNT;   // 0x30 (0x01FF FFFF)
-    __io uint32 STA;      // 0x34
-    __io uint32 ICR;      // 0x38
-    __io uint32 MASK;     // 0x3C
+    __IO uint32 POWER;    // 0x00
+    __IO uint32 CLKCR;    // 0x04
+    __IO uint32 ARG;      // 0x08
+    __IO uint32 CMD;      // 0x0C
+    __IO uint32 RESPCMD;  // 0x10 (0x3F)
+    __IO const uint32 RESP[4]; // 0x14 - contain the card status, which is part of the received response.
+    __IO uint32 DTIMER;   // 0x24 - contains the data timeout period, in card bus clock periods.
+    __IO uint32 DLEN;     // 0x28 (0x01FF FFFF) - contains the number of data bytes to be transferred
+    __IO uint32 DCTRL;    // 0x2C
+    __IO uint32 DCOUNT;   // 0x30 (0x01FF FFFF)
+    __IO uint32 STA;      // 0x34
+    __IO uint32 ICR;      // 0x38
+    __IO uint32 MASK;     // 0x3C
     const uint32 RESERVED1[2];
     __IO uint32 FIFOCNT;  // 0x48 (0x01FF FFFF)
     const uint32 RESERVED2[13];

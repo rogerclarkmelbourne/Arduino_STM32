@@ -54,6 +54,8 @@
 		#define BOARD_RCC_PLLMUL RCC_PLLMUL_9
 	#elif F_CPU==48000000
 		#define BOARD_RCC_PLLMUL RCC_PLLMUL_6
+	#elif F_CPU==16000000
+		#define BOARD_RCC_PLLMUL RCC_PLLMUL_2
 	#endif
 #endif
 
