@@ -1,0 +1,176 @@
+.TH DFU-UTIL 1 "September 23, 2012"
+.SH NAME
+dfu-util \- Device firmware update (DFU) USB programmer
+.SH SYNOPSIS
+.\" Listing devices
+.B dfu-util
+.B \-l 
+.RB [\| \-v \|]
+.RB [\| \-d
+.IR vid:pid \|]
+.RB [\| \-p
+.IR path \|]
+.RB [\| \-i
+.IR interface \|]
+.RB [\| \-a
+.IR alt-intf \|]
+.br
+.\" Download to or upload from device
+.B dfu-util
+.RB [\| \-v \|]
+.RB [\| \-d
+.IR pid:vid \|]
+.RB [\| \-p
+.IR path \|]
+.RB [\| \-i
+.IR interface \|]
+.RB [\| \-a
+.IR alt-intf \|]
+.RB [\| \-t
+.IR size \|]
+.RB [\| \-s
+.IR address \|]
+.RB [\| \-R \|]
+.RB [\| \-D \||\| \-U
+.IR file \|]
+.\" --help and --version
+.br
+.B dfu-util
+.RB [\| \-hV \|]
+.SH DESCRIPTION
+.B dfu-util
+is a program that implements the host (computer) side of the USB DFU
+(Universal Serial Bus Device Firmware Upgrade) protocol.
+.sp
+dfu-util communicates with devices that implement the device side of the
+USB DFU protocol, and is often used to upgrade the firmware of such
+devices.
+.SH OPTIONS
+.TP
+.B "\-l, \-\-list"
+List the currently attached DFU capable USB devices.
+.TP
+.BR "\-d, \-\-device" " [\fIVENDOR\fP]:[\fIPRODUCT\fP]"
+Specify vendor and/or product ID of the DFU device. Both
+.B VENDOR
+and
+.B PRODUCT
+are hexadecimal numbers (no prefix needed).
+Example:
+.sp
+.B "  $ dfu-util --device 1457:51ab"
+.sp
+If you only have one standards-compliant DFU device attached to your computer,
+this is optional. However, as soon as you have multiple DFU devices connected,
+dfu-util will detect this and abort, asking you to specify which device
+to use.
+.TP
+.BR "\-p, \-\-path" " BUS-PORT. ... .PORT"
+Specify the path to the DFU device.
+.TP
+.BR "\-c, \-\-cfg" " CONFIG-NR"
+Specify the configuration of the DFU device. Note that this is only used for matching, the configuration is not set by dfu-util.
+.TP
+.BR "\-i, \-\-intf" " INTF-NR"
+Specify the DFU interface number.
+.TP
+.BR "\-a, \-\-alt" " ALT"
+Specify the altsetting of the DFU interface by name or by number.
+.TP
+.B "\-t, \-\-transfer-size" " SIZE"
+Specify the number of bytes per USB transfer. The optimal value is
+usually determined automatically so this option is rarely useful. If
+you need to use this option for a device, please report it as a bug.
+.TP
+.BR "\-U, \-\-upload" " FILE"
+Read firmware from device into
+.BR FILE .
+.TP
+.BR "\-D, \-\-download" " FILE"
+Write firmware from
+.B FILE
+into device.
+.TP
+.B "\-R, \-\-reset"
+Issue USB reset signalling after upload or download has finished.
+.TP
+.BR "\-s, \-\-dfuse-address" " address"
+Specify target address for raw binary download/upload on DfuSe devices. Do
+.B not
+use this for downloading DfuSe (.dfu) files. Modifiers can be added
+to the address, separated by a colon, to perform special DfuSE commands such
+as "leave" DFU mode, "unprotect" and "mass-erase" flash memory.
+.TP
+.B "\-v, \-\-verbose"
+Print more information about dfu-util's operation. A second
+.B -v
+will turn on verbose logging of USB requests. Repeat this option to further
+increase verbosity.
+.TP
+.B "\-h, \-\-help"
+Show a help text and exit.
+.TP
+.B "\-V, \-\-version"
+Show version information and exit.
+.SH EXAMPLES
+.SS Using dfu-util in the OpenMoko project
+(with the Neo1973 hardware)
+.PP
+Flashing the rootfs:
+.br
+.B "  $ dfu-util -a rootfs -R -D /path/to/openmoko-devel-image.jffs2"
+.PP
+Flashing the kernel:
+.br
+.B "  $ dfu-util -a kernel -R -D /path/to/uImage"
+.PP
+Flashing the bootloader:
+.br
+.B "  $ dfu-util -a u-boot -R -D /path/to/u-boot.bin"
+.PP
+Copying a kernel into RAM:
+.br
+.B "  $ dfu-util -a 0 -R -D /path/to/uImage"
+.sp
+Once this has finished, the kernel will be available at the default load
+address of 0x32000000 in Neo1973 RAM.
+.B Note:
+You cannot transfer more than 2MB of data into RAM using this method.
+.sp
+.SS Using dfu-util with a DfuSe device
+.PP
+Flashing a
+.B .dfu
+(special DfuSe format) file to the device:
+.br
+.B "  $ dfu-util -a 0 -D /path/to/dfuse-image.dfu"
+.PP
+Reading out 1 KB of flash starting at address 0x8000000:
+.br
+.B "  $ dfu-util -a 0 -s 0x08000000:1024 -U newfile.bin"
+.PP
+Flashing a binary file to address 0x8004000 of device memory and
+ask the device to leave DFU mode:
+.br
+.B "  $ dfu-util -a 0 -s 0x08004000:leave -D /path/to/image.bin"
+.\" There are no bugs of course
+.SH BUGS
+Please report any bugs to the dfu-util mailing list at
+.BR dfu-util@lists.gnumonks.org .
+Please use the
+.IR --verbose " option (repeated as necessary) to provide more"
+information in your bug report.
+.SH SEE ALSO
+The dfu-util home page is
+.B http://dfu-util.gnumonks.org
+.SH HISTORY
+dfu-util was originally written for the OpenMoko project by
+Weston Schmidt <weston_schmidt@yahoo.com> and 
+Harald Welte <hwelte@hmw-consulting.de>. Over time, nearly complete
+support of DFU 1.0, DFU 1.1 and DfuSe ("1.1a") has been added.
+.SH LICENCE
+.B dfu-util
+is covered by the GNU General Public License (GPL), version 2 or later.
+.SH COPYRIGHT
+This manual page was originally written by Uwe Hermann <uwe@hermann-uwe.de>,
+and is now part of the dfu-util project.

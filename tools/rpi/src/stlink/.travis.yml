@@ -1,0 +1,24 @@
+sudo: true
+language: c
+compiler:
+  - gcc
+  - clang
+os:
+  - linux
+  - osx
+addons:
+  apt:
+    sources:
+#      - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang
+#      - clang-3.8
+      - g++-5
+      - gcc-5
+      - libusb-1.0.0-dev
+script:
+  - git fetch --tags
+  - printenv
+  - cmake --version
+  - ./.travis.sh
