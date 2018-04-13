@@ -132,7 +132,7 @@ typedef struct flash_reg_map {
  * Series-specific configuration values.
  */
 
-#define FLASH_SAFE_WAIT_STATES          FLASH_WAIT_STATE_2
+#define FLASH_SAFE_WAIT_STATES          (F_CPU > 48000000 ? FLASH_WAIT_STATE_2 : F_CPU > 24000000 ? FLASH_WAIT_STATE_1 : FLASH_WAIT_STATE_0)
 
 /* Flash memory features available via ACR */
 enum {
