@@ -1,0 +1,4 @@
+erase
+loadbin  , 0x8000000
+r
+q
