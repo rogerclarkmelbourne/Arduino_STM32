@@ -94,8 +94,8 @@ void rcc_switch_sysclk(rcc_sysclk_src sysclk_src) {
  * won't work for you. */
 
 /* Returns the RCC register which controls the clock source. */
-static inline __io uint32* rcc_clk_reg(rcc_clk clock) {
-    return (__io uint32*)((__io uint8*)RCC_BASE + (clock >> 8));
+static inline __IO uint32* rcc_clk_reg(rcc_clk clock) {
+    return (__IO uint32*)((__IO uint8*)RCC_BASE + (clock >> 8));
 }
 
 /* Returns a mask in rcc_clk_reg(clock) to be used for turning the

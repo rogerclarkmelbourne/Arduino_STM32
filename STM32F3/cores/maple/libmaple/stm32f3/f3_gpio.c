@@ -152,7 +152,7 @@ void gpio_set_modef(gpio_dev *dev,
  * @see gpio_set_modef()
  */
 void gpio_set_af(gpio_dev *dev, uint8 bit, gpio_af af) {
-    __io uint32 *afr;
+    __IO uint32 *afr;
     unsigned shift;
     uint32 tmp;
     if (bit >= 8) {

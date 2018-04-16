@@ -55,42 +55,42 @@ extern "C"{
  * only supports channels 1--5.
  */
 typedef struct dma_reg_map {
-    __io uint32 ISR;            /**< Interrupt status register */
-    __io uint32 IFCR;           /**< Interrupt flag clear register */
-    __io uint32 CCR1;           /**< Channel 1 configuration register */
-    __io uint32 CNDTR1;         /**< Channel 1 number of data register */
-    __io uint32 CPAR1;          /**< Channel 1 peripheral address register */
-    __io uint32 CMAR1;          /**< Channel 1 memory address register */
+    __IO uint32 ISR;            /**< Interrupt status register */
+    __IO uint32 IFCR;           /**< Interrupt flag clear register */
+    __IO uint32 CCR1;           /**< Channel 1 configuration register */
+    __IO uint32 CNDTR1;         /**< Channel 1 number of data register */
+    __IO uint32 CPAR1;          /**< Channel 1 peripheral address register */
+    __IO uint32 CMAR1;          /**< Channel 1 memory address register */
     const uint32 RESERVED1;     /**< Reserved. */
-    __io uint32 CCR2;           /**< Channel 2 configuration register */
-    __io uint32 CNDTR2;         /**< Channel 2 number of data register */
-    __io uint32 CPAR2;          /**< Channel 2 peripheral address register */
-    __io uint32 CMAR2;          /**< Channel 2 memory address register */
+    __IO uint32 CCR2;           /**< Channel 2 configuration register */
+    __IO uint32 CNDTR2;         /**< Channel 2 number of data register */
+    __IO uint32 CPAR2;          /**< Channel 2 peripheral address register */
+    __IO uint32 CMAR2;          /**< Channel 2 memory address register */
     const uint32 RESERVED2;     /**< Reserved. */
-    __io uint32 CCR3;           /**< Channel 3 configuration register */
-    __io uint32 CNDTR3;         /**< Channel 3 number of data register */
-    __io uint32 CPAR3;          /**< Channel 3 peripheral address register */
-    __io uint32 CMAR3;          /**< Channel 3 memory address register */
+    __IO uint32 CCR3;           /**< Channel 3 configuration register */
+    __IO uint32 CNDTR3;         /**< Channel 3 number of data register */
+    __IO uint32 CPAR3;          /**< Channel 3 peripheral address register */
+    __IO uint32 CMAR3;          /**< Channel 3 memory address register */
     const uint32 RESERVED3;     /**< Reserved. */
-    __io uint32 CCR4;           /**< Channel 4 configuration register */
-    __io uint32 CNDTR4;         /**< Channel 4 number of data register */
-    __io uint32 CPAR4;          /**< Channel 4 peripheral address register */
-    __io uint32 CMAR4;          /**< Channel 4 memory address register */
+    __IO uint32 CCR4;           /**< Channel 4 configuration register */
+    __IO uint32 CNDTR4;         /**< Channel 4 number of data register */
+    __IO uint32 CPAR4;          /**< Channel 4 peripheral address register */
+    __IO uint32 CMAR4;          /**< Channel 4 memory address register */
     const uint32 RESERVED4;     /**< Reserved. */
-    __io uint32 CCR5;           /**< Channel 5 configuration register */
-    __io uint32 CNDTR5;         /**< Channel 5 number of data register */
-    __io uint32 CPAR5;          /**< Channel 5 peripheral address register */
-    __io uint32 CMAR5;          /**< Channel 5 memory address register */
+    __IO uint32 CCR5;           /**< Channel 5 configuration register */
+    __IO uint32 CNDTR5;         /**< Channel 5 number of data register */
+    __IO uint32 CPAR5;          /**< Channel 5 peripheral address register */
+    __IO uint32 CMAR5;          /**< Channel 5 memory address register */
     const uint32 RESERVED5;     /**< Reserved. */
-    __io uint32 CCR6;           /**< Channel 6 configuration register */
-    __io uint32 CNDTR6;         /**< Channel 6 number of data register */
-    __io uint32 CPAR6;          /**< Channel 6 peripheral address register */
-    __io uint32 CMAR6;          /**< Channel 6 memory address register */
+    __IO uint32 CCR6;           /**< Channel 6 configuration register */
+    __IO uint32 CNDTR6;         /**< Channel 6 number of data register */
+    __IO uint32 CPAR6;          /**< Channel 6 peripheral address register */
+    __IO uint32 CMAR6;          /**< Channel 6 memory address register */
     const uint32 RESERVED6;     /**< Reserved. */
-    __io uint32 CCR7;           /**< Channel 7 configuration register */
-    __io uint32 CNDTR7;         /**< Channel 7 number of data register */
-    __io uint32 CPAR7;          /**< Channel 7 peripheral address register */
-    __io uint32 CMAR7;          /**< Channel 7 memory address register */
+    __IO uint32 CCR7;           /**< Channel 7 configuration register */
+    __IO uint32 CNDTR7;         /**< Channel 7 number of data register */
+    __IO uint32 CPAR7;          /**< Channel 7 peripheral address register */
+    __IO uint32 CMAR7;          /**< Channel 7 memory address register */
     const uint32 RESERVED7;     /**< Reserved. */
 } dma_reg_map;
 
@@ -105,10 +105,10 @@ typedef struct dma_reg_map {
  * @see dma_tube_regs()
  */
 typedef struct dma_tube_reg_map {
-    __io uint32 CCR;           /**< Channel configuration register */
-    __io uint32 CNDTR;         /**< Channel number of data register */
-    __io uint32 CPAR;          /**< Channel peripheral address register */
-    __io uint32 CMAR;          /**< Channel memory address register */
+    __IO uint32 CCR;           /**< Channel configuration register */
+    __IO uint32 CNDTR;         /**< Channel number of data register */
+    __IO uint32 CPAR;          /**< Channel peripheral address register */
+    __IO uint32 CMAR;          /**< Channel memory address register */
 } dma_tube_reg_map;
 
 /** DMA1 channel 1 register map base pointer */
@@ -528,7 +528,7 @@ typedef enum dma_request_src {
 
 #define DMA_CHANNEL_NREGS 5     /* accounts for reserved word */
 static inline dma_tube_reg_map* dma_tube_regs(dma_dev *dev, dma_tube tube) {
-    __io uint32 *ccr1 = &dev->regs->CCR1;
+    __IO uint32 *ccr1 = &dev->regs->CCR1;
     return (dma_channel_reg_map*)(ccr1 + DMA_CHANNEL_NREGS * (tube - 1));
 }
 

@@ -32,12 +32,12 @@ XPT2046_touch ts(CS_PIN, mySPI); // Chip Select pin, SPI port
 uint16_t xy[2];
 
 void setup() {
-  Serial1.begin(9600);
-  Serial1.println("-------------------------------------------------");
-  Serial1.println("XPT2046 touch screen buttons");
-  Serial1.println("Copyright (c) 02 Dec 2015 by Vassilis Serasidis");
-  Serial1.println("Home: http://www.serasidis.gr");
-  Serial1.println("-------------------------------------------------");
+  Serial.begin(9600);
+  Serial.println("-------------------------------------------------");
+  Serial.println("XPT2046 touch screen buttons");
+  Serial.println("Copyright (c) 02 Dec 2015 by Vassilis Serasidis");
+  Serial.println("Home: http://www.serasidis.gr");
+  Serial.println("-------------------------------------------------");
   ts.begin(); //Begin TouchScreen.
   ts.setButtonsNumber(COLUMNS, LINES); //Divide the Touch screen area into 4 columns and 2 lines and make them act as buttons. 
 }
@@ -46,14 +46,14 @@ void loop() {
   if(ts.read_XY(xy)){ //If the touch screen is preesed, read the X,Y coordinates and print them on Serial port.
     uint8_t buttonNumber = ts.getButtonNumber();
     if(buttonNumber > 0){
-      Serial1.print("Button: ");
-      Serial1.println(buttonNumber);
+      Serial.print("Button: ");
+      Serial.println(buttonNumber);
       
-      Serial1.print("X: ");
-      Serial1.println(xy[0]); //Print X value
-      Serial1.print("Y: ");
-      Serial1.println(xy[1]); //Print Y value
-      Serial1.println();
+      Serial.print("X: ");
+      Serial.println(xy[0]); //Print X value
+      Serial.print("Y: ");
+      Serial.println(xy[1]); //Print Y value
+      Serial.println();
     }
     delay(500);
   }

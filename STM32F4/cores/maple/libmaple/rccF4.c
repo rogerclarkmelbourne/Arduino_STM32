@@ -144,8 +144,8 @@ static const struct rcc_dev_info rcc_dev_table[] = {
 
 typedef struct
 {
-  __io uint32 CR;   /*!< PWR power control register,        Address offset: 0x00 */
-  __io uint32 CSR;  /*!< PWR power control/status register, Address offset: 0x04 */
+  __IO uint32 CR;   /*!< PWR power control register,        Address offset: 0x00 */
+  __IO uint32 CSR;  /*!< PWR power control/status register, Address offset: 0x04 */
 } PWR_TypeDef;
 
 #define PWR_BASE                             (0x40007000)
@@ -154,12 +154,12 @@ typedef struct
 
 typedef struct
 {
-  __io uint32 ACR;      /*!< FLASH access control register, Address offset: 0x00 */
-  __io uint32 KEYR;     /*!< FLASH key register,            Address offset: 0x04 */
-  __io uint32 OPTKEYR;  /*!< FLASH option key register,     Address offset: 0x08 */
-  __io uint32 SR;       /*!< FLASH status register,         Address offset: 0x0C */
-  __io uint32 CR;       /*!< FLASH control register,        Address offset: 0x10 */
-  __io uint32 OPTCR;    /*!< FLASH option control register, Address offset: 0x14 */
+  __IO uint32 ACR;      /*!< FLASH access control register, Address offset: 0x00 */
+  __IO uint32 KEYR;     /*!< FLASH key register,            Address offset: 0x04 */
+  __IO uint32 OPTKEYR;  /*!< FLASH option key register,     Address offset: 0x08 */
+  __IO uint32 SR;       /*!< FLASH status register,         Address offset: 0x0C */
+  __IO uint32 CR;       /*!< FLASH control register,        Address offset: 0x10 */
+  __IO uint32 OPTCR;    /*!< FLASH option control register, Address offset: 0x14 */
 } FLASH_TypeDef;
 
 #define FLASH_R_BASE          (0x40023C00)
@@ -598,7 +598,7 @@ void rcc_clk_init2(rcc_sysclk_src sysclk_src,
  * @param id Clock ID of the peripheral to turn on.
  */
 void rcc_clk_enable(rcc_clk_id id) {
-    static const __io uint32* enable_regs[] = {
+    static const __IO uint32* enable_regs[] = {
         [APB1] = &RCC_BASE->APB1ENR,
         [APB2] = &RCC_BASE->APB2ENR,
         [AHB1] = &RCC_BASE->AHB1ENR,
@@ -607,7 +607,7 @@ void rcc_clk_enable(rcc_clk_id id) {
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
-    __io uint32* enr = (__io uint32*)enable_regs[clk_domain];
+    __IO uint32* enr = (__IO uint32*)enable_regs[clk_domain];
     uint8 lnum = rcc_dev_table[id].line_num;
 
     bb_peri_set_bit(enr, lnum, 1);
@@ -618,7 +618,7 @@ void rcc_clk_enable(rcc_clk_id id) {
  * @param id Clock ID of the peripheral to turn on.
  */
 void rcc_clk_disable(rcc_clk_id id) {
-    static const __io uint32* enable_regs[] = {
+    static const __IO uint32* enable_regs[] = {
         [APB1] = &RCC_BASE->APB1ENR,
         [APB2] = &RCC_BASE->APB2ENR,
         [AHB1] = &RCC_BASE->AHB1ENR,
@@ -627,7 +627,7 @@ void rcc_clk_disable(rcc_clk_id id) {
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
-    __io uint32* enr = (__io uint32*)enable_regs[clk_domain];
+    __IO uint32* enr = (__IO uint32*)enable_regs[clk_domain];
     uint8 lnum = rcc_dev_table[id].line_num;
 
     bb_peri_set_bit(enr, lnum, 0);
@@ -638,7 +638,7 @@ void rcc_clk_disable(rcc_clk_id id) {
  * @param id Clock ID of the peripheral to reset.
  */
 void rcc_reset_dev(rcc_clk_id id) {
-    static const __io uint32* reset_regs[] = {
+    static const __IO uint32* reset_regs[] = {
         [APB1] = &RCC_BASE->APB1RSTR,
         [APB2] = &RCC_BASE->APB2RSTR,
         [AHB1] = &RCC_BASE->AHB1RSTR,
@@ -647,7 +647,7 @@ void rcc_reset_dev(rcc_clk_id id) {
     };
 
     rcc_clk_domain clk_domain = rcc_dev_clk(id);
-    __io void* addr = (__io void*)reset_regs[clk_domain];
+    __IO void* addr = (__IO void*)reset_regs[clk_domain];
     uint8 lnum = rcc_dev_table[id].line_num;
 
     bb_peri_set_bit(addr, lnum, 1);

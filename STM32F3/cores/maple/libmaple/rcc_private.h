@@ -40,16 +40,16 @@ struct rcc_dev_info {
 
 extern const struct rcc_dev_info rcc_dev_table[];
 
-static inline void rcc_do_clk_enable(__io uint32** enable_regs,
+static inline void rcc_do_clk_enable(__IO uint32** enable_regs,
                                      rcc_clk_id id) {
-    __io uint32 *enable_reg = enable_regs[rcc_dev_clk(id)];
+    __IO uint32 *enable_reg = enable_regs[rcc_dev_clk(id)];
     uint8 line_num = rcc_dev_table[id].line_num;
     bb_peri_set_bit(enable_reg, line_num, 1);
 }
 
-static inline void rcc_do_reset_dev(__io uint32** reset_regs,
+static inline void rcc_do_reset_dev(__IO uint32** reset_regs,
                                     rcc_clk_id id) {
-    __io uint32 *reset_reg = reset_regs[rcc_dev_clk(id)];
+    __IO uint32 *reset_reg = reset_regs[rcc_dev_clk(id)];
     uint8 line_num = rcc_dev_table[id].line_num;
     bb_peri_set_bit(reset_reg, line_num, 1);
     bb_peri_set_bit(reset_reg, line_num, 0);

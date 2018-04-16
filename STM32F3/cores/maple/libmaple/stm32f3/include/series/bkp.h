@@ -38,22 +38,22 @@
 
 /** Backup peripheral register map type. */
 typedef struct bkp_reg_map {
-    __io uint32 DR0;            ///< Data register 0
-    __io uint32 DR1;            ///< Data register 1
-    __io uint32 DR2;            ///< Data register 2
-    __io uint32 DR3;            ///< Data register 3
-    __io uint32 DR4;            ///< Data register 4
-    __io uint32 DR5;            ///< Data register 5
-    __io uint32 DR6;            ///< Data register 6
-    __io uint32 DR7;            ///< Data register 7
-    __io uint32 DR8;            ///< Data register 8
-    __io uint32 DR9;            ///< Data register 9
-    __io uint32 DR10;           ///< Data register 10
-    __io uint32 DR11;           ///< Data register 11
-    __io uint32 DR12;           ///< Data register 12
-    __io uint32 DR13;           ///< Data register 13
-    __io uint32 DR14;           ///< Data register 14
-    __io uint32 DR15;           ///< Data register 15
+    __IO uint32 DR0;            ///< Data register 0
+    __IO uint32 DR1;            ///< Data register 1
+    __IO uint32 DR2;            ///< Data register 2
+    __IO uint32 DR3;            ///< Data register 3
+    __IO uint32 DR4;            ///< Data register 4
+    __IO uint32 DR5;            ///< Data register 5
+    __IO uint32 DR6;            ///< Data register 6
+    __IO uint32 DR7;            ///< Data register 7
+    __IO uint32 DR8;            ///< Data register 8
+    __IO uint32 DR9;            ///< Data register 9
+    __IO uint32 DR10;           ///< Data register 10
+    __IO uint32 DR11;           ///< Data register 11
+    __IO uint32 DR12;           ///< Data register 12
+    __IO uint32 DR13;           ///< Data register 13
+    __IO uint32 DR14;           ///< Data register 14
+    __IO uint32 DR15;           ///< Data register 15
 } bkp_reg_map;
 
 /** Backup peripheral register map base pointer. */

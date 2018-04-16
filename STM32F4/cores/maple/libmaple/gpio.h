@@ -120,7 +120,7 @@ extern void afio_remap(afio_remap_peripheral p);
  * @see afio_debug_cfg
  */
 static inline void afio_cfg_debug_ports(afio_debug_cfg config) {
-    //__io uint32 *mapr = &AFIO_BASE->MAPR;
+    //__IO uint32 *mapr = &AFIO_BASE->MAPR;
     //*mapr = (*mapr & ~AFIO_MAPR_SWJ_CFG) | config;
 }
 

@@ -175,8 +175,8 @@ void adc_attach_interrupt(adc_dev *dev,
  * @param dev adc device
  */
 void adc_calibrate(adc_dev *dev) {
-    __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
-    __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
+    __IO uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
+    __IO uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
 
     *rstcal_bit = 1;
     while (*rstcal_bit)

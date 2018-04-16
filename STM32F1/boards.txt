@@ -38,13 +38,13 @@ mapleMini.menu.bootloader_version.bootloader20.upload.maximum_data_size=20480
 mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 
 #-- CPU Clock frequency
-mapleMini.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+mapleMini.menu.cpu_speed.speed_72mhz=72MHz (Normal)
 mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 
-mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+mapleMini.menu.cpu_speed.speed_48mhz=48MHz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
+mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128MHz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -648,7 +648,7 @@ genericSTM32F103T.menu.opt.ogstd.build.flags.ldspecs=
 genericSTM32F103V.name=Generic STM32F103V series
 genericSTM32F103V.vid.0=0x1EAF
 genericSTM32F103V.pid.0=0x0004
-genericSTM32F103V.build.variant=generic_stm32f103v
+#genericSTM32F103V.build.variant=generic_stm32f103v
 genericSTM32F103V.build.vect=VECT_TAB_ADDR=0x8000000
 genericSTM32F103V.build.core=maple
 genericSTM32F103V.build.board=GENERIC_STM32F103V
@@ -661,19 +661,29 @@ genericSTM32F103V.upload.protocol=maple_dfu
 genericSTM32F103V.build.error_led_port=GPIOE
 genericSTM32F103V.build.error_led_pin=6
 
+genericSTM32F103V.menu.device_variant.STM32F103VB=STM32F103VB
+genericSTM32F103V.menu.device_variant.STM32F103VB.build.variant=generic_stm32f103vb
+genericSTM32F103V.menu.device_variant.STM32F103VB.build.cpu_flags=-DMCU_STM32F103VB
+genericSTM32F103V.menu.device_variant.STM32F103VB.upload.maximum_size=131072
+genericSTM32F103V.menu.device_variant.STM32F103VB.upload.maximum_data_size=20480
+genericSTM32F103V.menu.device_variant.STM32F103VB.build.ldscript=ld/stm32f103vb.ld
+
 genericSTM32F103V.menu.device_variant.STM32F103VC=STM32F103VC
+genericSTM32F103V.menu.device_variant.STM32F103VC.build.variant=generic_stm32f103v
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.cpu_flags=-DMCU_STM32F103VC
 genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_size=262144
 genericSTM32F103V.menu.device_variant.STM32F103VC.upload.maximum_data_size=49152
 genericSTM32F103V.menu.device_variant.STM32F103VC.build.ldscript=ld/stm32f103vc.ld
 
 genericSTM32F103V.menu.device_variant.STM32F103VD=STM32F103VD
+genericSTM32F103V.menu.device_variant.STM32F103VD.build.variant=generic_stm32f103v
 genericSTM32F103V.menu.device_variant.STM32F103VD.build.cpu_flags=-DMCU_STM32F103VD
 genericSTM32F103V.menu.device_variant.STM32F103VD.upload.maximum_size=393216
 genericSTM32F103V.menu.device_variant.STM32F103VD.upload.maximum_data_size=65536
 genericSTM32F103V.menu.device_variant.STM32F103VD.build.ldscript=ld/stm32f103vd.ld
 
 genericSTM32F103V.menu.device_variant.STM32F103VE=STM32F103VE
+genericSTM32F103V.menu.device_variant.STM32F103VE.build.variant=generic_stm32f103v
 genericSTM32F103V.menu.device_variant.STM32F103VE.build.cpu_flags=-DMCU_STM32F103VE
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_size=524288
 genericSTM32F103V.menu.device_variant.STM32F103VE.upload.maximum_data_size=65536

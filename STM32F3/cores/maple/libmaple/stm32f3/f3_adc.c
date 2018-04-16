@@ -164,7 +164,7 @@ void adc_set_conv_seq(const adc_dev *dev, const uint8 *channels, uint8 len) {
 		uint8 i;
 		uint32 val = 0;
 		uint8 lshift;
-    __io uint32 *sqr = &dev->regs->SQR1;
+    __IO uint32 *sqr = &dev->regs->SQR1;
 
 		for (i=0; i<len; i++)
 		{

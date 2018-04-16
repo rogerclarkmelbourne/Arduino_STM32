@@ -45,51 +45,51 @@
  * ADC individual register map type.
  */
 typedef struct adc_reg_map {
-	__io uint32 ISR;				/**< */
-	__io uint32 IER;				/**< */
-	__io uint32 CR;					/**< */
-	__io uint32 CFGR;				/**< */
+	__IO uint32 ISR;				/**< */
+	__IO uint32 IER;				/**< */
+	__IO uint32 CR;					/**< */
+	__IO uint32 CFGR;				/**< */
 	uint32 reserved1;	
-	__io uint32 SMPR1;			/**< */
-	__io uint32 SMPR2;			/**< */
+	__IO uint32 SMPR1;			/**< */
+	__IO uint32 SMPR2;			/**< */
 	uint32 reserved2;	
-	__io uint32 TR1;				/**< */
-	__io uint32 TR2;				/**< */
-	__io uint32 TR3;				/**< */
+	__IO uint32 TR1;				/**< */
+	__IO uint32 TR2;				/**< */
+	__IO uint32 TR3;				/**< */
 	uint32 reserved3;	
-	__io uint32 SQR1;				/**< */
-	__io uint32 SQR2;				/**< */
-	__io uint32 SQR3;				/**< */
-	__io uint32 SQR4;				/**< */
-	__io uint32 DR;					/**< */
+	__IO uint32 SQR1;				/**< */
+	__IO uint32 SQR2;				/**< */
+	__IO uint32 SQR3;				/**< */
+	__IO uint32 SQR4;				/**< */
+	__IO uint32 DR;					/**< */
 	uint32 reserved4 [2];
-	__io uint32 JSQR;				/**< */
+	__IO uint32 JSQR;				/**< */
 	uint32 reserved5 [4];
-	__io uint32 OFR1;				/**< */
-	__io uint32 OFR2;				/**< */
-	__io uint32 OFR3;				/**< */
-	__io uint32 OFR4;				/**< */
+	__IO uint32 OFR1;				/**< */
+	__IO uint32 OFR2;				/**< */
+	__IO uint32 OFR3;				/**< */
+	__IO uint32 OFR4;				/**< */
 	uint32 reserved6 [4];
-	__io uint32 JDR1;				/**< */
-	__io uint32 JDR2;				/**< */
-	__io uint32 JDR3;				/**< */
-	__io uint32 JDR4;				/**< */
+	__IO uint32 JDR1;				/**< */
+	__IO uint32 JDR2;				/**< */
+	__IO uint32 JDR3;				/**< */
+	__IO uint32 JDR4;				/**< */
 	uint32 reserved7 [4];
-	__io uint32 AWD2CR;			/**< */
-	__io uint32 AWD3CR;			/**< */
+	__IO uint32 AWD2CR;			/**< */
+	__IO uint32 AWD3CR;			/**< */
 	uint32 reserved8 [2];
-	__io uint32 DIFSEL;			/**< */
-	__io uint32 CALFACT;		/**< */
+	__IO uint32 DIFSEL;			/**< */
+	__IO uint32 CALFACT;		/**< */
 } adc_reg_map;
 
 /*
  * ADC master and slave common register map type.
  */
 typedef struct adc_common_reg_map {
-	__io uint32 CSR;				/**< */
+	__IO uint32 CSR;				/**< */
 	uint32 reserved;
-	__io uint32 CCR;				/**< */
-	__io uint32 CDR;				/**< */
+	__IO uint32 CCR;				/**< */
+	__IO uint32 CDR;				/**< */
 } adc_common_reg_map;
 
 /** ADC device type. */

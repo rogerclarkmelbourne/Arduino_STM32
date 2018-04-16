@@ -50,7 +50,7 @@ void bkp_disable_writes(void) {
 }
 
 uint16 bkp_read(uint8 reg) {
-    __io uint32* dr = bkp_data_register(reg);
+    __IO uint32* dr = bkp_data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return 0;
@@ -59,7 +59,7 @@ uint16 bkp_read(uint8 reg) {
 }
 
 void bkp_write(uint8 reg, uint16 val) {
-    __io uint32* dr = bkp_data_register(reg);
+    __IO uint32* dr = bkp_data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return;

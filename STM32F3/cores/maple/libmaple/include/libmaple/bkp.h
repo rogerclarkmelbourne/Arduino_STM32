@@ -52,7 +52,7 @@ extern const struct bkp_dev *BKP;
 /*
  * this function needs to be implemented for each series separately
  */
-extern inline __io uint32* bkp_data_register(uint8 reg);
+extern inline __IO uint32* bkp_data_register(uint8 reg);
 
 /**
  * @brief Initialize backup interface.
