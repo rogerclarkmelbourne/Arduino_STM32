@@ -478,78 +478,78 @@ static void enable_bas_gen_irq(timer_dev *dev) {
  * file.
  */
 
-void __irq_tim1_brk(void) {
+__weak void __irq_tim1_brk(void) {
     dispatch_adv_brk(TIMER1);
 #if STM32_HAVE_TIMER(9)
     dispatch_tim_9_12(TIMER9);
 #endif
 }
 
-void __irq_tim1_up(void) {
+__weak void __irq_tim1_up(void) {
     dispatch_adv_up(TIMER1);
 #if STM32_HAVE_TIMER(10)
     dispatch_tim_10_11_13_14(TIMER10);
 #endif
 }
 
-void __irq_tim1_trg_com(void) {
+__weak void __irq_tim1_trg_com(void) {
     dispatch_adv_trg_com(TIMER1);
 #if STM32_HAVE_TIMER(11)
     dispatch_tim_10_11_13_14(TIMER11);
 #endif
 }
 
-void __irq_tim1_cc(void) {
+__weak void __irq_tim1_cc(void) {
     dispatch_adv_cc(TIMER1);
 }
 
-void __irq_tim2(void) {
+__weak void __irq_tim2(void) {
     dispatch_general(TIMER2);
 }
 
-void __irq_tim3(void) {
+__weak void __irq_tim3(void) {
     dispatch_general(TIMER3);
 }
 
-void __irq_tim4(void) {
+__weak void __irq_tim4(void) {
     dispatch_general(TIMER4);
 }
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-void __irq_tim5(void) {
+__weak void __irq_tim5(void) {
     dispatch_general(TIMER5);
 }
 
-void __irq_tim6(void) {
+__weak void __irq_tim6(void) {
     dispatch_basic(TIMER6);
 }
 
-void __irq_tim7(void) {
+__weak void __irq_tim7(void) {
     dispatch_basic(TIMER7);
 }
 
-void __irq_tim8_brk(void) {
+__weak void __irq_tim8_brk(void) {
     dispatch_adv_brk(TIMER8);
 #if STM32_HAVE_TIMER(12)
     dispatch_tim_9_12(TIMER12);
 #endif
 }
 
-void __irq_tim8_up(void) {
+__weak void __irq_tim8_up(void) {
     dispatch_adv_up(TIMER8);
 #if STM32_HAVE_TIMER(13)
     dispatch_tim_10_11_13_14(TIMER13);
 #endif
 }
 
-void __irq_tim8_trg_com(void) {
+__weak void __irq_tim8_trg_com(void) {
     dispatch_adv_trg_com(TIMER8);
 #if STM32_HAVE_TIMER(14)
     dispatch_tim_10_11_13_14(TIMER14);
 #endif
 }
 
-void __irq_tim8_cc(void) {
+__weak void __irq_tim8_cc(void) {
     dispatch_adv_cc(TIMER8);
 }
 #endif  /* defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY) */

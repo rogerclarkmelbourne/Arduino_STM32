@@ -190,7 +190,7 @@ static void usb_resume(RESUME_STATE eResumeSetVal) {
 }
 
 #define SUSPEND_ENABLED 1
-void __irq_usb_lp_can_rx0(void) {
+__weak void __irq_usb_lp_can_rx0(void) {
     uint16 istr = USB_BASE->ISTR;
 
     /* Use USB_ISR_MSK to only include code for bits we care about. */
