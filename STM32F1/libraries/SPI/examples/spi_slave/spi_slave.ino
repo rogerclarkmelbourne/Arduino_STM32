@@ -9,14 +9,11 @@
 
 void setupSPI(void)
 {
-  pinMode(PA7, INPUT); // MOSI1
-  pinMode(PA6, INPUT); // MISO1
-  pinMode(PA5, INPUT); // SCK
+  // MOSI, MISO, SCK PINs are set by the library
   pinMode(BOARD_SPI_DEFAULT_SS, INPUT); // SS
 
-  // Select SPI1
-  SPI.setModule(1);
   // The clock value is not used
+  // SPI1 is selected by default
   SPI.beginTransactionSlave(SPISettings(18000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT));
 }
 
@@ -24,9 +21,6 @@ void setup()
 {
   Serial.begin(115200);
   delay(100);
-
-  // Data that master will receive when transferring a data frame over SPI
-  SPI.dev()->regs->DR = 0;
   setupSPI();
 }
 
@@ -34,13 +28,12 @@ uint8_t count(0);
 void loop()
 {
   // Blocking call to read SPI message
-  uint8_t msg(SPI.read());
-  Serial.print("Received = 0b");
+  uint8_t msg = SPI.transfer(++count);
+  Serial.print("a Received = 0b");
   Serial.print(msg, BIN);
   Serial.print(", 0x");
   Serial.print(msg, HEX);
   Serial.print(", ");
   Serial.println(msg);
-  // Next data frame that will be received by master
-  SPI.dev()->regs->DR = ++count;
 }
+
