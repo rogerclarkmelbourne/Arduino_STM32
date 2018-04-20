@@ -1,7 +1,7 @@
-// SPI slave example
-// STM32 acts as a SPI slave an reads 8 bit data frames over SPI
-// The data sent to the master is a simple count (0, 1, 2, 3) that is incremented
-// each time a data frame is received.
+// SPI full-duplex slave example
+// STM32 acts as a SPI slave and reads 8 bit data frames over SPI.
+// Master also gets a reply from the slave, which is a a simple count (0, 1, 2, 3)
+// that is incremented each time a data frame is received.
 // Serial output is here for debug
 
 #include <SPI.h>
