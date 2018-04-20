@@ -399,6 +399,14 @@ genericSTM32F103C.menu.upload_method.jlinkMethod.upload.protocol=jlink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 genericSTM32F103C.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
 
+genericSTM32F103C.menu.upload_method.HIDUploadMethod=HID bootloader
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.protocol=maple_hid
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.tool=hid_upload
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.vect=VECT_TAB_ADDR=0x8001000
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.ldscript=ld/hid_bootloader.ld
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.usbID=1EAF:0003
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.altID=2
 #-- CPU Clock frequency
 genericSTM32F103C.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
 genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
