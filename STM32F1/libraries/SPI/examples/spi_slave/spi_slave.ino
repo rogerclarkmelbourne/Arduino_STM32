@@ -29,7 +29,7 @@ void loop()
 {
   // Blocking call to read SPI message
   uint8_t msg = SPI.transfer(++count);
-  Serial.print("a Received = 0b");
+  Serial.print("Received = 0b");
   Serial.print(msg, BIN);
   Serial.print(", 0x");
   Serial.print(msg, HEX);
