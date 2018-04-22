@@ -37,7 +37,7 @@
 #include <libmaple/usb_cdcacm.h>
 #include <libmaple/usb.h>
 #include <libmaple/iwdg.h>
-
+#include <libmaple/bkp.h>
 #include "wirish.h"
 
 /*
@@ -322,6 +322,11 @@ static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attrib
 #ifdef SERIAL_USB 
             // Got the magic sequence -> reset, presumably into the bootloader.
             // Return address is wait_reset, but we must set the thumb bit.
+						bkp_init();
+						bkp_enable_writes();
+						bkp_write(10, 0x424C);
+						bkp_disable_writes();
+						
             uintptr_t target = (uintptr_t)wait_reset | 0x1;
             asm volatile("mov r0, %[stack_top]      \n\t" // Reset stack
                          "mov sp, r0                \n\t"
