@@ -9,11 +9,9 @@
 
 void setupSPI(void)
 {
-  // MOSI, MISO, SCK PINs are set by the library
-  pinMode(BOARD_SPI_DEFAULT_SS, INPUT); // SS
-
   // The clock value is not used
   // SPI1 is selected by default
+  // MOSI, MISO, SCK and NSS PINs are set by the library
   SPI.beginTransactionSlave(SPISettings(18000000, MSBFIRST, SPI_MODE0, DATA_SIZE_8BIT));
 }
 
