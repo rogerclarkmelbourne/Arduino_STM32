@@ -50,7 +50,7 @@ uint8 TwoWire::process(uint8 stop) {
             res = EOTHER;
         }
         i2c_disable(sel_hard);
-        i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags));
+        i2c_master_enable(sel_hard, dev_flags);
     }
     return res;
 }
