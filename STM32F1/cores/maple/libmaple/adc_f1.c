@@ -72,7 +72,7 @@ adc_dev *ADC3 = &adc3;
     adc irq routine. 
     Added by bubulindo. 
 */
-void __irq_adc() {
+__weak void __irq_adc() {
     //get status
     uint32 adc_sr = ADC1->regs->SR;
 //End Of Conversion
@@ -107,7 +107,7 @@ void __irq_adc() {
     added by bubulindo
 */
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-void __irq_adc3() {
+__weak void __irq_adc3() {
     //get status
     uint32 adc_sr = ADC3->regs->SR;
 //End Of Conversion

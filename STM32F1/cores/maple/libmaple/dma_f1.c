@@ -360,48 +360,48 @@ void dma_setup_transfer(dma_dev       *dev,
  * IRQ handlers
  */
 
-void __irq_dma1_channel1(void) {
+__weak void __irq_dma1_channel1(void) {
     dma_irq_handler(DMA1, DMA_CH1);
 }
 
-void __irq_dma1_channel2(void) {
+__weak void __irq_dma1_channel2(void) {
     dma_irq_handler(DMA1, DMA_CH2);
 }
 
-void __irq_dma1_channel3(void) {
+__weak void __irq_dma1_channel3(void) {
     dma_irq_handler(DMA1, DMA_CH3);
 }
 
-void __irq_dma1_channel4(void) {
+__weak void __irq_dma1_channel4(void) {
     dma_irq_handler(DMA1, DMA_CH4);
 }
 
-void __irq_dma1_channel5(void) {
+__weak void __irq_dma1_channel5(void) {
     dma_irq_handler(DMA1, DMA_CH5);
 }
 
-void __irq_dma1_channel6(void) {
+__weak void __irq_dma1_channel6(void) {
     dma_irq_handler(DMA1, DMA_CH6);
 }
 
-void __irq_dma1_channel7(void) {
+__weak void __irq_dma1_channel7(void) {
     dma_irq_handler(DMA1, DMA_CH7);
 }
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-void __irq_dma2_channel1(void) {
+__weak void __irq_dma2_channel1(void) {
     dma_irq_handler(DMA2, DMA_CH1);
 }
 
-void __irq_dma2_channel2(void) {
+__weak void __irq_dma2_channel2(void) {
     dma_irq_handler(DMA2, DMA_CH2);
 }
 
-void __irq_dma2_channel3(void) {
+__weak void __irq_dma2_channel3(void) {
     dma_irq_handler(DMA2, DMA_CH3);
 }
 
-void __irq_dma2_channel4_5(void) {
+__weak void __irq_dma2_channel4_5(void) {
     if ((DMA2_BASE->CCR4 & DMA_CCR_EN) && (DMA2_BASE->ISR & DMA_ISR_GIF4)) {
         dma_irq_handler(DMA2, DMA_CH4);
     }
