@@ -385,6 +385,26 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     return ret;
 }
 
+void SPIClass::transfer(void *buf, size_t count) 
+ {
+    if (count == 0) return;
+    spi_dev * spi_d = _currentSetting->spi_d;
+    uint8 *p = (uint8_t *)buf;
+    spi_tx_reg(spi_d, *p); //transmitting first byte
+    while (--count > 0) 
+    {//if you wanted to transfer 4 things, it will go 3,2,1 and when it hits 9 the loop is exited , which is why the first byte is sent outside the loop
+        uint8 out = *(p + 1); //setting the thing to send(is generally 0)
+        while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
+        while (spi_is_busy(spi_d) != 0);     // wait until BSY=0 .waiting for clearance(from any last transmission or reception)
+        uint8 in = spi_rx_reg(spi_d); // reading SPI data register 
+        spi_tx_reg(spi_d, out); // transmitting stuff
+        *p++ = in; // placing the data in the buffer and incrementing address by 1.
+    }
+    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
+    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
+    *p = spi_rx_reg(spi_d);//get the last byte in 
+}
+
 /*  Roger Clark and Victor Perez, 2015
 *	Performs a DMA SPI transfer with at least a receive buffer.
 *	If a TX buffer is not provided, FF is sent over and over for the lenght of the transfer. 
