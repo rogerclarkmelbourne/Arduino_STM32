@@ -149,11 +149,7 @@ static void setup_clocks(void) {
 #if defined(BOOTLOADER_maple)
 	#define USER_ADDR_ROM 0x08005000
 #else
-	#if defined(BOOTLOADER_robotis)
-		#define USER_ADDR_ROM 0x08003000
-	#else
-		#define USER_ADDR_ROM 0x08000000
-	#endif
+	#define USER_ADDR_ROM 0x08000000
 #endif
 #define USER_ADDR_RAM 0x20000C00
 extern char __text_start__;

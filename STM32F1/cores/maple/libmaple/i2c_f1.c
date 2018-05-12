@@ -76,19 +76,19 @@ void i2c_master_release_bus(const i2c_dev *dev) {
  * IRQ handlers
  */
 
-void __irq_i2c1_ev(void) {
+__weak void __irq_i2c1_ev(void) {
    _i2c_irq_handler(I2C1);
 }
 
-void __irq_i2c2_ev(void) {
+__weak void __irq_i2c2_ev(void) {
    _i2c_irq_handler(I2C2);
 }
 
-void __irq_i2c1_er(void) {
+__weak void __irq_i2c1_er(void) {
     _i2c_irq_error_handler(I2C1);
 }
 
-void __irq_i2c2_er(void) {
+__weak void __irq_i2c2_er(void) {
     _i2c_irq_error_handler(I2C2);
 }
 

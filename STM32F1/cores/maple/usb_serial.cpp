@@ -37,7 +37,7 @@
 #include <libmaple/usb_cdcacm.h>
 #include <libmaple/usb.h>
 #include <libmaple/iwdg.h>
-
+#include <libmaple/bkp.h>
 #include "wirish.h"
 
 /*
@@ -263,20 +263,12 @@ static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestv
         break;
     }
 #endif
-
-#if defined(BOOTLOADER_robotis)
-    uint8 dtr = usb_cdcacm_get_dtr();
-    uint8 rts = usb_cdcacm_get_rts();
-
-    if (rts && !dtr) {
-        reset_state = DTR_NEGEDGE;
-    }
-#endif
-
+#if false
 	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
 		iwdg_init(IWDG_PRE_4, 10);
 		while (1);
 	}
+#endif	
 }
 
 #define RESET_DELAY 100000
@@ -287,41 +279,40 @@ static void wait_reset(void) {
 }
 #endif
 
+
 #define STACK_TOP 0x20000800
 #define EXC_RETURN 0xFFFFFFF9
 #define DEFAULT_CPSR 0x61000000
 static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attribute__((unused))) {
+static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {
-        reset_state = DTR_LOW;
 
-        if (usb_cdcacm_data_available() >= 4) {
-            // The magic reset sequence is "1EAF".
-#ifdef SERIAL_USB 
-            static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
-#else
-	#if defined(BOOTLOADER_robotis)
-				static const uint8 magic[4] = {'C', 'M', '9', 'X'};
-	#else
-				static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
-	#endif			
-#endif
-
+        if (usb_cdcacm_data_available() >= 4) 
+		{
             uint8 chkBuf[4];
 
             // Peek at the waiting bytes, looking for reset sequence,
             // bailing on mismatch.
             usb_cdcacm_peek_ex(chkBuf, usb_cdcacm_data_available() - 4, 4);
             for (unsigned i = 0; i < sizeof(magic); i++) {
-                if (chkBuf[i] != magic[i]) {
+                if (chkBuf[i] != magic[i]) 
+				{
+			        reset_state = DTR_LOW;
                     return;
                 }
             }
 
 #ifdef SERIAL_USB 
+            // The magic reset sequence is "1EAF".
             // Got the magic sequence -> reset, presumably into the bootloader.
             // Return address is wait_reset, but we must set the thumb bit.
+			bkp_init();
+			bkp_enable_writes();
+			bkp_write(10, 0x424C);
+			bkp_disable_writes();
+						
             uintptr_t target = (uintptr_t)wait_reset | 0x1;
             asm volatile("mov r0, %[stack_top]      \n\t" // Reset stack
                          "mov sp, r0                \n\t"
@@ -345,15 +336,9 @@ static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attrib
                            [cpsr] "r" (DEFAULT_CPSR)
                          : "r0", "r1", "r2");
 #endif
-
-#if defined(BOOTLOADER_robotis)
-            iwdg_init(IWDG_PRE_4, 10);
-#endif
-
             /* Can't happen. */
             ASSERT_FAULT(0);
         }
     }
 }
-
 #endif  // BOARD_HAVE_SERIALUSB

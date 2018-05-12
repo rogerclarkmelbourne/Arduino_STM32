@@ -71,7 +71,7 @@ uint8 WireBase::endTransmission(bool stop) {
 }
 
 uint8 WireBase::endTransmission(){
-    endTransmission(true);
+    return endTransmission(true);
 }
 
 //TODO: Add the ability to queue messages (adding a boolean to end of function

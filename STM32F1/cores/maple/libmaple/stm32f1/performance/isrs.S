@@ -76,9 +76,9 @@ __default_handler:
 	.weak	__exc_pendsv
 	.globl	__exc_pendsv
 	.set	__exc_pendsv, __default_handler
-	.weak	__exc_systick
-	.globl	__exc_systick
-	.set	__exc_systick, __default_handler
+//	.weak	__exc_systick                                  // __exc_systick() defined in STM32F1/cores/maple/libmaple/systick.c
+//	.globl	__exc_systick
+//	.set	__exc_systick, __default_handler
 	.weak	__irq_wwdg
 	.globl	__irq_wwdg
 	.set	__irq_wwdg, __default_handler
@@ -97,110 +97,110 @@ __default_handler:
 	.weak	__irq_rcc
 	.globl	__irq_rcc
 	.set	__irq_rcc, __default_handler
-	.weak	__irq_exti0
-	.globl	__irq_exti0
-	.set	__irq_exti0, __default_handler
-	.weak	__irq_exti1
-	.globl	__irq_exti1
-	.set	__irq_exti1, __default_handler
-	.weak	__irq_exti2
-	.globl	__irq_exti2
-	.set	__irq_exti2, __default_handler
-	.weak	__irq_exti3
-	.globl	__irq_exti3
-	.set	__irq_exti3, __default_handler
-	.weak	__irq_exti4
-	.globl	__irq_exti4
-	.set	__irq_exti4, __default_handler
-	.weak	__irq_dma1_channel1
-	.globl	__irq_dma1_channel1
-	.set	__irq_dma1_channel1, __default_handler
-	.weak	__irq_dma1_channel2
-	.globl	__irq_dma1_channel2
-	.set	__irq_dma1_channel2, __default_handler
-	.weak	__irq_dma1_channel3
-	.globl	__irq_dma1_channel3
-	.set	__irq_dma1_channel3, __default_handler
-	.weak	__irq_dma1_channel4
-	.globl	__irq_dma1_channel4
-	.set	__irq_dma1_channel4, __default_handler
-	.weak	__irq_dma1_channel5
-	.globl	__irq_dma1_channel5
-	.set	__irq_dma1_channel5, __default_handler
-	.weak	__irq_dma1_channel6
-	.globl	__irq_dma1_channel6
-	.set	__irq_dma1_channel6, __default_handler
-	.weak	__irq_dma1_channel7
-	.globl	__irq_dma1_channel7
-	.set	__irq_dma1_channel7, __default_handler
-	.weak	__irq_adc
-	.globl	__irq_adc
-	.set	__irq_adc, __default_handler
+//	.weak	__irq_exti0                                  // __irq_exti0() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti0
+//	.set	__irq_exti0, __default_handler
+//	.weak	__irq_exti1                                  // __irq_exti1() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti1
+//	.set	__irq_exti1, __default_handler
+//	.weak	__irq_exti2                                  // __irq_exti2() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti2
+//	.set	__irq_exti2, __default_handler
+//	.weak	__irq_exti3                                  // __irq_exti3() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti3
+//	.set	__irq_exti3, __default_handler
+//	.weak	__irq_exti4                                  // __irq_exti4() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti4
+//	.set	__irq_exti4, __default_handler
+//	.weak	__irq_dma1_channel1                          // __irq_dma1_channel1() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel1
+//	.set	__irq_dma1_channel1, __default_handler
+//	.weak	__irq_dma1_channel2                          // __irq_dma1_channel2() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel2
+//	.set	__irq_dma1_channel2, __default_handler
+//	.weak	__irq_dma1_channel3                          // __irq_dma1_channel3() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel3
+//	.set	__irq_dma1_channel3, __default_handler
+//	.weak	__irq_dma1_channel4                          // __irq_dma1_channel4() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel4
+//	.set	__irq_dma1_channel4, __default_handler
+//	.weak	__irq_dma1_channel5                          // __irq_dma1_channel5() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel5
+//	.set	__irq_dma1_channel5, __default_handler
+//	.weak	__irq_dma1_channel6                          // __irq_dma1_channel6() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel6
+//	.set	__irq_dma1_channel6, __default_handler
+//	.weak	__irq_dma1_channel7                          // __irq_dma1_channel7() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma1_channel7
+//	.set	__irq_dma1_channel7, __default_handler
+//	.weak	__irq_adc                                    // __irq_adc() defined in STM32F1/cores/maple/libmaple/adc_f1.c
+//	.globl	__irq_adc
+//	.set	__irq_adc, __default_handler
 	.weak	__irq_usb_hp_can_tx
 	.globl	__irq_usb_hp_can_tx
 	.set	__irq_usb_hp_can_tx, __default_handler
-	.weak	__irq_usb_lp_can_rx0
-	.globl	__irq_usb_lp_can_rx0
-	.set	__irq_usb_lp_can_rx0, __default_handler
+//	.weak	__irq_usb_lp_can_rx0                         // __irq_usb_lp_can_rx0() defined in STM32F1/cores/maple/libmaple/usb/stm32f1/usb.c
+//	.globl	__irq_usb_lp_can_rx0
+//	.set	__irq_usb_lp_can_rx0, __default_handler
 	.weak	__irq_can_rx1
 	.globl	__irq_can_rx1
 	.set	__irq_can_rx1, __default_handler
 	.weak	__irq_can_sce
 	.globl	__irq_can_sce
 	.set	__irq_can_sce, __default_handler
-	.weak	__irq_exti9_5
-	.globl	__irq_exti9_5
-	.set	__irq_exti9_5, __default_handler
-	.weak	__irq_tim1_brk
-	.globl	__irq_tim1_brk
-	.set	__irq_tim1_brk, __default_handler
-	.weak	__irq_tim1_up
-	.globl	__irq_tim1_up
-	.set	__irq_tim1_up, __default_handler
-	.weak	__irq_tim1_trg_com
-	.globl	__irq_tim1_trg_com
-	.set	__irq_tim1_trg_com, __default_handler
-	.weak	__irq_tim1_cc
-	.globl	__irq_tim1_cc
-	.set	__irq_tim1_cc, __default_handler
-
-	.weakref __irq_tim2, __default_handler
-	.globl  __irq_tim2
-	.weakref __irq_tim3, __default_handler
-	.globl  __irq_tim3
-	.weakref __irq_tim4, __default_handler
-	.globl  __irq_tim4	
-	
-	.weak	__irq_i2c1_ev
-	.globl	__irq_i2c1_ev
-	.set	__irq_i2c1_ev, __default_handler
-	.weak	__irq_i2c1_er
-	.globl	__irq_i2c1_er
-	.set	__irq_i2c1_er, __default_handler
-	.weak	__irq_i2c2_ev
-	.globl	__irq_i2c2_ev
-	.set	__irq_i2c2_ev, __default_handler
-	.weak	__irq_i2c2_er
-	.globl	__irq_i2c2_er
-	.set	__irq_i2c2_er, __default_handler
+//	.weak	__irq_exti9_5                                // __irq_exti9_5() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti9_5
+//	.set	__irq_exti9_5, __default_handler
+//	.weak	__irq_tim1_brk                               // __irq_tim1_brk() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim1_brk
+//	.set	__irq_tim1_brk, __default_handler
+//	.weak	__irq_tim1_up                                // __irq_tim1_up() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim1_up
+//	.set	__irq_tim1_up, __default_handler
+//	.weak	__irq_tim1_trg_com                           // __irq_tim1_trg_com() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim1_trg_com
+//	.set	__irq_tim1_trg_com, __default_handler
+//	.weak	__irq_tim1_cc                                // __irq_tim1_cc() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim1_cc
+//	.set	__irq_tim1_cc, __default_handler
+//
+//	.weakref __irq_tim2, __default_handler               // __irq_tim2() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl  __irq_tim2
+//	.weakref __irq_tim3, __default_handler               // __irq_tim3() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl  __irq_tim3
+//	.weakref __irq_tim4, __default_handler               // __irq_tim4() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl  __irq_tim4	
+//	
+//	.weak	__irq_i2c1_ev                                // __irq_i2c1_ev() defined in STM32F1/cores/maple/libmaple/i2c_f1.c
+//	.globl	__irq_i2c1_ev
+//	.set	__irq_i2c1_ev, __default_handler
+//	.weak	__irq_i2c1_er                                // __irq_i2c1_er() defined in STM32F1/cores/maple/libmaple/i2c_f1.c
+//	.globl	__irq_i2c1_er
+//	.set	__irq_i2c1_er, __default_handler
+//	.weak	__irq_i2c2_ev                                // __irq_i2c2_ev() defined in STM32F1/cores/maple/libmaple/i2c_f1.c
+//	.globl	__irq_i2c2_ev
+//	.set	__irq_i2c2_ev, __default_handler
+//	.weak	__irq_i2c2_er                                // __irq_i2c2_er() defined in STM32F1/cores/maple/libmaple/i2c_f1.c
+//	.globl	__irq_i2c2_er
+//	.set	__irq_i2c2_er, __default_handler
 	.weak	__irq_spi1
 	.globl	__irq_spi1
 	.set	__irq_spi1, __default_handler
 	.weak	__irq_spi2
 	.globl	__irq_spi2
 	.set	__irq_spi2, __default_handler
-	.weak	__irq_usart1
-	.globl	__irq_usart1
-	.set	__irq_usart1, __default_handler
-	.weak	__irq_usart2
-	.globl	__irq_usart2
-	.set	__irq_usart2, __default_handler
-	.weak	__irq_usart3
-	.globl	__irq_usart3
-	.set	__irq_usart3, __default_handler
-	.weak	__irq_exti15_10
-	.globl	__irq_exti15_10
-	.set	__irq_exti15_10, __default_handler
+//	.weak	__irq_usart1                                // __irq_usart1() defined in STM32F1/cores/maple/libmaple/usart_f1.c
+//	.globl	__irq_usart1
+//	.set	__irq_usart1, __default_handler
+//	.weak	__irq_usart2                                // __irq_usart2() defined in STM32F1/cores/maple/libmaple/usart_f1.c
+//	.globl	__irq_usart2
+//	.set	__irq_usart2, __default_handler
+//	.weak	__irq_usart3                                // __irq_usart3() defined in STM32F1/cores/maple/libmaple/usart_f1.c
+//	.globl	__irq_usart3
+//	.set	__irq_usart3, __default_handler
+//	.weak	__irq_exti15_10                             // __irq_exti15_10() defined in STM32F1/cores/maple/libmaple/exti.c
+//	.globl	__irq_exti15_10
+//	.set	__irq_exti15_10, __default_handler
 	.weak	__irq_rtcalarm
 	.globl	__irq_rtcalarm
 	.set	__irq_rtcalarm, __default_handler
@@ -208,55 +208,55 @@ __default_handler:
 	.globl	__irq_usbwakeup
 	.set	__irq_usbwakeup, __default_handler
 #if defined (STM32_HIGH_DENSITY)
-	.weak	__irq_tim8_brk
-	.globl	__irq_tim8_brk
-	.set	__irq_tim8_brk, __default_handler
-	.weak	__irq_tim8_up
-	.globl	__irq_tim8_up
-	.set	__irq_tim8_up, __default_handler
-	.weak	__irq_tim8_trg_com
-	.globl	__irq_tim8_trg_com
-	.set	__irq_tim8_trg_com, __default_handler
-	.weak	__irq_tim8_cc
-	.globl	__irq_tim8_cc
-	.set	__irq_tim8_cc, __default_handler
-	.weak	__irq_adc3
-	.globl	__irq_adc3
-	.set	__irq_adc3, __default_handler
+//	.weak	__irq_tim8_brk                              // __irq_tim8_brk() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim8_brk
+//	.set	__irq_tim8_brk, __default_handler
+//	.weak	__irq_tim8_up                               // __irq_tim8_up() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim8_up
+//	.set	__irq_tim8_up, __default_handler
+//	.weak	__irq_tim8_trg_com                          // __irq_tim8_trg_com() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim8_trg_com
+//	.set	__irq_tim8_trg_com, __default_handler
+//	.weak	__irq_tim8_cc                               // __irq_tim8_cc() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim8_cc
+//	.set	__irq_tim8_cc, __default_handler
+//	.weak	__irq_adc3                                  // __irq_adc3() defined in STM32F1/cores/maple/libmaple/adc_f1.c
+//	.globl	__irq_adc3
+//	.set	__irq_adc3, __default_handler
 	.weak	__irq_fsmc
 	.globl	__irq_fsmc
 	.set	__irq_fsmc, __default_handler
 	.weak	__irq_sdio
 	.globl	__irq_sdio
 	.set	__irq_sdio, __default_handler
-	.weak	__irq_tim5
-	.globl	__irq_tim5
-	.set	__irq_tim5, __default_handler
+//	.weak	__irq_tim5                                  // __irq_tim5() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim5
+//	.set	__irq_tim5, __default_handler
 	.weak	__irq_spi3
 	.globl	__irq_spi3
 	.set	__irq_spi3, __default_handler
-	.weak	__irq_uart4
-	.globl	__irq_uart4
-	.set	__irq_uart4, __default_handler
-	.weak	__irq_uart5
-	.globl	__irq_uart5
-	.set	__irq_uart5, __default_handler
-	.weak	__irq_tim6
-	.globl	__irq_tim6
-	.set	__irq_tim6, __default_handler
-	.weak	__irq_tim7
-	.globl	__irq_tim7
-	.set	__irq_tim7, __default_handler
-	.weak	__irq_dma2_channel1
-	.globl	__irq_dma2_channel1
-	.set	__irq_dma2_channel1, __default_handler
-	.weak	__irq_dma2_channel2
-	.globl	__irq_dma2_channel2
-	.set	__irq_dma2_channel2, __default_handler
-	.weak	__irq_dma2_channel3
-	.globl	__irq_dma2_channel3
-	.set	__irq_dma2_channel3, __default_handler
-	.weak	__irq_dma2_channel4_5
-	.globl	__irq_dma2_channel4_5
-	.set	__irq_dma2_channel4_5, __default_handler
+//	.weak	__irq_uart4                                 // __irq_uart4() defined in STM32F1/cores/maple/libmaple/usart_f1.c
+//	.globl	__irq_uart4
+//	.set	__irq_uart4, __default_handler
+//	.weak	__irq_uart5                                 // __irq_uart5() defined in STM32F1/cores/maple/libmaple/usart_f1.c
+//	.globl	__irq_uart5
+//	.set	__irq_uart5, __default_handler
+//	.weak	__irq_tim6                                  // __irq_tim6() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim6
+//	.set	__irq_tim6, __default_handler
+//	.weak	__irq_tim7                                  // __irq_tim7() defined in STM32F1/cores/maple/libmaple/timer.c
+//	.globl	__irq_tim7
+//	.set	__irq_tim7, __default_handler
+//	.weak	__irq_dma2_channel1                         // __irq_dma2_channel1() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma2_channel1
+//	.set	__irq_dma2_channel1, __default_handler
+//	.weak	__irq_dma2_channel2                         // __irq_dma2_channel2() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma2_channel2
+//	.set	__irq_dma2_channel2, __default_handler
+//	.weak	__irq_dma2_channel3                         // __irq_dma2_channel3() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma2_channel3
+//	.set	__irq_dma2_channel3, __default_handler
+//	.weak	__irq_dma2_channel4_5                       // __irq_dma2_channel4_5() defined in STM32F1/cores/maple/libmaple/dma_f1.c
+//	.globl	__irq_dma2_channel4_5
+//	.set	__irq_dma2_channel4_5, __default_handler
 #endif /* STM32_HIGH_DENSITY */
