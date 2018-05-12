@@ -290,7 +290,7 @@ public:
      */
     uint8 transfer(uint8 data) const;
     uint16_t transfer16(uint16_t data) const;
-
+    void transfer(void *buf,size_t count) ; 
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
 	 * The transfer mode (8 or 16 bit mode) is evaluated from the SPI peripheral setting.
