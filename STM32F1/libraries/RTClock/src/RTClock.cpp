@@ -39,7 +39,7 @@
 	
 	}//end RTC
 
-	RTClock::RTClock(rtc_clk_src src, uint16 prescaler ) {
+	RTClock::RTClock(rtc_clk_src src, uint32 prescaler ) {
 		switch (src) {
 	
 		case RTCSEL_LSE : {
