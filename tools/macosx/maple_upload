@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -e
+set -e
 
 if [ $# -lt 4 ]; then
     echo "Usage: $0 $# <dummy_port> <altID> <usbID> <binfile>" >&2
@@ -32,8 +32,6 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 # 750ms to 1500ms seems to work on my Mac
 
 ${DIR}/upload-reset ${dummy_port_fullpath} 750
-
-sleep 1
 
 if [ $# -eq 5 ]; then
     dfuse_addr="--dfuse-address $5"
