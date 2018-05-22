@@ -27,7 +27,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 
 "${DIR}/upload-reset" ${dummy_port_fullpath} 750
-
+sleep 1
 
 #DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
 DFU_UTIL=/usr/bin/dfu-util

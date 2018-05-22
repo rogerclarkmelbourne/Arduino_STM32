@@ -82,24 +82,24 @@ void USBSerial::begin(unsigned long ignoreBaud)
 {
 volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
 
-	ignoreBaud=removeCompilerWarningsIgnoreBaud;
-	begin();
+  ignoreBaud=removeCompilerWarningsIgnoreBaud;
+  begin();
 }
 void USBSerial::begin(unsigned long ignoreBaud, uint8_t ignore)
 {
 volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
 volatile uint8_t removeCompilerWarningsIgnore=ignore;
 
-	ignoreBaud=removeCompilerWarningsIgnoreBaud;
-	ignore=removeCompilerWarningsIgnore;
-	begin();
+  ignoreBaud=removeCompilerWarningsIgnoreBaud;
+  ignore=removeCompilerWarningsIgnore;
+  begin();
 }
 
 void USBSerial::end(void) {
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_disable(BOARD_USB_DISC_DEV, (uint8_t)BOARD_USB_DISC_BIT);
     usb_cdcacm_remove_hooks(USB_CDCACM_HOOK_RX | USB_CDCACM_HOOK_IFACE_SETUP);
-	_hasBegun = false;
+    _hasBegun = false;
 #endif
 
 }
@@ -107,13 +107,13 @@ void USBSerial::end(void) {
 size_t USBSerial::write(uint8 ch) {
 size_t n = 0;
     this->write(&ch, 1);
-		return n;
+    return n;
 }
 
 size_t USBSerial::write(const char *str) {
 size_t n = 0;
     this->write((const uint8*)str, strlen(str));
-	return n;
+    return n;
 }
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
@@ -128,7 +128,7 @@ size_t n = 0;
         txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
     }
 
-	return n;
+  return n;
 }
 
 int USBSerial::available(void) {
@@ -138,24 +138,24 @@ int USBSerial::available(void) {
 int USBSerial::peek(void)
 {
     uint8 b;
-	if (usb_cdcacm_peek(&b, 1)==1)
-	{
-		return b;
-	}
-	else
-	{
-		return -1;
-	}
+    if (usb_cdcacm_peek(&b, 1)==1)
+    {
+      return b;
+    }
+    else
+    {
+      return -1;
+    }
 }
 
 void USBSerial::flush(void)
 {
 /*Roger Clark. Rather slow method. Need to improve this */
     uint8 b;
-	while(usb_cdcacm_data_available())
-	{
-		this->read(&b, 1);
-	}
+  while(usb_cdcacm_data_available())
+  {
+    this->read(&b, 1);
+  }
     return;
 }
 
@@ -184,19 +184,19 @@ size_t USBSerial::readBytes(char *buf, const size_t& len)
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
-	/*
-	    this->read(&b, 1);
+  /*
+    this->read(&b, 1);
     return b;
-	*/
-	
-	if (usb_cdcacm_rx(&b, 1)==0)
-	{
-		return -1;
-	}
-	else
-	{
-		return b;
-	}
+  */
+
+  if (usb_cdcacm_rx(&b, 1)==0)
+  {
+    return -1;
+  }
+  else
+  {
+    return b;
+  }
 }
 
 uint8 USBSerial::pending(void) {
@@ -216,9 +216,9 @@ USBSerial::operator bool() {
 }
 
 #if BOARD_HAVE_SERIALUSB
-	#ifdef SERIAL_USB 
-		USBSerial Serial;
-	#endif
+  #ifdef SERIAL_USB 
+    USBSerial Serial;
+  #endif
 #endif
 
 /*
@@ -264,10 +264,10 @@ static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestv
     }
 #endif
 #if false
-	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
-		iwdg_init(IWDG_PRE_4, 10);
-		while (1);
-	}
+  if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
+    iwdg_init(IWDG_PRE_4, 10);
+    while (1);
+  }
 #endif	
 }
 
@@ -288,19 +288,20 @@ static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {
-
-        if (usb_cdcacm_data_available() >= 4) 
-		{
-            uint8 chkBuf[4];
+        int len = usb_cdcacm_data_available();
+        if (len >= 4) 
+        {
+            uint8 chkBuf[64];
 
             // Peek at the waiting bytes, looking for reset sequence,
             // bailing on mismatch.
-            usb_cdcacm_peek_ex(chkBuf, usb_cdcacm_data_available() - 4, 4);
+            usb_cdcacm_peek(chkBuf, len);
+
             for (unsigned i = 0; i < sizeof(magic); i++) {
-                if (chkBuf[i] != magic[i]) 
-				{
-			        reset_state = DTR_LOW;
-                    return;
+                if (chkBuf[len + i - 4] != magic[i]) 
+                {
+                  reset_state = DTR_LOW;
+                  return;
                 }
             }
 
@@ -308,11 +309,11 @@ static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
             // The magic reset sequence is "1EAF".
             // Got the magic sequence -> reset, presumably into the bootloader.
             // Return address is wait_reset, but we must set the thumb bit.
-			bkp_init();
-			bkp_enable_writes();
-			bkp_write(10, 0x424C);
-			bkp_disable_writes();
-						
+            bkp_init();
+            bkp_enable_writes();
+            bkp_write(10, 0x424C);
+            bkp_disable_writes();
+
             uintptr_t target = (uintptr_t)wait_reset | 0x1;
             asm volatile("mov r0, %[stack_top]      \n\t" // Reset stack
                          "mov sp, r0                \n\t"

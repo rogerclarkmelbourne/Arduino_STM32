@@ -37,14 +37,22 @@ mapleMini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
 mapleMini.menu.bootloader_version.bootloader20.upload.maximum_data_size=20480
 mapleMini.menu.bootloader_version.bootloader20.upload.altID=2
 
+mapleMini.menu.bootloader_version.hid_bootloader = HID Bootloader (20k RAM,124k Flash)
+mapleMini.menu.bootloader_version.hid_bootloader.build.vect=VECT_TAB_ADDR=0x8001000
+mapleMini.menu.bootloader_version.hid_bootloader.build.ldscript=ld/hid_bootloader.ld
+mapleMini.menu.bootloader_version.hid_bootloader.upload.maximum_size=126976
+mapleMini.menu.bootloader_version.hid_bootloader.upload.maximum_data_size=20480
+mapleMini.menu.bootloader_version.hid_bootloader.upload.tool=hid_upload
+mapleMini.menu.bootloader_version.hid_bootloader.upload.protocol=maple_hid
+
 #-- CPU Clock frequency
-mapleMini.menu.cpu_speed.speed_72mhz=72MHz (Normal)
+mapleMini.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
 mapleMini.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 
-mapleMini.menu.cpu_speed.speed_48mhz=48MHz (Slow - with USB)
+mapleMini.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
 mapleMini.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
 
-mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128MHz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
+mapleMini.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
 mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 
 #-- Optimizations
@@ -398,6 +406,13 @@ genericSTM32F103C.menu.upload_method.jlinkMethod=JLink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.protocol=jlink
 genericSTM32F103C.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
 genericSTM32F103C.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
+
+genericSTM32F103C.menu.upload_method.HIDUploadMethod=HID bootloader
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.protocol=maple_hid
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.upload.tool=hid_upload
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.vect=VECT_TAB_ADDR=0x8001000
+genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.ldscript=ld/hid_bootloader.ld
 
 #-- CPU Clock frequency
 genericSTM32F103C.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
