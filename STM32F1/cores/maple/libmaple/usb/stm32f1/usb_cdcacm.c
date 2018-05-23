@@ -260,7 +260,7 @@ static ONE_DESCRIPTOR String_Descriptor[N_STRING_DESCRIPTORS] = {
 
 /* I/O state */
 
-#define CDC_SERIAL_RX_BUFFER_SIZE	256 // must be power of 2
+
 #define CDC_SERIAL_RX_BUFFER_SIZE_MASK (CDC_SERIAL_RX_BUFFER_SIZE-1)
 
 /* Received data */

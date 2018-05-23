@@ -288,21 +288,22 @@ static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {
-
-        if (usb_cdcacm_data_available() >= 4) 
+		int len = usb_cdcacm_data_available();
+        if (len >= 4) 
 		{
-            uint8 chkBuf[4];
+            uint8 chkBuf[CDC_SERIAL_RX_BUFFER_SIZE];
 
             // Peek at the waiting bytes, looking for reset sequence,
             // bailing on mismatch.
-            usb_cdcacm_peek_ex(chkBuf, usb_cdcacm_data_available() - 4, 4);
+            usb_cdcacm_peek(chkBuf, len);
+
             for (unsigned i = 0; i < sizeof(magic); i++) {
-                if (chkBuf[i] != magic[i]) 
-				{
-			        reset_state = DTR_LOW;
-                    return;
+                if (chkBuf[len + i - 4] != magic[i]) 
+                {
+                  reset_state = DTR_LOW;
+                  return;
                 }
-            }
+			}
 
 #ifdef SERIAL_USB 
             // The magic reset sequence is "1EAF".

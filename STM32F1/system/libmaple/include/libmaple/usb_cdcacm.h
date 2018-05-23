@@ -42,6 +42,8 @@
 extern "C" {
 #endif
 
+#define CDC_SERIAL_RX_BUFFER_SIZE	256 // must be power of 2
+
 /*
  * CDC ACM Requests
  */
