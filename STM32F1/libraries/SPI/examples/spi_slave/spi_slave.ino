@@ -22,7 +22,7 @@ void setup()
   setupSPI();
 }
 
-uint8_t count(0);
+uint8_t count = 0;
 void loop()
 {
   // Blocking call to read SPI message
