@@ -46,6 +46,7 @@
 // Additionally the GD32 has a 4 USB PLL divider settings, rather than the 2 settings in the STM32, which allow it to operate on frequencies of 48,72,96 and 120Mhz and still have USB functioning
 
 #ifndef BOARD_RCC_PLLMUL
+#if !USE_HSI_CLOCK
 #if F_CPU==120000000
 	#define BOARD_RCC_PLLMUL RCC_PLLMUL_10
 #elif F_CPU==96000000
@@ -53,14 +54,20 @@
 #elif F_CPU==72000000
 	#define BOARD_RCC_PLLMUL RCC_PLLMUL_6	
 #endif
-
+#else
+	#define BOARD_RCC_PLLMUL RCC_PLLMUL_16
+#endif
 #endif
 
 namespace wirish {
     namespace priv {
 
         static stm32f1_rcc_pll_data pll_data = {BOARD_RCC_PLLMUL};
+#if !USE_HSI_CLOCK
         __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSE, &pll_data};
+#else
+        __weak rcc_pll_cfg w_board_pll_cfg = {RCC_PLLSRC_HSI_DIV_2, &pll_data};
+#endif
         __weak adc_prescaler w_adc_pre = ADC_PRE_PCLK2_DIV_6;
         __weak adc_smp_rate w_adc_smp = ADC_SMPR_55_5;
 
