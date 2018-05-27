@@ -458,7 +458,7 @@ uint8 usb_cdcacm_is_transmitting(void) {
 
 int usb_cdcacm_tx_available()
 {
-	return CDC_SERIAL_TX_BUFFER_SIZE - usb_cdcacm_get_pending();
+	return CDC_SERIAL_TX_BUFFER_SIZE - usb_cdcacm_get_pending() - 1;
 }
 
 uint16 usb_cdcacm_get_pending(void) {
