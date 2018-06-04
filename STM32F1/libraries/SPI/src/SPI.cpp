@@ -385,24 +385,29 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     return ret;
 }
 
-void SPIClass::transfer(void *buf, size_t count) 
+void SPIClass::transfer(uint8_t *buf, size_t count) 
  {
     if (count == 0) return;
-    spi_dev * spi_d = _currentSetting->spi_d;
-    uint8 *p = (uint8_t *)buf;
-    spi_tx_reg(spi_d, *p); //transmitting first byte
+    spi_rx_reg(_currentSetting->spi_d);      // clear the RX buffer in case a byte is waiting on it.
+    spi_reg_map * regs = _currentSetting->spi_d->regs;
+    // start sequence: write byte 0
+    uint8_t out;
+    regs->DR = *buf;    //write the first byte.    
     while (--count > 0) 
-    {//if you wanted to transfer 4 things, it will go 3,2,1 and when it hits 9 the loop is exited , which is why the first byte is sent outside the loop
-        uint8 out = *(p + 1); //setting the thing to send(is generally 0)
-        while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
-        while (spi_is_busy(spi_d) != 0);     // wait until BSY=0 .waiting for clearance(from any last transmission or reception)
-        uint8 in = spi_rx_reg(spi_d); // reading SPI data register 
-        spi_tx_reg(spi_d, out); // transmitting stuff
-        *p++ = in; // placing the data in the buffer and incrementing address by 1.
+    {
+        out = *(buf + 1); 		    //setting the thing to send.
+        while( !(regs->SR & SPI_SR_TXE) );  // wait for TXE flag
+        noInterrupts();                     //go atomic level - avoid any interrupts while receiving data.
+        while ( !(regs->SR & SPI_SR_RXNE) );//wait till data is available on the DR register.
+        interrupts();                       //re-enable interrupts.
+        *buf++ = (uint8_t)(regs->DR);       //read and store the received byte. This clears the RXNE flag 
+        regs->DR = out;                     //write next data item into the DR register. This clears the TXE flag. 
     }
-    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
-    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
-    *p = spi_rx_reg(spi_d);//get the last byte in 
+    while( !(regs->SR & SPI_SR_TXE) ); // wait until TXE=1
+    noInterrupts();                     //go atomic level - avoid any interrupts while receiving data.
+    while ( !(regs->SR & SPI_SR_RXNE) );//wait till data is available on the DR register.
+    interrupts();                       //re-enable interrupts.
+    *buf = spi_rx_reg(spi_d);           //get the last byte in 
 }
 
 /*  Roger Clark and Victor Perez, 2015
