@@ -391,23 +391,19 @@ void SPIClass::transfer(uint8_t *buf, size_t count)
     spi_rx_reg(_currentSetting->spi_d);      // clear the RX buffer in case a byte is waiting on it.
     spi_reg_map * regs = _currentSetting->spi_d->regs;
     // start sequence: write byte 0
-    uint8_t out;
-    regs->DR = *buf;    //write the first byte.    
+    regs->DR = *buf;  
     while (--count > 0) 
     {
-        out = *(buf + 1); 		    //setting the thing to send.
-        while( !(regs->SR & SPI_SR_TXE) );  // wait for TXE flag
-        noInterrupts();                     //go atomic level - avoid any interrupts while receiving data.
-        while ( !(regs->SR & SPI_SR_RXNE) );//wait till data is available on the DR register.
-        interrupts();                       //re-enable interrupts.
-        *buf++ = (uint8_t)(regs->DR);       //read and store the received byte. This clears the RXNE flag 
-        regs->DR = out;                     //write next data item into the DR register. This clears the TXE flag. 
+        while( !(regs->SR & SPI_SR_TXE) );   // wait for TXE flag
+        noInterrupts();                      // go atomic level - avoid interrupts to surely get the previously received data
+        regs->DR = *buf;                  // write the next data item to be transmitted into the SPI_DR register. This clears the TXE flag.
+        while ( !(regs->SR & SPI_SR_RXNE) ); // wait till data is available in the DR register
+        *buf++ = (uint8)(regs->DR);       // read and store the received byte. This clears the RXNE flag.
+        interrupts();                        // let systick do its job
     }
-    while( !(regs->SR & SPI_SR_TXE) ); // wait until TXE=1
-    noInterrupts();                     //go atomic level - avoid any interrupts while receiving data.
-    while ( !(regs->SR & SPI_SR_RXNE) );//wait till data is available on the DR register.
-    interrupts();                       //re-enable interrupts.
-    *buf = spi_rx_reg(spi_d);           //get the last byte in 
+    // read remaining last byte
+    while ( !(regs->SR & SPI_SR_RXNE) );     // wait till data is available in the Rx register
+    *buf++ = (uint8)(regs->DR); 
 }
 
 /*  Roger Clark and Victor Perez, 2015
