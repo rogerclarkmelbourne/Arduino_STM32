@@ -385,13 +385,13 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     return ret;
 }
 
-void SPIClass::transfer(uint8_t *buf, size_t count) 
+void SPIClass::transfer(uint8_t *buf, size_t count) //implementation written by stevstrong. 
  {
     if (count == 0) return;
     spi_rx_reg(_currentSetting->spi_d);      // clear the RX buffer in case a byte is waiting on it.
     spi_reg_map * regs = _currentSetting->spi_d->regs;
     // start sequence: write byte 0
-    regs->DR = *buf;  
+    regs->DR = *buf;  //transmit first byte
     while (--count > 0) 
     {
         while( !(regs->SR & SPI_SR_TXE) );   // wait for TXE flag
@@ -403,7 +403,7 @@ void SPIClass::transfer(uint8_t *buf, size_t count)
     }
     // read remaining last byte
     while ( !(regs->SR & SPI_SR_RXNE) );     // wait till data is available in the Rx register
-    *buf++ = (uint8)(regs->DR); 
+    *buf++ = (uint8)(regs->DR);  //read and store the last byte. 
 }
 
 /*  Roger Clark and Victor Perez, 2015
