@@ -148,6 +148,8 @@ int USBSerial::peek(void)
 	}
 }
 
+int USBSerial::availableForWrite(void) { return usb_cdcacm_tx_available(); }
+
 void USBSerial::flush(void)
 {
 /*Roger Clark. Rather slow method. Need to improve this */

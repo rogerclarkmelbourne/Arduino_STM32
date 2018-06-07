@@ -108,22 +108,22 @@ public:
     /*
      * Stack up bytes to be sent when transmitting
      */
-    void write(uint8);
+    size_t write(uint8);
 
     /*
      * Stack up bytes from the array to be sent when transmitting
      */
-    void write(uint8*, int);
+    size_t write(uint8*, int);
 
     /*
      * Ensure that a sending data will only be 8-bit bytes
      */
-    void write(int);
+    size_t write(int);
 
     /*
      * Ensure that an array sending data will only be 8-bit bytes
      */
-    void write(int*, int);
+    size_t write(int*, int);
 
     /*
      * Stack up bytes from a string to be sent when transmitting
