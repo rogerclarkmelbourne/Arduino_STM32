@@ -32,8 +32,8 @@
 
 sdio_dev * SDIO = SDIO_BASE;
 
-#define DELAY_LONG 10
-#define DELAY_SHORT 1
+#define DELAY_LONG 20
+#define DELAY_SHORT 2
 
 uint8_t dly = DELAY_LONG; // microseconds delay after accessing registers
 
@@ -43,9 +43,13 @@ uint8_t dly = DELAY_LONG; // microseconds delay after accessing registers
 void sdio_gpios_init(void)
 {
 	gpio_set_mode(PIN_MAP[BOARD_SDIO_D0].gpio_device, PIN_MAP[BOARD_SDIO_D0].gpio_bit, GPIO_AF_OUTPUT_PP);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_AF_OUTPUT_PP);
+/*	gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_AF_OUTPUT_PP);
 	gpio_set_mode(PIN_MAP[BOARD_SDIO_D2].gpio_device, PIN_MAP[BOARD_SDIO_D2].gpio_bit, GPIO_AF_OUTPUT_PP);
 	gpio_set_mode(PIN_MAP[BOARD_SDIO_D3].gpio_device, PIN_MAP[BOARD_SDIO_D3].gpio_bit, GPIO_AF_OUTPUT_PP);
+*/
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_INPUT_PU);
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D2].gpio_device, PIN_MAP[BOARD_SDIO_D2].gpio_bit, GPIO_INPUT_PU);
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D3].gpio_device, PIN_MAP[BOARD_SDIO_D3].gpio_bit, GPIO_INPUT_PU);
 	gpio_set_mode(PIN_MAP[BOARD_SDIO_CLK].gpio_device, PIN_MAP[BOARD_SDIO_CLK].gpio_bit, GPIO_AF_OUTPUT_PP);
 	gpio_set_mode(PIN_MAP[BOARD_SDIO_CMD].gpio_device, PIN_MAP[BOARD_SDIO_CMD].gpio_bit, GPIO_AF_OUTPUT_PP);
 	/*
@@ -63,12 +67,12 @@ void sdio_gpios_init(void)
 
 void sdio_gpios_deinit(void)
 {
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_D0].gpio_device, PIN_MAP[BOARD_SDIO_D0].gpio_bit, GPIO_INPUT_FLOATING);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_INPUT_FLOATING);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_D2].gpio_device, PIN_MAP[BOARD_SDIO_D2].gpio_bit, GPIO_INPUT_FLOATING);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_D3].gpio_device, PIN_MAP[BOARD_SDIO_D3].gpio_bit, GPIO_INPUT_FLOATING);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_CLK].gpio_device, PIN_MAP[BOARD_SDIO_CLK].gpio_bit, GPIO_INPUT_FLOATING);
-	gpio_set_mode(PIN_MAP[BOARD_SDIO_CMD].gpio_device, PIN_MAP[BOARD_SDIO_CMD].gpio_bit, GPIO_INPUT_FLOATING);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_D0].gpio_device, PIN_MAP[BOARD_SDIO_D0].gpio_bit, GPIO_INPUT_PU);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_INPUT_PU);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_D2].gpio_device, PIN_MAP[BOARD_SDIO_D2].gpio_bit, GPIO_INPUT_PU);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_D3].gpio_device, PIN_MAP[BOARD_SDIO_D3].gpio_bit, GPIO_INPUT_PU);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_CLK].gpio_device, PIN_MAP[BOARD_SDIO_CLK].gpio_bit, GPIO_INPUT_PU);
+	gpio_set_mode(PIN_MAP[BOARD_SDIO_CMD].gpio_device, PIN_MAP[BOARD_SDIO_CMD].gpio_bit, GPIO_INPUT_PU);
 
 	/*
 	 *  Todo just remove it, not needed for F1.
@@ -110,19 +114,35 @@ void sdio_power_off(void)
 
 void sdio_set_clock(uint32_t clk)
 {
-	if (clk>24000000UL) clk = 24000000UL; // limit the SDIO master clock to 24MHz
+	/*
+	 * limit the SDIO master clock to 8/3 of PCLK2.See RM 22.3
+	 * Also limited to no more than 48Mhz
+	 */
+    clk = min(clk,(SDIOCLK/3)*8);
+    clk = min(clk,36000000);
 
 	if (clk<1000000) dly = DELAY_LONG;
 	else dly = DELAY_SHORT;
 
+	/*
+	 *  round up divider, so we don't run the card over the speed supported.
+
+	 */
+	uint32 div = SDIOCLK/clk + (SDIOCLK % clk != 0) - 2;
+
+
 	sdio_disable();
-	SDIO->CLKCR = (SDIO->CLKCR & (~(SDIO_CLKCR_CLKDIV|SDIO_CLKCR_BYPASS))) | SDIO_CLKCR_CLKEN | (((SDIOCLK/clk)-2)&SDIO_CLKCR_CLKDIV);
+	//Serial.println(div,DEC);
+	SDIO->CLKCR = (SDIO->CLKCR & (~(SDIO_CLKCR_CLKDIV|SDIO_CLKCR_BYPASS))) | SDIO_CLKCR_PWRSAV | SDIO_CLKCR_HWFC_EN | SDIO_CLKCR_CLKEN  | (div & SDIO_CLKCR_CLKDIV);
 	delay_us(dly);
 }
 
 void sdio_set_dbus_width(uint16_t bus_w)
 {
 	SDIO->CLKCR = (SDIO->CLKCR & (~SDIO_CLKCR_WIDBUS)) | bus_w;
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D1].gpio_device, PIN_MAP[BOARD_SDIO_D1].gpio_bit, GPIO_AF_OUTPUT_PP);
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D2].gpio_device, PIN_MAP[BOARD_SDIO_D2].gpio_bit, GPIO_AF_OUTPUT_PP);
+    gpio_set_mode(PIN_MAP[BOARD_SDIO_D3].gpio_device, PIN_MAP[BOARD_SDIO_D3].gpio_bit, GPIO_AF_OUTPUT_PP);
 	delay_us(dly);
 }
 
@@ -149,9 +169,10 @@ void sdio_disable(void)
  */
 void sdio_begin(void)
 {
-	sdio_gpios_init();
+
 	sdio_init();
 	sdio_power_on();
+  sdio_gpios_init();
 	// Set initial SCK rate.
 	sdio_set_clock(400000);
 	delay_us(200); // generate 80 pulses at 400kHz
@@ -162,11 +183,11 @@ void sdio_begin(void)
  */
 void sdio_end(void)
 {
-	sdio_disable();
-	while ( sdio_cmd_xfer_ongoing() );
+  while ( sdio_cmd_xfer_ongoing() );
+  sdio_disable();
+  sdio_gpios_deinit();
 	sdio_power_off();
     rcc_clk_disable(RCC_SDIO);
-	sdio_gpios_deinit();
 }
 
 /**

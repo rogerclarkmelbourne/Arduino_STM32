@@ -80,7 +80,7 @@ void systick_attach_callback(void (*callback)(void)) {
  * SysTick ISR
  */
 
-void __exc_systick(void) {
+__weak void __exc_systick(void) {
     systick_uptime_millis++;
     if (systick_user_callback) {
         systick_user_callback();

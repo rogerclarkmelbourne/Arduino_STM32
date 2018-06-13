@@ -120,12 +120,12 @@ static void setup_clocks(void) {
     // Clear clock readiness interrupt flags and turn off clock
     // readiness interrupts.
     RCC_BASE->CIR = 0x00000000;
-
+#if !USE_HSI_CLOCK
     // Enable HSE, and wait until it's ready.
     rcc_turn_on_clk(RCC_CLK_HSE);
     while (!rcc_is_clk_ready(RCC_CLK_HSE))
         ;
-
+#endif
     // Configure AHBx, APBx, etc. prescalers and the main PLL.
     wirish::priv::board_setup_clock_prescalers();
     rcc_configure_pll(&wirish::priv::w_board_pll_cfg);
@@ -153,11 +153,7 @@ static void setup_clocks(void) {
 #if defined(BOOTLOADER_maple)
 	#define USER_ADDR_ROM 0x08005000
 #else
-	#if defined(BOOTLOADER_robotis)
-		#define USER_ADDR_ROM 0x08003000
-	#else
-		#define USER_ADDR_ROM 0x08000000
-	#endif
+	#define USER_ADDR_ROM 0x08000000
 #endif
 #define USER_ADDR_RAM 0x20000C00
 extern char __text_start__;

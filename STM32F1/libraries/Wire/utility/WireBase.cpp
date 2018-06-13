@@ -71,7 +71,7 @@ uint8 WireBase::endTransmission(bool stop) {
 }
 
 uint8 WireBase::endTransmission(){
-    endTransmission(true);
+    return endTransmission(true);
 }
 
 //TODO: Add the ability to queue messages (adding a boolean to end of function
@@ -95,27 +95,33 @@ uint8 WireBase::requestFrom(int address, int numBytes) {
     return WireBase::requestFrom((uint8)address, numBytes);
 }
 
-void WireBase::write(uint8 value) {
+size_t WireBase::write(uint8 value) {
     if (tx_buf_idx == BUFFER_LENGTH) {
         tx_buf_overflow = true;
-        return;
+        return 0;
     }
     tx_buf[tx_buf_idx++] = value;
     itc_msg.length++;
+	return 1;
 }
 
-void WireBase::write(uint8* buf, int len) {
+size_t WireBase::write(uint8* buf, int len) {
     for (uint8 i = 0; i < len; i++) {
-        write(buf[i]);
+        if (!write(buf[i]))
+		{
+			return i;
+		}
     }
+	return len;
 }
 
-void WireBase::write(int value) {
-    write((uint8)value);
+
+size_t WireBase::write(int value) {
+    return write((uint8)value);
 }
 
-void WireBase::write(int* buf, int len) {
-    write((uint8*)buf, (uint8)len);
+size_t WireBase::write(int* buf, int len) {
+    return write((uint8*)buf, (uint8)len);
 }
 
 void WireBase::write(char* buf) {
