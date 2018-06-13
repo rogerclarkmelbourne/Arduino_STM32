@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <libmaple/nvic.h>
 #include "usb_hid.h"
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 #include "usb_generic.h"
 #include <libmaple/usb.h>
 #include <string.h>
