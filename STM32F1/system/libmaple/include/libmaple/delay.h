@@ -46,6 +46,7 @@ extern "C" {
  * @param us Number of microseconds to delay.
  */
 static inline void delay_us(uint32 us) {
+    if(!us) return;
     us *= STM32_DELAY_US_MULT;
 
     /* fudge for function call overhead  */
