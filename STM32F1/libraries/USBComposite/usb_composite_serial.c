@@ -33,7 +33,7 @@
  * the result made cleaner.
  */
 
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 #include "usb_generic.h"
 #include <string.h>
 #include <libmaple/usb.h>

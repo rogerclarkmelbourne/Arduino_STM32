@@ -23,7 +23,7 @@
 #include <string.h>
 #include <libmaple/iwdg.h>
 
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 
 #define USB_TIMEOUT 50
 

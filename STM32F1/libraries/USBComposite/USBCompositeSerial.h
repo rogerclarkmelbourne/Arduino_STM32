@@ -2,7 +2,7 @@
 #define _COMPOSITE_SERIAL_H_
 
 #include "USBComposite.h"
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 
 class USBCompositeSerial : public Stream {
 private:

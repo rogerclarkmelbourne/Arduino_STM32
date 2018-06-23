@@ -6,6 +6,7 @@
 #include "SdFat.h"
 
 #define LED_PIN PB12
+#define PRODUCT_ID 0x29
 
 SdFatEX sd;
 const uint32_t speed = SPI_CLOCK_DIV2 ;
@@ -22,6 +23,7 @@ bool read(uint32_t memoryOffset, uint8_t *readbuff, uint16_t transferLength) {
 }
 
 void setup() {
+  USBComposite.setProductId(PRODUCT_ID);
   pinMode(LED_PIN,OUTPUT);
   digitalWrite(LED_PIN,1);
 }
