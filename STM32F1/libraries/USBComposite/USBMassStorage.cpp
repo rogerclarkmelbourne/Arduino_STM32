@@ -1,7 +1,7 @@
 #include "USBMassStorage.h"
 #include "usb_mass.h"
 #include "usb_mass_mal.h"
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 #include <string.h>
 
 void USBMassStorageDevice::begin() {

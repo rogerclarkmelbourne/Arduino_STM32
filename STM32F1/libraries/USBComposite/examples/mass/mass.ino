@@ -1,5 +1,7 @@
 #include <USBComposite.h>
 
+#define PRODUCT_ID 0x29
+
 #include "image.h"
 
 bool write(uint32_t memoryOffset, const uint8_t *writebuff, uint16_t transferLength) {
@@ -49,6 +51,7 @@ void dumpDrive() {
 }
 
 void setup() {
+  USBComposite.setProductId(PRODUCT_ID);
   MassStorage.setDrive(0, sizeof(image), read, write);
   MassStorage.registerComponent();
   CompositeSerial.registerComponent();
