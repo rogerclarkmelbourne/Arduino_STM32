@@ -33,11 +33,12 @@ static void ifaceSetupHook(unsigned, void*);
 #endif
 
 bool USBCompositeSerial::init(USBCompositeSerial* me) {
-	(void)me;
 #if defined(SERIAL_USB)
 	composite_cdcacm_set_hooks(USBHID_CDCACM_HOOK_RX, rxHook);
 	composite_cdcacm_set_hooks(USBHID_CDCACM_HOOK_IFACE_SETUP, ifaceSetupHook);
 #endif
+    composite_cdcacm_setTXEPSize(me->txPacketSize);
+    composite_cdcacm_setRXEPSize(me->rxPacketSize);
 	return true;
 }
 

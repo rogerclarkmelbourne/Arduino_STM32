@@ -18,6 +18,7 @@
  * @brief USB HID Keyboard device 
  */
 
+#include <Arduino.h>
 #include <string.h>
 #include <stdint.h>
 #include <libmaple/nvic.h>
@@ -25,13 +26,19 @@
 #include "USBXBox360.h" 
 #include "usb_x360.h"
 
+bool USBXBox360::wait() {
+    uint32_t t=millis();
+	while (x360_is_transmitting() != 0 && (millis()-t)<500) ;
+    return ! x360_is_transmitting();
+}
+
 void USBXBox360::sendReport(void){
 	x360_tx(xbox360_Report, sizeof(xbox360_Report));
-	
-	while (x360_is_transmitting() != 0) {
-    }
+
+    if(wait()) {
 	/* flush out to avoid having the pc wait for more data */
-	x360_tx(NULL, 0);
+        x360_tx(NULL, 0);
+    }
 }
 
 void USBXBox360::setRumbleCallback(void (*callback)(uint8 left, uint8 right)) {
@@ -45,12 +52,13 @@ void USBXBox360::setLEDCallback(void (*callback)(uint8 pattern)) {
 
 bool USBXBox360::init(void* ignore) {
 	(void)ignore;
-	usb_generic_set_info(0x045e, 0x028e, NULL, NULL, NULL);
+    USBComposite.setVendorId(0x045e);
+    USBComposite.setProductId(0x028e);
 	return true;
 }
 
 bool USBXBox360::registerComponent() {
-	return USBComposite.add(&usbX360Part, this, init);
+	return USBComposite.add(&usbX360Part, this, (USBPartInitializer)&USBXBox360::init);
 }
 
 void USBXBox360::begin(void){
@@ -85,16 +93,14 @@ bool USBXBox360::getManualReportMode() {
 
 void USBXBox360::safeSendReport() {	
     if (!manualReport) {
-        while (x360_is_transmitting() != 0) {
-        }
-        sendReport();
+        if (wait())
+            sendReport();
     }
 }
 
 void USBXBox360::send() {
-    while (x360_is_transmitting() != 0) {
-    }
-    sendReport();
+    if (wait())
+        sendReport();
 }
     
 void USBXBox360::button(uint8_t button, bool val){

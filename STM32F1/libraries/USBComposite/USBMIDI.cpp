@@ -60,12 +60,14 @@ void USBMidi::setChannel(unsigned int channel) {
 
 }
 
-/*bool USBMidi::init(USBMidi* me) {
+bool USBMidi::init(USBMidi* me) {
+    usb_midi_setTXEPSize(me->txPacketSize);
+    usb_midi_setRXEPSize(me->rxPacketSize);
 	return true;
-}*/
+}
 
 bool USBMidi::registerComponent() {
-    return USBComposite.add(&usbMIDIPart, this); 
+    return USBComposite.add(&usbMIDIPart, this, (USBPartInitializer)&USBMidi::init); 
 }
 
 void USBMidi::begin(unsigned channel) {
@@ -113,7 +115,7 @@ void USBMidi::writePackets(const void *buf, uint32 len) {
     }
 
 
-    if (sent == USB_MIDI_TX_EPSIZE) {
+    if (sent == usb_midi_txEPSize) {
         while (usb_midi_is_transmitting() != 0) {
         }
         /* flush out to avoid having the pc wait for more data */

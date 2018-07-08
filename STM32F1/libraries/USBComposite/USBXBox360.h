@@ -29,6 +29,7 @@ private:
     bool enabled;
 	void safeSendReport(void);
 	void sendReport(void);
+    bool wait(void);
 public:
 	void send(void);
 	static bool init(void* ignore);
