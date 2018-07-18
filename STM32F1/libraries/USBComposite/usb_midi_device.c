@@ -264,6 +264,7 @@ static void getMIDIPartDescriptor(uint8* out) {
     // patch to reflect where the part goes in the descriptor
     OUT_BYTE(usbMIDIDescriptor_Config, AC_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, MS_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
+    OUT_BYTE(usbMIDIDescriptor_Config, AC_CS_Interface.baInterfaceNr) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, DataOutEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
     OUT_BYTE(usbMIDIDescriptor_Config, DataInEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
 }

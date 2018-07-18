@@ -129,9 +129,12 @@ uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len);
 uint32 usb_cdcacm_data_available(void); /* in RX buffer */
 uint16 usb_cdcacm_get_pending(void);
 uint8 usb_cdcacm_is_transmitting(void);
+int usb_cdcacm_tx_available();
 
 uint8 usb_cdcacm_get_dtr(void);
 uint8 usb_cdcacm_get_rts(void);
+
+
 
 typedef struct usb_cdcacm_line_coding {
     uint32 dwDTERate;           /* Baud rate */
