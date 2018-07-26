@@ -42,8 +42,6 @@ discovery_f407.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
 #-- Optimizations
 discovery_f407.menu.opt.osstd=Smallest (default)
-discovery_f407.menu.opt.osstd.build.flags.optimize=-Os
-discovery_f407.menu.opt.osstd.build.flags.ldspecs=
 discovery_f407.menu.opt.oslto=Smallest Code with LTO
 discovery_f407.menu.opt.oslto.build.flags.optimize=-Os -flto
 discovery_f407.menu.opt.oslto.build.flags.ldspecs=-flto
@@ -127,8 +125,6 @@ generic_f407v.menu.upload_method.DFUUploadMethod.upload.altID=2
 
 #-- Optimizations
 generic_f407v.menu.opt.osstd=Smallest (default)
-generic_f407v.menu.opt.osstd.build.flags.optimize=-Os
-generic_f407v.menu.opt.osstd.build.flags.ldspecs=
 generic_f407v.menu.opt.oslto=Smallest Code with LTO
 generic_f407v.menu.opt.oslto.build.flags.optimize=-Os -flto
 generic_f407v.menu.opt.oslto.build.flags.ldspecs=-flto
@@ -192,8 +188,6 @@ stm32f4stamp.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
 #-- Optimizations
 stm32f4stamp.menu.opt.osstd=Smallest (default)
-stm32f4stamp.menu.opt.osstd.build.flags.optimize=-Os
-stm32f4stamp.menu.opt.osstd.build.flags.ldspecs=
 stm32f4stamp.menu.opt.oslto=Smallest Code with LTO
 stm32f4stamp.menu.opt.oslto.build.flags.optimize=-Os -flto
 stm32f4stamp.menu.opt.oslto.build.flags.ldspecs=-flto
@@ -256,8 +250,6 @@ netduino2plus.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
 
 #-- Optimizations
 netduino2plus.menu.opt.osstd=Smallest (default)
-netduino2plus.menu.opt.osstd.build.flags.optimize=-Os
-netduino2plus.menu.opt.osstd.build.flags.ldspecs=
 netduino2plus.menu.opt.oslto=Smallest Code with LTO
 netduino2plus.menu.opt.oslto.build.flags.optimize=-Os -flto
 netduino2plus.menu.opt.oslto.build.flags.ldspecs=-flto
