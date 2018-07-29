@@ -47,6 +47,7 @@ class TwoWire : public WireBase {
 private:
     i2c_dev* sel_hard;
     uint8    dev_flags;
+    bool     isbegin;
 protected:
     /*
      * Processes the incoming I2C message defined by WireBase to the
