@@ -60,7 +60,7 @@ uint8 TwoWire::process(){
 }
 
 // TODO: Add in Error Handling if devsel is out of range for other Maples
-TwoWire::TwoWire(uint8 dev_sel, uint8 flags) : isbegin(false) {
+TwoWire::TwoWire(uint8 dev_sel, uint8 flags) {
     if (dev_sel == 1) {
         sel_hard = I2C1;
     } else if (dev_sel == 2) {
@@ -77,15 +77,12 @@ TwoWire::~TwoWire() {
 }
 
 void TwoWire::begin(uint8 self_addr) {
-    if(isbegin) return;
-    isbegin = true;
     i2c_master_enable(sel_hard, dev_flags);
 }
 
 void TwoWire::end() {
     i2c_disable(sel_hard);
     sel_hard = 0;
-    isbegin = false;
 }
 
 void TwoWire::setClock(uint32_t frequencyHz)
