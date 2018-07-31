@@ -246,6 +246,7 @@ netduino2plus.build.density=STM32_HIGH_DENSITY
 netduino2plus.build.error_led_port=GPIOD
 netduino2plus.build.error_led_pin=14
 netduino2plus.build.board=Netduino2F405
+netduino2plus.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
 netduino2plus.menu.usb_cfg.usb_nc=USB inactive
 netduino2plus.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
