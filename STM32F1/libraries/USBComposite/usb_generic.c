@@ -72,7 +72,7 @@ static void usbSetConfiguration(void);
 static void usbSetDeviceAddress(void);
 
 #define LEAFLABS_ID_VENDOR                0x1EAF
-#define MAPLE_ID_PRODUCT                  0x0004 // was 0x0024
+#define MAPLE_ID_PRODUCT                  0x0024 // was 0x0024
 #define USB_DEVICE_CLASS              	  0x00
 #define USB_DEVICE_SUBCLASS	           	  0x00
 #define DEVICE_PROTOCOL					  0x01

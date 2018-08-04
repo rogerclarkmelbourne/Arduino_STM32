@@ -293,15 +293,15 @@ typedef struct {
 class USBHIDDevice {
 private:
 	bool enabledHID = false;
+    uint32 txPacketSize = 64;
 public:
+	static bool init(USBHIDDevice* me);
 	bool registerComponent();
 	void setReportDescriptor(const uint8_t* report_descriptor, uint16_t report_descriptor_length);
 	void setReportDescriptor(const HIDReportDescriptor* reportDescriptor);
     // All the strings are zero-terminated ASCII strings. Use NULL for defaults.
-    void begin(const uint8_t* report_descriptor, uint16_t length, uint16_t idVendor=0, uint16_t idProduct=0,
-        const char* manufacturer=NULL, const char* product=NULL, const char* serialNumber="00000000000000000001");
-    void begin(const HIDReportDescriptor* reportDescriptor, uint16_t idVendor=0, uint16_t idProduct=0,
-        const char* manufacturer=NULL, const char* product=NULL, const char* serialNumber="00000000000000000001");
+    void begin(const uint8_t* report_descriptor, uint16_t length);
+    void begin(const HIDReportDescriptor* reportDescriptor);
     void setSerial(uint8 serialSupport=true);
     void setBuffers(uint8_t buffers, volatile HIDBuffer_t* fb=NULL, int count=0); // type = HID_REPORT_TYPE_FEATURE or HID_REPORT_TYPE_OUTPUT
     bool addBuffer(uint8_t type, volatile HIDBuffer_t* buffer);
@@ -320,12 +320,13 @@ public:
         setBuffers(HID_REPORT_TYPE_OUTPUT, fb, count);
     }     
     void end(void);
+    void setTXPacketSize(uint32 size=64) {
+        txPacketSize = size;
+    }
 };
 
-void USBHID_begin_with_serial(const uint8_t* report_descriptor, uint16_t length, uint16_t idVendor=0, uint16_t idProduct=0,
-	const char* manufacturer=NULL, const char* product=NULL, const char* serialNumber="00000000000000000001");
-void USBHID_begin_with_serial(const HIDReportDescriptor* reportDescriptor, uint16_t idVendor=0, uint16_t idProduct=0,
-	const char* manufacturer=NULL, const char* product=NULL, const char* serialNumber="00000000000000000001");
+void USBHID_begin_with_serial(const uint8_t* report_descriptor, uint16_t length);
+void USBHID_begin_with_serial(const HIDReportDescriptor* reportDescriptor);
 
 class HIDReporter {
     private:

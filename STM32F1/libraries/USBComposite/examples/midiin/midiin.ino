@@ -15,6 +15,7 @@ class myMidi : public USBMidi {
 myMidi midi;
 
 void setup() {
+    USBComposite.setProductId(0x0030);
     pinMode(SPEAKER_PIN, OUTPUT);
     midi.registerComponent();
     CompositeSerial.registerComponent();

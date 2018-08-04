@@ -70,6 +70,8 @@ static void vcomDataRxCb(void);
  * Descriptors
  */
  
+static uint32_t txEPSize = 64;
+static uint32_t rxEPSize = 64;
 
 typedef struct {
     //CDCACM
@@ -165,7 +167,7 @@ static const serial_part_config serialPartConfigData = {
         .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_OUT |
                              CDCACM_ENDPOINT_RX), // patch
         .bmAttributes     = USB_EP_TYPE_BULK,
-        .wMaxPacketSize   = USBHID_CDCACM_RX_EPSIZE,
+        .wMaxPacketSize   = 64, // patch
         .bInterval        = 0x00,
     },
 
@@ -174,17 +176,18 @@ static const serial_part_config serialPartConfigData = {
         .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
         .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | CDCACM_ENDPOINT_TX), // PATCH
         .bmAttributes     = USB_EP_TYPE_BULK,
-        .wMaxPacketSize   = USBHID_CDCACM_TX_EPSIZE,
+        .wMaxPacketSize   = 64, // patch
         .bInterval        = 0x00,
     }
 };
 
 #define OUT_BYTE(s,v) out[(uint8*)&(s.v)-(uint8*)&s]
+#define OUT_16(s,v) *(uint16_t*)&OUT_BYTE(s,v) // OK on Cortex which can handle unaligned writes
 
 static USBEndpointInfo serialEndpoints[3] = {
     {
         .callback = vcomDataTxCb,
-        .bufferSize = USBHID_CDCACM_TX_EPSIZE,
+        .bufferSize = 64, // patch
         .type = USB_EP_EP_TYPE_BULK,
         .tx = 1,
     },
@@ -196,7 +199,7 @@ static USBEndpointInfo serialEndpoints[3] = {
     },
     {
         .callback = vcomDataRxCb,
-        .bufferSize = USBHID_CDCACM_RX_EPSIZE,
+        .bufferSize = 64, // patch
         .type = USB_EP_EP_TYPE_BULK,
         .tx = 0,
     },
@@ -216,6 +219,23 @@ static void getSerialPartDescriptor(uint8* out) {
     OUT_BYTE(serialPartConfigData, CDC_Functional_CallManagement.Data[1]) += usbSerialPart.startInterface;
     OUT_BYTE(serialPartConfigData, CDC_Functional_Union.Data[0]) += usbSerialPart.startInterface;
     OUT_BYTE(serialPartConfigData, CDC_Functional_Union.Data[1]) += usbSerialPart.startInterface;
+    
+    OUT_16(serialPartConfigData, DataOutEndpoint.wMaxPacketSize) = rxEPSize;
+    OUT_16(serialPartConfigData, DataInEndpoint.wMaxPacketSize) = txEPSize;
+}
+
+void composite_cdcacm_setTXEPSize(uint32_t size) {
+    if (size == 0 || size > 64)
+        size = 64;
+    serialEndpoints[0].bufferSize = size;
+    txEPSize = size;
+}
+
+void composite_cdcacm_setRXEPSize(uint32_t size) {
+    if (size == 0 || size > 64)
+        size = 64;
+    serialEndpoints[2].bufferSize = size;
+    rxEPSize = size;
 }
 
 USBCompositePart usbSerialPart = {
@@ -441,9 +461,9 @@ static void vcomDataTxCb(void)
 		return; // it was already flushed, keep Tx endpoint disabled
 	}
 	usbGenericTransmitting = 1;
-    // We can only send up to USBHID_CDCACM_TX_EPSIZE bytes in the endpoint.
-    if (tx_unsent > USBHID_CDCACM_TX_EPSIZE) {
-        tx_unsent = USBHID_CDCACM_TX_EPSIZE;
+    // We can only send up to txEPSize bytes in the endpoint.
+    if (tx_unsent > txEPSize) {
+        tx_unsent = txEPSize;
     }
 	// copy the bytes from USB Tx buffer to PMA buffer
 	uint32 *dst = usb_pma_ptr(usbSerialPart.endpoints[CDCACM_ENDPOINT_TX].pmaAddress);
@@ -495,7 +515,7 @@ static void vcomDataRxCb(void)
 
 	uint32 rx_unread = (head - vcom_rx_tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 	// only enable further Rx if there is enough room to receive one more packet
-	if ( rx_unread < (CDC_SERIAL_RX_BUFFER_SIZE-USBHID_CDCACM_RX_EPSIZE) ) {
+	if ( rx_unread < (CDC_SERIAL_RX_BUFFER_SIZE-rxEPSize) ) {
 		usb_set_ep_rx_stat(usbSerialPart.endpoints[CDCACM_ENDPOINT_RX].address, USB_EP_STAT_RX_VALID);
 	}
 

@@ -72,16 +72,13 @@ typedef struct HIDBuffer_t {
 extern "C" {
 #endif
 
-#define USB_HID_TX_EPSIZE            	0x40
-
 void usb_hid_set_report_descriptor(const uint8* report_descriptor, uint16 report_descriptor_length);
 void usb_hid_clear_buffers(uint8_t type);
 uint8_t usb_hid_add_buffer(uint8_t type, volatile HIDBuffer_t* buf);
 void usb_hid_set_buffers(uint8_t type, volatile HIDBuffer_t* featureBuffers, int count);    
 uint16_t usb_hid_get_data(uint8_t type, uint8_t reportID, uint8_t* out, uint8_t poll);
 void usb_hid_set_feature(uint8_t reportID, uint8_t* data);
-
- 
+void usb_hid_setTXEPSize(uint32_t size); 
 
 /*
  * HID Requests
