@@ -146,7 +146,7 @@ int composite_cdcacm_get_n_data_bits(void); /* bDataBits */
 
 void composite_cdcacm_set_hooks(unsigned hook_flags, void (*hook)(unsigned, void*));
 
-static inline __always_inline void composite_cdcacm_remove_hooks(unsigned hook_flags) {
+static __always_inline void composite_cdcacm_remove_hooks(unsigned hook_flags) {
     composite_cdcacm_set_hooks(hook_flags, 0);
 }
 
