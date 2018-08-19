@@ -126,12 +126,7 @@ int HardwareSerial::peek(void)
 
 int HardwareSerial::availableForWrite(void)
 {
-/* Roger Clark. 
- * Currently there isn't an output ring buffer, chars are sent straight to the hardware. 
- * so just return 1, meaning that 1 char can be written
- * This will be slower than a ring buffer implementation, but it should at least work !
- */
-  return 1;
+    return this->usart_device->wb->size-rb_full_count(this->usart_device->wb);
 }
 
 size_t HardwareSerial::write(unsigned char ch) {
