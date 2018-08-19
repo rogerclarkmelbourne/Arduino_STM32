@@ -538,6 +538,10 @@ static inline void dma_clear_isr_bits(dma_dev *dev, dma_tube tube) {
     dev->regs->IFCR = (1U << (4 * (tube - 1)));
 }
 
+static inline uint16 dma_get_count(dma_dev *dev, dma_tube tube) {
+    return dma_channel_regs(dev, tube)->CNDTR;
+}
+
 /**
  * @brief Deprecated
  * STM32F1 mode flags for dma_setup_xfer(). Use dma_tube_cfg() instead.

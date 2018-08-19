@@ -111,6 +111,10 @@ generic_f407v.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 generic_f407v.menu.upload_method.STLinkMethod.upload.dfuse_addr=0x08004000
 generic_f407v.menu.upload_method.STLinkMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08000000
 
+generic_f407v.menu.upload_method.HIDUploadMethod=HID bootloader 2.0
+generic_f407v.menu.upload_method.HIDUploadMethod.upload.tool=hid_upload
+generic_f407v.menu.upload_method.HIDUploadMethod.build.vect_flags=-DVECT_TAB_FLASH -DUSER_ADDR_ROM=(uint32)0x08004000 -DVECT_TAB_OFFSET=0x4000
+generic_f407v.menu.upload_method.HIDUploadMethod.build.ldscript=ld/bootloader_8004000.ld
 
 generic_f407v.menu.upload_method.DFUUploadMethod=STM32duino bootloader
 generic_f407v.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
