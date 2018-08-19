@@ -44,6 +44,8 @@ build.error_led_pin=1
 build.cpu_flags=
 build.hs_flag=
 build.upload_flags=
+build.flags.optimize=-Os
+build.flags.ldspecs=
 build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
 
 

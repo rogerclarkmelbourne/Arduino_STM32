@@ -34,6 +34,8 @@ build.cpu_flags=
 build.hs_flag=
 build.common_flags=-mthumb -D__STM32F4__
 build.extra_flags= {build.cpu_flags} {build.hs_flag} {build.common_flags}
+build.flags.optimize=-Os
+build.flags.ldspecs=
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
