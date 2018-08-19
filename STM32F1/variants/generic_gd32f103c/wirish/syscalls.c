@@ -89,11 +89,11 @@ __weak int _fstat(int fd __attribute__((unused)), struct stat *st) {
     return 0;
 }
 
-__weak int _isatty(int fd) {
+__weak int _isatty(int fd __attribute__((unused))) {
     return 1;
 }
 
-__weak int isatty(int fd) {
+__weak int isatty(int fd __attribute__((unused))) {
     return 1;
 }
 
@@ -156,7 +156,7 @@ __weak void cgets(char *s, int bufsize) {
 }
 
 __weak int _write(int fd __attribute__((unused)), const char *buf, size_t cnt) {
-    int i;
+    size_t i;
 
     for (i = 0; i < cnt; i++)
         putch(buf[i]);

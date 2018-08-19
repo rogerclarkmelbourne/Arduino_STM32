@@ -492,7 +492,7 @@ uint32 usb_cdcacm_rx(uint8* buf, uint32 len)
  * Looks at unread bytes without marking them as read. */
 uint32 usb_cdcacm_peek(uint8* buf, uint32 len)
 {
-    int i;
+    uint32 i;
     uint32 tail = rx_tail;
 	uint32 rx_unread = (rx_head-tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 
@@ -510,7 +510,7 @@ uint32 usb_cdcacm_peek(uint8* buf, uint32 len)
 
 uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len)
 {
-    int i;
+    uint32 i;
     uint32 tail = (rx_tail + offset) & CDC_SERIAL_RX_BUFFER_SIZE_MASK ;
 	uint32 rx_unread = (rx_head-tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 
@@ -588,7 +588,7 @@ static void vcomDataTxCb(void)
 	uint32 *dst = usb_pma_ptr(USB_CDCACM_TX_ADDR);
     uint16 tmp = 0;
 	uint16 val;
-	int i;
+	uint32 i;
 	for (i = 0; i < tx_unsent; i++) {
 		val = vcomBufferTx[tail];
 		tail = (tail + 1) & CDC_SERIAL_TX_BUFFER_SIZE_MASK;
