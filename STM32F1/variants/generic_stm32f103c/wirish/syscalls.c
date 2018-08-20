@@ -56,7 +56,14 @@ extern char _lm_heap_end;
  *
  * Get incr bytes more RAM (for use by the heap).  malloc() and
  * friends call this function behind the scenes.
+ *
+ * The following can be included in application code to reserve 
+ * a minimum amount of space for future stack growth:
+ *   extern int __sbrk_stack_reserve;
+ *   __sbrk_stack_reserve=10240;
+ *
  */
+volatile int __sbrk_stack_reserve = 256;
 void *_sbrk(int incr) {
     static void * pbreak = NULL; /* current program break */
     void * ret;
@@ -65,7 +72,7 @@ void *_sbrk(int incr) {
         pbreak = CONFIG_HEAP_START;
     }
 
-    if ((CONFIG_HEAP_END - pbreak < incr) ||
+    if (((void*)&ret - pbreak < incr + __sbrk_stack_reserve) ||
         (pbreak - CONFIG_HEAP_START < -incr)) {
         errno = ENOMEM;
         return (void *)-1;
