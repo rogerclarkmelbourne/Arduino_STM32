@@ -57,10 +57,10 @@
 #define USBD_LANGID_STRING              0x409
 #define USBD_MANUFACTURER_STRING        (uint8_t*)"STMicroelectronics"
 
-#define USBD_PRODUCT_HS_STRING          (uint8_t*)"STM32 Virtual ComPort in HS mode"
+#define USBD_PRODUCT_HS_STRING          (uint8_t*)"STM32 Virtual ComPort in HS Mode"
 #define USBD_SERIALNUMBER_HS_STRING     (uint8_t*)"00000000050B"
 
-#define USBD_PRODUCT_FS_STRING          (uint8_t*)"STM32 Virtual ComPort  in FS Mode"
+#define USBD_PRODUCT_FS_STRING          (uint8_t*)"STM32 Virtual ComPort in FS Mode"
 #define USBD_SERIALNUMBER_FS_STRING     (uint8_t*)"00000000050C"
 
 #define USBD_CONFIGURATION_HS_STRING    (uint8_t*)"VCP Config"

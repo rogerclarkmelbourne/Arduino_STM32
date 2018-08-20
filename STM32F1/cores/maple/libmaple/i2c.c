@@ -175,8 +175,8 @@ void i2c_init(i2c_dev *dev) {
  *                         SDA/PB9.
  */
 void i2c_master_enable(i2c_dev *dev, uint32 flags) {
-    /* PE must be disabled to configure the device */
-    ASSERT(!(dev->regs->CR1 & I2C_CR1_PE));
+    /* If the device is already enabled, don't do it again */
+    if(dev->regs->CR1 & I2C_CR1_PE) return;
 
     /* Ugh */
     _i2c_handle_remap(dev, flags);
