@@ -87,7 +87,7 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 };
 
 static const spi_pins board_alt_spi_pins[] __FLASH__ = {
-#if BOARD_NR_SPI >= 1 && defined(BOARD_SPI1_ALT_MOSI_PIN)
+#if defined(BOARD_SPI1_ALT_MOSI_PIN)
     {BOARD_SPI1_ALT_NSS_PIN,
      BOARD_SPI1_ALT_SCK_PIN,
      BOARD_SPI1_ALT_MISO_PIN,
