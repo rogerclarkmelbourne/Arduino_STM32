@@ -21,6 +21,7 @@ CFLAGS_$(d) := $(LIBMAPLE_INCLUDES) $(WIRISH_INCLUDES) -I$(d)
 sSRCS_$(d) := start.S
 cSRCS_$(d) := start_c.c
 cSRCS_$(d) += syscalls.c
+cSRCS_$(d) += libc_repl.c
 cSRCS_$(d) += $(MCU_SERIES)/util_hooks.c
 cppSRCS_$(d) := boards.cpp
 cppSRCS_$(d) += cxxabi-compat.cpp
