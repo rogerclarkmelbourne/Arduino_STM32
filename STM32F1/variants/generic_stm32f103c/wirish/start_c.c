@@ -85,9 +85,6 @@ void __attribute__((noreturn)) start_c(void) {
 
     /* Jump to main. */
     exit_code = main(0, 0, 0);
-    if (exit) {
-        exit(exit_code);
-    }
 
     /* If exit is NULL, make sure we don't return. */
     for (;;)
