@@ -44,6 +44,8 @@ build.error_led_pin=1
 build.cpu_flags=
 build.hs_flag=
 build.upload_flags=
+build.flags.optimize=-Os
+build.flags.ldspecs=
 build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
 
 
@@ -162,14 +164,14 @@ tools.jlink_upload.upload.params.verbose=-d
 tools.jlink_upload.upload.params.quiet=n
 tools.jlink_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin"
 
-# HID upload
+# HID upload 2.0
 tools.hid_upload.cmd=hid_upload
-tools.hid_upload.cmd.windows=hid_upload.bat
-tools.hid_upload.cmd.macosx=hid_upload
+tools.hid_upload.cmd.windows=hid-flash.exe
+tools.hid_upload.cmd.macosx=hid_flash
 tools.hid_upload.path={runtime.hardware.path}/tools/win
 tools.hid_upload.path.macosx={runtime.hardware.path}/tools/macosx
 tools.hid_upload.path.linux={runtime.hardware.path}/tools/linux
 tools.hid_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.hid_upload.upload.params.verbose=-d
 tools.hid_upload.upload.params.quiet=n
-tools.hid_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
+tools.hid_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin" {serial.port.file}
