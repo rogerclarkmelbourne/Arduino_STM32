@@ -110,15 +110,13 @@ size_t n = 0;
 		return n;
 }
 
-size_t USBSerial::write(const char *str) {
-size_t n = 0;
-    this->write((const uint8*)str, strlen(str));
-	return n;
+size_t USBSerial::write(const char *str)
+{
+    return this->write((const uint8*)str, strlen(str));
 }
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
-size_t n = 0;
     if (!(bool) *this || !buf) {
         return 0;
     }
@@ -127,8 +125,7 @@ size_t n = 0;
     while (txed < len) {
         txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
     }
-
-	return n;
+    return txed;
 }
 
 int USBSerial::available(void) {
