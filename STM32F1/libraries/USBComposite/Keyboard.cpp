@@ -1,4 +1,4 @@
-#include "USBHID.h"
+#include "USBComposite.h" 
 #include <string.h>
 
 //================================================================================
@@ -140,7 +140,7 @@ static const uint8_t ascii_to_hid[128] =
 };
 
 void HIDKeyboard::begin(void){
-    USBHID.addOutputBuffer(&ledData);
+    HID.addOutputBuffer(&ledData);
 }
 
 void HIDKeyboard::end(void) {
@@ -255,4 +255,3 @@ size_t HIDKeyboard::write(uint8_t c)
     }
 }
 
-HIDKeyboard Keyboard;
