@@ -26,16 +26,16 @@ uint16_t usb_mass_mal_get_status(uint8_t lun) {
 		return USB_MASS_MAL_SUCCESS;
 }
 
-uint16_t usb_mass_mal_read_memory(uint8_t lun, uint32_t memoryOffset, uint8_t *readbuff, uint16_t transferLength) {
-	if (lun >= USB_MASS_MAX_DRIVES || ! usb_mass_drives[lun].read(memoryOffset, readbuff, transferLength))
+uint16_t usb_mass_mal_read_memory(uint8_t lun, uint8_t *readbuff, uint32_t startSector, uint16_t numSectors) {
+	if (lun >= USB_MASS_MAX_DRIVES || ! usb_mass_drives[lun].read(readbuff, startSector, numSectors))
 		return USB_MASS_MAL_FAIL;
 	else
 		return USB_MASS_MAL_SUCCESS;
 }
 
-uint16_t usb_mass_mal_write_memory(uint8_t lun, uint32_t memoryOffset, uint8_t *writebuff, uint16_t transferLength) {
+uint16_t usb_mass_mal_write_memory(uint8_t lun, uint8_t *writebuff, uint32_t startSector, uint16_t numSectors) {
 	if (lun >= USB_MASS_MAX_DRIVES || usb_mass_drives[lun].write == NULL 
-			|| ! usb_mass_drives[lun].write(memoryOffset, writebuff, transferLength))
+			|| ! usb_mass_drives[lun].write(writebuff, startSector, numSectors))
 		return USB_MASS_MAL_FAIL;
 	else
 		return USB_MASS_MAL_SUCCESS;

@@ -7,8 +7,6 @@
 extern "C" {
 #endif
 
-#define SCSI_BLOCK_SIZE							     512
-
   /* SCSI Commands */
 #define SCSI_FORMAT_UNIT                            0x04
 #define SCSI_INQUIRY                                0x12

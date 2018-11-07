@@ -29,6 +29,7 @@ private:
     bool enabled;
 	void safeSendReport(void);
 	void sendReport(void);
+    bool wait(void);
 public:
 	void send(void);
 	static bool init(void* ignore);
@@ -51,8 +52,6 @@ public:
     void setLEDCallback(void (*callback)(uint8 pattern));
     void setRumbleCallback(void (*callback)(uint8 left, uint8 right));
 };
-
-extern USBXBox360 XBox360;
 
 #endif
 

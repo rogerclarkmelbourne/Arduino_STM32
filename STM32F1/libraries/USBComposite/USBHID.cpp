@@ -1,4 +1,5 @@
 /* Copyright (c) 2011, Peter Barrett
+ * Copyright (c) 2017-2018, Alexander Pruss
 **
 ** Permission to use, copy, modify, and/or distribute this software for
 ** any purpose with or without fee is hereby granted, provided that the
@@ -14,8 +15,7 @@
 ** SOFTWARE.
 */
 
-#include "USBHID.h"
-#include "USBCompositeSerial.h"
+#include "USBComposite.h" 
 
 #include <string.h>
 #include <stdint.h>
@@ -33,20 +33,24 @@
  * USB HID interface
  */
 
-bool USBHIDDevice::registerComponent() {
-	return USBComposite.add(&usbHIDPart, this);
+bool USBHID::init(USBHID* me) {
+    usb_hid_setTXEPSize(me->txPacketSize);
+	return true;
 }
 
-void USBHIDDevice::setReportDescriptor(const uint8_t* report_descriptor, uint16_t report_descriptor_length) {
+bool USBHID::registerComponent() {
+	return USBComposite.add(&usbHIDPart, this, (USBPartInitializer)&USBHID::init);
+}
+
+void USBHID::setReportDescriptor(const uint8_t* report_descriptor, uint16_t report_descriptor_length) {
 	usb_hid_set_report_descriptor(report_descriptor, report_descriptor_length);
 }
 
-void USBHIDDevice::setReportDescriptor(const HIDReportDescriptor* report) {
+void USBHID::setReportDescriptor(const HIDReportDescriptor* report) {
     setReportDescriptor(report->descriptor, report->length);
 }
 
-void USBHIDDevice::begin(const uint8_t* report_descriptor, uint16_t report_descriptor_length, uint16_t idVendor, uint16_t idProduct,
-        const char* manufacturer, const char* product, const char* serialNumber) {
+void USBHID::begin(const uint8_t* report_descriptor, uint16_t report_descriptor_length) {
             
 	if (enabledHID)
 		return;
@@ -54,11 +58,6 @@ void USBHIDDevice::begin(const uint8_t* report_descriptor, uint16_t report_descr
 	setReportDescriptor(report_descriptor, report_descriptor_length);
 	
 	USBComposite.clear();
-	USBComposite.setVendorId(idVendor);
-	USBComposite.setProductId(idProduct);
-	USBComposite.setManufacturerString(manufacturer);
-	USBComposite.setProductString(product);
-	USBComposite.setSerialString(serialNumber); 
 	registerComponent();
 
 	USBComposite.begin(); 
@@ -66,33 +65,47 @@ void USBHIDDevice::begin(const uint8_t* report_descriptor, uint16_t report_descr
 	enabledHID = true;
 }
 
-void USBHIDDevice::begin(const HIDReportDescriptor* report, uint16_t idVendor, uint16_t idProduct,
-        const char* manufacturer, const char* product, const char* serialNumber) {
-    begin(report->descriptor, report->length, idVendor, idProduct, manufacturer, product, serialNumber);
+void USBHID::begin(const HIDReportDescriptor* report) {
+    begin(report->descriptor, report->length);
 }
 
-void USBHIDDevice::setBuffers(uint8_t type, volatile HIDBuffer_t* fb, int count) {
+void USBHID::setBuffers(uint8_t type, volatile HIDBuffer_t* fb, int count) {
     usb_hid_set_buffers(type, fb, count);
 }
 
-bool USBHIDDevice::addBuffer(uint8_t type, volatile HIDBuffer_t* buffer) {
+bool USBHID::addBuffer(uint8_t type, volatile HIDBuffer_t* buffer) {
     return 0 != usb_hid_add_buffer(type, buffer);
 }
 
-void USBHIDDevice::clearBuffers(uint8_t type) {
+void USBHID::clearBuffers(uint8_t type) {
 	usb_hid_clear_buffers(type);
 }
 
-void USBHIDDevice::clearBuffers() {
+void USBHID::clearBuffers() {
 	clearBuffers(HID_REPORT_TYPE_OUTPUT);
 	clearBuffers(HID_REPORT_TYPE_FEATURE);
 }
 
-void USBHIDDevice::end(void){
-	if(enabledHID){
+void USBHID::end(void){
+	if(enabledHID) {
 		USBComposite.end();
 		enabledHID = false;
 	}
+}
+
+void USBHID::begin(USBCompositeSerial serial, const uint8_t* report_descriptor, uint16_t report_descriptor_length) {	
+	USBComposite.clear();
+
+	setReportDescriptor(report_descriptor, report_descriptor_length);
+	registerComponent();
+
+	serial.registerComponent();
+
+	USBComposite.begin();
+}
+		
+void USBHID::begin(USBCompositeSerial serial, const HIDReportDescriptor* report) {
+    begin(serial, report->descriptor, report->length);
 }
 
 void HIDReporter::sendReport() {
@@ -115,7 +128,7 @@ void HIDReporter::sendReport() {
     usb_hid_tx(NULL, 0);
 }
         
-HIDReporter::HIDReporter(uint8_t* _buffer, unsigned _size, uint8_t _reportID) {
+HIDReporter::HIDReporter(USBHID& _HID, uint8_t* _buffer, unsigned _size, uint8_t _reportID) : HID(_HID) {
     if (_reportID == 0) {
         buffer = _buffer+1;
         bufferSize = _size-1;
@@ -130,7 +143,7 @@ HIDReporter::HIDReporter(uint8_t* _buffer, unsigned _size, uint8_t _reportID) {
         buffer[0] = _reportID;
 }
 
-HIDReporter::HIDReporter(uint8_t* _buffer, unsigned _size) {
+HIDReporter::HIDReporter(USBHID& _HID, uint8_t* _buffer, unsigned _size) : HID(_HID) {
     buffer = _buffer;
     bufferSize = _size;
     memset(buffer, 0, _size);
@@ -151,30 +164,5 @@ uint16_t HIDReporter::getFeature(uint8_t* out, uint8_t poll) {
 
 uint16_t HIDReporter::getOutput(uint8_t* out, uint8_t poll) {
     return usb_hid_get_data(HID_REPORT_TYPE_OUTPUT, reportID, out, poll);
-}
-
-USBHIDDevice USBHID;
-
-void USBHID_begin_with_serial(const uint8_t* report_descriptor, uint16_t report_descriptor_length, uint16_t idVendor, uint16_t idProduct,
-        const char* manufacturer, const char* product, const char* serialNumber) {
-	
-	USBComposite.clear();
-	USBComposite.setVendorId(idVendor);
-	USBComposite.setProductId(idProduct);
-	USBComposite.setManufacturerString(manufacturer);
-	USBComposite.setProductString(product);
-	USBComposite.setSerialString(serialNumber); 
-
-	USBHID.setReportDescriptor(report_descriptor, report_descriptor_length);
-	USBHID.registerComponent();
-
-	CompositeSerial.registerComponent();
-
-	USBComposite.begin();
-}
-		
-void USBHID_begin_with_serial(const HIDReportDescriptor* report, uint16_t idVendor, uint16_t idProduct,
-        const char* manufacturer, const char* product, const char* serialNumber) {
-    USBHID_begin_with_serial(report->descriptor, report->length, idVendor, idProduct, manufacturer, product, serialNumber);
 }
 

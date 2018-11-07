@@ -1,8 +1,11 @@
-#include <USBHID.h>
+#include <USBComposite.h>
+
+USBHID HID;
+HIDKeyboard BootKeyboard(HID, 0);
 
 void setup() 
 {
-    USBHID_begin_with_serial(HID_BOOT_KEYBOARD);
+    HID.begin(HID_BOOT_KEYBOARD);
     BootKeyboard.begin(); // needed just in case you need LED support
 }
 

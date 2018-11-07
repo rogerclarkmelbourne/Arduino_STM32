@@ -249,18 +249,19 @@ uint8_t scsi_address_management(uint8_t lun, uint8_t cmd, uint32_t lba, uint32_t
   return (TRUE);
 }
 
-void scsi_read_memory(uint8_t lun, uint32_t memoryOffset, uint32_t transferLength) {
-  static uint32_t offset, length;
+void scsi_read_memory(uint8_t lun, uint32_t startSector, uint32_t numSectors) {
+  static uint32_t length;
+  static uint64_t offset;
 
   if (SCSI_transferState == SCSI_TXFR_IDLE) {
-    offset = memoryOffset * SCSI_BLOCK_SIZE;
-    length = transferLength * SCSI_BLOCK_SIZE;
+    offset = (uint64_t)startSector * SCSI_BLOCK_SIZE;
+    length = numSectors * SCSI_BLOCK_SIZE;
     SCSI_transferState = SCSI_TXFR_ONGOING;
   }
 
   if (SCSI_transferState == SCSI_TXFR_ONGOING) {
     if (SCSI_blockReadCount == 0) {
-      usb_mass_mal_read_memory(lun, offset, SCSI_dataBuffer, SCSI_BLOCK_SIZE);
+      usb_mass_mal_read_memory(lun, SCSI_dataBuffer, (uint32_t)(offset/SCSI_BLOCK_SIZE), 1);
 
       usb_mass_sil_write(SCSI_dataBuffer, MAX_BULK_PACKET_SIZE);
 
@@ -293,14 +294,15 @@ void scsi_read_memory(uint8_t lun, uint32_t memoryOffset, uint32_t transferLengt
   }
 }
 
-void scsi_write_memory(uint8_t lun, uint32_t memoryOffset, uint32_t transferLength) {
-  static uint32_t offset, length;
+void scsi_write_memory(uint8_t lun, uint32_t startSector, uint32_t numSectors) {
+  static uint32_t length;
+  static uint64_t offset;
   uint32_t idx;
   uint32_t temp = SCSI_counter + 64;
 
   if (SCSI_transferState == SCSI_TXFR_IDLE) {
-    offset = memoryOffset * SCSI_BLOCK_SIZE;
-    length = transferLength * SCSI_BLOCK_SIZE;
+    offset = (uint64_t)startSector * SCSI_BLOCK_SIZE;
+    length = numSectors * SCSI_BLOCK_SIZE;
     SCSI_transferState = SCSI_TXFR_ONGOING;
   }
 
@@ -315,7 +317,7 @@ void scsi_write_memory(uint8_t lun, uint32_t memoryOffset, uint32_t transferLeng
 
     if (!(length % SCSI_BLOCK_SIZE)) {
       SCSI_counter = 0;
-      usb_mass_mal_write_memory(lun, offset - SCSI_BLOCK_SIZE, SCSI_dataBuffer, SCSI_BLOCK_SIZE);
+      usb_mass_mal_write_memory(lun, SCSI_dataBuffer, (uint32_t)(offset/SCSI_BLOCK_SIZE) - 1, 1);
     }
 
     usb_mass_CSW.dDataResidue -= usb_mass_dataLength;

@@ -8,10 +8,12 @@
 extern "C" {
 #endif
 
+#define SCSI_BLOCK_SIZE							     512
+
 #define USB_MASS_MAX_DRIVES  2
 
-typedef bool (*MassStorageWriter)(uint32_t memoryOffset, const uint8_t *writebuff, uint16_t transferLength);
-typedef bool (*MassStorageReader)(uint32_t memoryOffset, uint8_t *readbuff, uint16_t transferLength);
+typedef bool (*MassStorageWriter)(const uint8_t *writebuff, uint32_t startSector, uint16_t numSectors);
+typedef bool (*MassStorageReader)(uint8_t *readbuff, uint32_t startSector, uint16_t numSectors);
 typedef bool (*MassStorageStatuser)(void);
 typedef bool (*MassStorageInitializer)(void);
 typedef bool (*MassStorageFormatter)(void);
@@ -28,8 +30,8 @@ typedef struct {
 extern MassStorageDriveInfo usb_mass_drives[USB_MASS_MAX_DRIVES];
 uint16_t usb_mass_mal_init(uint8_t lun);
 uint16_t usb_mass_mal_get_status(uint8_t lun);
-uint16_t usb_mass_mal_read_memory(uint8_t lun, uint32_t memoryOffset, uint8_t *readbuff, uint16_t transferLength);
-uint16_t usb_mass_mal_write_memory(uint8_t lun, uint32_t memoryOffset, uint8_t *writebuff, uint16_t transferLength);
+uint16_t usb_mass_mal_read_memory(uint8_t lun, uint8_t *readbuff, uint32_t startSector, uint16_t numSectors);
+uint16_t usb_mass_mal_write_memory(uint8_t lun, uint8_t *writebuff, uint32_t startSector, uint16_t numSectors);
 void usb_mass_mal_format(uint8_t lun);
 
 #ifdef __cplusplus
