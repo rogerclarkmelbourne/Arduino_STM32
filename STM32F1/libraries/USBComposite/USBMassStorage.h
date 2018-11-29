@@ -6,7 +6,7 @@
 #include "usb_generic.h"
 #include "usb_mass_mal.h"
 
-class USBMassStorageDevice {
+class USBMassStorage {
 private:
   bool enabled = false;
 public:
@@ -15,11 +15,9 @@ public:
   void loop();
   void clearDrives(void);
   bool registerComponent();
-  void setDrive(uint32 driveNumber, uint32 byteSize, MassStorageReader reader,
+  void setDriveData(uint32 driveNumber, uint32 numSectors, MassStorageReader reader,
 	MassStorageWriter writer = NULL, MassStorageStatuser = NULL, MassStorageInitializer = NULL);
 };
-
-extern USBMassStorageDevice MassStorage;
 
 #endif	/* USBMASSSTORAGE_H */
 
