@@ -96,3 +96,4 @@ int8_t parsetimestamp(char *buf, tm_t &tm);
 extern RTClock rt;
 
 #endif /* RTADJUST_H_ */
+

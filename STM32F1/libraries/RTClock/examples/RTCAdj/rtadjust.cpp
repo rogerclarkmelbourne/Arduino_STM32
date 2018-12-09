@@ -25,8 +25,6 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
- *
- */
 #include <Arduino.h>
 #include <RTClock.h>
 #include "rtadjust.h"
