@@ -6,6 +6,11 @@ It provides an example of how one could adjust for RTC (real time clock) drifts 
 For drifts that is less than (304 secs ~ 5 minutes) per month. STM has published an appnote for a different means of slowing down the RTC clock
 [AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/6c/a3/24/49/a5/d4/4a/db/CD00164185.pdf/files/CD00164185.pdf/jcr:content/translations/en.CD00164185.pdf). This is possibly simpler and more accurate.
 
+Due to the use of backup registers, you need to power the board/stm32 on VBAT (e.g. using a coin cell)
+so that the backup memory is maintained. And as the last adjusted date/time (saved in backup register
+8 and 9) and drift duration (saved in backup register 7), if power is removed and the backup memory
+is lost, you would need to re-do the calibration again.  
+
 ## Building and running the sketch
 
 Build and run the sketch based on STM32duino libmaple core using the Arduino IDE.
@@ -103,4 +108,3 @@ void calibratertc(time_t time_now);
  * extern refers to this RTClock*/
 RTClock rt(RTCSEL_LSE); // initialise
 ```
-
