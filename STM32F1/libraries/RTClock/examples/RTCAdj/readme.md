@@ -4,7 +4,7 @@ This Arduino sketch is built based on Stm32duino libmaple core.
 It provides an example of how one could adjust for RTC (real time clock) drifts if one is using a 32k crystal that drift significantly.
 
 For drifts that is less than (304 secs ~ 5 minutes) per month. STM has published an appnote for a different means of slowing down the RTC clock
-[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/6c/a3/24/49/a5/d4/4a/db/CD00164185.pdf/files/CD00164185.pdf/jcr:content/translations/en.CD00164185.pdf). This is possibly simpler and more accurate. *this feature has been added in this implementation*
+[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf). This is possibly simpler and more accurate. *this feature has been added in this implementation*
 
 Due to the use of backup registers, you need to power the board/stm32 on VBAT (e.g. using a coin cell) so that the backup memory is maintained. And as the last adjusted date/time (saved in backup register 8 and 9) and drift duration (saved in backup register 7), if power is removed and the backup memory is lost, you would need to re-do the calibration again.  
 
