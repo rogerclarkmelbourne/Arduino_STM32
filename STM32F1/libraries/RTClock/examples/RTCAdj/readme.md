@@ -4,12 +4,9 @@ This Arduino sketch is built based on Stm32duino libmaple core.
 It provides an example of how one could adjust for RTC (real time clock) drifts if one is using a 32k crystal that drift significantly.
 
 For drifts that is less than (304 secs ~ 5 minutes) per month. STM has published an appnote for a different means of slowing down the RTC clock
-[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/6c/a3/24/49/a5/d4/4a/db/CD00164185.pdf/files/CD00164185.pdf/jcr:content/translations/en.CD00164185.pdf). This is possibly simpler and more accurate.
+[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/6c/a3/24/49/a5/d4/4a/db/CD00164185.pdf/files/CD00164185.pdf/jcr:content/translations/en.CD00164185.pdf). This is possibly simpler and more accurate. *this feature has been added in this implementation*
 
-Due to the use of backup registers, you need to power the board/stm32 on VBAT (e.g. using a coin cell)
-so that the backup memory is maintained. And as the last adjusted date/time (saved in backup register
-8 and 9) and drift duration (saved in backup register 7), if power is removed and the backup memory
-is lost, you would need to re-do the calibration again.  
+Due to the use of backup registers, you need to power the board/stm32 on VBAT (e.g. using a coin cell) so that the backup memory is maintained. And as the last adjusted date/time (saved in backup register 8 and 9) and drift duration (saved in backup register 7), if power is removed and the backup memory is lost, you would need to re-do the calibration again.  
 
 ## Building and running the sketch
 
@@ -40,6 +37,10 @@ drift duration, number of seconds for the stm32 rtc to drift 1 secs (faster): 33
 In your wiring/arduino setup() function, make it call the function *adjtime();*, e.g.
 ```
 void setup() {
+  /* initialise access to backup registers,
+   * this is necessary due to the use of backup registers */
+  bkp_init();
+
   /* adjust rtc */
   adjtime();
 }
@@ -56,8 +57,10 @@ This app/sketch itself has the commands to do the calibration. To do the calibra
    This would set the RTC and the last adjustment date/time  to the date / time you supplied.  
    The last adjustment date/time is saved in 2 backup registers 8 and 9.
    
-2. after a day or so, run cYYYY-MM-DD HH:MM:SS - calibrate rtc
-   where YYYY-MM-DD HH:MM_SS - is the current accurate date/time at the time you do the calibration.
+2. after a day or more, a longer period cumulates more drift and increase accuracy  
+   run cYYYY-MM-DD HH:MM:SS - calibrate rtc  
+   where YYYY-MM-DD HH:MM_SS - is the current accurate date/time at the time you do the calibration. 
+
    This would compute the drift duration and save it in backup register 7.
    
 3. reset the device and check the time after the calibration. if setup() calls adjtime(), the RTC would show the drift adjusted/compensated date/time.
@@ -67,6 +70,10 @@ This app/sketch itself has the commands to do the calibration. To do the calibra
 1. in setup() run adjtime() 
 ```
 void setup() {
+  /* initialise access to backup registers,
+   * this is necessary due to the use of backup registers */
+  bkp_init();
+
   /* adjust rtc */
   adjtime();
 }
@@ -95,6 +102,19 @@ void synctime(time_t time_now);
  *  if the cumulative delay between current time and the last time when synctime()
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
+ *
+ *  note that this function can only be run once to compute the drift_duration
+ *  this is because the time of last adjustment would have been updated
+ *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  computing drift duration
+ *
+ *  to run it again
+ *  1) first zero out drift duration using setbkpdrift(0)
+ *     or disconnect VBAT and power to clear backup memory
+ *  next repeat the calibration cycle
+ *  2) run synctime(time_now) with the accurate clock time
+ *  3) after a day or more (longer period cumulates more drift and increase accuracy)
+ *     run calibrate(time_now) with the accurate clock time
  *
  *  @param time the time_t value of the current accurate clock time
  */

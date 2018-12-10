@@ -50,6 +50,19 @@ void synctime(time_t time_now);
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
  *
+ *  note that this function can only be run once to compute the drift_duration
+ *  this is because the time of last adjustment would have been updated
+ *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  computing drift duration
+ *
+ *  to run it again
+ *  1) first zero out drift duration using setbkpdrift(0)
+ *     or disconnect VBAT and power to clear backup memory
+ *  next repeat the calibration cycle
+ *  2) run synctime(time_now) with the accurate clock time
+ *  3) after a day or more (longer period cumulates more drift and increase accuracy)
+ *     run calibrate(time_now) with the accurate clock time
+ *
  *  @param time the time_t value of the current accurate clock time
  */
 void calibratertc(time_t time_now);
@@ -77,13 +90,30 @@ time_t getbkptime();
  */
 void setbkpdrift(int16_t drift_dur);
 
-
 /* get the drift duration from backup register 7
  * @return 	number of seconds for the stm32 rtc to drift 1 secs (faster)
  * 			from an accurate time source
  *
  */
 int16_t getdrift();
+
+
+/* update BKP_RTCCR register calibration value
+ * see AN2604 STM32F101xx and STM32F103xx RTC calibration
+ * https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf
+ * as well as RM0008 reference manual for stm32f1x section 6 Backup registers (BKP) page 80
+ * section 6.4.2 RTC clock calibration register (BKP_RTCCR) page 82
+ *
+ * @param cal the calibration value according to AN2604 STM32F101xx and STM32F103xx RTC calibration
+ *
+ */
+void setrtccr(uint8_t cal);
+
+/* retrieve the rtccr calibration value
+ *
+ * @return rtccr calibration value
+ */
+uint8_t getrtccr();
 
 /* utility function to parse entered timestamp
  * format yyyy-mm-dd hh:mm:ss
@@ -96,4 +126,3 @@ int8_t parsetimestamp(char *buf, tm_t &tm);
 extern RTClock rt;
 
 #endif /* RTADJUST_H_ */
-

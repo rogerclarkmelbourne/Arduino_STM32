@@ -47,6 +47,7 @@ enum LineState {
 void processkey();
 void showtime();
 void synctime(char *buf, int len);
+void settime(char *buf, int len);
 void calibrate(char *buf, int len);
 void setdriftdur(char *buf, int len);
 void help();
@@ -57,7 +58,8 @@ void setup() {
 
 	Serial.begin(115200);
 
-	/* initialise access to backup registers */
+	/* initialise access to backup registers,
+	 * this is necessary due to the use of backup registers */
 	bkp_init();
 
 	/* adjust rtc */
@@ -90,6 +92,9 @@ void processkey() {
 			case 's':
 				synctime(buf,ind);
 				break;
+			case 'T':
+				settime(buf,ind);
+				break;
 			case 'c':
 				calibrate(buf,ind);
 				break;
@@ -113,6 +118,11 @@ void processkey() {
 			clearbuf();
 			cmd = 's';
 			break;
+		case 'T':
+			state = LineState::LINE;
+			clearbuf();
+			cmd = 'T';
+			break;
 		case 'c':
 			state = LineState::LINE;
 			clearbuf();
@@ -135,7 +145,7 @@ void showtime() {
     // get and print actual RTC timestamp
     rt.breakTime(rt.now(), tm);
     memset(buf,0,BUFLEN);
-    sprintf(buf, "RTC timestamp: %u-%u-%u, %02u:%02u:%02u\n",
+    sprintf(buf, "RTC timestamp: %u-%u-%u, %02u:%02u:%02u",
     		tm.year+1970, tm.month, tm.day, tm.hour, tm.minute, tm.second);
     Serial.println(buf);
     clearbuf();
@@ -143,13 +153,16 @@ void showtime() {
     Serial.print("last adj:");
     rt.breakTime(getbkptime(), tm);
     memset(buf,0,BUFLEN);
-    sprintf(buf, "RTC timestamp: %u-%u-%u, %02u:%02u:%02u\n",
+    sprintf(buf, "RTC timestamp: %u-%u-%u, %02u:%02u:%02u",
     		tm.year+1970, tm.month, tm.day, tm.hour, tm.minute, tm.second);
     Serial.println(buf);
     clearbuf();
 
     Serial.print(F("drift duration, number of seconds for the stm32 rtc to drift 1 secs (faster):"));
     Serial.println(getdrift());
+
+    Serial.print(F("BKP_RTCCR:"));
+    Serial.println(getrtccr());
 }
 
 void synctime(char *buf, int len) {
@@ -167,6 +180,7 @@ void synctime(char *buf, int len) {
 }
 
 
+
 void calibrate(char *buf, int len) {
 	if (len == BUFLEN) buf[BUFLEN-1] = 0; //terminate the string for safety
 	if(parsetimestamp(buf, tm) <0) {
@@ -182,9 +196,29 @@ void calibrate(char *buf, int len) {
 	calibratertc(time);
 }
 
+/*
+ * this function sets the rtc directly by-passing all the adjustments
+ *
+ * note that this function is used during tests to simulate drifts etc
+ * hence it is not features in help();
+ *
+ * in a normal context use synctime() to set the RTC time so that
+ * the last adjustment date/time is updated as well
+ */
+void settime(char *buf, int len) {
+	if (len == BUFLEN) buf[BUFLEN-1] = 0; //terminate the string for safety
+	if(parsetimestamp(buf, tm) <0) {
+		Serial.println(F("invalid date/time"));
+		return;
+	}
+
+	rt.setTime(tm);
+}
+
 void setdriftdur(char *buf, int len) {
 	if (len == BUFLEN) buf[BUFLEN-1] = 0; //terminate the string for safety
 	int16_t drift_dur = atoi(buf);
+	/* this funciton updates the drift duration directly */
 	setbkpdrift(drift_dur);
 }
 
@@ -203,5 +237,4 @@ void clearbuf() {
 	ind = 0;
 	memset(buf,0,BUFLEN);
 }
-
 
