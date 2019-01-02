@@ -133,8 +133,12 @@ void processkey() {
 			clearbuf();
 			cmd = 'x';
 			break;
-		default:
+		case 'h':
+		case 'H':
+		case '?':
 			help();
+			break;
+		default:
 			break;
 		}
 	}

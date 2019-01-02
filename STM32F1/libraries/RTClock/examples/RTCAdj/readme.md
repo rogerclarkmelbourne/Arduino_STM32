@@ -19,6 +19,7 @@ The files relevant to the sketch are:
 
 The sketch is a demo that runs on the serial console, the commands on the serial console are
 
+* h, H, ? - display help this message
 * t - display current time
 * sYYYY-MM-DD HH:MM:SS - sync/set time
 * cYYYY-MM-DD HH:MM:SS - calibrate rtc  
