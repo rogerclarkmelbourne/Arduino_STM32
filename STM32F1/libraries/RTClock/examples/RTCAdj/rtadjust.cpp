@@ -206,13 +206,12 @@ uint8_t getrtccr() {
 	return (BKP->regs->RTCCR) & 0x7f;
 }
 
-const char * delim = " -:";
 /* utility function to parse entered timestamp
  * format yyyy-mm-dd hh:mm:ss
  * */
 int8_t parsetimestamp(char *buf, tm_t &tm) {
 	int8_t i = 0;
-    char *token = strtok(buf, delim); // get first token
+    char *token = strtok(buf, " -:"); // get first token
     // walk through tokens
     while( token != NULL ) {
     	i++;
@@ -242,7 +241,7 @@ int8_t parsetimestamp(char *buf, tm_t &tm) {
     	default:
     		break;
     	}
-		token = strtok(NULL, delim); // get next token
+		token = strtok(NULL, " -:"); // get next token
     }
     if (i==6) //if we have 6 tokens assume it is correct ;p
     	return 0;
