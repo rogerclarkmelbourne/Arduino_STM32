@@ -227,6 +227,7 @@ void setdriftdur(char *buf, int len) {
 }
 
 void help() {
+	Serial.println(F("h, H, ? - display help, this message"));
 	Serial.println(F("t - current time"));
 	Serial.println(F("sYYYY-MM-DD HH:MM:SS - sync/set time"));
 	Serial.println(F("cYYYY-MM-DD HH:MM:SS - calibrate rtc"));
