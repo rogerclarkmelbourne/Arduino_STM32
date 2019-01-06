@@ -290,6 +290,7 @@ public:
      */
     uint8 transfer(uint8 data) const;
     uint16_t transfer16(uint16_t data) const;
+    void transfer(void *buffer,size_t size) const; //Added by Cai Zhaotian
 
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
