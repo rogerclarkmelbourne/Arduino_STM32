@@ -368,6 +368,20 @@ uint8 SPIClass::transfer(uint8 byte) const
     return (uint8)spi_rx_reg(spi_d); // "... and read the last received data."
 }
 
+void SPIClass::transfer(void *buffer,size_t size) const
+{
+    //Added by Cai Zhaotian (Beta vulgaris). For compatibility with newer Arduino API.
+    spi_dev * spi_d = _currentSetting->spi_d;
+    spi_rx_reg(spi_d); // read any previous data
+    for(size_t i=0;i<size;i++) //begin loop
+    {
+        spi_tx_reg(spi_d, ((char*)buffer)[i]); // Write the data item to be transmitted into the SPI_DR register
+        while (spi_is_tx_empty(spi_d) == 0); // "5. Wait until TXE=1 ..."
+        while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+        ((char*)buffer)[i]= (uint8)spi_rx_reg(spi_d); // "... and read the last received data."
+    }
+}
+
 uint16_t SPIClass::transfer16(uint16_t data) const
 {
     // Modified by stevestrong: write & read two consecutive bytes in 8 bit mode (DFF=0)
