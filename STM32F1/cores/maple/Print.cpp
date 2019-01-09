@@ -208,20 +208,48 @@ size_t Print::println(const Printable& x)
   return n;
 }
 
+
 #ifdef SUPPORTS_PRINTF
 #include <stdio.h>
 #include <stdarg.h>
+
 // Work in progress to support printf.
 // Need to implement stream FILE to write individual chars to chosen serial port
+// *** implement stream for uarts, lcd, more tft - nicht! 
+// *** We will use the standard path - fopencookie(), that work on all plathorm with GLIBC.
+// *** (On AVR platfotm has an equivalent solution)
+
+
+  // Write block to device.
+  // Non class function for use from libc.printf,
+  // pointer to class Print passed in argumwent dev.
+  static ssize_t cookie_write_helper(void *dev, const char* buff, size_t len)
+  {
+     Print* pPrint = (Print*)(dev);  //pointer to class Print
+     size_t write_len = 0;
+     for (uint8_t *ptr = (uint8_t*) buff; len-- > 0; write_len++, ptr++ ) {
+       if ( *ptr == '\n') pPrint->print((char)'\r');
+       pPrint->print( (char)*ptr );
+     }
+     return write_len;
+  }
+ 
 int Print::printf (__const char *__restrict __format, ...)
  {
-FILE *__restrict __stream;
-     int ret_status = 0;
+    FILE *__restrict __stream;
 
-
+         __stream = fopencookie( (void*) this, "rw+", (cookie_io_functions_t) {
+          (cookie_read_function_t* ) NULL, 
+          (cookie_write_function_t*) cookie_write_helper,
+          (cookie_seek_function_t* ) NULL, 
+          (cookie_close_function_t*) NULL
+         } );
+    setvbuf(__stream, NULL, _IONBF, 0);  //turn off buffer
+                                         //(Note: Buffer from stdlib need only for multithread code,
+                                         //       and not alternative for uart buffers and fifo.)
      va_list args;
      va_start(args,__format);
-     ret_status = vfprintf(__stream, __format, args);
+     int ret_status = vfprintf(__stream, __format, args);
      va_end(args);
      return ret_status;
  }
