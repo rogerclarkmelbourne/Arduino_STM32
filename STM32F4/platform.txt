@@ -3,37 +3,39 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=STM32F4 boards
+name=STM32F4 Boards (STM32duino.com)
 version=0.1.0
 
 # compiler variables
 # ----------------------
-#build.gcc_ver=gcc-arm-none-eabi-4.8.3-2014q1
-
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.c.flags=-c -g {build.flags.optimize} -Wall -MMD -std=gnu11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} {build.vect_flags} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
 compiler.c.elf.cmd=arm-none-eabi-g++
-compiler.c.elf.flags=-Os -Wl,--gc-sections
+compiler.c.elf.flags={build.flags.optimize} -Wl,--gc-sections {build.flags.ldspecs}
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-c -g -Os -w -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
+compiler.cpp.flags=-c -g {build.flags.optimize} -Wall -MMD -std=gnu++11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} {build.vect_flags} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin}
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
 compiler.elf2hex.flags=-O binary
 compiler.elf2hex.cmd=arm-none-eabi-objcopy
-compiler.ldflags=
+compiler.ldflags={build.flags.ldspecs}
 compiler.size.cmd=arm-none-eabi-size
 compiler.define=-DARDUINO=                            
 
 # this can be overriden in boards.txt
+build.f_cpu=168000000L
+build.mcu=cortex-m4
 build.cpu_flags=
 build.hs_flag=
 build.common_flags=-mthumb -D__STM32F4__
 build.extra_flags= {build.cpu_flags} {build.hs_flag} {build.common_flags}
+build.flags.optimize=-Os
+build.flags.ldspecs=
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -44,10 +46,12 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 
-##compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include" "-I{build.system.path}/libmaple/stm32f1/include/series" "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
-#compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+##compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+#compiler.libs.c.flags="-I{build.core.path}" "-I{build.core.path}/libmaple" "-I{build.core.path}/libmaple/usbF4" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Core/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Class/cdc/inc" "-I{build.core.path}/libmaple/usbF4/STM32_USB_OTG_Driver/inc" "-I{build.core.path}/libmaple/usbF4/VCP" 
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.core.path}/libmaple/usbF4"
 
-compiler.libs.c.flags="-I{build.core.path}/libmaple" -I{build.core.path}/libmaple/usbF4 -I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Core/inc -I{build.core.path}/libmaple/usbF4/STM32_USB_Device_Library/Class/cdc/inc -I{build.core.path}/libmaple/usbF4/STM32_USB_OTG_Driver/inc -I{build.core.path}/libmaple/usbF4/VCP 
+
+
 
 # USB Flags
 # ---------
@@ -62,19 +66,21 @@ compiler.libs.c.flags="-I{build.core.path}/libmaple" -I{build.core.path}/libmapl
 # ---------------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.c.extra_flags} {build.extra_flags} {build.cpu_flags} {build.vect_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.cpp.extra_flags} {build.extra_flags} {build.cpu_flags} {build.vect_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
-recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
-
+recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mcpu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} {compiler.S.extra_flags} {build.extra_flags} {build.cpu_flags} {build.vect_flags} {build.hs_flag} {build.common_flags} {compiler.libs.c.flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Create archives
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
+##recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--entry=Reset_Handler -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group "{build.path}/syscalls_sam3.c.o" {object_files} "{build.variant.path}/{build.variant_system_lib}" "{archive_file_path}" -Wl,--end-group
+#-Wl,--entry=__start__ 
+#recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group {object_files} "{build.variant.path}/{build.variant_system_lib}" "{archive_file_path}" -Wl,--end-group
 recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mcpu={build.mcu} "-T{build.variant.path}/{build.ldscript}" "-Wl,-Map,{build.path}/{build.project_name}.map" {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" "-L{build.path}" -lm -lgcc -mthumb -Wl,--cref -Wl,--check-sections -Wl,--gc-sections -Wl,--unresolved-symbols=report-all -Wl,--warn-common -Wl,--warn-section-align -Wl,--warn-unresolved-symbols -Wl,--start-group {object_files} -Wl,--whole-archive "{archive_file_path}" -Wl,--no-whole-archive -Wl,--end-group
 
 ## Create eeprom
@@ -85,7 +91,6 @@ recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
-#recipe.size.regex=\.text\s+([0-9]+).*
 recipe.size.regex=^(?:\.text|\.rodata|\.ARM.exidx)\s+([0-9]+).*
 recipe.size.regex.data=^(?:\.data|\.bss|\.noinit)\s+([0-9]+).*
 
@@ -102,7 +107,7 @@ tools.maple_upload.cmd.windows=maple_upload.bat
 tools.maple_upload.path={runtime.hardware.path}/tools/win
 tools.maple_upload.path.macosx={runtime.hardware.path}/tools/macosx
 tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux
-
+tools.maple_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.maple_upload.upload.params.verbose=-d
 tools.maple_upload.upload.params.quiet=
 tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin" {upload.dfuse_addr}
@@ -110,21 +115,25 @@ tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altI
 # Generic STM32 upload via serial to Serial Port 1 (pins PA9 and PA10) - note. Boot0 line needs to high on board reset to enable upload via serial
 # at the end of the upload the program is automatically run, without the board being reset
 
-tools.serial_upload.cmd=serial_upload
-tools.serial_upload.cmd.windows=serial_upload.bat
-#tools.serial_upload.cmd.linux=
-tools.serial_upload.path={runtime.hardware.path}/tools/win
+# stlink upload
+tools.stlink_upload.cmd=stlink_upload
+tools.stlink_upload.cmd.windows=stlink_upload.bat
+tools.stlink_upload.path.windows={runtime.hardware.path}/tools/win
+tools.stlink_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.stlink_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.stlink_upload.path.linux64={runtime.hardware.path}/tools/linux64
+tools.stlink_upload.upload.params.verbose=-d
+tools.stlink_upload.upload.params.quiet=
+tools.stlink_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
 
-tools.serial_upload.upload.params.verbose=-d
-tools.serial_upload.upload.params.quiet=
-tools.serial_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
-
-# STLINK/V2
-
-tools.stlink.cmd=stlink_upload
-tools.stlink.cmd.windows=stlink_upload.bat
-tools.stlink.path={runtime.hardware.path}/tools/win
-tools.stlink.path.linux={runtime.hardware.path}/tools/linux/
-tools.stlink.upload.params.verbose=-d
-tools.stlink.upload.params.quiet=
-tools.stlink.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
+# HID upload 2.0 (HID bootloader 2.0 This bootloader will cover the STM32F1 and STM32F4 MCUs)
+tools.hid_upload.cmd=hid_upload
+tools.hid_upload.cmd.windows=hid-flash.exe
+tools.hid_upload.cmd.macosx=hid_flash
+tools.hid_upload.path={runtime.hardware.path}/tools/win
+tools.hid_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.hid_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.hid_upload.path.linux64={runtime.hardware.path}/tools/linux64
+tools.hid_upload.upload.params.verbose=-d
+tools.hid_upload.upload.params.quiet=n
+tools.hid_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin" {serial.port.file}

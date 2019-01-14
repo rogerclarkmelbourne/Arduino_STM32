@@ -149,11 +149,7 @@ static void setup_clocks(void) {
 #if defined(BOOTLOADER_maple)
 	#define USER_ADDR_ROM 0x08005000
 #else
-	#if defined(BOOTLOADER_robotis)
-		#define USER_ADDR_ROM 0x08003000
-	#else
-		#define USER_ADDR_ROM 0x08000000
-	#endif
+	#define USER_ADDR_ROM 0x08000000
 #endif
 #define USER_ADDR_RAM 0x20000C00
 extern char __text_start__;
@@ -181,7 +177,7 @@ nvic_init((uint32)VECT_TAB_ADDR, 0);
 */
 }
 
-static void adc_default_config(const adc_dev *dev) {
+static void adc_default_config( adc_dev *dev) {
     adc_enable_single_swstart(dev);
     adc_set_sample_rate(dev, wirish::priv::w_adc_smp);
 }

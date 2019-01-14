@@ -39,15 +39,15 @@
 
 /** I2C register map type */
 typedef struct i2c_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 OAR1;           /**< Own address register 1 */
-    __io uint32 OAR2;           /**< Own address register 2 */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 SR1;            /**< Status register 1 */
-    __io uint32 SR2;            /**< Status register 2 */
-    __io uint32 CCR;            /**< Clock control register */
-    __io uint32 TRISE;          /**< TRISE (rise time) register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 OAR1;           /**< Own address register 1 */
+    __IO uint32 OAR2;           /**< Own address register 2 */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 SR1;            /**< Status register 1 */
+    __IO uint32 SR2;            /**< Status register 2 */
+    __IO uint32 CCR;            /**< Clock control register */
+    __IO uint32 TRISE;          /**< TRISE (rise time) register */
 } i2c_reg_map;
 
 /** I2C device states */
@@ -78,7 +78,7 @@ typedef struct i2c_msg {
  */
 typedef struct i2c_dev {
     i2c_reg_map *regs;          /**< Register map */
-    gpio_dev *gpio_port;        /**< SDA, SCL pins' GPIO port */
+    //gpio_dev *gpio_port;        /**< SDA, SCL pins' GPIO port */
     uint8 sda_pin;              /**< SDA bit on gpio_port */
     uint8 scl_pin;              /**< SCL bit on gpio_port */
     rcc_clk_id clk_id;          /**< RCC clock information */

@@ -1,0 +1,27 @@
+#######################################
+# Syntax Coloring Map For CoOS
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+vTaskDelay	KEYWORD2
+vTaskDelayUntil	KEYWORD2
+xTaskCreate	KEYWORD2
+vTaskSuspend	KEYWORD2
+vTaskDelete	KEYWORD2
+vTaskPrioritySet	KEYWORD2
+uxTaskPriorityGet	KEYWORD2
+vTaskStartScheduler	KEYWORD2
+vApplicationIdleHook	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+configUSE_IDLE_HOOK		LITERAL1
+configMINIMAL_STACK_SIZE	LITERAL1
+tskIDLE_PRIORITY	LITERAL1

@@ -53,13 +53,13 @@ extern "C"{
 
 /** USART register map type */
 typedef struct usart_reg_map {
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 BRR;            /**< Baud rate register */
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 CR3;            /**< Control register 3 */
-    __io uint32 GTPR;           /**< Guard time and prescaler register */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 BRR;            /**< Baud rate register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 CR3;            /**< Control register 3 */
+    __IO uint32 GTPR;           /**< Guard time and prescaler register */
 } usart_reg_map;
 
 /*
@@ -381,16 +381,22 @@ typedef struct usart_reg_map {
 #define USART_RX_BUF_SIZE               64
 #endif
 
+#ifndef USART_TX_BUF_SIZE
+#define USART_TX_BUF_SIZE               64
+#endif
+
 /** USART device type */
 typedef struct usart_dev {
     usart_reg_map *regs;             /**< Register map */
     ring_buffer *rb;                 /**< RX ring buffer */
+    ring_buffer *wb;                 /**< TX ring buffer */
     uint32 max_baud;                 /**< @brief Deprecated.
                                       * Maximum baud rate. */
     uint8 rx_buf[USART_RX_BUF_SIZE]; /**< @brief Deprecated.
                                       * Actual RX buffer used by rb.
                                       * This field will be removed in
                                       * a future release. */
+    uint8 tx_buf[USART_TX_BUF_SIZE]; /**< Actual TX buffer used by wb */
     rcc_clk_id clk_id;               /**< RCC clock information */
     nvic_irq_num irq_num;            /**< USART NVIC interrupt */
 } usart_dev;
@@ -433,8 +439,8 @@ static inline void usart_disable_all(void) {
 /**
  * @brief Transmit one character on a serial port.
  *
- * This function blocks until the character has been successfully
- * transmitted.
+ * This function blocks until the character has been queued
+ * for transmission.
  *
  * @param dev Serial port to send on.
  * @param byte Byte to transmit.
@@ -500,6 +506,14 @@ static inline uint32 usart_data_available(usart_dev *dev) {
  */
 static inline void usart_reset_rx(usart_dev *dev) {
     rb_reset(dev->rb);
+}
+
+/**
+ * @brief Discard the contents of a serial port's RX buffer.
+ * @param dev Serial port whose buffer to empty.
+ */
+static inline void usart_reset_tx(usart_dev *dev) {
+    rb_reset(dev->wb);
 }
 
 #ifdef __cplusplus

@@ -3,7 +3,7 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=STM32 Boards (STM32duino.com)
+name=STM32F1 Boards (STM32duino.com)
 version=0.1.2
 
 compiler.warning_flags=-w -DDEBUG_LEVEL=DEBUG_NONE
@@ -16,27 +16,27 @@ compiler.warning_flags.all=-Wall -Wextra -DDEBUG_LEVEL=DEBUG_ALL
 # ----------------------
 compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
-compiler.c.flags=-c -g -Os {compiler.warning_flags} -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} 
+compiler.c.flags=-c -g {build.flags.optimize} {compiler.warning_flags} -std=gnu11 -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} 
 compiler.c.elf.cmd=arm-none-eabi-g++
-compiler.c.elf.flags=-Os -Wl,--gc-sections
+compiler.c.elf.flags={build.flags.optimize} -Wl,--gc-sections {build.flags.ldspecs}
 compiler.S.cmd=arm-none-eabi-gcc
 compiler.S.flags=-c -g -x assembler-with-cpp -MMD
 compiler.cpp.cmd=arm-none-eabi-g++
-compiler.cpp.flags=-c -g -Os {compiler.warning_flags} -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} 
+compiler.cpp.flags=-c -g {build.flags.optimize} {compiler.warning_flags} -std=gnu++11 -MMD -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -fno-rtti -fno-exceptions -DBOARD_{build.variant} -D{build.vect} -DERROR_LED_PORT={build.error_led_port} -DERROR_LED_PIN={build.error_led_pin} 
 compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
 compiler.elf2hex.flags=-O binary
 compiler.elf2hex.cmd=arm-none-eabi-objcopy
-compiler.ldflags=
+compiler.ldflags={build.flags.ldspecs}
 compiler.size.cmd=arm-none-eabi-size
 compiler.define=-DARDUINO=                            
 
 # this can be overriden in boards.txt
 build.f_cpu=72000000L
 build.mcu=cortex-m3
-build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ 
+build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__ -DARDUINO_ARCH_STM32
 build.variant_system_lib=libmaple.a
 ## LED stuff is not really used but is still required in the code
 build.error_led_port=GPIOB
@@ -44,6 +44,8 @@ build.error_led_pin=1
 build.cpu_flags=
 build.hs_flag=
 build.upload_flags=
+build.flags.optimize=-Os
+build.flags.ldspecs=
 build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
 
 
@@ -57,7 +59,7 @@ compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
 
-compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include" "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
 
 
 
@@ -150,3 +152,26 @@ tools.bmp_upload.upload.speed=230400
 tools.bmp_upload.upload.params.verbose=
 tools.bmp_upload.upload.params.quiet=-q --batch-silent
 tools.bmp_upload.upload.pattern="{path}{cmd}" -cd "{build.path}" -b {upload.speed} {upload.verbose} -ex "set debug remote 0" -ex "set target-async off" -ex "set remotetimeout 60" -ex "set mem inaccessible-by-default off" -ex "set confirm off" -ex "set height 0" -ex "target extended-remote {serial.port}" -ex "monitor swdp_scan" -ex "attach 1" -ex "x/wx 0x8000004" -ex "monitor erase_mass" -ex "echo 0x8000004 expect 0xffffffff after erase\n" -ex "x/wx 0x8000004" -ex "file {build.project_name}.elf" -ex "load" -ex "x/wx 0x08000004" -ex "tbreak main" -ex "run" -ex "echo \n\n\nUpload finished!" -ex "quit"
+
+tools.jlink_upload.cmd=jlink_upload
+tools.jlink_upload.cmd.windows=jlink_upload.bat
+tools.jlink_upload.cmd.macosx=jlink_upload
+tools.jlink_upload.path={runtime.hardware.path}/tools/win
+tools.jlink_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.jlink_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.jlink_upload.path.linux64={runtime.hardware.path}/tools/linux64
+tools.jlink_upload.upload.params.verbose=-d
+tools.jlink_upload.upload.params.quiet=n
+tools.jlink_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin"
+
+# HID upload 2.0
+tools.hid_upload.cmd=hid_upload
+tools.hid_upload.cmd.windows=hid-flash.exe
+tools.hid_upload.cmd.macosx=hid_flash
+tools.hid_upload.path={runtime.hardware.path}/tools/win
+tools.hid_upload.path.macosx={runtime.hardware.path}/tools/macosx
+tools.hid_upload.path.linux={runtime.hardware.path}/tools/linux
+tools.hid_upload.path.linux64={runtime.hardware.path}/tools/linux64
+tools.hid_upload.upload.params.verbose=-d
+tools.hid_upload.upload.params.quiet=n
+tools.hid_upload.upload.pattern="{path}/{cmd}" "{build.path}/{build.project_name}.bin" {serial.port.file}

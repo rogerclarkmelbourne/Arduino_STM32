@@ -31,9 +31,6 @@
 #define USB_StatusIn() Send0LengthData()
 #define USB_StatusOut() vSetEPRxStatus(EP_RX_VALID)
 
-#define StatusInfo0 StatusInfo.bw.bb1 /* Reverse bb0 & bb1 */
-#define StatusInfo1 StatusInfo.bw.bb0
-
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u16_u8 StatusInfo;
@@ -857,11 +854,11 @@ u8 Setup0_Process(void)
     pInformation->USBbmRequestType = *pBuf.b++; /* bmRequestType */
     pInformation->USBbRequest = *pBuf.b++; /* bRequest */
     pBuf.w++;  /* word not accessed because of 32 bits addressing */
-    pInformation->USBwValue = ByteSwap(*pBuf.w++); /* wValue */
+    pInformation->USBwValue = *pBuf.w++; /* wValue in Little Endian */
     pBuf.w++;  /* word not accessed because of 32 bits addressing */
-    pInformation->USBwIndex  = ByteSwap(*pBuf.w++); /* wIndex */
+    pInformation->USBwIndex  = *pBuf.w++; /* wIndex in Little Endian */
     pBuf.w++;  /* word not accessed because of 32 bits addressing */
-    pInformation->USBwLength = *pBuf.w; /* wLength */
+    pInformation->USBwLength = *pBuf.w; /* wLength in Little Endian */
   }
 
   pInformation->ControlState = SETTING_UP;

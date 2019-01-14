@@ -48,7 +48,15 @@
 // works for F103 performance line MCUs, which is all that LeafLabs
 // currently officially supports).
 #ifndef BOARD_RCC_PLLMUL
-#define BOARD_RCC_PLLMUL RCC_PLLMUL_9
+	#if F_CPU==128000000
+		#define BOARD_RCC_PLLMUL RCC_PLLMUL_16
+	#elif F_CPU==72000000
+		#define BOARD_RCC_PLLMUL RCC_PLLMUL_9
+	#elif F_CPU==48000000
+		#define BOARD_RCC_PLLMUL RCC_PLLMUL_6
+	#elif F_CPU==16000000
+		#define BOARD_RCC_PLLMUL RCC_PLLMUL_2
+	#endif
 #endif
 
 namespace wirish {
@@ -71,7 +79,7 @@ namespace wirish {
 			#if F_CPU == 72000000
 			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);
 			#elif F_CPU == 48000000
-			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1_5);			
+			rcc_set_prescaler(RCC_PRESCALER_USB, RCC_USB_SYSCLK_DIV_1);			
 			#endif	
         }
 

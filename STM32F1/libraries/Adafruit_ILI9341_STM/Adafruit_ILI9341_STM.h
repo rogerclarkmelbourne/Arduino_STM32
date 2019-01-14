@@ -7,9 +7,12 @@ This library has been modified for the Maple Mini
 #define _ADAFRUIT_ILI9341H_
 
 #include "Arduino.h"
-#include "Print.h"
 #include <Adafruit_GFX_AS.h>
-#include <avr/pgmspace.h>
+#include <SPI.h>
+
+#ifndef swap
+  #define swap(a, b) { int16_t t = a; a = b; b = t; }
+#endif
 
 #define ILI9341_TFTWIDTH  240
 #define ILI9341_TFTHEIGHT 320
@@ -92,21 +95,19 @@ This library has been modified for the Maple Mini
 #define ILI9341_GREENYELLOW 0xAFE5      /* 173, 255,  47 */
 #define ILI9341_PINK        0xF81F
 
-class Adafruit_ILI9341_STM : public Adafruit_GFX {
+class Adafruit_ILI9341_STM : public Adafruit_GFX_AS {
 
  public:
 
-  Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _MOSI, int8_t _SCLK,
-		   int8_t _RST, int8_t _MISO);
   Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _RST = -1);
-  
-  void     begin(void),
-           setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
+
+  void     begin(SPIClass & spi, uint32_t freq=48000000);
+  void     begin(void) { begin(SPI); }
+  void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
            pushColor(uint16_t color),
+           pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async=0),
            fillScreen(uint16_t color),
-		   #if defined (__STM32F1__)
 		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
-		   #endif
            drawPixel(int16_t x, int16_t y, uint16_t color),
            drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color),
            drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color),
@@ -117,43 +118,49 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX {
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
 
   /* These are not for current use, 8-bit protocol only! */
-  uint8_t  readdata(void),
-    readcommand8(uint8_t reg, uint8_t index = 0);
+  uint16_t readPixel(int16_t x, int16_t y);
+  uint16_t readPixels(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t *buf);
+  uint16_t readPixelsRGB24(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t *buf);
+
+  uint8_t  readcommand8(uint8_t reg, uint8_t index = 0);
   /*
   uint16_t readcommand16(uint8_t);
   uint32_t readcommand32(uint8_t);
-  void     dummyclock(void);
-  */  
+  */
 
-  void     spiwrite(uint8_t),
-    writecommand(uint8_t c),
-    writedata(uint8_t d),
-    commandList(uint8_t *addr);
-  uint8_t  spiread(void);
+#define DMA_ON_LIMIT 250 // do DMA only for more data than this
+#define SAFE_FREQ  24000000ul // 24MHz for reading
 
+#define writePixel drawPixel
+
+#define dc_command() ( *dcport  =(uint32_t)dcpinmask<<16 ) // 0
+#define dc_data()    ( *dcport  =(uint32_t)dcpinmask )     // 1
+#define cs_clear()   ( *csport  =(uint32_t)cspinmask<<16 )
+#define cs_set()     ( *csport  =(uint32_t)cspinmask )
+#define clk_clear()  ( *clkport =(uint32_t)clkpinmask<<16 )
+#define clk_set()    ( *clkport =(uint32_t)clkpinmask )
+#define mosi_clear() ( *mosiport=(uint32_t)misopinmask<<16 )
+#define mosi_set()   ( *mosiport=(uint32_t)misopinmask )
+#define miso_in()    ( (*misoport)&misopinmask )
+
+  inline uint8_t spiread(void)  { return mSPI.transfer(0x00); }
+  inline uint8_t readdata(void) { return mSPI.transfer(0x00); }
+  inline void    writedata(uint8_t c)   { mSPI.write(c); }
+  inline void    spiwrite(uint16_t c)   { mSPI.write(c); }
+  inline void    spiwrite16(uint16_t c) { mSPI.write16(c); } // 8 bit mode
+
+  void  writecommand(uint8_t c),
+        commandList(uint8_t *addr);
 
  private:
-  uint8_t  tabcolor;
+  uint32_t _freq, _safe_freq;
+  SPIClass & mSPI = SPI;
 
-
-
-
-  boolean  hwSPI;
-#if defined (__AVR__) || defined(TEENSYDUINO)
-  uint8_t mySPCR;
-  volatile uint8_t *mosiport, *clkport, *dcport, *rsport, *csport;
-  int8_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
-  uint8_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-#elif defined (__STM32F1__)
-    volatile uint32 *mosiport, *clkport, *dcport, *rsport, *csport;
-    uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
-    uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-	uint16_t lineBuffer[ILI9341_TFTHEIGHT]; // DMA buffer. 16bit color data per pixel
-#elif defined (__arm__)
-    volatile RwReg *mosiport, *clkport, *dcport, *rsport, *csport;
-    uint32_t  _cs, _dc, _rst, _mosi, _miso, _sclk;
-    uint32_t  mosipinmask, clkpinmask, cspinmask, dcpinmask;
-#endif
+  volatile uint32_t *csport, *dcport;
+  int8_t  _cs, _dc, _rst;
+  uint16_t  cspinmask, dcpinmask;
+  uint16_t lineBuffer[ILI9341_TFTHEIGHT]; // DMA buffer. 16bit color data per pixel
 };
+
 
 #endif

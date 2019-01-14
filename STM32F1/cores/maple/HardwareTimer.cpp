@@ -30,6 +30,7 @@
 #include "ext_interrupts.h" // for noInterrupts(), interrupts()
 #include "wirish_math.h"
 #include <board/board.h>           // for CYCLES_PER_MICROSECOND
+#include <libmaple/dma.h>
 
 // TODO [0.1.0] Remove deprecated pieces
 
@@ -138,10 +139,24 @@ void HardwareTimer::detachInterrupt(int channel) {
     timer_detach_interrupt(this->dev, (uint8)channel);
 }
 
+void HardwareTimer::enableDMA(int channel) {
+    timer_dma_enable_req(this->dev, (uint8)channel);
+}
+
+void HardwareTimer::disableDMA(int channel) {
+    timer_dma_disable_req(this->dev, (uint8)channel);
+}
+
 void HardwareTimer::refresh(void) {
     timer_generate_update(this->dev);
 }
 
+void HardwareTimer::setMasterModeTrGo(uint32_t mode) {
+	this->dev->regs.bas->CR2 &= ~TIMER_CR2_MMS;
+	this->dev->regs.bas->CR2 |= mode;
+}
+
+    
 /* -- Deprecated predefined instances -------------------------------------- */
 
 HardwareTimer Timer1(1);

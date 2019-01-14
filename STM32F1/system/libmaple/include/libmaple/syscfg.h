@@ -48,12 +48,12 @@ extern "C" {
  * @brief SYSCFG register map type.
  */
 typedef struct syscfg_reg_map {
-    __io uint32 MEMRMP;    /**< Memory remap register */
-    __io uint32 PMC;       /**< Peripheral mode configuration */
-    __io uint32 EXTICR[4]; /**< External interrupt configuration registers */
+    __IO uint32 MEMRMP;    /**< Memory remap register */
+    __IO uint32 PMC;       /**< Peripheral mode configuration */
+    __IO uint32 EXTICR[4]; /**< External interrupt configuration registers */
     const uint32 RESERVED1;
     const uint32 RESERVED2;
-    __io uint32 CMPCR;   /**< Compensation cell control register */
+    __IO uint32 CMPCR;   /**< Compensation cell control register */
 } syscfg_reg_map;
 
 /** SYSCFG register map base pointer */

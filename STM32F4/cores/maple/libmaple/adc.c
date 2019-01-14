@@ -41,27 +41,24 @@
 #include "rcc.h"
 #include "adc.h"
 
-static adc_dev adc1 = {
+/** ADC1 device. */
+const adc_dev ADC1 = {
     .regs   = ADC1_BASE,
     .clk_id = RCC_ADC1
 };
-/** ADC1 device. */
-const adc_dev *ADC1 = &adc1;
 
-static adc_dev adc2 = {
+/** ADC2 device. */
+const adc_dev ADC2 = {
     .regs   = ADC2_BASE,
     .clk_id = RCC_ADC2
 };
-/** ADC2 device. */
-const adc_dev *ADC2 = &adc2;
 
 #ifdef STM32_HIGH_DENSITY
-adc_dev adc3 = {
+/** ADC3 device. */
+const adc_dev ADC3 = {
     .regs   = ADC3_BASE,
     .clk_id = RCC_ADC3
 };
-/** ADC3 device. */
-const adc_dev *ADC3 = &adc3;
 #endif
 
 /**
@@ -74,7 +71,7 @@ const adc_dev *ADC3 = &adc3;
  */
 void adc_init(const adc_dev *dev) {
     rcc_clk_enable(dev->clk_id);
-#ifdef STM32F2
+#ifdef STM32F4
     if(dev->clk_id == RCC_ADC1) {
     	rcc_reset_dev(dev->clk_id);
     }
@@ -101,10 +98,10 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
  * @param fn Function to call on each ADC device.
  */
 void adc_foreach(void (*fn)(const adc_dev*)) {
-    fn(ADC1);
-    fn(ADC2);
+    fn(&ADC1);
+    fn(&ADC2);
 #ifdef STM32_HIGH_DENSITY
-    fn(ADC3);
+    fn(&ADC3);
 #endif
 }
 
@@ -136,10 +133,12 @@ void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
  * @brief Calibrate an ADC peripheral
  * @param dev adc device
  */
-void adc_calibrate(const adc_dev *dev) {
+void adc_calibrate(const adc_dev *dev)
+{
+/*
 #ifndef STM32F2
-    __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
-    __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
+    __IO uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
+    __IO uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
 
     *rstcal_bit = 1;
     while (*rstcal_bit)
@@ -149,6 +148,7 @@ void adc_calibrate(const adc_dev *dev) {
     while (*cal_bit)
         ;
 #endif
+*/
 }
 
 /**
@@ -171,8 +171,8 @@ uint16 adc_read(const adc_dev *dev, uint8 channel) {
     return (uint16)(regs->DR & ADC_DR_DATA);
 }
 
-void setupADC_F2() {
-#ifdef STM32F2
+void setupADC_F4(void)
+{
 		  uint32 tmpreg1 = 0;
 
 		  tmpreg1 = ADC_COMMON->CCR;
@@ -196,5 +196,4 @@ void setupADC_F2() {
 
 		  /* Write to ADC CCR */
 		  ADC_COMMON->CCR = tmpreg1;
-#endif
 }

@@ -52,21 +52,17 @@ extern "C"{
 
 /** USART register map type */
 typedef struct usart_reg_map {
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 BRR;            /**< Baud rate register */
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 CR3;            /**< Control register 3 */
-    __io uint32 GTPR;           /**< Guard time and prescaler register */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 BRR;            /**< Baud rate register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 CR3;            /**< Control register 3 */
+    __IO uint32 GTPR;           /**< Guard time and prescaler register */
 } usart_reg_map;
 
 /** USART1 register map base pointer */
-#ifdef STM32F2
-  #define USART1_BASE                   ((struct usart_reg_map*)0x40011000)
-#else
-  #define USART1_BASE                   ((struct usart_reg_map*)0x40013800)
-#endif
+#define USART1_BASE                   ((struct usart_reg_map*)0x40011000)
 /** USART2 register map base pointer */
 #define USART2_BASE                     ((struct usart_reg_map*)0x40004400)
 /** USART3 register map base pointer */

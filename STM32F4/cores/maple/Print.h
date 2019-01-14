@@ -25,9 +25,9 @@
 
 #include <libmaple/libmaple_types.h>
 #include "WString.h"
+#include "Printable.h"
 
 enum {
-    BYTE = 0,
     BIN  = 2,
     OCT  = 8,
     DEC  = 10,
@@ -51,6 +51,8 @@ public:
     size_t print(long long, int=DEC);
     size_t print(unsigned long long, int=DEC);
     size_t print(double, int=2);
+    size_t print(const __FlashStringHelper *);
+    size_t print(const Printable&);
     size_t println(void);
 	size_t println(const String &s);
 	size_t println(char);
@@ -63,6 +65,8 @@ public:
     size_t println(long long, int=DEC);
     size_t println(unsigned long long, int=DEC);
     size_t println(double, int=2);
+    size_t println(const __FlashStringHelper *);
+    size_t println(const Printable&);
 #ifdef SUPPORTS_PRINTF
 // Roger Clark. Work in progress to add printf support
 	int printf(const char * format, ...);

@@ -48,14 +48,14 @@ extern "C"{
 
 /** @brief STM32F1 Flash register map type */
 typedef struct flash_reg_map {
-    __io uint32 ACR;            /**< Access control register */
-    __io uint32 KEYR;           /**< Key register */
-    __io uint32 OPTKEYR;        /**< OPTKEY register */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 CR;             /**< Control register */
-    __io uint32 AR;             /**< Address register */
-    __io uint32 OBR;            /**< Option byte register */
-    __io uint32 WRPR;           /**< Write protection register */
+    __IO uint32 ACR;            /**< Access control register */
+    __IO uint32 KEYR;           /**< Key register */
+    __IO uint32 OPTKEYR;        /**< OPTKEY register */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 CR;             /**< Control register */
+    __IO uint32 AR;             /**< Address register */
+    __IO uint32 OBR;            /**< Option byte register */
+    __IO uint32 WRPR;           /**< Write protection register */
 } flash_reg_map;
 
 #define FLASH_BASE                      ((struct flash_reg_map*)0x40022000)
@@ -132,7 +132,7 @@ typedef struct flash_reg_map {
  * Series-specific configuration values.
  */
 
-#define FLASH_SAFE_WAIT_STATES          FLASH_WAIT_STATE_2
+#define FLASH_SAFE_WAIT_STATES          (F_CPU > 48000000 ? FLASH_WAIT_STATE_2 : F_CPU > 24000000 ? FLASH_WAIT_STATE_1 : FLASH_WAIT_STATE_0)
 
 /* Flash memory features available via ACR */
 enum {

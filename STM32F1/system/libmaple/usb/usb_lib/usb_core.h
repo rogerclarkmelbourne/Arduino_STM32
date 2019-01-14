@@ -101,8 +101,9 @@ typedef union
   u16 w;
   struct BW
   {
-    u8 bb1;
+    /* Little Endian */
     u8 bb0;
+	u8 bb1;
   }
   bw;
 } u16_u8;
@@ -211,6 +212,8 @@ USER_STANDARD_REQUESTS;
 #define USBwLength USBwLengths.w
 #define USBwLength0 USBwLengths.bw.bb0
 #define USBwLength1 USBwLengths.bw.bb1
+#define StatusInfo0 StatusInfo.bw.bb0
+#define StatusInfo1 StatusInfo.bw.bb1
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

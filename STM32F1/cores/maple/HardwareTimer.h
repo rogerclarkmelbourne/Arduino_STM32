@@ -38,6 +38,10 @@
 /** Timer mode. */
 typedef timer_mode TimerMode;
 
+//CARLOS
+//defines for the ENCODER mode.
+
+
 /**
  * @brief Interface to one of the 16-bit timer peripherals.
  */
@@ -173,7 +177,8 @@ public:
      * This interrupt handler will be called when the timer's counter
      * reaches the given channel compare value.
      *
-     * @param channel the channel to attach the ISR to, from 1 to 4.
+     * @param channel the channel to attach the ISR to, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @param handler The ISR to attach to the given channel.
      * @see voidFuncPtr
      */
@@ -185,7 +190,8 @@ public:
      *
      * The handler will no longer be called by this timer.
      *
-     * @param channel the channel whose interrupt to detach, from 1 to 4.
+     * @param channel the channel whose interrupt to detach, from 0 to 4.
+     *   Channel 0 is for overflow interrupt (update interrupt).
      * @see HardwareTimer::attachInterrupt()
      */
     void detachInterrupt(int channel);
@@ -205,7 +211,68 @@ public:
      */
     void refresh(void);
 
-    /* Escape hatch */
+	// SYFRE
+    /**
+     * @brief Set the Master mode TRGO signal 
+     *        These bits allow to select the information to be sent in master mode to slave timers for 
+     *        synchronization (TRGO). 
+	 *	mode:
+	 * 		TIMER_CR2_MMS_RESET
+	 * 		TIMER_CR2_MMS_ENABLE
+	 * 		TIMER_CR2_MMS_UPDATE
+	 * 		TIMER_CR2_MMS_COMPARE_PULSE
+	 * 		TIMER_CR2_MMS_COMPARE_OC1REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC2REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC3REF
+	 * 		TIMER_CR2_MMS_COMPARE_OC4REF
+     */
+	void setMasterModeTrGo(uint32_t mode);
+
+    void setSlaveFlags(uint32 flags) {
+        ((this->dev)->regs).gen->SMCR = flags;
+    }
+
+//CARLOS.
+/*
+    added these functions to make sense for the encoder mode. 
+*/
+//direction of movement. (to be better described). 
+    uint8 getDirection() {
+        return get_direction(this->dev);
+    }
+
+//set if the encoder will count edges on one, which or both channels. 
+    void setEdgeCounting(uint32 counting) {
+        setSlaveFlags(counting);
+    }
+
+//set the polarity of counting... not sure how interesting this is.. 
+    void setPolarity(uint8 channel, uint8 pol) {
+        timer_cc_set_pol(this->dev, channel, pol);
+    }
+
+    void setInputCaptureMode(uint8 channel, timer_ic_input_select input) {
+        input_capture_mode(this->dev, channel, input);
+    }
+
+    uint8_t getInputCaptureFlag(uint8 channel) {
+        return ( timer_get_status(this->dev) >> channel ) & 0x1;
+    }
+
+    uint8_t getInputCaptureFlagOverflow(uint8 channel) {
+		uint8 ret = ( timer_get_status(this->dev) >> (8+channel) ) & 0x1;
+		if ( ret ) timer_reset_status_bit(this->dev, (8+channel)); // clear flag
+        return ret;
+    }
+
+//add the filtering definition for the input channel.
+    
+
+    /**
+     * @brief Enable/disable DMA request for the input channel.
+     */
+    void enableDMA(int channel);
+    void disableDMA(int channel);
 
     /**
      * @brief Get a pointer to the underlying libmaple timer_dev for

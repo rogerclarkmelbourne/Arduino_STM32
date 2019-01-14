@@ -29,10 +29,11 @@
  * @brief Miscellaneous utility macros and procedures.
  */
 
-#include "libmaple_types.h"
-
 #ifndef _UTIL_H_
 #define _UTIL_H_
+
+#include "libmaple_types.h"
+#include "delay.h"
 
 #ifdef __cplusplus
 extern "C"{

@@ -32,29 +32,33 @@
 #ifndef _LIBMAPLE_H_
 #define _LIBMAPLE_H_
 
-#include "libmaple_types.h"
-#include "stm32.h"
 #include "util.h"
-#include "delay.h"
 
 /*
  * Where to put usercode, based on space reserved for bootloader.
  *
  * FIXME this has no business being here
  */
+/*
 #if defined(MCU_STM32F103VE) || defined(MCU_STM32F205VE) || defined(MCU_STM32F406VG)
-    /* e.g., Aeroquad32 */
-    #define USER_ADDR_ROM 0x08010000    /* ala42 */
+    // e.g., Aeroquad32
+    #define USER_ADDR_ROM 0x08010000    // ala42
     #define USER_ADDR_RAM 0x20000C00
     #define STACK_TOP     0x20000800
 #elif defined(BOARD_freeflight)
+*/
+#ifndef USER_ADDR_ROM
 #define USER_ADDR_ROM 0x08000000
-#define USER_ADDR_RAM 0x20000000
+#endif
+#define USER_ADDR_RAM 0x20000C00
 #define STACK_TOP     0x20000800
+/*
 #else
 #define USER_ADDR_ROM 0x08005000
 #define USER_ADDR_RAM 0x20000C00
 #define STACK_TOP     0x20000800
 #endif
+*/
+
 #endif
 

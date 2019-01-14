@@ -41,10 +41,10 @@ extern "C"{
 
 /** SysTick register map type */
 typedef struct systick_reg_map {
-    __io uint32 CSR;            /**< Control and status register */
-    __io uint32 RVR;            /**< Reload value register */
-    __io uint32 CNT;            /**< Current value register ("count") */
-    __io uint32 CVR;            /**< Calibration value register */
+    __IO uint32 CSR;            /**< Control and status register */
+    __IO uint32 RVR;            /**< Reload value register */
+    __IO uint32 CNT;            /**< Current value register ("count") */
+    __IO uint32 CVR;            /**< Calibration value register */
 } systick_reg_map;
 
 /** SysTick register map base pointer */
@@ -107,6 +107,12 @@ static inline uint32 systick_get_count(void) {
 static inline uint32 systick_check_underflow(void) {
     return SYSTICK_BASE->CSR & SYSTICK_CSR_COUNTFLAG;
 }
+
+/**
+ * @brief prototype for systick_attach_callback
+ *
+ */
+extern void systick_attach_callback(void (*callback)(void));
 
 #ifdef __cplusplus
 } // extern "C"

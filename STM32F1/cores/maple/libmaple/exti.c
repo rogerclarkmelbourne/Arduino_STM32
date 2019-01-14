@@ -200,7 +200,7 @@ void exti_detach_interrupt(exti_num num) {
  * Private routines
  */
 
-void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
+void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port) {
     uint32 shift = 4 * (num % 4);
     uint32 cr = *exti_cr;
     cr &= ~(0xF << shift);
@@ -212,31 +212,31 @@ void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
  * Interrupt handlers
  */
 
-void __irq_exti0(void) {
+__weak void __irq_exti0(void) {
     dispatch_single_exti(EXTI0);
 }
 
-void __irq_exti1(void) {
+__weak void __irq_exti1(void) {
     dispatch_single_exti(EXTI1);
 }
 
-void __irq_exti2(void) {
+__weak void __irq_exti2(void) {
     dispatch_single_exti(EXTI2);
 }
 
-void __irq_exti3(void) {
+__weak void __irq_exti3(void) {
     dispatch_single_exti(EXTI3);
 }
 
-void __irq_exti4(void) {
+__weak void __irq_exti4(void) {
     dispatch_single_exti(EXTI4);
 }
 
-void __irq_exti9_5(void) {
+__weak void __irq_exti9_5(void) {
     dispatch_extis(5, 9);
 }
 
-void __irq_exti15_10(void) {
+__weak void __irq_exti15_10(void) {
     dispatch_extis(10, 15);
 }
 

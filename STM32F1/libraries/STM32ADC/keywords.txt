@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map RTClock
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Encoder	KEYWORD1
+
+
+start					KEYWORD2
+stop					KEYWORD2
+
+resetCounts				KEYWORD2
+value					KEYWORD2
+getTurns				KEYWORD2
+reset					KEYWORD2
+getAngle				KEYWORD2
+getDirection				KEYWORD2
+Polarity				KEYWORD2
+setPrescaler				KEYWORD2
+getPrescaler				KEYWORD2
+setPPR					KEYWORD2
+getPPR					KEYWORD2
+attachInterrupt				KEYWORD2
+detachInterrupt				KEYWORD2
+setFilter				KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+COUNT_CH2				LITERAL1
+COUNT_CH1				LITERAL1
+COUNT_BOTH_CHANNELS			LITERAL1
+RADIANS					LITERAL1
+GRADES					LITERAL1
+DEGREES					LITERAL1
+NORMAL					LITERAL1
+INVERTED				LITERAL1
+POSITIVE				LITERAL1
+NEGATIVE				LITERAL1

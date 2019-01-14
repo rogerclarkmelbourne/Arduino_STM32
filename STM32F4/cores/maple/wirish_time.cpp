@@ -28,10 +28,10 @@
  *  @brief Delay implementation.
  */
 
-#include "libmaple.h"
-#include "systick.h"
+#include <libmaple/libmaple.h>
+#include <libmaple/systick.h>
 #include "wirish_time.h"
-#include "delay.h"
+#include <libmaple/delay.h>
 
 void delay(unsigned long ms) {
     uint32 i;

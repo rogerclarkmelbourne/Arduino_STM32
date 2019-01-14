@@ -53,15 +53,15 @@ extern "C" {
 
 /** SPI register map type. */
 typedef struct spi_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 CRCPR;          /**< CRC polynomial register */
-    __io uint32 RXCRCR;         /**< RX CRC register */
-    __io uint32 TXCRCR;         /**< TX CRC register */
-    __io uint32 I2SCFGR;        /**< I2S configuration register */
-    __io uint32 I2SPR;          /**< I2S prescaler register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 CRCPR;          /**< CRC polynomial register */
+    __IO uint32 RXCRCR;         /**< RX CRC register */
+    __IO uint32 TXCRCR;         /**< TX CRC register */
+    __IO uint32 I2SCFGR;        /**< I2S configuration register */
+    __IO uint32 I2SPR;          /**< I2S prescaler register */
 } spi_reg_map;
 
 /*
@@ -213,31 +213,22 @@ typedef struct spi_dev {
 
 void spi_init(spi_dev *dev);
 
-struct gpio_dev;
 /**
  * @brief Configure GPIO bit modes for use as a SPI port's pins.
  *
  * @param dev SPI device
  * @param as_master If true, configure as bus master; otherwise, as slave.
- * @param nss_dev NSS pin's GPIO device
  * @param nss_bit NSS pin's GPIO bit on nss_dev
- * @param sck_dev SCK pin's GPIO device
  * @param sck_bit SCK pin's GPIO bit on comm_dev
- * @param miso_dev MISO pin's GPIO device
  * @param miso_bit MISO pin's GPIO bit on comm_dev
- * @param mosi_dev MOSI pin's GPIO device
  * @param mosi_bit MOSI pin's GPIO bit on comm_dev
  */
 extern void spi_config_gpios(spi_dev *dev,
                              uint8 as_master,
-                             struct gpio_dev *nss_dev,
-                             uint8 nss_bit,
-                             struct gpio_dev *sck_dev,
-                             uint8 sck_bit,
-                             struct gpio_dev *miso_dev,
-                             uint8 miso_bit,
-                             struct gpio_dev *mosi_dev,
-                             uint8 mosi_bit);
+                             uint8 nss_pin,
+                             uint8 sck_pin,
+                             uint8 miso_pin,
+                             uint8 mosi_pin);
 
 /**
  * @brief SPI mode configuration.
@@ -312,7 +303,7 @@ void spi_slave_enable(spi_dev *dev,
                       spi_mode mode,
                       uint32 flags);
 
-uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len);
+void spi_tx(spi_dev *dev, void *buf, uint32 len);
 
 /**
  * @brief Call a function on each SPI port

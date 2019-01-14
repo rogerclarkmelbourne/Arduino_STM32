@@ -87,7 +87,7 @@
  */
 #elif defined (__STM32F1__)
 #include "Arduino.h"
-//#include <HardWire.h>
+//#include <Wire.h>
 #include "hardware/arm/HW_STM32_defines.h"
 #endif
 

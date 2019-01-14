@@ -68,7 +68,7 @@ gpio_dev gpiod = {
 /** GPIO port D device. */
 gpio_dev* const GPIOD = &gpiod;
 
-#ifdef STM32_HIGH_DENSITY
+#if STM32_NR_GPIO_PORTS > 4
 gpio_dev gpioe = {
     .regs      = GPIOE_BASE,
     .clk_id    = RCC_GPIOE,
@@ -106,7 +106,7 @@ void gpio_init_all(void) {
     gpio_init(GPIOB);
     gpio_init(GPIOC);
     gpio_init(GPIOD);
-#ifdef STM32_HIGH_DENSITY
+#if STM32_NR_GPIO_PORTS > 4
     gpio_init(GPIOE);
     gpio_init(GPIOF);
     gpio_init(GPIOG);
@@ -123,7 +123,7 @@ void gpio_init_all(void) {
  */
 void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
     gpio_reg_map *regs = dev->regs;
-    __io uint32 *cr = &regs->CRL + (pin >> 3);
+    __IO uint32 *cr = &regs->CRL + (pin >> 3);
     uint32 shift = (pin & 0x7) * 4;
     uint32 tmp = *cr;
 
@@ -140,9 +140,8 @@ void gpio_set_mode(gpio_dev *dev, uint8 pin, gpio_pin_mode mode) {
 
 gpio_pin_mode gpio_get_mode(gpio_dev *dev, uint8 pin) {
     gpio_reg_map *regs = dev->regs;
-    __io uint32 *cr = &regs->CRL + (pin >> 3);
+    __IO uint32 *cr = &regs->CRL + (pin >> 3);
     uint32 shift = (pin & 0x7) * 4;
-    uint32 tmp = *cr;
 
 	uint32 crMode = (*cr>>shift) & 0x0F;
 	

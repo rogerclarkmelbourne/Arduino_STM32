@@ -20,11 +20,11 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_core.h"
+#include <STM32_USB_Device_Library/Core/inc/usbd_core.h>
 #include "usbd_desc.h"
-#include "usbd_req.h"
+#include <STM32_USB_Device_Library/Core/inc/usbd_req.h>
 #include "usbd_conf.h"
-#include "usb_regs.h"
+#include <STM32_USB_OTG_Driver/inc/usb_regs.h>
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -57,10 +57,10 @@
 #define USBD_LANGID_STRING              0x409
 #define USBD_MANUFACTURER_STRING        (uint8_t*)"STMicroelectronics"
 
-#define USBD_PRODUCT_HS_STRING          (uint8_t*)"STM32 Virtual ComPort in HS mode"
+#define USBD_PRODUCT_HS_STRING          (uint8_t*)"STM32 Virtual ComPort in HS Mode"
 #define USBD_SERIALNUMBER_HS_STRING     (uint8_t*)"00000000050B"
 
-#define USBD_PRODUCT_FS_STRING          (uint8_t*)"STM32 Virtual ComPort  in FS Mode"
+#define USBD_PRODUCT_FS_STRING          (uint8_t*)"STM32 Virtual ComPort in FS Mode"
 #define USBD_SERIALNUMBER_FS_STRING     (uint8_t*)"00000000050C"
 
 #define USBD_CONFIGURATION_HS_STRING    (uint8_t*)"VCP Config"

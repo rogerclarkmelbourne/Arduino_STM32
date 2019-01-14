@@ -38,6 +38,7 @@
 static void disable_channel(timer_dev *dev, uint8 channel);
 static void pwm_mode(timer_dev *dev, uint8 channel);
 static void output_compare_mode(timer_dev *dev, uint8 channel);
+static void encoder_mode(timer_dev *dev, uint8 channel) ;//CARLOS
 
 static inline void enable_irq(timer_dev *dev, timer_interrupt_id iid);
 
@@ -230,6 +231,13 @@ void timer_set_mode(timer_dev *dev, uint8 channel, timer_mode mode) {
     case TIMER_OUTPUT_COMPARE:
         output_compare_mode(dev, channel);
         break;
+    //added by CARLOS. 
+    case TIMER_ENCODER: 
+        encoder_mode(dev, channel); //find a way to pass all the needed stuff on the 8bit var
+        break;
+    case TIMER_INPUT_CAPTURE:// code from @Cesco
+        input_capture_mode(dev, channel, TIMER_IC_INPUT_DEFAULT);
+        break;		
     }
 }
 
@@ -293,6 +301,13 @@ void timer_detach_interrupt(timer_dev *dev, uint8 interrupt) {
     dev->handlers[interrupt] = NULL;
 }
 
+//CARLOS 
+uint8 get_direction(timer_dev *dev){
+    return *bb_perip(&(dev->regs).gen->CR1, TIMER_CR1_DIR_BIT);
+}
+
+
+
 /*
  * Utilities
  */
@@ -310,6 +325,34 @@ static void pwm_mode(timer_dev *dev, uint8 channel) {
 
 static void output_compare_mode(timer_dev *dev, uint8 channel) {
     timer_oc_set_mode(dev, channel, TIMER_OC_MODE_ACTIVE_ON_MATCH, 0);
+    timer_cc_enable(dev, channel);
+}
+
+//added by CARLOS.
+static void encoder_mode(timer_dev *dev, uint8 channel __attribute__((unused))) {
+    
+    //prescaler. 
+    //(dev->regs).gen->PSC = 1;
+
+    //map inputs. 
+    (dev->regs).gen->CCMR1 = TIMER_CCMR1_CC1S_INPUT_TI1 | TIMER_CCMR1_CC2S_INPUT_TI2 | TIMER_CCMR1_IC2F | TIMER_CCMR1_IC1F ;
+
+    (dev->regs).gen->SMCR = TIMER_SMCR_SMS_ENCODER3; //choose encoder 3, counting on both edges. 
+
+    //polarity
+    //(dev->regs).gen->CCER = TIMER_CCER_CC1P; //to invert the counting, only one of the inputs should be inverted.  
+
+    //set the interval used by the encoder.
+    //timer_set_reload(dev, 1000);
+
+//    (dev->regs).gen->CR1  |=TIMER_CR1_UDIS_BIT;
+
+    //run timer
+    timer_resume(dev);
+}
+
+void input_capture_mode(timer_dev *dev, uint8 channel, timer_ic_input_select input) {
+    timer_oc_set_mode(dev, channel, 0, input);
     timer_cc_enable(dev, channel);
 }
 
@@ -435,78 +478,78 @@ static void enable_bas_gen_irq(timer_dev *dev) {
  * file.
  */
 
-void __irq_tim1_brk(void) {
+__weak void __irq_tim1_brk(void) {
     dispatch_adv_brk(TIMER1);
 #if STM32_HAVE_TIMER(9)
     dispatch_tim_9_12(TIMER9);
 #endif
 }
 
-void __irq_tim1_up(void) {
+__weak void __irq_tim1_up(void) {
     dispatch_adv_up(TIMER1);
 #if STM32_HAVE_TIMER(10)
     dispatch_tim_10_11_13_14(TIMER10);
 #endif
 }
 
-void __irq_tim1_trg_com(void) {
+__weak void __irq_tim1_trg_com(void) {
     dispatch_adv_trg_com(TIMER1);
 #if STM32_HAVE_TIMER(11)
     dispatch_tim_10_11_13_14(TIMER11);
 #endif
 }
 
-void __irq_tim1_cc(void) {
+__weak void __irq_tim1_cc(void) {
     dispatch_adv_cc(TIMER1);
 }
 
-void __irq_tim2(void) {
+__weak void __irq_tim2(void) {
     dispatch_general(TIMER2);
 }
 
-void __irq_tim3(void) {
+__weak void __irq_tim3(void) {
     dispatch_general(TIMER3);
 }
 
-void __irq_tim4(void) {
+__weak void __irq_tim4(void) {
     dispatch_general(TIMER4);
 }
 
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-void __irq_tim5(void) {
+__weak void __irq_tim5(void) {
     dispatch_general(TIMER5);
 }
 
-void __irq_tim6(void) {
+__weak void __irq_tim6(void) {
     dispatch_basic(TIMER6);
 }
 
-void __irq_tim7(void) {
+__weak void __irq_tim7(void) {
     dispatch_basic(TIMER7);
 }
 
-void __irq_tim8_brk(void) {
+__weak void __irq_tim8_brk(void) {
     dispatch_adv_brk(TIMER8);
 #if STM32_HAVE_TIMER(12)
     dispatch_tim_9_12(TIMER12);
 #endif
 }
 
-void __irq_tim8_up(void) {
+__weak void __irq_tim8_up(void) {
     dispatch_adv_up(TIMER8);
 #if STM32_HAVE_TIMER(13)
     dispatch_tim_10_11_13_14(TIMER13);
 #endif
 }
 
-void __irq_tim8_trg_com(void) {
+__weak void __irq_tim8_trg_com(void) {
     dispatch_adv_trg_com(TIMER8);
 #if STM32_HAVE_TIMER(14)
     dispatch_tim_10_11_13_14(TIMER14);
 #endif
 }
 
-void __irq_tim8_cc(void) {
+__weak void __irq_tim8_cc(void) {
     dispatch_adv_cc(TIMER8);
 }
 #endif  /* defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY) */
