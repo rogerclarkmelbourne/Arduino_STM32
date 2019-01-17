@@ -50,7 +50,7 @@ if [ ! -x ${DFU_UTIL} ]; then
     exit 2
 fi
 
-${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr}
+${DFU_UTIL} -d ${usbID} -a ${altID} -D ${binfile} -R ${dfuse_addr} -R
 
 # DFU_UTIL doesn't reset properly in new Mac OS, use reenumerate tool from Prober.app
 if (system_profiler SPUSBDataType | grep --quiet Maple\ 003) then
