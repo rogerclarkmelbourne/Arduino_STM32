@@ -1,4 +1,4 @@
-#include "USBHID.h"
+#include "USBComposite.h" 
 
 #define REPORT(name, ...) \
     static uint8_t raw_ ## name[] = { __VA_ARGS__ }; \

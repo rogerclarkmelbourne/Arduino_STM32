@@ -117,9 +117,15 @@ size_t USBSerial::write(const char *str)
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
+#ifdef USB_SERIAL_REQUIRE_DTR
     if (!(bool) *this || !buf) {
         return 0;
     }
+#else	
+	  if (!buf || !(usb_is_connected(USBLIB) && usb_is_configured(USBLIB))) {
+        return 0;
+    }
+#endif	
 
     uint32 txed = 0;
     while (txed < len) {

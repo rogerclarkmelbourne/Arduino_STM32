@@ -1,4 +1,4 @@
-#include "USBHID.h"
+#include "USBComposite.h" 
 
 // This code requires gcc on low-endian devices.
 
@@ -115,4 +115,3 @@ void HIDJoystick::hat(int16_t dir){
     safeSendReport();
 }
 
-HIDJoystick Joystick;

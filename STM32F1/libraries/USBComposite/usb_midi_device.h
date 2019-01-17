@@ -136,10 +136,6 @@ typedef struct {
  * Endpoint configuration
  */
 
-#define USB_MIDI_TX_EPSIZE            0x40
-
-#define USB_MIDI_RX_EPSIZE            0x40
-
 #ifndef __cplusplus
 #define USB_MIDI_DECLARE_DEV_DESC(vid, pid)                           \
   {                                                                     \
@@ -171,16 +167,20 @@ typedef struct {
  * MIDI interface
  */
 
-    void usb_midi_putc(char ch);
-    uint32 usb_midi_tx(const uint32* buf, uint32 len);
-    uint32 usb_midi_rx(uint32* buf, uint32 len);
-    uint32 usb_midi_peek(uint32* buf, uint32 len);
-    
-    uint32 usb_midi_data_available(void); /* in RX buffer */
-    uint16 usb_midi_get_pending(void);
-    uint8 usb_midi_is_transmitting(void);
-    
-    void sendThroughSysex(char *printbuffer, int bufferlength);
+void usb_midi_setTXEPSize(uint32_t size);
+void usb_midi_setRXEPSize(uint32_t size);
+void usb_midi_putc(char ch);
+uint32 usb_midi_tx(const uint32* buf, uint32 len);
+uint32 usb_midi_rx(uint32* buf, uint32 len);
+uint32 usb_midi_peek(uint32* buf, uint32 len);
+
+uint32 usb_midi_data_available(void); /* in RX buffer */
+uint16 usb_midi_get_pending(void);
+uint8 usb_midi_is_transmitting(void);
+
+void sendThroughSysex(char *printbuffer, int bufferlength);
+
+extern uint32_t usb_midi_txEPSize;
 
 #ifdef __cplusplus
 }

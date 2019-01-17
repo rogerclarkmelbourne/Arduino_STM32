@@ -15,8 +15,15 @@ extern "C" {
 
 #define N_STRING_DESCRIPTORS 4
 
-#define MAX_PACKET_SIZE            0x40  /* 64B, maximum for USB FS Devices */
-#define MAX_BULK_PACKET_SIZE       0x40  /* 64B, max bulk  Can't use 512 because the internal buffers for USB is only 512B */
+// 512 needs to be divisible by the following two values
+#define MAX_PACKET_SIZE            64  /* 64B, maximum for USB FS Devices */
+#define MAX_BULK_PACKET_SIZE       64  /* 64B, max bulk  Can't use 512 because the internal buffers for USB is only 512B */
+#if 512/MAX_PACKET_SIZE*MAX_PACKET_SIZE != 512
+# error MAX_PACKET_SIZE must divide 512
+#endif
+#if 512/MAX_BULK_PACKET_SIZE*MAX_BULK_PACKET_SIZE != 512
+# error MAX_BULK_PACKET_SIZE must divide 512
+#endif
 
 
   /* MASS Storage Requests */

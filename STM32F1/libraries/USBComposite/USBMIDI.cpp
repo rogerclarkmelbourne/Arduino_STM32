@@ -38,7 +38,7 @@
  * @brief USB MIDI device with a class compatible with maplemidi
  */
 
-#include "USBMIDI.h"
+#include "USBComposite.h" 
 
 #include <string.h>
 #include <stdint.h>
@@ -50,25 +50,27 @@
 
 
 /*
- * USBMidi interface
+ * USBMIDI interface
  */
 
 #define USB_TIMEOUT 50
 
-void USBMidi::setChannel(unsigned int channel) {
+void USBMIDI::setChannel(unsigned int channel) {
 	channelIn_ = channel;
 
 }
 
-/*bool USBMidi::init(USBMidi* me) {
+bool USBMIDI::init(USBMIDI* me) {
+    usb_midi_setTXEPSize(me->txPacketSize);
+    usb_midi_setRXEPSize(me->rxPacketSize);
 	return true;
-}*/
-
-bool USBMidi::registerComponent() {
-    return USBComposite.add(&usbMIDIPart, this); 
 }
 
-void USBMidi::begin(unsigned channel) {
+bool USBMIDI::registerComponent() {
+    return USBComposite.add(&usbMIDIPart, this, (USBPartInitializer)&USBMIDI::init); 
+}
+
+void USBMIDI::begin(unsigned channel) {
 	setChannel(channel);
 	
 	if (enabled)
@@ -81,18 +83,18 @@ void USBMidi::begin(unsigned channel) {
 	enabled = true;	
 }
 
-void USBMidi::end(void) {
+void USBMIDI::end(void) {
 	if (enabled) {
 		USBComposite.end();
 		enabled = false;
 	}
 }
 
-void USBMidi::writePacket(uint32 p) {
+void USBMIDI::writePacket(uint32 p) {
     this->writePackets(&p, 1);
 }
 
-void USBMidi::writePackets(const void *buf, uint32 len) {
+void USBMIDI::writePackets(const void *buf, uint32 len) {
     if (!this->isConnected() || !buf) {
         return;
     }
@@ -113,7 +115,7 @@ void USBMidi::writePackets(const void *buf, uint32 len) {
     }
 
 
-    if (sent == USB_MIDI_TX_EPSIZE) {
+    if (sent == usb_midi_txEPSize) {
         while (usb_midi_is_transmitting() != 0) {
         }
         /* flush out to avoid having the pc wait for more data */
@@ -121,11 +123,11 @@ void USBMidi::writePackets(const void *buf, uint32 len) {
     }
 }
 
-uint32 USBMidi::available(void) {
+uint32 USBMIDI::available(void) {
     return usb_midi_data_available();
 }
 
-uint32 USBMidi::readPackets(void *buf, uint32 len) {
+uint32 USBMIDI::readPackets(void *buf, uint32 len) {
     if (!buf) {
         return 0;
     }
@@ -139,22 +141,21 @@ uint32 USBMidi::readPackets(void *buf, uint32 len) {
 }
 
 /* Blocks forever until 1 byte is received */
-uint32 USBMidi::readPacket(void) {
+uint32 USBMIDI::readPacket(void) {
     uint32 p;
     this->readPackets(&p, 1);
     return p;
 }
 
-uint8 USBMidi::pending(void) {
+uint8 USBMIDI::pending(void) {
     return usb_midi_get_pending();
 }
 
-uint8 USBMidi::isConnected(void) {
+uint8 USBMIDI::isConnected(void) {
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB);
 }
 
 
-USBMidi USBMIDI;
 
 
 // These are midi status message types are defined in MidiSpec.h
@@ -171,7 +172,7 @@ union EVENT_t {
 //  This is a private function & not meant to be called from outside this class.
 //  It's used whenever data is available from the USB port.
 //
-void USBMidi::dispatchPacket(uint32 p)
+void USBMIDI::dispatchPacket(uint32 p)
 {
     union EVENT_t e;
 
@@ -251,7 +252,7 @@ void USBMidi::dispatchPacket(uint32 p)
 
 
 // Try to read data from USB port & pass anything read to processing function
-void USBMidi::poll(void)
+void USBMIDI::poll(void)
 {   while(available()) {
         dispatchPacket(readPacket());
     }
@@ -260,7 +261,7 @@ void USBMidi::poll(void)
 static union EVENT_t outPacket; // since we only use one at a time no point in reallocating it
 
 // Send Midi NOTE OFF message to a given channel, with note 0-127 and velocity 0-127
-void USBMidi::sendNoteOff(unsigned int channel, unsigned int note, unsigned int velocity)
+void USBMIDI::sendNoteOff(unsigned int channel, unsigned int note, unsigned int velocity)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_NOTE_OFF;
@@ -273,7 +274,7 @@ void USBMidi::sendNoteOff(unsigned int channel, unsigned int note, unsigned int 
 
 
 // Send Midi NOTE ON message to a given channel, with note 0-127 and velocity 0-127
-void USBMidi::sendNoteOn(unsigned int channel, unsigned int note, unsigned int velocity)
+void USBMIDI::sendNoteOn(unsigned int channel, unsigned int note, unsigned int velocity)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_NOTE_ON;
@@ -288,7 +289,7 @@ void USBMidi::sendNoteOn(unsigned int channel, unsigned int note, unsigned int v
 // and new velocity 0-127
 // Note velocity change == polyphonic aftertouch.
 // Note aftertouch == channel pressure.
-void USBMidi::sendVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity)
+void USBMIDI::sendVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_AFTER_TOUCH;
@@ -302,7 +303,7 @@ void USBMidi::sendVelocityChange(unsigned int channel, unsigned int note, unsign
 
 // Send a Midi CC message to a given channel, as a given controller 0-127, with given
 //  value 0-127
-void USBMidi::sendControlChange(unsigned int channel, unsigned int controller, unsigned int value)
+void USBMIDI::sendControlChange(unsigned int channel, unsigned int controller, unsigned int value)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_CONTROL_CHANGE;
@@ -314,7 +315,7 @@ void USBMidi::sendControlChange(unsigned int channel, unsigned int controller, u
 }
 
 // Send a Midi PROGRAM CHANGE message to given channel, with program ID 0-127
-void USBMidi::sendProgramChange(unsigned int channel, unsigned int program)
+void USBMIDI::sendProgramChange(unsigned int channel, unsigned int program)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_PROGRAM_CHANGE;
@@ -325,7 +326,7 @@ void USBMidi::sendProgramChange(unsigned int channel, unsigned int program)
 }
 
 // Send a Midi AFTER TOUCH message to given channel, with velocity 0-127
-void USBMidi::sendAfterTouch(unsigned int channel, unsigned int velocity)
+void USBMIDI::sendAfterTouch(unsigned int channel, unsigned int velocity)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_CHANNEL_PRESSURE;
@@ -336,7 +337,7 @@ void USBMidi::sendAfterTouch(unsigned int channel, unsigned int velocity)
 }
 
 // Send a Midi PITCH CHANGE message, with a 14-bit pitch (always for all channels)
-void USBMidi::sendPitchChange(unsigned int pitch)
+void USBMIDI::sendPitchChange(unsigned int pitch)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_PITCH_WHEEL;
@@ -348,7 +349,7 @@ void USBMidi::sendPitchChange(unsigned int pitch)
 }
 
 // Send a Midi SONG POSITION message, with a 14-bit position (always for all channels)
-void USBMidi::sendSongPosition(unsigned int position)
+void USBMIDI::sendSongPosition(unsigned int position)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_3BYTE_SYS_COMMON;
@@ -360,7 +361,7 @@ void USBMidi::sendSongPosition(unsigned int position)
 }
 
 // Send a Midi SONG SELECT message, with a song ID of 0-127 (always for all channels)
-void USBMidi::sendSongSelect(unsigned int song)
+void USBMIDI::sendSongSelect(unsigned int song)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_2BYTE_SYS_COMMON;
@@ -371,7 +372,7 @@ void USBMidi::sendSongSelect(unsigned int song)
 }
 
 // Send a Midi TUNE REQUEST message (TUNE REQUEST is always for all channels)
-void USBMidi::sendTuneRequest(void)
+void USBMIDI::sendTuneRequest(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -381,7 +382,7 @@ void USBMidi::sendTuneRequest(void)
 
 
 // Send a Midi SYNC message (SYNC is always for all channels)
-void USBMidi::sendSync(void)
+void USBMIDI::sendSync(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -390,7 +391,7 @@ void USBMidi::sendSync(void)
 }
 
 // Send a Midi START message (START is always for all channels)
-void USBMidi::sendStart(void)
+void USBMIDI::sendStart(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -400,7 +401,7 @@ void USBMidi::sendStart(void)
 
 
 // Send a Midi CONTINUE message (CONTINUE is always for all channels)
-void USBMidi::sendContinue(void)
+void USBMIDI::sendContinue(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -410,7 +411,7 @@ void USBMidi::sendContinue(void)
 
 
 // Send a Midi STOP message (STOP is always for all channels)
-void USBMidi::sendStop(void)
+void USBMIDI::sendStop(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -419,7 +420,7 @@ void USBMidi::sendStop(void)
 }
 
 // Send a Midi ACTIVE SENSE message (ACTIVE SENSE is always for all channels)
-void USBMidi::sendActiveSense(void)
+void USBMIDI::sendActiveSense(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -428,7 +429,7 @@ void USBMidi::sendActiveSense(void)
 }
 
 // Send a Midi RESET message (RESET is always for all channels)
-void USBMidi::sendReset(void)
+void USBMIDI::sendReset(void)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_1BYTE;
@@ -450,20 +451,20 @@ const uint32 midiNoteFrequency_10ths[128] = {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 // Placeholders.  You should subclass the Midi base class and define these to have your
 //  version called.
-void USBMidi::handleNoteOff(unsigned int channel, unsigned int note, unsigned int velocity) {}
-void USBMidi::handleNoteOn(unsigned int channel, unsigned int note, unsigned int velocity) {}
-void USBMidi::handleVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity) {}
-void USBMidi::handleControlChange(unsigned int channel, unsigned int controller, unsigned int value) {}
-void USBMidi::handleProgramChange(unsigned int channel, unsigned int program) {}
-void USBMidi::handleAfterTouch(unsigned int channel, unsigned int velocity) {}
-void USBMidi::handlePitchChange(unsigned int pitch) {}
-void USBMidi::handleSongPosition(unsigned int position) {}
-void USBMidi::handleSongSelect(unsigned int song) {}
-void USBMidi::handleTuneRequest(void) {}
-void USBMidi::handleSync(void) {}
-void USBMidi::handleStart(void) {}
-void USBMidi::handleContinue(void) {}
-void USBMidi::handleStop(void) {}
-void USBMidi::handleActiveSense(void) {}
-void USBMidi::handleReset(void) {}
+void USBMIDI::handleNoteOff(unsigned int channel, unsigned int note, unsigned int velocity) {}
+void USBMIDI::handleNoteOn(unsigned int channel, unsigned int note, unsigned int velocity) {}
+void USBMIDI::handleVelocityChange(unsigned int channel, unsigned int note, unsigned int velocity) {}
+void USBMIDI::handleControlChange(unsigned int channel, unsigned int controller, unsigned int value) {}
+void USBMIDI::handleProgramChange(unsigned int channel, unsigned int program) {}
+void USBMIDI::handleAfterTouch(unsigned int channel, unsigned int velocity) {}
+void USBMIDI::handlePitchChange(unsigned int pitch) {}
+void USBMIDI::handleSongPosition(unsigned int position) {}
+void USBMIDI::handleSongSelect(unsigned int song) {}
+void USBMIDI::handleTuneRequest(void) {}
+void USBMIDI::handleSync(void) {}
+void USBMIDI::handleStart(void) {}
+void USBMIDI::handleContinue(void) {}
+void USBMIDI::handleStop(void) {}
+void USBMIDI::handleActiveSense(void) {}
+void USBMIDI::handleReset(void) {}
 #pragma GCC diagnostic pop

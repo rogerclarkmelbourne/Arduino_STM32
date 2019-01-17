@@ -272,7 +272,7 @@ void LglSysexHandler(uint32 *midiBufferRx, uint32 *rx_offset, uint32 *n_unread_p
                         uint32 *s;
                         uint32 *d = midiBufferRx + soPackets;
                         for (s = midiBufferRx+c;
-                             ((*n_unread_packets) && (s <= midiBufferRx+(USB_MIDI_RX_EPSIZE/4)));
+                             ((*n_unread_packets) && (s <= midiBufferRx+(usb_midi_txEPSize/4)));
                              d++,s++
                             ) {
                                 (*d)=(*s);

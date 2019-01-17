@@ -1,0 +1,19 @@
+Version 0.90 of the library has changed the API significantly in order to save flash and RAM.
+The main change is that other than USBComposite, all pre-declared object instances have been
+removed.
+
+When upgrading to 0.90 or higher, you will have to make a number of changes to your code.
+
+1. Use a single include file instead of USBHID.h, USBMIDI.h, etc.:
+    #include <USBComposite.h>
+    
+2. Declare all instances other than USBComposite. This includes instances of plugin classes
+   like USBHID as well as of HID profiles like HIDKeyboard (which need an instance of USBHID).
+   
+3. Note that USBHID is now a class (for consistency with other class names) and there is no
+   USBHID instance. You need to declare an instance, e.g.:
+    USBHID HID;
+   and replace calls to USBHID.* with calls to HID.*.
+
+4. Replace USBHID_begin_with_serial(...) with HID.begin(CompositeSerial,...) where HID is your
+   instance of USBHID.

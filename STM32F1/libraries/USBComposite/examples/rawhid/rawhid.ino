@@ -3,7 +3,8 @@
 #define TXSIZE 256
 #define RXSIZE 300
 
-HIDRaw<TXSIZE,RXSIZE> raw;
+USBHID HID;
+HIDRaw<TXSIZE,RXSIZE> raw(HID);
 uint8 buf[RXSIZE];
 
 const uint8_t reportDescription[] = {
@@ -11,7 +12,7 @@ const uint8_t reportDescription[] = {
 };
 
 void setup(){
-  USBHID_begin_with_serial(reportDescription, sizeof(reportDescription));  
+  HID.begin(reportDescription, sizeof(reportDescription));  
   raw.begin();
 }
 
