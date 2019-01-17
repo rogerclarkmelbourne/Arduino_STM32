@@ -122,7 +122,7 @@ size_t USBSerial::write(const uint8 *buf, uint32 len)
         return 0;
     }
 #else	
-	  if (!buf || !(usb_is_connected(USBLIB) && usb_is_configured(USBLIB))) {
+    if (!buf || !(usb_is_connected(USBLIB) && usb_is_configured(USBLIB))) {
         return 0;
     }
 #endif	
