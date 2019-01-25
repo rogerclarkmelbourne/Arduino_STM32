@@ -221,32 +221,32 @@ size_t Print::println(const Printable& x)
 
 /*  
 //Bug detected 
-//failed: fopencookie( 0, "w+",  { NULL,  WR_fn, NULL, NULL }) - failed on gcc stm32.
-//failed: fopencookie( 0, "rw+", { NULL, WR_fn, NULL, NULL }) - failed on gcc stm32. 
+//failed: fopencookie( 0, "w+",  { NULL,  WR_fn, NULL, NULL }) 
+//failed: fopencookie( 0, "rw+", { NULL, WR_fn, NULL, NULL }) 
 //
-//worked: fopencookie( 0, "rw+", { RD_fn, WR_fn, NULL, NULL }) - failed on gcc stm32.
-//worked: fopencookie( 0, "rw+", { NULL,  WR_fn, NULL, NULL }) - failed on gcc stm32.
+//worked: fopencookie( 0, "rw+", { RD_fn, WR_fn, NULL, NULL }) 
+//worked: fopencookie( 0, "rw+", { NULL,  WR_fn, NULL, NULL })
 //
 //Resume:  To fix - you should always specify the cookies_read function, zero is not valid. 
 */
 
 
-  // Read/Write blocks to device.
-  // Non class function for use from libc.printf,
-  // pointer to class Print passed in argumwent dev.
-  static ssize_t cookie_read_helper(void *dev __attribute__((unused)) , const char* buff __attribute__((unused)) , size_t len __attribute__((unused)) )
-  {
+// Read/Write blocks to device.
+// Non class function for use from libc.printf,
+// pointer to class Print passed in argumwent dev.
+static ssize_t cookie_read_helper(void *dev __attribute__((unused)) , const char* buff __attribute__((unused)) ,
+				    size_t len __attribute__((unused)) )
+{
     return 0; 
-  }     
+}     
 
-  static ssize_t cookie_write_helper(void *dev, const char* buff, size_t size)
-  {     
+static ssize_t cookie_write_helper(void *dev, const char* buff, size_t size)
+{     
     Print* pPrint=(Print*)dev;
     ssize_t len=0;
     for(char* c = (char*)buff; size-- >0; len++) pPrint->print(*c++);
     return len;
-
-  }
+}
    
    
 size_t Print::printf(const char *format, ...)   
@@ -268,7 +268,6 @@ size_t Print::printf(const char *format, ...)
     int ret_status = vfprintf(stream, format, args);    
     va_end(args);
     fclose(stream);
-
          
     return ret_status>0 ? (size_t)ret_status : 0;
 }
