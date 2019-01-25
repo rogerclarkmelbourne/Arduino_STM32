@@ -209,51 +209,71 @@ size_t Print::println(const Printable& x)
 }
 
 
-#ifdef SUPPORTS_PRINTF
+//#ifdef SUPPORTS_PRINTF
+//Note: ifdef not need - not used printf is not linked
+
+// method uses the GLIBS extension fopencookie (), which works on the platforms STM32, SAMD, ESP8266, Linux ..
+// And work with any devices: Serial, TFT, Flash &etc. 
+//( For avr-libc, a similar functional is implemented through specific properties of type FILE, without any functions.)
+
 #include <stdio.h>
 #include <stdarg.h>
 
-// Work in progress to support printf.
-// Need to implement stream FILE to write individual chars to chosen serial port
-// *** implement stream for uarts, lcd, more tft - nicht! 
-// *** We will use the standard path - fopencookie(), that work on all plathorm with GLIBC.
-// *** (On AVR platfotm has an equivalent solution)
+/*  
+//Bug detected 
+//failed: fopencookie( 0, "w+",  { NULL,  WR_fn, NULL, NULL }) - failed on gcc stm32.
+//failed: fopencookie( 0, "rw+", { NULL, WR_fn, NULL, NULL }) - failed on gcc stm32. 
+//
+//worked: fopencookie( 0, "rw+", { RD_fn, WR_fn, NULL, NULL }) - failed on gcc stm32.
+//worked: fopencookie( 0, "rw+", { NULL,  WR_fn, NULL, NULL }) - failed on gcc stm32.
+//
+//Resume:  To fix - you should always specify the cookies_read function, zero is not valid. 
+*/
 
 
-  // Write block to device.
+  // Read/Write blocks to device.
   // Non class function for use from libc.printf,
   // pointer to class Print passed in argumwent dev.
-  static ssize_t cookie_write_helper(void *dev, const char* buff, size_t len)
+  static ssize_t cookie_read_helper(void *dev __attribute__((unused)) , const char* buff __attribute__((unused)) , size_t len __attribute__((unused)) )
   {
-     Print* pPrint = (Print*)(dev);  //pointer to class Print
-     size_t write_len = 0;
-     for (uint8_t *ptr = (uint8_t*) buff; len-- > 0; write_len++, ptr++ ) {
-       if ( *ptr == '\n') pPrint->print((char)'\r');
-       pPrint->print( (char)*ptr );
-     }
-     return write_len;
-  }
- 
-int Print::printf (__const char *__restrict __format, ...)
- {
-    FILE *__restrict __stream;
+    return 0; 
+  }     
 
-         __stream = fopencookie( (void*) this, "rw+", (cookie_io_functions_t) {
-          (cookie_read_function_t* ) NULL, 
+  static ssize_t cookie_write_helper(void *dev, const char* buff, size_t size)
+  {     
+    Print* pPrint=(Print*)dev;
+    ssize_t len=0;
+    for(char* c = (char*)buff; size-- >0; len++) pPrint->print(*c++);
+    return len;
+
+  }
+   
+   
+size_t Print::printf(const char *format, ...)   
+{
+  FILE* stream = fopencookie( (void*) this, "rw+", (cookie_io_functions_t) {
+          (cookie_read_function_t* ) cookie_read_helper, 
           (cookie_write_function_t*) cookie_write_helper,
           (cookie_seek_function_t* ) NULL, 
           (cookie_close_function_t*) NULL
          } );
-    setvbuf(__stream, NULL, _IONBF, 0);  //turn off buffer
-                                         //(Note: Buffer from stdlib need only for multithread code,
-                                         //       and not alternative for uart buffers and fifo.)
-     va_list args;
-     va_start(args,__format);
-     int ret_status = vfprintf(__stream, __format, args);
-     va_end(args);
-     return ret_status;
- }
- #endif
+    if(!stream){ print("\nERROR:opencookie - failed\n"); return 0; } // for dbg only        
+             
+    setvbuf(stream, NULL, _IONBF, 0);  //turn off buffer
+                                       //(Note: Buffer from stdlib need only for multithread code,
+                                       //       and not alternative for uart buffers and fifo.)
+                                                
+    va_list args;
+    va_start(args,format);          
+    int ret_status = vfprintf(stream, format, args);    
+    va_end(args);
+    fclose(stream);
+
+         
+    return ret_status>0 ? (size_t)ret_status : 0;
+}
+// #endif
+
 
 /*
  * Private methods
