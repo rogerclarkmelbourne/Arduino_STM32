@@ -216,6 +216,7 @@ size_t Print::println(const Printable& x)
 // And work with any devices: Serial, TFT, Flash &etc. 
 //( For avr-libc, a similar functional is implemented through specific properties of type FILE, without any functions.)
 
+#define _GNU_SOURCE       
 #include <stdio.h>
 #include <stdarg.h>
 
