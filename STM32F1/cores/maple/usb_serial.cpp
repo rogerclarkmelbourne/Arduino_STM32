@@ -56,6 +56,7 @@ static void ifaceSetupHook(unsigned, void*);
 #define USB_TIMEOUT 50
 #if BOARD_HAVE_SERIALUSB
 bool USBSerial::_hasBegun = false;
+bool USBSerial::_isBlocking = false;
 #endif
 
 USBSerial::USBSerial(void) {
@@ -131,9 +132,14 @@ size_t n = 0;
 #endif	
 
     uint32 txed = 0;
-    while (txed < len) {
-        txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
-    }
+	if (!_isBlocking) 	{
+		return usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+	}
+	else {
+		while (txed < len) {
+			txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+		}
+	}
 
 	return n;
 }
@@ -223,6 +229,16 @@ uint8 USBSerial::getRTS(void) {
 USBSerial::operator bool() {
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
+
+void USBSerial::enableBlockingTx(void)
+{
+	_isBlocking=true;
+}
+void USBSerial::disableBlockingTx(void)
+{
+	_isBlocking=false;
+}
+
 
 #if BOARD_HAVE_SERIALUSB
 	#ifdef SERIAL_USB 
