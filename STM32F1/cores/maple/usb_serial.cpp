@@ -106,21 +106,16 @@ void USBSerial::end(void) {
 }
 
 size_t USBSerial::write(uint8 ch) {
-size_t n = 0;
-    this->write(&ch, 1);
-		return n;
+
+    return this->write(&ch, 1);
 }
 
 size_t USBSerial::write(const char *str) {
-size_t n = 0;
-    this->write((const uint8*)str, strlen(str));
-	return n;
+    return this->write((const uint8*)str, strlen(str));
 }
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
-size_t n = 0;
-
 #ifdef USB_SERIAL_REQUIRE_DTR
  if (!(bool) *this || !buf) {
         return 0;
@@ -133,7 +128,7 @@ size_t n = 0;
 
     uint32 txed = 0;
 	if (!_isBlocking) 	{
-		return usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+		txed = usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
 	}
 	else {
 		while (txed < len) {
@@ -141,7 +136,7 @@ size_t n = 0;
 		}
 	}
 
-	return n;
+	return txed;
 }
 
 int USBSerial::available(void) {
@@ -199,10 +194,6 @@ size_t USBSerial::readBytes(char *buf, const size_t& len)
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
-	/*
-	    this->read(&b, 1);
-    return b;
-	*/
 	
 	if (usb_cdcacm_rx(&b, 1)==0)
 	{
