@@ -279,12 +279,7 @@ static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestv
         break;
     }
 #endif
-#if false
-	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
-		iwdg_init(IWDG_PRE_4, 10);
-		while (1);
-	}
-#endif	
+
 }
 
 #define RESET_DELAY 100000
