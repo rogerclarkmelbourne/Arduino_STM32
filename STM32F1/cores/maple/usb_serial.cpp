@@ -56,6 +56,7 @@ static void ifaceSetupHook(unsigned, void*);
 #define USB_TIMEOUT 50
 #if BOARD_HAVE_SERIALUSB
 bool USBSerial::_hasBegun = false;
+bool USBSerial::_isBlocking = false;
 #endif
 
 USBSerial::USBSerial(void) {
@@ -105,30 +106,37 @@ void USBSerial::end(void) {
 }
 
 size_t USBSerial::write(uint8 ch) {
-size_t n = 0;
-    this->write(&ch, 1);
-		return n;
+
+    return this->write(&ch, 1);
 }
 
 size_t USBSerial::write(const char *str) {
-size_t n = 0;
-    this->write((const uint8*)str, strlen(str));
-	return n;
+    return this->write((const uint8*)str, strlen(str));
 }
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
-size_t n = 0;
-    if (!(bool) *this || !buf) {
+#ifdef USB_SERIAL_REQUIRE_DTR
+ if (!(bool) *this || !buf) {
         return 0;
     }
+#else	
+	if (!buf || !(usb_is_connected(USBLIB) && usb_is_configured(USBLIB))) {
+        return 0;
+    }
+#endif	
 
     uint32 txed = 0;
-    while (txed < len) {
-        txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
-    }
+	if (!_isBlocking) 	{
+		txed = usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+	}
+	else {
+		while (txed < len) {
+			txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+		}
+	}
 
-	return n;
+	return txed;
 }
 
 int USBSerial::available(void) {
@@ -186,10 +194,6 @@ size_t USBSerial::readBytes(char *buf, const size_t& len)
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
-	/*
-	    this->read(&b, 1);
-    return b;
-	*/
 	
 	if (usb_cdcacm_rx(&b, 1)==0)
 	{
@@ -216,6 +220,16 @@ uint8 USBSerial::getRTS(void) {
 USBSerial::operator bool() {
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
+
+void USBSerial::enableBlockingTx(void)
+{
+	_isBlocking=true;
+}
+void USBSerial::disableBlockingTx(void)
+{
+	_isBlocking=false;
+}
+
 
 #if BOARD_HAVE_SERIALUSB
 	#ifdef SERIAL_USB 
@@ -265,12 +279,7 @@ static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestv
         break;
     }
 #endif
-#if false
-	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
-		iwdg_init(IWDG_PRE_4, 10);
-		while (1);
-	}
-#endif	
+
 }
 
 #define RESET_DELAY 100000
