@@ -124,6 +124,7 @@ SPIClass::SPIClass(uint32 spi_num) {
 // SPI2:  1 / 0 / 3     - 1 / 0 / 4
 // SPI3:  1 / 0 / 0 (2) - 1 / 0 / 5 (7)
 /*****************************************************************************/
+#if BOARD_NR_SPI >= 1
 	_settings[0].spi_d = SPI1;
 	_settings[0].clockDivider = determine_baud_rate(_settings[0].spi_d, _settings[0].clock);
 #ifdef SPI_DMA
@@ -132,6 +133,8 @@ SPIClass::SPIClass(uint32 spi_num) {
 	_settings[0].spiRxDmaStream  = DMA_STREAM0; // alternative: DMA_STREAM2
 	_settings[0].spiTxDmaStream  = DMA_STREAM3; // alternative: DMA_STREAM5
 #endif
+#endif
+#if BOARD_NR_SPI >= 2
 	_settings[1].spi_d = SPI2;
 	_settings[1].clockDivider = determine_baud_rate(_settings[1].spi_d, _settings[1].clock);
 #ifdef SPI_DMA
@@ -139,6 +142,7 @@ SPIClass::SPIClass(uint32 spi_num) {
 	_settings[1].spiDmaChannel = DMA_CH0;
 	_settings[1].spiRxDmaStream  = DMA_STREAM3; // alternative: -
 	_settings[1].spiTxDmaStream  = DMA_STREAM4; // alternative: -
+#endif
 #endif
 #if BOARD_NR_SPI >= 3
 	_settings[2].spi_d = SPI3;
