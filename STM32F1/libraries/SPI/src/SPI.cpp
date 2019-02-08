@@ -554,12 +554,16 @@ void SPIClass::onReceive(void(*callback)(void)) {
     _currentSetting->receiveCallback = callback;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
+            #if BOARD_NR_SPI >= 1
         case RCC_SPI1:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi1EventCallback);
             break;
+            #endif
+            #if BOARD_NR_SPI >= 2
         case RCC_SPI2:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi2EventCallback);
             break;
+            #endif
             #if BOARD_NR_SPI >= 3
         case RCC_SPI3:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi3EventCallback);
@@ -578,12 +582,16 @@ void SPIClass::onTransmit(void(*callback)(void)) {
     _currentSetting->transmitCallback = callback;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
+            #if BOARD_NR_SPI >= 1
         case RCC_SPI1:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi1EventCallback);
             break;
-        case RCC_SPI2:
+            #endif
+            #if BOARD_NR_SPI >= 2
+       case RCC_SPI2:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi2EventCallback);
             break;
+            #endif
             #if BOARD_NR_SPI >= 3
         case RCC_SPI3:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi3EventCallback);
@@ -686,14 +694,18 @@ uint8 SPIClass::recv(void) {
     DMA call back functions, one per port.
 */
 
+#if BOARD_NR_SPI >= 1
 void SPIClass::_spi1EventCallback()
 {
     reinterpret_cast<class SPIClass*>(_spi1_this)->EventCallback();
 }
+#endif
 
+#if BOARD_NR_SPI >= 2
 void SPIClass::_spi2EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi2_this)->EventCallback();
 }
+#endif
 #if BOARD_NR_SPI >= 3
 void SPIClass::_spi3EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi3_this)->EventCallback();
