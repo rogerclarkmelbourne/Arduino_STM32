@@ -450,6 +450,7 @@ public:
 #define KEY_PAGE_DOWN		0xD6
 #define KEY_HOME			0xD2
 #define KEY_END				0xD5
+#define KEY_NUM_LOCK        0xDB
 #define KEY_CAPS_LOCK		0xC1
 #define KEY_F1				0xC2
 #define KEY_F2				0xC3
