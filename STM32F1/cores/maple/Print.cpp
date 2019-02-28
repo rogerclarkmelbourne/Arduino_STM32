@@ -220,18 +220,6 @@ size_t Print::println(const Printable& x)
 #include <stdio.h>
 #include <stdarg.h>
 
-/*  
-//Bug detected 
-//failed: fopencookie( 0, "w+",  { NULL,  WR_fn, NULL, NULL }) 
-//failed: fopencookie( 0, "rw+", { NULL, WR_fn, NULL, NULL }) 
-//
-//worked: fopencookie( 0, "rw+", { RD_fn, WR_fn, NULL, NULL }) 
-//worked: fopencookie( 0, "rw+", { NULL,  WR_fn, NULL, NULL })
-//
-//Resume:  To fix - you should always specify the cookies_read function, zero is not valid. 
-*/
-
-
 // Read/Write blocks to device.
 // Non class function for use from libc.printf,
 // pointer to class Print passed in argumwent dev.
@@ -253,8 +241,9 @@ static ssize_t cookie_write_helper(void *dev, const char* buff, size_t size)
 size_t Print::printf(const char *format, ...)   
 {
   FILE* stream = fopencookie( (void*) this, "rw+", (cookie_io_functions_t) {
-          (cookie_read_function_t* ) cookie_read_helper, 
-          (cookie_write_function_t*) cookie_write_helper,
+          (cookie_read_function_t* ) cookie_read_helper,  // Even if reading is not required, you must pass a 
+	                                                  // pointer to the dummy function, but not NULL
+          (cookie_write_function_t*) cookie_write_helper, 
           (cookie_seek_function_t* ) NULL, 
           (cookie_close_function_t*) NULL
          } );
