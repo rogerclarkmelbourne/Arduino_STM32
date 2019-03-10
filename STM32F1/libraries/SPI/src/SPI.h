@@ -161,8 +161,12 @@ private:
     Should move this to within the class once tested out, just for tidyness
 */
 static uint8_t ff = 0XFF;
+#if BOARD_NR_SPI >= 1
 static void (*_spi1_this);
+#endif
+#if BOARD_NR_SPI >= 2
 static void (*_spi2_this);
+#endif
 #if BOARD_NR_SPI >= 3
 static void (*_spi3_this);
 #endif
@@ -411,8 +415,12 @@ private:
 
     void EventCallback(void);
 
+    #if BOARD_NR_SPI >= 1
     static void _spi1EventCallback(void);
+    #endif
+    #if BOARD_NR_SPI >= 2
     static void _spi2EventCallback(void);
+    #endif
     #if BOARD_NR_SPI >= 3
     static void _spi3EventCallback(void);
     #endif

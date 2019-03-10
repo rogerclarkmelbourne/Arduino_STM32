@@ -120,16 +120,20 @@ SPIClass::SPIClass(uint32 spi_num)
 
     // Init things specific to each SPI device
     // clock divider setup is a bit of hack, and needs to be improved at a later date.
+#if BOARD_NR_SPI >= 1
     _settings[0].spi_d = SPI1;
     _settings[0].clockDivider = determine_baud_rate(_settings[0].spi_d, _settings[0].clock);
     _settings[0].spiDmaDev = DMA1;
     _settings[0].spiTxDmaChannel = DMA_CH3;
     _settings[0].spiRxDmaChannel = DMA_CH2;
+#endif
+#if BOARD_NR_SPI >= 2
     _settings[1].spi_d = SPI2;
     _settings[1].clockDivider = determine_baud_rate(_settings[1].spi_d, _settings[1].clock);
     _settings[1].spiDmaDev = DMA1;
     _settings[1].spiTxDmaChannel = DMA_CH5;
     _settings[1].spiRxDmaChannel = DMA_CH4;
+#endif
 #if BOARD_NR_SPI >= 3
     _settings[2].spi_d = SPI3;
     _settings[2].clockDivider = determine_baud_rate(_settings[2].spi_d, _settings[2].clock);
@@ -550,12 +554,16 @@ void SPIClass::onReceive(void(*callback)(void)) {
     _currentSetting->receiveCallback = callback;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
+            #if BOARD_NR_SPI >= 1
         case RCC_SPI1:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi1EventCallback);
             break;
+            #endif
+            #if BOARD_NR_SPI >= 2
         case RCC_SPI2:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi2EventCallback);
             break;
+            #endif
             #if BOARD_NR_SPI >= 3
         case RCC_SPI3:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &SPIClass::_spi3EventCallback);
@@ -574,12 +582,16 @@ void SPIClass::onTransmit(void(*callback)(void)) {
     _currentSetting->transmitCallback = callback;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
+            #if BOARD_NR_SPI >= 1
         case RCC_SPI1:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi1EventCallback);
             break;
-        case RCC_SPI2:
+            #endif
+            #if BOARD_NR_SPI >= 2
+       case RCC_SPI2:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi2EventCallback);
             break;
+            #endif
             #if BOARD_NR_SPI >= 3
         case RCC_SPI3:
             dma_attach_interrupt(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &SPIClass::_spi3EventCallback);
@@ -682,14 +694,18 @@ uint8 SPIClass::recv(void) {
     DMA call back functions, one per port.
 */
 
+#if BOARD_NR_SPI >= 1
 void SPIClass::_spi1EventCallback()
 {
     reinterpret_cast<class SPIClass*>(_spi1_this)->EventCallback();
 }
+#endif
 
+#if BOARD_NR_SPI >= 2
 void SPIClass::_spi2EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi2_this)->EventCallback();
 }
+#endif
 #if BOARD_NR_SPI >= 3
 void SPIClass::_spi3EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi3_this)->EventCallback();
