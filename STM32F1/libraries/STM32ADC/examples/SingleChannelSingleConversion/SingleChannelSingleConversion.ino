@@ -5,7 +5,7 @@
 */
 #include <STM32ADC.h>
 
-ADC myAdc(ADC1);
+STM32ADC myAdc(ADC1);
 uint8 pin[] = {D11};
 
 
