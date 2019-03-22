@@ -10,6 +10,8 @@ uint8 pin[] = {D11};
 
 
 void int_func() {
+  Serial.print("Readin: ");
+  uint32_t adc_result = myADC.getData();
   Serial.println(adc_result);
 };
 
@@ -18,6 +20,8 @@ void setup() {
   myADC.setTrigger(ADC_EXT_EV_SWSTART);//start on SWStart bit
   myADC.setChannels(pin, 1); //this is actually the pin you want to measure
   myADC.attachADCInterrupt(int_func);
+  //
+  myADC.startConversion(); 
 }; //end setup
 
 void loop(){
