@@ -19,7 +19,7 @@ void setup() {
   Serial.begin(19200);
   myADC.setTrigger(ADC_EXT_EV_SWSTART);//start on SWStart bit
   myADC.setChannels(pin, 1); //this is actually the pin you want to measure
-  myADC.attachADCInterrupt(int_func);
+  myADC.attachInterrupt(int_func, ADC_EOC);
   //
   myADC.startConversion(); 
 }; //end setup
