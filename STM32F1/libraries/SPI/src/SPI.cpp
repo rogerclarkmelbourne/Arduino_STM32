@@ -362,6 +362,11 @@ void SPIClass::write(const void *data, uint32 length)
     while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
 }
 
+void SPIClass::transfer(const void *data, uint32 length)
+{
+	write(data, length);
+}
+
 uint8 SPIClass::transfer(uint8 byte) const
 {
     spi_dev * spi_d = _currentSetting->spi_d;

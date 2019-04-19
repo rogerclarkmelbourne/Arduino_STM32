@@ -283,6 +283,7 @@ public:
      * @param length Number of bytes/words in buffer to transmit.
      */
     void write(const void * buffer, uint32 length);
+	void transfer(const void * buffer, uint32 length);
 
     /**
      * @brief Transmit a byte, then return the next unread byte.
