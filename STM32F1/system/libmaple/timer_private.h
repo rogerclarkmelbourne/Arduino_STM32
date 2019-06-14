@@ -129,7 +129,7 @@ static inline __always_inline void dispatch_single_irq(timer_dev *dev,
         void (*handler)(void) = dev->handlers[iid];
         if (handler) {
             handler();
-            regs->SR &= ~irq_mask;
+            regs->SR = ~irq_mask;
         }
     }
 }
@@ -165,7 +165,7 @@ static inline __always_inline void dispatch_adv_trg_com(timer_dev *dev) {
     handle_irq(dsr, TIMER_SR_TIF,   hs, TIMER_TRG_INTERRUPT, handled);
     handle_irq(dsr, TIMER_SR_COMIF, hs, TIMER_COM_INTERRUPT, handled);
 
-    regs->SR &= ~handled;
+    regs->SR = ~handled;
 }
 
 static inline __always_inline void dispatch_adv_cc(timer_dev *dev) {
@@ -179,7 +179,7 @@ static inline __always_inline void dispatch_adv_cc(timer_dev *dev) {
     handle_irq(dsr, TIMER_SR_CC2IF, hs, TIMER_CC2_INTERRUPT, handled);
     handle_irq(dsr, TIMER_SR_CC1IF, hs, TIMER_CC1_INTERRUPT, handled);
 
-    regs->SR &= ~handled;
+    regs->SR = ~handled;
 }
 
 static inline __always_inline void dispatch_general(timer_dev *dev) {
@@ -195,7 +195,7 @@ static inline __always_inline void dispatch_general(timer_dev *dev) {
     handle_irq(dsr, TIMER_SR_CC1IF, hs, TIMER_CC1_INTERRUPT,    handled);
     handle_irq(dsr, TIMER_SR_UIF,   hs, TIMER_UPDATE_INTERRUPT, handled);
 
-    regs->SR &= ~handled;
+    regs->SR = ~handled;
 }
 
 /* On F1 (XL-density), F2, and F4, TIM9 and TIM12 are restricted
@@ -211,7 +211,7 @@ static inline __always_inline void dispatch_tim_9_12(timer_dev *dev) {
     handle_irq(dsr, TIMER_SR_CC1IF, hs, TIMER_CC1_INTERRUPT,    handled);
     handle_irq(dsr, TIMER_SR_UIF,   hs, TIMER_UPDATE_INTERRUPT, handled);
 
-    regs->SR &= ~handled;
+    regs->SR = ~handled;
 }
 
 /* On F1 (XL-density), F2, and F4, timers 10, 11, 13, and 14 are
@@ -225,7 +225,7 @@ static inline __always_inline void dispatch_tim_10_11_13_14(timer_dev *dev) {
     handle_irq(dsr, TIMER_SR_CC1IF, hs, TIMER_CC1_INTERRUPT,    handled);
     handle_irq(dsr, TIMER_SR_UIF,   hs, TIMER_UPDATE_INTERRUPT, handled);
 
-    regs->SR &= ~handled;
+    regs->SR = ~handled;
 }
 
 static inline __always_inline void dispatch_basic(timer_dev *dev) {
