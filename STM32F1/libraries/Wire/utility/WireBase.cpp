@@ -77,7 +77,7 @@ uint8 WireBase::endTransmission(){
 //TODO: Add the ability to queue messages (adding a boolean to end of function
 // call, allows for the Arduino style to stay while also giving the flexibility
 // to bulk send
-uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
+uint8 WireBase::requestFrom(uint8 address, int num_bytes,bool stop) {
     if (num_bytes > BUFFER_LENGTH) {
         num_bytes = BUFFER_LENGTH;
     }
@@ -85,14 +85,14 @@ uint8 WireBase::requestFrom(uint8 address, int num_bytes) {
     itc_msg.flags = I2C_MSG_READ;
     itc_msg.length = num_bytes;
     itc_msg.data = &rx_buf[rx_buf_idx];
-    process();
+    process(stop);
     rx_buf_len += itc_msg.xferred;
     itc_msg.flags = 0;
     return rx_buf_len;
 }
 
-uint8 WireBase::requestFrom(int address, int numBytes) {
-    return WireBase::requestFrom((uint8)address, numBytes);
+uint8 WireBase::requestFrom(int address, int numBytes, bool stop) {
+    return WireBase::requestFrom((uint8)address, numBytes,stop);
 }
 
 size_t WireBase::write(uint8 value) {
