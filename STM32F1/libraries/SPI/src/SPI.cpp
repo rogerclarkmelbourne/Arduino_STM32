@@ -61,6 +61,8 @@ static void configure_gpios(spi_dev *dev, bool as_master);
 
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq);
 
+static inline void waitSpiTransferEnd (spi_dev *spi_d);
+
 #if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
 #error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
 #endif
@@ -182,10 +184,7 @@ void SPIClass::end(void) {
         // FIXME [0.1.0] remove this once you have an interrupt based driver
         volatile uint16 rx __attribute__((unused)) = spi_rx_reg(_currentSetting->spi_d);
     }
-    while (!spi_is_tx_empty(_currentSetting->spi_d))
-        ;
-    while (spi_is_busy(_currentSetting->spi_d))
-        ;
+    waitSpiTransferEnd (_currentSetting->spi_d);
     spi_peripheral_disable(_currentSetting->spi_d);
     // added for DMA callbacks.
     // Need to add unsetting the callbacks for the DMA channels.
@@ -329,8 +328,7 @@ void SPIClass::write(uint16 data)
      * This almost doubles the speed of this function.
      */
     spi_tx_reg(_currentSetting->spi_d, data); // write the data to be transmitted into the SPI_DR register (this clears the TXE flag)
-    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+    waitSpiTransferEnd(_currentSetting->spi_d);
 }
 
 void SPIClass::write16(uint16 data)
@@ -339,8 +337,7 @@ void SPIClass::write16(uint16 data)
     spi_tx_reg(_currentSetting->spi_d, data>>8); // write high byte
     while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // Wait until TXE=1
     spi_tx_reg(_currentSetting->spi_d, data); // write low byte
-    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // Wait until TXE=1
-    while (spi_is_busy(_currentSetting->spi_d) != 0); // wait until BSY=0
+    waitSpiTransferEnd(_currentSetting->spi_d);
 }
 
 void SPIClass::write(uint16 data, uint32 n)
@@ -358,8 +355,7 @@ void SPIClass::write(const void *data, uint32 length)
 {
     spi_dev * spi_d = _currentSetting->spi_d;
     spi_tx(spi_d, data, length); // data can be array of bytes or words
-    while (spi_is_tx_empty(spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+    waitSpiTransferEnd(_currentSetting->spi_d); // "5. Wait until TXE=1 and then wait until BSY=0 before disabling the SPI."
 }
 
 uint8 SPIClass::transfer(uint8 byte) const
@@ -367,8 +363,7 @@ uint8 SPIClass::transfer(uint8 byte) const
     spi_dev * spi_d = _currentSetting->spi_d;
     spi_rx_reg(spi_d); // read any previous data
     spi_tx_reg(spi_d, byte); // Write the data item to be transmitted into the SPI_DR register
-    while (spi_is_tx_empty(spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+    waitSpiTransferEnd(spi_d);
     return (uint8)spi_rx_reg(spi_d); // "... and read the last received data."
 }
 
@@ -379,12 +374,10 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     spi_dev * spi_d = _currentSetting->spi_d;
     spi_rx_reg(spi_d);                   // read any previous data
     spi_tx_reg(spi_d, data>>8);          // write high byte
-    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
-    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
+    waitSpiTransferEnd(spi_d);
 	uint16_t ret = spi_rx_reg(spi_d)<<8; // read and shift high byte
     spi_tx_reg(spi_d, data);             // write low byte
-    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
-    while (spi_is_busy(spi_d) != 0);     // wait until BSY=0
+    waitSpiTransferEnd(spi_d);
 	ret += spi_rx_reg(spi_d);            // read low byte
     return ret;
 }
@@ -436,8 +429,7 @@ uint8 SPIClass::dmaTransferRepeat(uint16 length) {
         if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
 
-    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI."
+    waitSpiTransferEnd(_currentSetting->spi_d);  // "5. Wait until TXE=1 and then wait until BSY=0 before disabling the SPI."
     spi_tx_dma_disable(_currentSetting->spi_d);
     spi_rx_dma_disable(_currentSetting->spi_d);
     dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
@@ -493,8 +485,7 @@ uint8 SPIClass::dmaSendRepeat(uint16 length) {
         //Avoid interrupts and just loop waiting for the flag to be set.
         if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
     }
-    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+    waitSpiTransferEnd(_currentSetting->spi_d); // "5. Wait until TXE=1 and then wait until BSY=0 before disabling the SPI."
     spi_tx_dma_disable(_currentSetting->spi_d);
     dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
     dma_clear_isr_bits(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
@@ -519,8 +510,7 @@ uint8 SPIClass::dmaSendAsync(const void * transmitBuf, uint16 length, bool minc)
             if ((millis() - m) > DMA_TIMEOUT) { b = 2; break; }
         }		
 
-        while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-        while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0 before disabling the SPI." 
+        waitSpiTransferEnd(_currentSetting->spi_d); // "5. Wait until TXE=1 and then wait until BSY=0 before disabling the SPI."
         spi_tx_dma_disable(_currentSetting->spi_d);
         dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
         _currentSetting->state = SPI_STATE_READY;
@@ -612,8 +602,7 @@ void SPIClass::onTransmit(void(*callback)(void)) {
 */
 
 void SPIClass::EventCallback() {
-    while (spi_is_tx_empty(_currentSetting->spi_d) == 0); // "5. Wait until TXE=1 ..."
-    while (spi_is_busy(_currentSetting->spi_d) != 0); // "... and then wait until BSY=0"
+    waitSpiTransferEnd(_currentSetting->spi_d);
     switch (_currentSetting->state) {
     case SPI_STATE_TRANSFER:
         while (spi_is_rx_nonempty(_currentSetting->spi_d));
@@ -779,7 +768,7 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
     {
     case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
     case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
-    case RCC_AHB:  clock = 0; break;    //There is no SPI on this bus, but it removes compiler warning 
+    case RCC_AHB:  clock = 0; break;    //There is no SPI on this bus, but it removes warning 
     }
     clock /= 2;
     i = 0;
@@ -788,6 +777,17 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
         i++;
     }
     return baud_rates[i];
+}
+
+/**
+* @brief Waits unti TXE (tx empy) flag set and BSY (busy) flag unset.
+*/
+static inline void waitSpiTransferEnd (spi_dev *spi_d)
+{
+    while (spi_is_tx_empty(spi_d) == 0) // wait until TXE=1
+    {}
+    while (spi_is_busy(spi_d) != 0) // wait until BSY=0
+    {}
 }
 
 SPIClass SPI(1);
