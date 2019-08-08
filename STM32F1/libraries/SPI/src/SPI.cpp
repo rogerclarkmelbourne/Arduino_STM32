@@ -779,6 +779,7 @@ static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
     {
     case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
     case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
+    case RCC_AHB:  clock = 0; break;    //There is no SPI on this bus, but it removes compiler warning 
     }
     clock /= 2;
     i = 0;
