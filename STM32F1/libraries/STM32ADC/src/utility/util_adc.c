@@ -7,7 +7,7 @@
     Interrupt function.
     This handles Analog watchdog and ADC1 and 2.
 */
-extern volatile unsigned int adc_result = 0;
+extern volatile unsigned int adc_result;
 
 /*
     Starts a single conversion in one channel previously defined.
