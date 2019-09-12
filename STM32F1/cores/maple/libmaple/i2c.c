@@ -270,9 +270,7 @@ static inline int32 wait_for_state_change(i2c_dev *dev,
         }
 
         if (timeout) {
-            if (systick_uptime() > (dev->timestamp + timeout)) {
-                /* TODO: overflow? */
-                /* TODO: racy? */
+            if ((systick_uptime() - dev->timestamp) > timeout) {
                 return I2C_ERROR_TIMEOUT;
             }
         }
