@@ -25,7 +25,7 @@
 #include <inttypes.h>
 #include "Stream.h"
 #include "Arduino.h"
-#include <libmaple/i2c_slave.h>
+#include <libmaple/i2c.h>
 
 
 // WIRE_HAS_END means Wire has end()

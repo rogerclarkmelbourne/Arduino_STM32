@@ -27,7 +27,7 @@ extern "C" {
 
 #include "Wire_slave.h"
 #include "wirish.h"
-#include <libmaple/i2c_slave.h>
+#include <libmaple/i2c.h>
 
 #define BUFFER_LENGTH 32
 

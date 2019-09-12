@@ -29,12 +29,25 @@
  * @file libmaple/include/libmaple/i2c.h
  * @brief Inter-Integrated Circuit (I2C) peripheral support
  *
- * Currently master-only. Usage notes:
+ * Supports Master and Slave.
+ *  Master Usage notes:
  *
  * - Enable an I2C device with i2c_master_enable().
  * - Initialize an array of struct i2c_msg to suit the bus
  *   transactions (reads/writes) you wish to perform.
  * - Call i2c_master_xfer() to do the work.
+ *
+ * Slave Usage notes:
+ * - Enable I2C slave by calling i2c_slave_enable().
+ *   Check flags for usage. Enabling master also enabled slave.
+ * - initialise the i2c_msg struct and the data buffer
+ * - initialise the callback functions
+ *
+ * I2C slave support added 2012 by Barry Carter. barry.carter@gmail.com, headfuzz.co.uk
+ * 
+ * Modified 2019 by Donna Whisnant to merge WireSlave changes with the core to
+ * make slave mode work and without having conflicting data type defintions
+ * 
  */
 
 #ifndef _LIBMAPLE_I2C_H_
@@ -64,8 +77,7 @@ extern "C" {
  * - Reg. map base pointers, device pointer declarations.
  */
 
- /* Roger clark. Replaced with line below #include <series/i2c.h>*/
-#include "stm32f1/include/series/i2c.h"
+#include <series/i2c.h>
 #include <libmaple/i2c_common.h>
 
 #include <libmaple/libmaple_types.h>
@@ -196,9 +208,16 @@ typedef struct i2c_msg {
 /* I2C enable options */
 #define I2C_FAST_MODE           0x1           // 400 khz
 #define I2C_DUTY_16_9           0x2           // 16/9 duty ratio
-/* Flag 0x4 is reserved; DO NOT USE. */
+#define I2C_REMAP               0x4           // Deprecated: I2C_REMAP for I2C1
 #define I2C_BUS_RESET           0x8           // Perform a bus reset
+#define I2C_SLAVE_USE_RX_BUFFER 0x10          // Use a buffered message when doing a slave recv
+#define I2C_SLAVE_USE_TX_BUFFER 0x20          // Use a buffered message when doing a slave transmit
+#define I2C_SLAVE_DUAL_ADDRESS  0x40          // Enable the dual slave address scheme
+#define I2C_SLAVE_GENERAL_CALL  0x80          // Enable the general call on address 0x00
+#define I2C_SLAVE_MODE          0x100         // Will be '1' if configured for slave mode, '0' if master mode
+
 void i2c_master_enable(i2c_dev *dev, uint32 flags);
+void i2c_slave_enable(i2c_dev *dev, uint32 flags);
 
 #define I2C_ERROR_PROTOCOL      (-1)
 #define I2C_ERROR_TIMEOUT       (-2)
@@ -405,6 +424,48 @@ static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val) {
  */
 static inline void i2c_set_trise(i2c_dev *dev, uint32 trise) {
     dev->regs->TRISE = trise;
+}
+
+
+/*
+ * Slave support
+ */
+
+/**
+ * @brief Enable General Call to allow the  unit to respond on addr 0x00
+ * @param dev I2C device
+  */
+static inline void i2c_slave_general_call_enable(i2c_dev *dev) {
+    dev->regs->CR1 |= I2C_CR1_ENGC;
+}
+
+/* callback functions */
+/* Callback handler for data received over the bus */
+void i2c_slave_attach_recv_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_recv_callback_func func);
+
+/* Callback handler for data being requested over the bus
+ * The callback function must call i2c_write to get the data over the bus
+ */
+void i2c_slave_attach_transmit_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_transmit_callback_func func);
+
+/**
+ * @brief Set the primary I2c slave address
+ * @param dev I2C device
+ * @param address the 7 or 10 bit i2c address
+  */
+static inline void i2c_slave_set_own_address(i2c_dev *dev, uint16 address)
+{
+    dev->regs->OAR1 = (address << 1) | 0x4000;     // According to ST Docs: Note: Bit 14 should always be kept at 1 by software!
+}
+
+/**
+ * @brief Set the secondary I2c slave address
+ * @param dev I2C device
+ * @param address the 7 or 10 bit i2c address
+  */
+static inline void i2c_slave_set_own_address2(i2c_dev *dev, uint16 address)
+{
+    dev->regs->OAR2 = (address << 1) | I2C_OAR2_ENDUAL;
 }
 
 #ifdef __cplusplus
