@@ -86,6 +86,15 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 #endif
 };
 
+#if BOARD_NR_SPI >= 1
+static void (*_spi1_this);
+#endif
+#if BOARD_NR_SPI >= 2
+static void (*_spi2_this);
+#endif
+#if BOARD_NR_SPI >= 3
+static void (*_spi3_this);
+#endif
 
 /*
  * Constructor
@@ -368,14 +377,14 @@ uint8 SPIClass::transfer(uint8 byte) const
 uint16_t SPIClass::transfer16(uint16_t data) const
 {
     // Modified by stevestrong: write & read two consecutive bytes in 8 bit mode (DFF=0)
-	// This is more effective than two distinct byte transfers
+    // This is more effective than two distinct byte transfers
     spi_dev * spi_d = _currentSetting->spi_d;
     spi_rx_reg(spi_d);                   // read any previous data
     spi_tx_reg(spi_d, data>>8);          // write high byte
-    waitSpiTxEnd(spi_d);
+    waitSpiTxEnd(spi_d);                 // wait until TXE=1 and then wait until BSY=0
     uint16_t ret = spi_rx_reg(spi_d)<<8; // read and shift high byte
     spi_tx_reg(spi_d, data);             // write low byte
-    waitSpiTxEnd(spi_d);
+    waitSpiTxEnd(spi_d);                 // wait until TXE=1 and then wait until BSY=0
     ret += spi_rx_reg(spi_d);            // read low byte
     return ret;
 }
@@ -678,16 +687,13 @@ uint8 SPIClass::recv(void) {
 }
 
 /*
-    DMA call back functions, one per port.
-*/
-
+ * DMA call back functions, one per port.
+ */
 #if BOARD_NR_SPI >= 1
-void SPIClass::_spi1EventCallback()
-{
+void SPIClass::_spi1EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi1_this)->EventCallback();
 }
 #endif
-
 #if BOARD_NR_SPI >= 2
 void SPIClass::_spi2EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi2_this)->EventCallback();
@@ -698,10 +704,10 @@ void SPIClass::_spi3EventCallback() {
     reinterpret_cast<class SPIClass*>(_spi3_this)->EventCallback();
 }
 #endif
-/*
-* Auxiliary functions
-*/
 
+/*
+ * Auxiliary functions
+ */
 static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
     switch (dev->clk_id) {
 #if BOARD_NR_SPI >= 1
@@ -761,15 +767,14 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
 * (CYCLES_PER_MICROSECOND == 72, APB2 at 72MHz, APB1 at 36MHz).
 */
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
-    uint32_t clock = 0, i;
-    switch (rcc_dev_clk(dev->clk_id))
-    {
+    uint32_t clock;
+    switch (rcc_dev_clk(dev->clk_id)) {
     case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
     case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
     case RCC_AHB:  clock = 0; break;    //There is no SPI on this bus, but it removes warning 
     }
     clock /= 2;
-    i = 0;
+    uint32_t i = 0;
     while (i < 7 && freq < clock) {
         clock /= 2;
         i++;
