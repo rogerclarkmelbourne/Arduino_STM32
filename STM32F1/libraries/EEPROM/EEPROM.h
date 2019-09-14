@@ -61,6 +61,7 @@ public:
 
 	uint16 init(void);
 	uint16 init(uint32, uint32, uint32);
+	uint16 init(uint32, uint32, uint32, uint16);
 
 	uint16 format(void);
 
@@ -75,6 +76,7 @@ public:
 	uint32 PageBase0;
 	uint32 PageBase1;
 	uint32 PageSize;
+	uint16 Pages;
 	uint16 Status;
 private:
 	FLASH_Status EE_ErasePage(uint32);
