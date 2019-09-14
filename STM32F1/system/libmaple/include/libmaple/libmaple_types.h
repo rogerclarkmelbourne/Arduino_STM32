@@ -58,7 +58,11 @@ typedef void (*voidArgumentFuncPtr)(void *);
 #define __deprecated __attribute__((__deprecated__))
 #define __weak __attribute__((weak))
 #ifndef __always_inline
-#define __always_inline __attribute__((always_inline))
+#if __GNUC_PREREQ__(3, 1) || (defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 800)
+#define	__always_inline	__inline__ __attribute__((__always_inline__))
+#else
+#define	__always_inline
+#endif
 #endif
 #ifndef __unused
 #define __unused __attribute__((unused))
