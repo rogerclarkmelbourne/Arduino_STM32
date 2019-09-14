@@ -56,6 +56,7 @@ static void ifaceSetupHook(unsigned, void*);
 #define USB_TIMEOUT 50
 #if BOARD_HAVE_SERIALUSB
 bool USBSerial::_hasBegun = false;
+bool USBSerial::_isBlocking = false;
 #endif
 
 USBSerial::USBSerial(void) {
@@ -105,30 +106,37 @@ void USBSerial::end(void) {
 }
 
 size_t USBSerial::write(uint8 ch) {
-size_t n = 0;
-    this->write(&ch, 1);
-		return n;
+
+    return this->write(&ch, 1);
 }
 
 size_t USBSerial::write(const char *str) {
-size_t n = 0;
-    this->write((const uint8*)str, strlen(str));
-	return n;
+    return this->write((const uint8*)str, strlen(str));
 }
 
 size_t USBSerial::write(const uint8 *buf, uint32 len)
 {
-size_t n = 0;
-    if (!(bool) *this || !buf) {
+#ifdef USB_SERIAL_REQUIRE_DTR
+ if (!(bool) *this || !buf) {
         return 0;
     }
+#else	
+	if (!buf || !(usb_is_connected(USBLIB) && usb_is_configured(USBLIB))) {
+        return 0;
+    }
+#endif	
 
     uint32 txed = 0;
-    while (txed < len) {
-        txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
-    }
+	if (!_isBlocking) 	{
+		txed = usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+	}
+	else {
+		while (txed < len) {
+			txed += usb_cdcacm_tx((const uint8*)buf + txed, len - txed);
+		}
+	}
 
-	return n;
+	return txed;
 }
 
 int USBSerial::available(void) {
@@ -186,10 +194,6 @@ size_t USBSerial::readBytes(char *buf, const size_t& len)
 /* Blocks forever until 1 byte is received */
 int USBSerial::read(void) {
     uint8 b;
-	/*
-	    this->read(&b, 1);
-    return b;
-	*/
 	
 	if (usb_cdcacm_rx(&b, 1)==0)
 	{
@@ -216,6 +220,16 @@ uint8 USBSerial::getRTS(void) {
 USBSerial::operator bool() {
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
+
+void USBSerial::enableBlockingTx(void)
+{
+	_isBlocking=true;
+}
+void USBSerial::disableBlockingTx(void)
+{
+	_isBlocking=false;
+}
+
 
 #if BOARD_HAVE_SERIALUSB
 	#ifdef SERIAL_USB 
@@ -265,26 +279,9 @@ static void ifaceSetupHook(unsigned hook __attribute__((unused)), void *requestv
         break;
     }
 #endif
-#if false
-	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
-		iwdg_init(IWDG_PRE_4, 10);
-		while (1);
-	}
-#endif	
+
 }
 
-#define RESET_DELAY 100000
-#ifdef SERIAL_USB 
-static void wait_reset(void) {
-  delay_us(RESET_DELAY);
-  nvic_sys_reset();
-}
-#endif
-
-
-#define STACK_TOP 0x20000800
-#define EXC_RETURN 0xFFFFFFF9
-#define DEFAULT_CPSR 0x61000000
 static void rxHook(unsigned hook __attribute__((unused)), void *ignored __attribute__((unused))) {
 static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
@@ -309,34 +306,11 @@ static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
 #ifdef SERIAL_USB 
             // The magic reset sequence is "1EAF".
             // Got the magic sequence -> reset, presumably into the bootloader.
-            // Return address is wait_reset, but we must set the thumb bit.
 			bkp_init();
 			bkp_enable_writes();
 			bkp_write(10, 0x424C);
 			bkp_disable_writes();
-						
-            uintptr_t target = (uintptr_t)wait_reset | 0x1;
-            asm volatile("mov r0, %[stack_top]      \n\t" // Reset stack
-                         "mov sp, r0                \n\t"
-                         "mov r0, #1                \n\t"
-                         "mov r1, %[target_addr]    \n\t"
-                         "mov r2, %[cpsr]           \n\t"
-                         "push {r2}                 \n\t" // Fake xPSR
-                         "push {r1}                 \n\t" // PC target addr
-                         "push {r0}                 \n\t" // Fake LR
-                         "push {r0}                 \n\t" // Fake R12
-                         "push {r0}                 \n\t" // Fake R3
-                         "push {r0}                 \n\t" // Fake R2
-                         "push {r0}                 \n\t" // Fake R1
-                         "push {r0}                 \n\t" // Fake R0
-                         "mov lr, %[exc_return]     \n\t"
-                         "bx lr"
-                         :
-                         : [stack_top] "r" (STACK_TOP),
-                           [target_addr] "r" (target),
-                           [exc_return] "r" (EXC_RETURN),
-                           [cpsr] "r" (DEFAULT_CPSR)
-                         : "r0", "r1", "r2");
+			nvic_sys_reset();			
 #endif
             /* Can't happen. */
             ASSERT_FAULT(0);

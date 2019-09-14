@@ -95,7 +95,7 @@
  *   This causes the Midi class to read data from the USB port and process it.
  */
 
-class USBMidi {
+class USBMIDI {
 private:
     bool enabled = false;
     
@@ -109,8 +109,11 @@ private:
     // Called whenever data is read from the USB port
     void dispatchPacket(uint32 packet);
     
+    uint32 txPacketSize = 64;
+    uint32 rxPacketSize = 64;
+
 public:
-	//static bool init(USBMidi* me);
+	static bool init(USBMIDI* me);
 	// This registers this USB composite device component with the USBComposite class instance.
 	bool registerComponent();
 	void setChannel(unsigned channel=0);
@@ -118,6 +121,14 @@ public:
 		return channelIn_;
 	}
     
+    void setRXPacketSize(uint32 size=64) {
+        rxPacketSize = size;
+    }
+
+    void setTXPacketSize(uint32 size=64) {
+        txPacketSize = size;
+    }
+
     // Call to start the USB port, at given baud.  For many applications
     //  the default parameters are just fine (which will cause messages for all
     //  MIDI channels to be delivered)
@@ -177,9 +188,8 @@ public:
     virtual void handleStop(void);
     virtual void handleActiveSense(void);
     virtual void handleReset(void);
+    
 };
-
-extern USBMidi USBMIDI;
 
 extern const uint32 midiNoteFrequency_10ths[128];
 

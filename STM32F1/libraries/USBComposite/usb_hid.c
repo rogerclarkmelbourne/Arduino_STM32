@@ -51,6 +51,7 @@ uint16 GetEPTxAddr(uint8 /*bEpNum*/);
 #include "usb_def.h"
 
 static uint32 ProtocolValue = 0;
+static uint32 txEPSize = 64;
 
 static void hidDataTxCb(void);
 static void hidUSBReset(void);
@@ -116,7 +117,7 @@ static const hid_part_config hidPartConfigData = {
         .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
         .bEndpointAddress = USB_DESCRIPTOR_ENDPOINT_IN | HID_ENDPOINT_TX, // PATCH
         .bmAttributes     = USB_ENDPOINT_TYPE_INTERRUPT,
-        .wMaxPacketSize   = USB_HID_TX_EPSIZE,//0x40,//big enough for a keyboard 9 byte packet and for a mouse 5 byte packet
+        .wMaxPacketSize   = 64, //PATCH
         .bInterval        = 0x0A,
 	}
 };
@@ -124,13 +125,21 @@ static const hid_part_config hidPartConfigData = {
 static USBEndpointInfo hidEndpoints[1] = {
     {
         .callback = hidDataTxCb,
-        .bufferSize = USB_HID_TX_EPSIZE,
+        .bufferSize = 64,
         .type = USB_EP_EP_TYPE_INTERRUPT, // TODO: interrupt???
         .tx = 1,
     }
 };
 
+void usb_hid_setTXEPSize(uint32_t size) {
+    if (size == 0 || size > 64)
+        size = 64;
+    hidEndpoints[0].bufferSize = size;
+    txEPSize = size;
+}
+
 #define OUT_BYTE(s,v) out[(uint8*)&(s.v)-(uint8*)&s]
+#define OUT_16(s,v) *(uint16_t*)&OUT_BYTE(s,v) // OK on Cortex which can handle unaligned writes
 
 static void getHIDPartDescriptor(uint8* out) {
     memcpy(out, &hidPartConfigData, sizeof(hid_part_config));
@@ -139,6 +148,7 @@ static void getHIDPartDescriptor(uint8* out) {
     OUT_BYTE(hidPartConfigData, HIDDataInEndpoint.bEndpointAddress) += usbHIDPart.startEndpoint;
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenL) = (uint8)HID_Report_Descriptor.Descriptor_Size;
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenH) = (uint8)(HID_Report_Descriptor.Descriptor_Size>>8);
+    OUT_16(hidPartConfigData, HIDDataInEndpoint.wMaxPacketSize) = txEPSize;
 }
 
 USBCompositePart usbHIDPart = {
@@ -367,8 +377,8 @@ static void hidDataTxCb(void)
 	}
 	usbGenericTransmitting = 1;
     // We can only send up to USBHID_CDCACM_TX_EPSIZE bytes in the endpoint.
-    if (tx_unsent > USB_HID_TX_EPSIZE) {
-        tx_unsent = USB_HID_TX_EPSIZE;
+    if (tx_unsent > txEPSize) {
+        tx_unsent = txEPSize;
     }
 	// copy the bytes from USB Tx buffer to PMA buffer
 	uint32 *dst = usb_pma_ptr(usbHIDPart.endpoints[HID_ENDPOINT_TX].pmaAddress);

@@ -7,15 +7,18 @@
 
 #define DATA_SIZE (sizeof(JoystickReport_t)-1)
 
+USBHID HID;
+
 class HIDJoystickRawData : public HIDJoystick {
   private:
     uint8_t featureData[HID_BUFFER_ALLOCATE_SIZE(DATA_SIZE,1)];
     HIDBuffer_t fb { featureData, HID_BUFFER_SIZE(DATA_SIZE,1), HID_JOYSTICK_REPORT_ID }; 
+    USBHID HID;
   public:
-    HIDJoystickRawData(uint8_t reportID=HID_JOYSTICK_REPORT_ID) : HIDJoystick(reportID) {}
+    HIDJoystickRawData(USBHID& _HID, uint8_t reportID=HID_JOYSTICK_REPORT_ID) : HIDJoystick(HID, reportID) {}
     
     void begin() {
-      USBHID.setFeatureBuffers(&fb, 1);
+      HID.setFeatureBuffers(&fb, 1);
     }
     
     void setRawData(JoystickReport_t* p) {
@@ -24,7 +27,7 @@ class HIDJoystickRawData : public HIDJoystick {
     }
 };
 
-HIDJoystickRawData joy;
+HIDJoystickRawData joy(HID);
 JoystickReport_t report = {HID_JOYSTICK_REPORT_ID};
 
 const uint8_t reportDescription[] = {
@@ -33,7 +36,7 @@ const uint8_t reportDescription[] = {
 };
 
 void setup() {
-  USBHID_begin_with_serial(reportDescription, sizeof(reportDescription));
+  HID.begin(reportDescription, sizeof(reportDescription));
   joy.begin();
 }
 

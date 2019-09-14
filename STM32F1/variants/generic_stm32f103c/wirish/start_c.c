@@ -48,8 +48,6 @@ extern void __libc_init_array(void);
 
 extern int main(int, char**, char**);
 
-extern void exit(int) __attribute__((noreturn, weak));
-
 /* The linker must ensure that these are at least 4-byte aligned. */
 extern char __data_start__, __data_end__;
 extern char __bss_start__, __bss_end__;
@@ -64,7 +62,6 @@ void __attribute__((noreturn)) start_c(void) {
     struct rom_img_cfg *img_cfg = (struct rom_img_cfg*)&_lm_rom_img_cfgp;
     int *src = img_cfg->img_start;
     int *dst = (int*)&__data_start__;
-    int exit_code;
 
     /* Initialize .data, if necessary. */
     if (src != dst) {
@@ -84,10 +81,7 @@ void __attribute__((noreturn)) start_c(void) {
     __libc_init_array();
 
     /* Jump to main. */
-    exit_code = main(0, 0, 0);
-    if (exit) {
-        exit(exit_code);
-    }
+    main(0, 0, 0);
 
     /* If exit is NULL, make sure we don't return. */
     for (;;)

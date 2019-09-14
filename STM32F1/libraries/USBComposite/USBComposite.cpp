@@ -1,7 +1,7 @@
 #include "USBComposite.h"
 
 #define DEFAULT_VENDOR_ID  0x1EAF
-#define DEFAULT_PRODUCT_ID 0x0004
+#define DEFAULT_PRODUCT_ID 0x0024
 
 static char* putSerialNumber(char* out, int nibbles, uint32 id) {
     for (int i=0; i<nibbles; i++, id >>= 4) {
@@ -100,12 +100,12 @@ void USBCompositeDevice::setSerialString(const char* s) {
 bool USBCompositeDevice::begin() {
    if (enabled)
         return true;
-	usb_generic_set_info(vendorId, productId, iManufacturer[0] ? iManufacturer : NULL, iProduct[0] ? iProduct : NULL, 
-        haveSerialNumber ? iSerialNumber : NULL);
     for (uint32 i = 0 ; i < numParts ; i++) {
 		if (init[i] != NULL && !init[i](plugin[i]))
 			return false;
 	}
+	usb_generic_set_info(vendorId, productId, iManufacturer[0] ? iManufacturer : NULL, iProduct[0] ? iProduct : NULL, 
+        haveSerialNumber ? iSerialNumber : NULL);
     if (! usb_generic_set_parts(parts, numParts))
         return false;
     usb_generic_enable();

@@ -1,4 +1,4 @@
-#include "USBHID.h"
+#include "USBComposite.h" 
 
 void HIDConsumer::begin(void) {}
 void HIDConsumer::end(void) {}

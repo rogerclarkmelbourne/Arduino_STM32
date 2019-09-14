@@ -1,7 +1,10 @@
 #include <USBComposite.h>
 
+USBHID HID;
+HIDJoystick Joystick(HID);
+
 void setup() {
-  USBHID_begin_with_serial(HID_JOYSTICK);
+  HID.begin(HID_JOYSTICK);
 }
 
 void loop() {

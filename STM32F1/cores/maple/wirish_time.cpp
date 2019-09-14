@@ -34,13 +34,18 @@
 #include <libmaple/delay.h>
 #include "Arduino.h"
 
-void delay(unsigned long ms) {
-    uint32 start = millis();
-	do
-	{
-		yield();
-	}
-    while (millis() - start < ms);
+void delay(unsigned long ms)
+{
+    uint32 start = micros();
+    while (ms > 0)
+    {
+        yield();
+        while ( (ms > 0) && ((micros() - start) >= 1000) )
+        {
+            ms--;
+            start += 1000;
+        }
+    }
 }
 
 void delayMicroseconds(uint32 us) {
