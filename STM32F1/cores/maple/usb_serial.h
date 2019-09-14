@@ -69,6 +69,10 @@ public:
     uint8 getRTS();
     uint8 getDTR();
     uint8 pending();
+	
+	
+	void enableBlockingTx(void);
+	void disableBlockingTx(void);
 
     /* SukkoPera: This is the Arduino way to check if an USB CDC serial
      * connection is open.
@@ -85,6 +89,7 @@ public:
 
 protected:
     static bool _hasBegun;
+	static bool _isBlocking;
 };
 
 #ifdef SERIAL_USB

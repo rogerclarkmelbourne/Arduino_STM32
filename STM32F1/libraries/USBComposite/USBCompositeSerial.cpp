@@ -14,7 +14,7 @@
 ** SOFTWARE.
 */
 
-#include <USBCompositeSerial.h>
+#include "USBComposite.h" 
 
 #include <string.h>
 #include <stdint.h>
@@ -23,7 +23,7 @@
 #include <string.h>
 #include <libmaple/iwdg.h>
 
-#include "usb_serial.h"
+#include "usb_composite_serial.h"
 
 #define USB_TIMEOUT 50
 
@@ -33,11 +33,12 @@ static void ifaceSetupHook(unsigned, void*);
 #endif
 
 bool USBCompositeSerial::init(USBCompositeSerial* me) {
-	(void)me;
 #if defined(SERIAL_USB)
 	composite_cdcacm_set_hooks(USBHID_CDCACM_HOOK_RX, rxHook);
 	composite_cdcacm_set_hooks(USBHID_CDCACM_HOOK_IFACE_SETUP, ifaceSetupHook);
 #endif
+    composite_cdcacm_setTXEPSize(me->txPacketSize);
+    composite_cdcacm_setRXEPSize(me->rxPacketSize);
 	return true;
 }
 
@@ -268,7 +269,4 @@ static void rxHook(unsigned hook, void *ignored) {
     }
 }
 #endif
-
-
-USBCompositeSerial CompositeSerial;
 

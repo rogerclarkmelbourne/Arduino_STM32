@@ -1,15 +1,20 @@
 #include <USBComposite.h>
 
+USBMassStorage MassStorage;
+USBCompositeSerial CompositeSerial;
+
+#define PRODUCT_ID 0x29
+
 #include "image.h"
 
-bool write(uint32_t memoryOffset, const uint8_t *writebuff, uint16_t transferLength) {
-  memcpy(image+memoryOffset, writebuff, transferLength);
+bool write(const uint8_t *writebuff, uint32_t memoryOffset, uint16_t transferLength) {
+  memcpy(image+SCSI_BLOCK_SIZE*memoryOffset, writebuff, SCSI_BLOCK_SIZE*transferLength);
 
   return true;
 }
 
-bool read(uint32_t memoryOffset, uint8_t *readbuff, uint16_t transferLength) {
-  memcpy(readbuff, image+memoryOffset, transferLength);
+bool read(uint8_t *readbuff, uint32_t memoryOffset, uint16_t transferLength) {
+  memcpy(readbuff, image+SCSI_BLOCK_SIZE*memoryOffset, SCSI_BLOCK_SIZE*transferLength);
   
   return true;
 }
@@ -49,7 +54,8 @@ void dumpDrive() {
 }
 
 void setup() {
-  MassStorage.setDrive(0, sizeof(image), read, write);
+  USBComposite.setProductId(PRODUCT_ID);
+  MassStorage.setDriveData(0, sizeof(image)/SCSI_BLOCK_SIZE, read, write);
   MassStorage.registerComponent();
   CompositeSerial.registerComponent();
   USBComposite.begin();

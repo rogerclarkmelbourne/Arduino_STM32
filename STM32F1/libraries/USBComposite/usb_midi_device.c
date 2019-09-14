@@ -202,7 +202,7 @@ static const usb_descriptor_config usbMIDIDescriptor_Config = {
         .bEndpointAddress   = (USB_DESCRIPTOR_ENDPOINT_OUT |
                              MIDI_ENDPOINT_RX), // PATCH
         .bmAttributes       = USB_EP_TYPE_BULK,
-        .wMaxPacketSize     = USB_MIDI_RX_EPSIZE,
+        .wMaxPacketSize     = 64, // PATCH
         .bInterval          = 0x00,
     },
 
@@ -219,7 +219,7 @@ static const usb_descriptor_config usbMIDIDescriptor_Config = {
         .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
         .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | MIDI_ENDPOINT_TX), // PATCH
         .bmAttributes     = USB_EP_TYPE_BULK,
-        .wMaxPacketSize   = USB_MIDI_TX_EPSIZE,
+        .wMaxPacketSize   = 64, // PATCH
         .bInterval        = 0x00,
     },
 
@@ -236,11 +236,11 @@ static const usb_descriptor_config usbMIDIDescriptor_Config = {
 /* I/O state */
 
 /* Received data */
-static volatile uint32 midiBufferRx[USB_MIDI_RX_EPSIZE/4];
+static volatile uint32 midiBufferRx[64/4];
 /* Read index into midiBufferRx */
 static volatile uint32 rx_offset = 0;
 /* Transmit data */
-static volatile uint32 midiBufferTx[USB_MIDI_TX_EPSIZE/4];
+static volatile uint32 midiBufferTx[64/4];
 /* Write index into midiBufferTx */
 static volatile uint32 tx_offset = 0;
 /* Number of bytes left to transmit */
@@ -250,6 +250,8 @@ static volatile uint8 transmitting = 0;
 /* Number of unread bytes */
 static volatile uint32 n_unread_packets = 0;
 
+uint32_t usb_midi_txEPSize = 64;
+static uint32_t rxEPSize = 64;
 
 // eventually all of this should be in a place for settings which can be written to flash.
 volatile uint8 myMidiChannel = DEFAULT_MIDI_CHANNEL;
@@ -258,26 +260,30 @@ volatile uint8 myMidiCable = DEFAULT_MIDI_CABLE;
 volatile uint8 myMidiID[] = { LEAFLABS_MMA_VENDOR_1,LEAFLABS_MMA_VENDOR_2,LEAFLABS_MMA_VENDOR_3,0};
 
 #define OUT_BYTE(s,v) out[(uint8*)&(s.v)-(uint8*)&s]
+#define OUT_16(s,v) *(uint16_t*)&OUT_BYTE(s,v) // OK on Cortex which can handle unaligned writes
 
 static void getMIDIPartDescriptor(uint8* out) {
     memcpy(out, &usbMIDIDescriptor_Config, sizeof(usbMIDIDescriptor_Config));
     // patch to reflect where the part goes in the descriptor
     OUT_BYTE(usbMIDIDescriptor_Config, AC_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, MS_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
+    OUT_BYTE(usbMIDIDescriptor_Config, AC_CS_Interface.baInterfaceNr) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, DataOutEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
     OUT_BYTE(usbMIDIDescriptor_Config, DataInEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
+    OUT_16(usbMIDIDescriptor_Config, DataInEndpoint.wMaxPacketSize) = usb_midi_txEPSize;
+    OUT_16(usbMIDIDescriptor_Config, DataOutEndpoint.wMaxPacketSize) = usb_midi_txEPSize;
 }
 
 static USBEndpointInfo midiEndpoints[2] = {
     {
         .callback = midiDataRxCb,
-        .bufferSize = USB_MIDI_RX_EPSIZE,
+        .bufferSize = 64, // patch
         .type = USB_EP_EP_TYPE_BULK, 
         .tx = 0
     },
     {
         .callback = midiDataTxCb,
-        .bufferSize = USB_MIDI_TX_EPSIZE,
+        .bufferSize = 64, // patch
         .type = USB_EP_EP_TYPE_BULK, 
         .tx = 1,
     }
@@ -294,6 +300,22 @@ USBCompositePart usbMIDIPart = {
     .usbNoDataSetup = usbMIDINoDataSetup,
     .endpoints = midiEndpoints
 };
+
+void usb_midi_setTXEPSize(uint32_t size) {
+    size = (size+3)/4*4;
+    if (size == 0 || size > 64)
+        size = 64;
+    midiEndpoints[1].bufferSize = size;
+    usb_midi_txEPSize = size;
+}
+
+void usb_midi_setRXEPSize(uint32_t size) {
+    size = (size+3)/4*4;
+    if (size == 0 || size > 64)
+        size = 64;
+    midiEndpoints[0].bufferSize = size;
+    rxEPSize = size;
+}
 
 /*
  * MIDI interface
@@ -312,9 +334,9 @@ uint32 usb_midi_tx(const uint32* buf, uint32 packets) {
         return 0;  /* return len */
     }
 
-    /* We can only put USB_MIDI_TX_EPSIZE bytes in the buffer. */
-    if (bytes > USB_MIDI_TX_EPSIZE) {
-        bytes = USB_MIDI_TX_EPSIZE;
+    /* We can only put usb_midi_txEPSize bytes in the buffer. */
+    if (bytes > usb_midi_txEPSize) {
+        bytes = usb_midi_txEPSize;
         packets=bytes/4;
     }
 
@@ -360,7 +382,7 @@ uint32 usb_midi_rx(uint32* buf, uint32 packets) {
     /* If all bytes have been read, re-enable the RX endpoint, which
      * was set to NAK when the current batch of bytes was received. */
     if (n_unread_packets == 0) {
-        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, USB_MIDI_RX_EPSIZE);
+        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, rxEPSize);
         usb_set_ep_rx_stat(USB_MIDI_RX_ENDP, USB_EP_STAT_RX_VALID);
         rx_offset = 0;
     }
@@ -407,7 +429,7 @@ static void midiDataRxCb(void) {
     LglSysexHandler((uint32*)midiBufferRx,(uint32*)&rx_offset,(uint32*)&n_unread_packets);
     
     if (n_unread_packets == 0) {
-        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, USB_MIDI_RX_EPSIZE);
+        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, rxEPSize);
         usb_set_ep_rx_stat(USB_MIDI_RX_ENDP, USB_EP_STAT_RX_VALID);
         rx_offset = 0;
     }

@@ -37,21 +37,26 @@
 #include <libmaple/ring_buffer.h>
 #include <libmaple/usart.h>
 
-static inline __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, usart_reg_map *regs) {
+static __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, usart_reg_map *regs) {
     /* Handling RXNEIE and TXEIE interrupts. 
      * RXNE signifies availability of a byte in DR.
      *
      * See table 198 (sec 27.4, p809) in STM document RM0008 rev 15.
      * We enable RXNEIE. */
     if ((regs->CR1 & USART_CR1_RXNEIE) && (regs->SR & USART_SR_RXNE)) {
+        if( regs->SR & USART_SR_FE || regs->SR & USART_SR_PE ) {
+           // framing error or parity error
+           regs->DR; //read and throw away the data, this clears FE and PE as well
+       } else {
 #ifdef USART_SAFE_INSERT
-        /* If the buffer is full and the user defines USART_SAFE_INSERT,
-         * ignore new bytes. */
-        rb_safe_insert(rb, (uint8)regs->DR);
+            /* If the buffer is full and the user defines USART_SAFE_INSERT,
+            * ignore new bytes. */
+            rb_safe_insert(rb, (uint8)regs->DR);
 #else
-        /* By default, push bytes around in the ring buffer. */
-        rb_push_insert(rb, (uint8)regs->DR);
+            /* By default, push bytes around in the ring buffer. */
+            rb_push_insert(rb, (uint8)regs->DR);
 #endif
+       }
     }
     /* TXE signifies readiness to send a byte to DR. */
     if ((regs->CR1 & USART_CR1_TXEIE) && (regs->SR & USART_SR_TXE)) {

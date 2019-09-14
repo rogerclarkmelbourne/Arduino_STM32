@@ -59,14 +59,15 @@ void UserToPMABufferCopy(const u8 *pbUsrBuf, u16 wPMABufAddr, u16 wNBytes)
 *******************************************************************************/
 void PMAToUserBufferCopy(u8 *pbUsrBuf, u16 wPMABufAddr, u16 wNBytes)
 {
-  u32 n = (wNBytes + 1) >> 1;/* /2*/
-  u32 i;
-  u32 *pdwVal;
-  pdwVal = (u32 *)(wPMABufAddr * 2 + PMAAddr);
-  for (i = n; i != 0; i--)
+  u16 * destPtr = (u16*)pbUsrBuf;
+  u32 * pdwVal = (u32 *)(wPMABufAddr * 2 + PMAAddr);
+  for (u16 i = wNBytes/2; i > 0; i--)
   {
-    *(u16*)pbUsrBuf++ = *pdwVal++;
-    pbUsrBuf++;
+    *destPtr++ = (u16)*pdwVal++;
+  }
+  if (wNBytes & 0x1) // odd value ?
+  {
+    *(u8*)destPtr = *(u8*)pdwVal;
   }
 }
 

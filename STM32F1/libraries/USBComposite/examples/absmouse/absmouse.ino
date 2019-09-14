@@ -1,13 +1,14 @@
-#include <USBHID.h>
+#include <USBComposite.h>
 
 const uint8_t reportDescription[] = {
   HID_ABS_MOUSE_REPORT_DESCRIPTOR(HID_MOUSE_REPORT_ID)
 };
 
-HIDAbsMouse mouse;
+USBHID HID;
+HIDAbsMouse mouse(HID);
 
 void setup(){
-  USBHID_begin_with_serial(reportDescription, sizeof(reportDescription));
+  HID.begin(reportDescription, sizeof(reportDescription));
   delay(1000);
   mouse.move(0,0);
   delay(1000);

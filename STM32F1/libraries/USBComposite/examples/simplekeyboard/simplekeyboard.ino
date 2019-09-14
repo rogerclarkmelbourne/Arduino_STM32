@@ -1,7 +1,10 @@
 #include <USBComposite.h>
 
+USBHID HID;
+HIDKeyboard Keyboard(HID);
+
 void setup() {
-  USBHID_begin_with_serial(HID_KEYBOARD);
+  HID.begin(HID_KEYBOARD);
   Keyboard.begin(); // useful to detect host capslock state and LEDs
   delay(1000);
 }

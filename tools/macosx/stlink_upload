@@ -1,2 +1,2 @@
 #!/bin/bash
-$(dirname $0)/stlink/st-flash write "$4" 0x8000000 
+$(dirname $0)/stlink/st-flash write "$1" 0x8000000 
