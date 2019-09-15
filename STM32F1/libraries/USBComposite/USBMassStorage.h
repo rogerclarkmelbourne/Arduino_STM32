@@ -2,7 +2,6 @@
 #define	USBMASSSTORAGE_H
 
 #include <boards.h>
-#include "USBComposite.h"
 #include "usb_generic.h"
 #include "usb_mass_mal.h"
 

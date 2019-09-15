@@ -34,7 +34,6 @@
 
 //#include <Print.h>
 #include <boards.h>
-#include <USBComposite.h>
 #include "usb_generic.h"
 
 /*
