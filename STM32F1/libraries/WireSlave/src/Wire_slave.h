@@ -82,8 +82,6 @@ protected:
 	void allocateRxBuffer(size_t length);
 	void allocateTxBuffer(size_t length);
 
-	void resetRxBuffer(void);
-	void resetTxBuffer(void);
 	uint8 process(bool stop = true);	// wrapper for i2c_master_xfer
 
 	inline void __attribute__((always_inline)) onReceiveService(i2c_msg* msg);

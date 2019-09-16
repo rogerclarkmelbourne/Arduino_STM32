@@ -213,11 +213,10 @@ typedef struct i2c_msg {
 #define I2C_DUTY_16_9           0x2           // 16/9 duty ratio
 #define I2C_REMAP               0x4           // Deprecated: I2C_REMAP for I2C1
 #define I2C_BUS_RESET           0x8           // Perform a bus reset
-#define I2C_SLAVE_USE_RX_BUFFER 0x10          // Use a buffered message when doing a slave recv
-#define I2C_SLAVE_USE_TX_BUFFER 0x20          // Use a buffered message when doing a slave transmit
+#define I2C_10BIT_ADDRESSING    0x10          // Enable 10-bit address mode
+#define I2C_SLAVE_MODE          0x20          // Set if configured for slave mode instead of master mode
 #define I2C_SLAVE_DUAL_ADDRESS  0x40          // Enable the dual slave address scheme
 #define I2C_SLAVE_GENERAL_CALL  0x80          // Enable the general call on address 0x00
-#define I2C_SLAVE_MODE          0x100         // Will be '1' if configured for slave mode, '0' if master mode
 
 void i2c_master_enable(i2c_dev *dev, uint32 flags);
 void i2c_slave_enable(i2c_dev *dev, uint32 flags);
@@ -229,46 +228,10 @@ int32 wait_for_state_change(i2c_dev *dev, i2c_state state, uint32 timeout);
 
 void i2c_bus_reset(const i2c_dev *dev);
 
+/* Auxiliary procedure for enabling an I2C peripheral; `flags' as for
+ * i2c_master_enable(). */
+void i2c_set_ccr_trise(i2c_dev *dev, uint32 flags);
 
-/* Start/stop conditions */
-
-///**
-// * @brief Generate a start condition on the bus.
-// * @param dev I2C device
-// */
-//static inline void i2c_start_condition(i2c_dev *dev, int8_t bSetAck) {
-//    uint32 cr1;
-//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-//                                     I2C_CR1_STOP  |
-//                                     I2C_CR1_PEC)) {
-//        ;
-//    }
-//    if (bSetAck) {
-//        dev->regs->CR1 = I2C_CR1_PE | I2C_CR1_START | I2C_CR1_ACK;
-//    } else {
-//        dev->regs->CR1 = I2C_CR1_PE | I2C_CR1_START;
-//    }
-//}
-
-///**
-// * @brief Generate a stop condition on the bus
-// * @param dev I2C device
-// */
-//static inline void i2c_stop_condition(i2c_dev *dev) {
-//    uint32 cr1;
-//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-//                                     I2C_CR1_STOP  |
-//                                     I2C_CR1_PEC)) {
-//        ;
-//    }
-//    dev->regs->CR1 |= I2C_CR1_STOP;
-//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-//                                     I2C_CR1_STOP  |
-//                                     I2C_CR1_PEC)) {
-//        ;
-//    }
-//
-//}
 
 /* IRQ enable/disable */
 
@@ -303,24 +266,6 @@ static inline void i2c_enable_irq(i2c_dev *dev, uint32 irqs) {
  */
 static inline void i2c_disable_irq(i2c_dev *dev, uint32 irqs) {
     dev->regs->CR2 &= ~irqs;
-}
-
-/* ACK/NACK */
-
-/**
- * @brief Enable I2C acknowledgment
- * @param dev I2C device
- */
-static inline void i2c_enable_ack(i2c_dev *dev) {
-    dev->regs->CR1 |= I2C_CR1_ACK;
-}
-
-/**
- * @brief Disable I2C acknowledgment
- * @param dev I2C device
- */
-static inline void i2c_disable_ack(i2c_dev *dev) {
-    dev->regs->CR1 &= ~I2C_CR1_ACK;
 }
 
 /**
@@ -365,31 +310,6 @@ extern void i2c_master_release_bus(const i2c_dev *dev);
 /* Miscellaneous low-level routines */
 
 void i2c_init(i2c_dev *dev);
-
-///**
-/// * @brief Turn on an I2C peripheral
-// * @param dev Device to enable
-// */
-//static inline void i2c_peripheral_enable(i2c_dev *dev) {
-//    dev->regs->CR1 |= I2C_CR1_PE;
-//}
-
-///**
-// * @brief Turn off an I2C peripheral
-// * @param dev Device to turn off
-// */
-//static inline void i2c_peripheral_disable(i2c_dev *dev) {
-//    dev->regs->CR1 &= ~I2C_CR1_PE;
-//}
-
-///**
-// * @brief Fill transmit register
-// * @param dev I2C device
-// * @param byte Byte to write
-// */
-//static inline void i2c_write(i2c_dev *dev, uint8 byte) {
-//    dev->regs->DR = byte;
-//}
 
 /**
  * @brief Set input clock frequency, in MHz
@@ -439,14 +359,6 @@ static inline void i2c_set_trise(i2c_dev *dev, uint32 trise) {
 /*
  * Slave support
  */
-
-/**
- * @brief Enable General Call to allow the  unit to respond on addr 0x00
- * @param dev I2C device
-  */
-static inline void i2c_slave_general_call_enable(i2c_dev *dev) {
-    dev->regs->CR1 |= I2C_CR1_ENGC;
-}
 
 /* callback functions */
 /* Callback handler for data received over the bus */

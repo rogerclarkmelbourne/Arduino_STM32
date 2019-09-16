@@ -90,8 +90,4 @@ static inline struct gpio_dev* sda_port(const i2c_dev *dev) {
     return (dev->gpio_port == NULL) ? dev->sda_port : dev->gpio_port;
 }
 
-/* Auxiliary procedure for enabling an I2C peripheral; `flags' as for
- * i2c_master_enable(). */
-void _i2c_set_ccr_trise(i2c_dev *dev, uint32 flags);
-
 #endif  /* _LIBMAPLE_I2C_PRIVATE_H_ */

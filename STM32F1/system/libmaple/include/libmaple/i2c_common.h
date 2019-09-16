@@ -58,7 +58,6 @@ typedef enum i2c_state {
     I2C_STATE_IDLE              = 1, /**< Idle */
     I2C_STATE_XFER_DONE         = 2, /**< Done with transfer */
     I2C_STATE_BUSY              = 3, /**< Busy */
-    I2C_STATE_SL_RX             = 4, /**< Slave receiving */
     I2C_STATE_ERROR             = -1 /**< Error occurred */
 } i2c_state;
 

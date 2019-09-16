@@ -88,8 +88,7 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);
 		dev_flags |= I2C_SLAVE_MODE;
 		if (myAddress2 != MASTER_ADDRESS) dev_flags |= I2C_SLAVE_DUAL_ADDRESS;
-		dev_flags |=	I2C_SLAVE_GENERAL_CALL				// TODO : Add support for enabling/disabling general call
-						| I2C_SLAVE_USE_RX_BUFFER | I2C_SLAVE_USE_TX_BUFFER;
+		dev_flags |= I2C_SLAVE_GENERAL_CALL;				// TODO : Add support for enabling/disabling general call
 
 		itc_slave_msg.addr = myAddress1;
 		itc_slave_msg.flags = 0;
@@ -464,22 +463,6 @@ inline void TwoWire::allocateTxBuffer(size_t length)
 	}
 }
 
-
-//  TODO : Can't we just drop these reset functions??
-/**
- * @brief  Reset Rx/Tx buffer content to 0
- */
-inline void TwoWire::resetRxBuffer(void)
-{
-	if (rxBuffer != nullptr)
-    	memset(rxBuffer, 0, rxBufferAllocated);
-}
-
-inline void TwoWire::resetTxBuffer(void)
-{
-	if (txBuffer != nullptr)
-		memset(txBuffer, 0, txBufferAllocated);
-}
 
 // Preinstantiate Objects //////////////////////////////////////////////////////
 

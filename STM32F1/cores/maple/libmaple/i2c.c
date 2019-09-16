@@ -60,8 +60,6 @@
 #define I2C_TIMEOUT_BUSY_FLAG 25U
 #endif
 
-static void set_ccr_trise(i2c_dev *dev, uint32 flags);
-
 /**
  * @brief Fill data register with slave address
  * @param dev I2C device
@@ -76,6 +74,8 @@ static inline void i2c_send_slave_addr(i2c_dev *dev, uint32 addr, uint32 rw) {
  * Simple debugging trail. Define I2C_DEBUG to turn on.
  */
 #ifdef I2C_DEBUG
+
+// TODO : Add back DEBUG support to the IRQ functions to set these crumbs
 
 #define NR_CRUMBS       128
 struct crumb {
@@ -184,7 +184,7 @@ void i2c_init(i2c_dev *dev) {
 #endif
 
 /**
- * @brief Initialize an I2C device as bus master
+ * @brief Initialize an I2C device as bus master or slave
  * @param dev Device to enable
  * @param flags Bitwise or of the following I2C options:
  *              I2C_FAST_MODE: 400 khz operation,
@@ -195,6 +195,10 @@ void i2c_init(i2c_dev *dev) {
  *              I2C_10BIT_ADDRESSING: Enable 10-bit addressing,
  *              I2C_REMAP: (deprecated, STM32F1 only) Remap I2C1 to SCL/PB8
  *                         SDA/PB9.
+ *              I2C_SLAVE_MODE: Configure as Slave
+ *              I2C_SLAVE_DUAL_ADDRESS: Slave can respond on 2 i2C addresses
+ *              I2C_SLAVE_GENERAL_CALL: SLA+W broadcast to all general call
+ *                                      listeners on bus. Addr 0x00
  */
 void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     /* If the device is already enabled, disable so we can reconfigure it */
@@ -218,7 +222,7 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
      * needed on master devices, but doesn't hurt to be set for slaves
      * too.
      */
-    set_ccr_trise(dev, flags);
+    i2c_set_ccr_trise(dev, flags);
 
     /* Enable event and buffer interrupts */
     nvic_irq_enable(dev->ev_nvic_line);
@@ -242,14 +246,14 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
          * for master, we'll wait until transmitting.
          */
         i2c_enable_irq(dev, I2C_IRQ_EVENT | I2C_IRQ_ERROR);
-	}
+    }
 
     dev->state = I2C_STATE_IDLE;
 }
 
 
 /**
- * @brief Initialize an I2C device as slave (and master)
+ * @brief Initialize an I2C device as slave
  * @param dev Device to enable
  * @param flags Bitwise or of the following I2C options:
  *              I2C_FAST_MODE: 400 khz operation,
@@ -260,13 +264,10 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
  *              I2C_10BIT_ADDRESSING: Enable 10-bit addressing,
  *              I2C_REMAP: (deprecated, STM32F1 only) Remap I2C1 to SCL/PB8
  *                         SDA/PB9.
+ *              I2C_SLAVE_MODE: Configure as Slave
  *              I2C_SLAVE_DUAL_ADDRESS: Slave can respond on 2 i2C addresses
  *              I2C_SLAVE_GENERAL_CALL: SLA+W broadcast to all general call
  *                                      listeners on bus. Addr 0x00
- *              I2C_SLAVE_USE_RX_BUFFER: Use a buffer to receive the incoming
- *                                       data. Callback at end of recv
- *              I2C_SLAVE_USE_TX_BUFFER: Use a buffer to transmit data.
- *                                       Callback will be called before tx
  */
 void i2c_slave_enable(i2c_dev *dev, uint32 flags)
 {
@@ -713,7 +714,7 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
 /*
  * CCR/TRISE configuration helper
  */
-static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
+void i2c_set_ccr_trise(i2c_dev *dev, uint32 flags) {
     uint32 ccr     = 0;
     uint32 trise   = 0;
     uint32 clk_mhz = _i2c_bus_clk(dev);
