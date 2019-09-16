@@ -46,7 +46,8 @@
  * I2C slave support added 2012 by Barry Carter. barry.carter@gmail.com, headfuzz.co.uk
  * 
  * Modified 2019 by Donna Whisnant to merge WireSlave changes with the core to
- * make slave mode work and without having conflicting data type defintions
+ * make slave mode work and without having conflicting data type defintions,
+ * and rewrote logic to function better.
  * 
  */
 
@@ -106,6 +107,8 @@ typedef struct i2c_msg {
 
 #define I2C_MSG_READ            0x1
 #define I2C_MSG_10BIT_ADDR      0x2
+#define I2C_MSG_NOSTOP          0x4
+
     /**
      * Bitwise OR of:
      * - I2C_MSG_READ (write is default)
@@ -222,57 +225,50 @@ void i2c_slave_enable(i2c_dev *dev, uint32 flags);
 #define I2C_ERROR_PROTOCOL      (-1)
 #define I2C_ERROR_TIMEOUT       (-2)
 int32 i2c_master_xfer(i2c_dev *dev, i2c_msg *msgs, uint16 num, uint32 timeout);
+int32 wait_for_state_change(i2c_dev *dev, i2c_state state, uint32 timeout);
 
 void i2c_bus_reset(const i2c_dev *dev);
 
-/**
- * @brief Disable an I2C device
- *
- * This function disables the corresponding peripheral and marks dev's
- * state as I2C_STATE_DISABLED.
- *
- * @param dev Device to disable.
- */
-static inline void i2c_disable(i2c_dev *dev) {
-    dev->regs->CR1 &= ~I2C_CR1_PE;
-    dev->state = I2C_STATE_DISABLED;
-}
 
 /* Start/stop conditions */
 
-/**
- * @brief Generate a start condition on the bus.
- * @param dev I2C device
- */
-static inline void i2c_start_condition(i2c_dev *dev) {
-    uint32 cr1;
-    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-                                     I2C_CR1_STOP  |
-                                     I2C_CR1_PEC)) {
-        ;
-    }
-    dev->regs->CR1 |= I2C_CR1_START;
-}
+///**
+// * @brief Generate a start condition on the bus.
+// * @param dev I2C device
+// */
+//static inline void i2c_start_condition(i2c_dev *dev, int8_t bSetAck) {
+//    uint32 cr1;
+//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
+//                                     I2C_CR1_STOP  |
+//                                     I2C_CR1_PEC)) {
+//        ;
+//    }
+//    if (bSetAck) {
+//        dev->regs->CR1 = I2C_CR1_PE | I2C_CR1_START | I2C_CR1_ACK;
+//    } else {
+//        dev->regs->CR1 = I2C_CR1_PE | I2C_CR1_START;
+//    }
+//}
 
-/**
- * @brief Generate a stop condition on the bus
- * @param dev I2C device
- */
-static inline void i2c_stop_condition(i2c_dev *dev) {
-    uint32 cr1;
-    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-                                     I2C_CR1_STOP  |
-                                     I2C_CR1_PEC)) {
-        ;
-    }
-    dev->regs->CR1 |= I2C_CR1_STOP;
-    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
-                                     I2C_CR1_STOP  |
-                                     I2C_CR1_PEC)) {
-        ;
-    }
-
-}
+///**
+// * @brief Generate a stop condition on the bus
+// * @param dev I2C device
+// */
+//static inline void i2c_stop_condition(i2c_dev *dev) {
+//    uint32 cr1;
+//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
+//                                     I2C_CR1_STOP  |
+//                                     I2C_CR1_PEC)) {
+//        ;
+//    }
+//    dev->regs->CR1 |= I2C_CR1_STOP;
+//    while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
+//                                     I2C_CR1_STOP  |
+//                                     I2C_CR1_PEC)) {
+//        ;
+//    }
+//
+//}
 
 /* IRQ enable/disable */
 
@@ -294,7 +290,6 @@ static inline void i2c_stop_condition(i2c_dev *dev) {
  *             I2C_IRQ_BUFFER (buffer interrupt).
  */
 static inline void i2c_enable_irq(i2c_dev *dev, uint32 irqs) {
-    _i2c_irq_priority_fixup(dev);
     dev->regs->CR2 |= irqs;
 }
 
@@ -328,6 +323,20 @@ static inline void i2c_disable_ack(i2c_dev *dev) {
     dev->regs->CR1 &= ~I2C_CR1_ACK;
 }
 
+/**
+ * @brief Disable an I2C device
+ *
+ * This function disables the corresponding peripheral and marks dev's
+ * state as I2C_STATE_DISABLED.
+ *
+ * @param dev Device to disable.
+ */
+static inline void i2c_disable(i2c_dev *dev) {
+    i2c_disable_irq(dev, I2C_IRQ_BUFFER | I2C_IRQ_EVENT | I2C_IRQ_ERROR);   // Make sure IRQs are disabled in case we are switching master<->slave modes
+    dev->regs->CR1 &= ~I2C_CR1_PE;
+    dev->state = I2C_STATE_DISABLED;
+}
+
 /* GPIO control */
 
 /**
@@ -357,30 +366,30 @@ extern void i2c_master_release_bus(const i2c_dev *dev);
 
 void i2c_init(i2c_dev *dev);
 
-/**
- * @brief Turn on an I2C peripheral
- * @param dev Device to enable
- */
-static inline void i2c_peripheral_enable(i2c_dev *dev) {
-    dev->regs->CR1 |= I2C_CR1_PE;
-}
+///**
+/// * @brief Turn on an I2C peripheral
+// * @param dev Device to enable
+// */
+//static inline void i2c_peripheral_enable(i2c_dev *dev) {
+//    dev->regs->CR1 |= I2C_CR1_PE;
+//}
 
-/**
- * @brief Turn off an I2C peripheral
- * @param dev Device to turn off
- */
-static inline void i2c_peripheral_disable(i2c_dev *dev) {
-    dev->regs->CR1 &= ~I2C_CR1_PE;
-}
+///**
+// * @brief Turn off an I2C peripheral
+// * @param dev Device to turn off
+// */
+//static inline void i2c_peripheral_disable(i2c_dev *dev) {
+//    dev->regs->CR1 &= ~I2C_CR1_PE;
+//}
 
-/**
- * @brief Fill transmit register
- * @param dev I2C device
- * @param byte Byte to write
- */
-static inline void i2c_write(i2c_dev *dev, uint8 byte) {
-    dev->regs->DR = byte;
-}
+///**
+// * @brief Fill transmit register
+// * @param dev I2C device
+// * @param byte Byte to write
+// */
+//static inline void i2c_write(i2c_dev *dev, uint8 byte) {
+//    dev->regs->DR = byte;
+//}
 
 /**
  * @brief Set input clock frequency, in MHz
@@ -388,11 +397,14 @@ static inline void i2c_write(i2c_dev *dev, uint8 byte) {
  * @param freq Frequency, in MHz. This must be at least 2, and at most
  *             the APB frequency of dev's bus. (For example, if
  *             rcc_dev_clk(dev) == RCC_APB1, freq must be at most
- *             PCLK1, in MHz). There is an additional limit of 46 MHz.
+ *             PCLK1, in MHz). There is an additional limit of 36 MHz.
  */
 static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq) {
-#define I2C_MAX_FREQ_MHZ 46
-    ASSERT(2 <= freq && freq <= _i2c_bus_clk(dev) && freq <= I2C_MAX_FREQ_MHZ);
+// TODO : I2C_MAX_FREQ_MHZ should be in the series header, as it's different on STM32F4 and others!
+#define I2C_MAX_FREQ_MHZ 36     // Limit on STM32F1 is 36 MHz (See ST Spec, which says: Higher than 0b100100 not allowed)
+    if (freq < 2) freq = 2;
+    if (freq > _i2c_bus_clk(dev)) freq = _i2c_bus_clk(dev);
+    if (freq > I2C_MAX_FREQ_MHZ) freq = I2C_MAX_FREQ_MHZ;
     uint32 cr2 = dev->regs->CR2;
     cr2 &= ~I2C_CR2_FREQ;
     cr2 |= freq;
@@ -410,10 +422,7 @@ static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq) {
  *            Fast/Standard mode)
  */
 static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val) {
-    uint32 ccr = dev->regs->CCR;
-    ccr &= ~I2C_CCR_CCR;
-    ccr |= val;
-    dev->regs->CCR = ccr;
+    dev->regs->CCR = val;
 }
 
 /**
@@ -446,7 +455,7 @@ void i2c_slave_attach_recv_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_recv_ca
 /* Callback handler for data being requested over the bus
  * The callback function must call i2c_write to get the data over the bus
  */
-void i2c_slave_attach_transmit_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_transmit_callback_func func);
+void i2c_slave_attach_transmit_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_xmit_callback_func func);
 
 /**
  * @brief Set the primary I2c slave address
@@ -455,6 +464,7 @@ void i2c_slave_attach_transmit_handler(i2c_dev *dev, i2c_msg *msg, i2c_slave_tra
   */
 static inline void i2c_slave_set_own_address(i2c_dev *dev, uint16 address)
 {
+    // TODO : Add support for 10-bit addresses
     dev->regs->OAR1 = (address << 1) | 0x4000;     // According to ST Docs: Note: Bit 14 should always be kept at 1 by software!
 }
 
@@ -465,6 +475,7 @@ static inline void i2c_slave_set_own_address(i2c_dev *dev, uint16 address)
   */
 static inline void i2c_slave_set_own_address2(i2c_dev *dev, uint16 address)
 {
+    // TODO : Add support for 10-bit addresses
     dev->regs->OAR2 = (address << 1) | I2C_OAR2_ENDUAL;
 }
 

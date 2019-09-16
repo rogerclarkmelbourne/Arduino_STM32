@@ -69,8 +69,8 @@ private:
 	bool transmitting;
 
 	uint32_t dev_flags;
-	i2c_msg itc_msg;
-	i2c_msg itc_slave_msg;
+	i2c_msg itc_msg;			// Master Tx/Rx Message and Slave Tx Message
+	i2c_msg itc_slave_msg;		// Slave Rx Message (since it's completely asynchronous)
 
 	// TODO : Add additional slave functions that relay the address
 	//	being accessed:
@@ -149,6 +149,9 @@ public:
 
 	// Minimum I2C Buffer Length:
 	static constexpr size_t BUFFER_LENGTH  = 36;		// Use 36 instead of 32 for minimum size so we can transfer 32 bytes of data in addition to addresses for EEPROM, etc.
+
+private:
+	uint8_t slaveRxBuffer[BUFFER_LENGTH];			// Fixed length slave IRQ receive buffer
 };
 
 extern TwoWire& Wire;

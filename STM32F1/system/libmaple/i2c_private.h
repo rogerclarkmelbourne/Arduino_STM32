@@ -33,30 +33,48 @@
 #define I2C_DEV_OLD(num, port, sda, scl)          \
     {                                             \
         .regs         = I2C##num##_BASE,          \
+        .msg          = NULL,                     \
+        .error_flags  = 0,                        \
+        .timestamp    = 0,                        \
         .gpio_port    = port,                     \
-        .scl_port     = NULL,                     \
         .sda_port     = NULL,                     \
+        .scl_port     = NULL,                     \
+        .msgs_left    = 0,                        \
         .sda_pin      = sda,                      \
         .scl_pin      = scl,                      \
         .clk_id       = RCC_I2C##num,             \
         .ev_nvic_line = NVIC_I2C##num##_EV,       \
         .er_nvic_line = NVIC_I2C##num##_ER,       \
         .state        = I2C_STATE_DISABLED,       \
+        .config_flags = 0,                        \
+        .i2c_slave_xmit_callback = NULL,          \
+        .i2c_slave_recv_callback = NULL,          \
+        .i2c_slave_xmit_msg = NULL,               \
+        .i2c_slave_recv_msg = NULL,               \
     }
 
 /* For new-style definitions (SDA/SCL may be on different GPIO devices) */
 #define I2C_DEV_NEW(num, sdaport, sdabit, sclport, sclbit)          \
     {                                                               \
         .regs         = I2C##num##_BASE,                            \
+        .msg          = NULL,                                       \
+        .error_flags  = 0,                                          \
+        .timestamp    = 0,                                          \
         .gpio_port    = NULL,                                       \
-        .scl_port     = sclport,                                    \
-        .scl_pin      = sclbit,                                     \
         .sda_port     = sdaport,                                    \
+        .scl_port     = sclport,                                    \
+        .msgs_left    = 0,                                          \
         .sda_pin      = sdabit,                                     \
+        .scl_pin      = sclbit,                                     \
         .clk_id       = RCC_I2C##num,                               \
         .ev_nvic_line = NVIC_I2C##num##_EV,                         \
         .er_nvic_line = NVIC_I2C##num##_ER,                         \
         .state        = I2C_STATE_DISABLED,                         \
+        .config_flags = 0,                                          \
+        .i2c_slave_xmit_callback = NULL,                            \
+        .i2c_slave_recv_callback = NULL,                            \
+        .i2c_slave_xmit_msg = NULL,                                 \
+        .i2c_slave_recv_msg = NULL,                                 \
     }
 
 void _i2c_irq_handler(i2c_dev *dev);

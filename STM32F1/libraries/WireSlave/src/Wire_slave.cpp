@@ -48,8 +48,8 @@ TwoWire::TwoWire(i2c_dev* i2cDevice)
 		txBufferLength(0),
 		transmitting(false),
 		dev_flags(0),
-		itc_msg(),
-		itc_slave_msg(),
+		itc_msg({}),
+		itc_slave_msg({}),
 		user_onRequest(nullptr),
 		user_onReceive(nullptr)
 {
@@ -82,10 +82,10 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 	// Note: Leave speed set as configured in dev_flags
 	//	in case user calls setClock() before begin().
 	if (myAddress1 == MASTER_ADDRESS) {
-		dev_flags &= I2C_FAST_MODE;		// Note: Clear I2C_SLAVE_MODE flag
+		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);		// Note: Clear I2C_SLAVE_MODE flag
 		i2c_master_enable(sel_hard, dev_flags);
 	} else {
-		dev_flags &= I2C_FAST_MODE;
+		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);
 		dev_flags |= I2C_SLAVE_MODE;
 		if (myAddress2 != MASTER_ADDRESS) dev_flags |= I2C_SLAVE_DUAL_ADDRESS;
 		dev_flags |=	I2C_SLAVE_GENERAL_CALL				// TODO : Add support for enabling/disabling general call
@@ -93,37 +93,45 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 
 		itc_slave_msg.addr = myAddress1;
 		itc_slave_msg.flags = 0;
-		itc_slave_msg.data = rxBuffer;
-		itc_slave_msg.length = 0;
-		itc_slave_msg.flags = 0;
+		itc_slave_msg.data = slaveRxBuffer;
+		itc_slave_msg.length = sizeof(slaveRxBuffer);	// length will be the size of the receive buffer that the IRQ routine can use
+		itc_slave_msg.xferred = 0;
 
-		// TODO why does enable only work before setting IRS and address?
-		i2c_slave_enable(sel_hard, dev_flags);
+		itc_msg.addr = 0;
+		itc_msg.flags = 0;
+		itc_msg.data = txBuffer;
+		itc_msg.length = 0;
+		itc_msg.xferred = 0;
 
 		if (sel_hard->regs == I2C1_BASE) {
 			// attach  receive handler
 			i2c_slave_attach_recv_handler(sel_hard, &itc_slave_msg, onReceiveService1);
 			// attach transmit handler
-			i2c_slave_attach_transmit_handler(sel_hard, &itc_slave_msg, onRequestService1);
+			i2c_slave_attach_transmit_handler(sel_hard, &itc_msg, onRequestService1);
 		}
 		#if WIRE_INTERFACES_COUNT > 1
 		else if (sel_hard->regs == I2C2_BASE) {
 			// attach  receive handler
 			i2c_slave_attach_recv_handler(sel_hard, &itc_slave_msg, onReceiveService2);
 			// attach transmit handler
-			i2c_slave_attach_transmit_handler(sel_hard, &itc_slave_msg, onRequestService2);
+			i2c_slave_attach_transmit_handler(sel_hard, &itc_msg, onRequestService2);
 		}
 		#endif
 
+		i2c_slave_enable(sel_hard, dev_flags);		// Must enable first so that RCC, etc, get configured
+
+		// TODO : Add support for 10-bit addresses	
 		i2c_slave_set_own_address(sel_hard, myAddress1);
-		i2c_slave_set_own_address2(sel_hard, myAddress2);
+		if (dev_flags & I2C_SLAVE_DUAL_ADDRESS) {
+			i2c_slave_set_own_address2(sel_hard, myAddress2);
+		}
 	}
 }
 
 void TwoWire::end(void)
 {
-	i2c_peripheral_disable(sel_hard);
-	i2c_master_release_bus(sel_hard);	// TODO is this required? (Note: It switches the port pins from AF back to GPIO)
+	i2c_disable(sel_hard);
+	i2c_master_release_bus(sel_hard);	// Release pins and switch the port pins from AF back to GPIO
 	free(txBuffer);
 	txBuffer = nullptr;
 	txBufferAllocated = 0;
@@ -150,7 +158,9 @@ void TwoWire::setClock(uint32_t frequencyHz)
 
 uint8 TwoWire::process(bool stop)
 {
+	if (!stop) itc_msg.flags |= I2C_MSG_NOSTOP;
 	int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
+	itc_msg.flags &= ~I2C_MSG_NOSTOP;
 
 	if (res == I2C_ERROR_PROTOCOL) {
 		if (sel_hard->error_flags & I2C_SR1_AF) { /* NACK */
@@ -186,7 +196,7 @@ uint8 TwoWire::requestFrom(uint16_t address, uint8_t num_bytes, uint32_t iaddres
 	itc_msg.addr = address;
 	itc_msg.flags = I2C_MSG_READ;
 	itc_msg.length = num_bytes;
-	itc_msg.data = &rxBuffer[rxBufferIndex];
+	itc_msg.data = rxBuffer;
 	if (process(sendStop) != 0) {
 		itc_msg.flags = 0;		// Clear message flags because we are no longer reading
 		return 0;				// Failure means we received no data back
@@ -220,7 +230,7 @@ void TwoWire::beginTransmission(uint16_t address)
 		txBufferLength = 0;
 
 		itc_msg.addr = address;
-		itc_msg.data = &txBuffer[txBufferIndex];
+		itc_msg.data = txBuffer;
 		itc_msg.length = 0;
 		itc_msg.flags = 0;
 	}
@@ -248,10 +258,6 @@ uint8_t TwoWire::endTransmission(bool sendStop)
 		itc_msg.length = txBufferLength;
 		itc_msg.flags = 0;
 		ret = process(sendStop);
-		txBufferIndex = 0;
-
-		// reset Tx buffer
-		resetTxBuffer();	// TODO : why? isn't this just unnecessary?
 
 		// reset tx buffer iterator vars
 		txBufferIndex = 0;
@@ -334,8 +340,7 @@ int TwoWire::read(void)
 
 	// get each successive byte on each call
 	if (rxBufferIndex < rxBufferLength) {
-		value = rxBuffer[rxBufferIndex];
-		++rxBufferIndex;
+		value = rxBuffer[rxBufferIndex++];
 	}
 
 	return value;
@@ -357,15 +362,19 @@ int TwoWire::peek(void)
 
 void TwoWire::flush(void)
 {
-	// TODO : Uh... why??  flush means force it
-	//	to be written, not to drop the buffers!
+	if (!isMaster()) {
+		// If this is a slave, let flush make sure
+		//	any pending onRequestService has completed
+		//	so we can turn around and reconfigure as a
+		//	master for multi-master bus transmission:
+		wait_for_state_change(sel_hard, I2C_STATE_IDLE, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
 
-	rxBufferIndex = 0;
-	rxBufferLength = 0;
-	resetRxBuffer();
-	txBufferIndex = 0;
-	txBufferLength = 0;
-	resetTxBuffer();
+		// Since this function has no return value and is
+		//	an override of the underlying flush() function
+		//	then force-transistion our state to idle to
+		//	cover error and timeout conditions:
+		sel_hard->state = I2C_STATE_IDLE;
+	}
 }
 
 // behind the scenes function that is called when data is received
@@ -376,22 +385,17 @@ void __attribute__((always_inline)) TwoWire::onReceiveService(i2c_msg* msg)
 		return;
 	}
 
-//	// don't bother if rx buffer is in use by a master requestFrom() op
-//	// i know this drops data, but it allows for slight stupidity
-//	// meaning, they may not have read all the master requestFrom() data yet
-//	if (rxBufferIndex < rxBufferLength) {
-//		return;
-//	}
+    // TODO : Add support to make the target slave address accessible to the calling app
 
 	// copy twi rx buffer into local read buffer, enabling new
 	//	reads to happen in parallel
-	allocateRxBuffer(msg->length);					// TODO : Should we limit/cap receive length?
+	allocateRxBuffer(msg->xferred);
 	rxBufferIndex = 0;
 	if (rxBuffer != nullptr) {
-		memcpy(rxBuffer, msg->data, msg->length);
-		rxBufferLength = msg->length;
+		memcpy(rxBuffer, msg->data, msg->xferred);
+		rxBufferLength = msg->xferred;
 		// alert user program
-		user_onReceive(msg->length);
+		user_onReceive(msg->xferred);
 	} else {
 		rxBufferLength = 0;
 		user_onReceive(0);		// Alert the user program that we received something, but couldn't transfer the data
@@ -404,7 +408,9 @@ void __attribute__((always_inline)) TwoWire::onRequestService(i2c_msg* msg)
 	// don't bother if user hasn't registered a callback
 	if (!user_onRequest) return;
 
-	// reset tx buffer iterator vars
+	// TODO : Add support to make the target slave address accessible to the calling app
+
+	// reset tx buffer iterator vars for slave data write
 	// !!! this will kill any pending pre-master sendTo() activity
 	txBufferIndex = 0;
 	txBufferLength = 0;
@@ -412,9 +418,11 @@ void __attribute__((always_inline)) TwoWire::onRequestService(i2c_msg* msg)
 	user_onRequest();
 
 	// update i2c_msg
-	msg->data = txBuffer;				// TODO : NO, this isn't safe!  txBuffer could get reallocated/cleared on subsequent calls before transmit IRQ has sent the message!!!!
-	msg->length = txBufferLength;		// TODO : And if the buffer is realloc in write, this copy of txBufferLength doesn't get updated!!! -- need to hand off this buffer completely!
-	msg->xferred = 0;
+	msg->data = txBuffer;				// This assignment is necessary as the writes in user function may change the pointer
+	msg->length = txBufferLength;
+
+	// Note: Caller can't do Master transmission in multi-master until Slave
+	//	transmission is complete! (they should call flush() before switching to master!)
 }
 
 // sets function called on slave write
