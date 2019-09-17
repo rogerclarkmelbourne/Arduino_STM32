@@ -168,6 +168,71 @@ void i2c_bus_reset(const i2c_dev *dev) {
 }
 
 /**
+ * 15-step process to clear stuck busy as outlined in the
+ * errata sheet.  Even though the errata sheet describes
+ * it for not being able to enter master mode.  It can
+ * also happen when entering slave mode.  A normal reset
+ * will clear the stuck busy, but leave you with a stuck
+ * start mode, which prevents a master from starting its
+ * sequence and prevents a slave from acknowledging its
+ * addresses when presented on the bus.
+ * 
+ * This stuck state can also be reset by external controllers.
+ * So if you are interfacing two of these micros together,
+ * this reset logic will also clear other STM32 controllers
+ * on the bus that are also in this stuck-state.
+ */
+static void i2c_clear_busy_flag_erratum(const i2c_dev *dev) {
+    // 1. Clear PE bit.
+    dev->regs->CR1 &= ~I2C_CR1_PE;
+
+    // 2. Configure the SCL and SDA I/Os as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+    i2c_master_release_bus(dev);
+
+    // 3. Check SCL and SDA High level in GPIOx_IDR.
+    while (gpio_read_bit(scl_port(dev), dev->scl_pin) == 0) { }
+    while (gpio_read_bit(sda_port(dev), dev->sda_pin) == 0) { }
+
+    // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+    gpio_write_bit(sda_port(dev), dev->sda_pin, 0);
+
+    // 5. Check SDA Low level in GPIOx_IDR.
+    while (gpio_read_bit(sda_port(dev), dev->sda_pin)) { }
+
+    // 6. Configure the SCL I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+    gpio_write_bit(scl_port(dev), dev->scl_pin, 0);
+
+    // 7. Check SCL Low level in GPIOx_IDR.
+    while (gpio_read_bit(scl_port(dev), dev->scl_pin)) { }
+
+    // 8. Configure the SCL I/O as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+    gpio_write_bit(scl_port(dev), dev->scl_pin, 1);
+
+    // 9. Check SCL High level in GPIOx_IDR.
+    while (gpio_read_bit(scl_port(dev), dev->scl_pin) == 0) { }
+
+    // 10. Configure the SDA I/O as General Purpose Output Open-Drain , High level (Write 1 to GPIOx_ODR).
+    gpio_write_bit(sda_port(dev), dev->sda_pin, 1);
+
+    // 11. Check SDA High level in GPIOx_IDR.
+    while (gpio_read_bit(sda_port(dev), dev->sda_pin) == 0) { }
+
+    // 12. Configure the SCL and SDA I/Os as Alternate function Open-Drain.
+    i2c_config_gpios(dev);
+
+    // 13. Set SWRST bit in I2Cx_CR1 register.
+    dev->regs->CR1 |= I2C_CR1_SWRST;
+    delay_us(10);
+
+    // 14. Clear SWRST bit in I2Cx_CR1 register.
+    dev->regs->CR1 &= ~I2C_CR1_SWRST;
+    delay_us(10);
+
+    // 15. Enable the I2C peripheral by setting the PE bit in I2Cx_CR1 register
+    // This step handled in i2c_master_enable
+}
+
+/**
  * @brief Initialize an I2C device and reset its registers to their
  *        default values.
  * @param dev Device to initialize.
@@ -201,11 +266,14 @@ void i2c_init(i2c_dev *dev) {
  *                                      listeners on bus. Addr 0x00
  */
 void i2c_master_enable(i2c_dev *dev, uint32 flags) {
-    /* If the device is already enabled, disable so we can reconfigure it */
-    i2c_disable(dev);
-
     /* Remap I2C if needed */
     _i2c_handle_remap(dev, flags);
+
+    /* Turn on clock */
+    i2c_init(dev);              // If clocks aren't running here, the reset and clear logic below doesn't work
+
+    /* If the device is already enabled, disable so we can reconfigure it */
+    i2c_disable(dev);
 
     /* Reset the bus. Clock out any hung slaves. */
     /* Note that this call reconfigs the port pins as GPIO instead of AF */
@@ -213,9 +281,12 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
         i2c_bus_reset(dev);
     }
 
-    /* Turn on clock and set GPIO modes to AF */
+    if (flags & I2C_PUP_RESET) {
+        i2c_clear_busy_flag_erratum(dev);
+    }
+
+    /* Set GPIO modes to AF */
     i2c_config_gpios(dev);
-    i2c_init(dev);
 
     /* Configure clock and rise time, for both master and slave devices.
      * As per ST specs, CR2 must be set for both.  CCR and TRISE is only

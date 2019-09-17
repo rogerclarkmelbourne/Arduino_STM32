@@ -47,6 +47,7 @@ TwoWire::TwoWire(i2c_dev* i2cDevice)
 		txBufferIndex(0),
 		txBufferLength(0),
 		transmitting(false),
+		haveReset(false),
 		dev_flags(0),
 		itc_msg({}),
 		itc_slave_msg({}),
@@ -83,7 +84,7 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 	//	in case user calls setClock() before begin().
 	if (myAddress1 == MASTER_ADDRESS) {
 		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);		// Note: Clear I2C_SLAVE_MODE flag
-		i2c_master_enable(sel_hard, dev_flags);
+		i2c_master_enable(sel_hard, dev_flags | (!haveReset ? I2C_PUP_RESET : 0));
 	} else {
 		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);
 		dev_flags |= I2C_SLAVE_MODE;
@@ -117,7 +118,7 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 		}
 		#endif
 
-		i2c_slave_enable(sel_hard, dev_flags);		// Must enable first so that RCC, etc, get configured
+		i2c_slave_enable(sel_hard, dev_flags | (!haveReset ? I2C_PUP_RESET : 0));		// Must enable first so that RCC, etc, get configured
 
 		// TODO : Add support for 10-bit addresses	
 		i2c_slave_set_own_address(sel_hard, myAddress1);
@@ -125,6 +126,8 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 			i2c_slave_set_own_address2(sel_hard, myAddress2);
 		}
 	}
+
+	haveReset = true;
 }
 
 void TwoWire::end(void)

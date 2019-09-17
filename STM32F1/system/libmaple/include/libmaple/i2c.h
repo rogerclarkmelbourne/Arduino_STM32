@@ -217,6 +217,7 @@ typedef struct i2c_msg {
 #define I2C_SLAVE_MODE          0x20          // Set if configured for slave mode instead of master mode
 #define I2C_SLAVE_DUAL_ADDRESS  0x40          // Enable the dual slave address scheme
 #define I2C_SLAVE_GENERAL_CALL  0x80          // Enable the general call on address 0x00
+#define I2C_PUP_RESET           0x100         // Power-Up Reset
 
 void i2c_master_enable(i2c_dev *dev, uint32 flags);
 void i2c_slave_enable(i2c_dev *dev, uint32 flags);

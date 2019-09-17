@@ -67,6 +67,7 @@ private:
 	size_t txBufferLength;
 
 	bool transmitting;
+	bool haveReset;				// Flag indicating initial power-on I2C reset status
 
 	uint32_t dev_flags;
 	i2c_msg itc_msg;			// Master Tx/Rx Message and Slave Tx Message
