@@ -158,18 +158,9 @@ private:
 
 
 /*
-    Should move this to within the class once tested out, just for tidyness
-*/
-static uint8_t ff = 0XFF;
-#if BOARD_NR_SPI >= 1
-static void (*_spi1_this);
-#endif
-#if BOARD_NR_SPI >= 2
-static void (*_spi2_this);
-#endif
-#if BOARD_NR_SPI >= 3
-static void (*_spi3_this);
-#endif
+ * Kept for compat.
+ */
+static const uint8_t ff = 0XFF;
 
 /**
  * @brief Wirish SPI interface.
@@ -433,6 +424,14 @@ private:
 	*/
 };
 
+/**
+* @brief Waits unti TXE (tx empy) flag set and BSY (busy) flag unset.
+*/
+static inline void waitSpiTxEnd(spi_dev *spi_d)
+{
+    while (spi_is_tx_empty(spi_d) == 0); // wait until TXE=1
+    while (spi_is_busy(spi_d) != 0); // wait until BSY=0
+}
 
 extern SPIClass SPI;//(1);// dummy params
 #endif

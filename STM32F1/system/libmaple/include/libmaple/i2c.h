@@ -198,7 +198,7 @@ typedef struct i2c_msg {
 #define I2C_DUTY_16_9           0x2           // 16/9 duty ratio
 /* Flag 0x4 is reserved; DO NOT USE. */
 #define I2C_BUS_RESET           0x8           // Perform a bus reset
-void i2c_master_enable(i2c_dev *dev, uint32 flags);
+void i2c_master_enable(i2c_dev *dev, uint32 flags, uint32 freq);
 
 #define I2C_ERROR_PROTOCOL      (-1)
 #define I2C_ERROR_TIMEOUT       (-2)
