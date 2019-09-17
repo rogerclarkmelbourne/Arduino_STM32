@@ -37,7 +37,7 @@
 #include <libmaple/ring_buffer.h>
 #include <libmaple/usart.h>
 
-static __always_inline void usart_irq(ring_buffer *rb, ring_buffer *wb, usart_reg_map *regs) {
+inline void usart_irq(ring_buffer *rb, ring_buffer *wb, usart_reg_map *regs) {
     /* Handling RXNEIE and TXEIE interrupts. 
      * RXNE signifies availability of a byte in DR.
      *

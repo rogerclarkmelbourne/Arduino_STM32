@@ -707,8 +707,7 @@ void dma_set_mem_n_addr(dma_dev *dev, dma_tube tube, int n,
  * @param tube Tube whose memory 0 address to set
  * @param addr Address to use as memory 0
  */
-static __always_inline void
-dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
+inline void dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
     dma_set_mem_n_addr(dev, tube, 0, addr);
 }
 
@@ -720,8 +719,7 @@ dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
  * @param tube Tube whose memory 1 address to set
  * @param addr Address to use as memory 1
  */
-static __always_inline void
-dma_set_mem1_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
+inline void dma_set_mem1_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
     dma_set_mem_n_addr(dev, tube, 1, addr);
 }
 
@@ -732,18 +730,18 @@ dma_set_mem_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
 }
 
 /* SM0AR and SM1AR are treated as though they have the same size */
-static inline dma_xfer_size dma_get_mem_size(dma_dev *dev, dma_tube tube) {
+inline dma_xfer_size dma_get_mem_size(dma_dev *dev, dma_tube tube) {
     return (dma_xfer_size)(dma_tube_regs(dev, tube)->SCR >> 13);
 }
 
-static inline dma_xfer_size dma_get_per_size(dma_dev *dev, dma_tube tube) {
+inline dma_xfer_size dma_get_per_size(dma_dev *dev, dma_tube tube) {
     return (dma_xfer_size)(dma_tube_regs(dev, tube)->SCR >> 11);
 }
 
 void dma_enable_fifo(dma_dev *dev, dma_tube tube);
 void dma_disable_fifo(dma_dev *dev, dma_tube tube);
 
-static __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
+inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
     return dma_tube_regs(dev, tube)->SFCR & DMA_SFCR_DMDIS;
 }
 
