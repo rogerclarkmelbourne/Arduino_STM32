@@ -48,6 +48,7 @@ TwoWire::TwoWire(i2c_dev* i2cDevice)
 		txBufferLength(0),
 		transmitting(false),
 		haveReset(false),
+		useGeneralCall(true),
 		dev_flags(0),
 		itc_msg({}),
 		itc_slave_msg({}),
@@ -89,7 +90,7 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 		dev_flags &= (I2C_FAST_MODE | I2C_DUTY_16_9);
 		dev_flags |= I2C_SLAVE_MODE;
 		if (myAddress2 != MASTER_ADDRESS) dev_flags |= I2C_SLAVE_DUAL_ADDRESS;
-		dev_flags |= I2C_SLAVE_GENERAL_CALL;				// TODO : Add support for enabling/disabling general call
+		if (useGeneralCall) dev_flags |= I2C_SLAVE_GENERAL_CALL;
 
 		itc_slave_msg.addr = myAddress1;
 		itc_slave_msg.flags = 0;

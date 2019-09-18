@@ -68,6 +68,7 @@ private:
 
 	bool transmitting;
 	bool haveReset;				// Flag indicating initial power-on I2C reset status
+	bool useGeneralCall;		// Flag indicating if I2C General Call slave address will be processed by slave
 
 	uint32_t dev_flags;
 	i2c_msg itc_msg;			// Master Tx/Rx Message and Slave Tx Message
@@ -147,6 +148,20 @@ public:
 	//	This will be either the primary or secondary address used in the call
 	//	to begin() or will be '0' if it was a General Call (broadcast) message.
 	uint16_t recvSlaveAddress() const { return itc_slave_msg.addr; }
+
+	// setGeneralCall : Set whether or not the I2C General Call Slave address (00)
+	//	will be processed.  Call this BEFORE calling begin() to activate a slave.
+	//	If begin() was already called, call end(), change the state, and call
+	//	begin() again, otherwise the state will not change.
+	//	The default for this option is 'true'.
+	void setGeneralCall(bool bEnable)
+	{
+		if (sel_hard->state == I2C_STATE_DISABLED) useGeneralCall = bEnable;	// Only allow change when disabled
+	}
+
+	// generalCall : Returns whether or not General Call Slave address (00)
+	//	has been (or will be) enabled on the port configured as a slave.
+	bool getGeneralCall() const { return useGeneralCall; }
 
 	using Print::write;
 
