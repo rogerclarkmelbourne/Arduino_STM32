@@ -96,6 +96,7 @@ __weak void __irq_i2c2_er(void) {
  * Internal APIs
  */
 
+#if defined(_I2C_HAVE_IRQ_FIXUP) && (_I2C_HAVE_IRQ_FIXUP)
 void _i2c_irq_priority_fixup(i2c_dev *dev) {
     /*
      * Important STM32 Errata:
@@ -133,3 +134,4 @@ void _i2c_irq_priority_fixup(i2c_dev *dev) {
 //  There's no need to bump the Error Interrupt's priority:
 //    nvic_irq_set_priority(dev->er_nvic_line, 0);
 }
+#endif

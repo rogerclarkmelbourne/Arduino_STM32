@@ -65,6 +65,7 @@ extern "C" {
  *   MHz. (This is for internal use only).
  *
  * - (optional) _I2C_HAVE_IRQ_FIXUP: Leave undefined, or define to 1.
+ *   Or define to 0 to completely disable the workaround.
  *   This is for internal use only. It's a hack to work around a
  *   silicon bug related to I2C IRQ pre-emption on some targets. If 1,
  *   the series header must also declare and implement a routine with
@@ -236,7 +237,7 @@ void i2c_set_ccr_trise(i2c_dev *dev, uint32 flags);
 
 /* IRQ enable/disable */
 
-#ifndef _I2C_HAVE_IRQ_FIXUP
+#if !defined(_I2C_HAVE_IRQ_FIXUP) || (_I2C_HAVE_IRQ_FIXUP == 0)
 /* The series header provides this if _I2C_HAVE_IRQ_FIXUP is defined,
  * but we need it either way. */
 #define _i2c_irq_priority_fixup(dev) ((void)0)
