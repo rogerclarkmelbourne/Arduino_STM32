@@ -387,8 +387,6 @@ void __attribute__((always_inline)) TwoWire::onReceiveService(i2c_msg* msg)
 		return;
 	}
 
-    // TODO : Add support to make the target slave address accessible to the calling app
-
 	// copy twi rx buffer into local read buffer, enabling new
 	//	reads to happen in parallel
 	allocateRxBuffer(msg->xferred);
@@ -409,8 +407,6 @@ void __attribute__((always_inline)) TwoWire::onRequestService(i2c_msg* msg)
 {
 	// don't bother if user hasn't registered a callback
 	if (!user_onRequest) return;
-
-	// TODO : Add support to make the target slave address accessible to the calling app
 
 	// reset tx buffer iterator vars for slave data write
 	// !!! this will kill any pending pre-master sendTo() activity

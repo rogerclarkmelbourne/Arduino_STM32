@@ -73,8 +73,6 @@ private:
 	i2c_msg itc_msg;			// Master Tx/Rx Message and Slave Tx Message
 	i2c_msg itc_slave_msg;		// Slave Rx Message (since it's completely asynchronous)
 
-	// TODO : Add additional slave functions that relay the address
-	//	being accessed:
 	void (*user_onRequest)(void);
 	void (*user_onReceive)(int quantity);
 
@@ -143,6 +141,12 @@ public:
 	virtual void flush(void) override;
 	void onReceive(void (*)(int quantity));
 	void onRequest(void (*)(void));
+
+	// recvSlaveAddress : Can be called from the user-defined onReceive handler
+	//	function to provide the slave address that the message was sent to.
+	//	This will be either the primary or secondary address used in the call
+	//	to begin() or will be '0' if it was a General Call (broadcast) message.
+	uint16_t recvSlaveAddress() const { return itc_slave_msg.addr; }
 
 	using Print::write;
 
