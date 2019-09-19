@@ -96,6 +96,7 @@ __weak void __irq_i2c2_er(void) {
  * Internal APIs
  */
 
+#if defined(_I2C_HAVE_IRQ_FIXUP) && (_I2C_HAVE_IRQ_FIXUP)
 void _i2c_irq_priority_fixup(i2c_dev *dev) {
     /*
      * Important STM32 Errata:
@@ -123,7 +124,14 @@ void _i2c_irq_priority_fixup(i2c_dev *dev) {
      * not be preempted. We set the i2c interrupt priority to be the highest
      * interrupt in the system (priority level 0). All other interrupts have
      * been initialized to priority level 16. See nvic_init().
+     * 
+     * TODO: Add alternate workaround in the Event Interrupt which involves
+     * switching the pins to GPIO mode and manually stretching the receive event.
+     * 
      */
     nvic_irq_set_priority(dev->ev_nvic_line, 0);
-    nvic_irq_set_priority(dev->er_nvic_line, 0);
+// Note: The fixup only involves the Event Interrupt.
+//  There's no need to bump the Error Interrupt's priority:
+//    nvic_irq_set_priority(dev->er_nvic_line, 0);
 }
+#endif
