@@ -133,7 +133,8 @@ void TwoWire::begin(uint16_t myAddress1, uint16_t myAddress2)
 
 void TwoWire::end(void)
 {
-	i2c_disable(sel_hard);
+	flush();							// Make sure all transmissions are complete
+	i2c_disable(sel_hard);				// Disable peripheral
 	i2c_master_release_bus(sel_hard);	// Release pins and switch the port pins from AF back to GPIO
 	free(txBuffer);
 	txBuffer = nullptr;
@@ -365,18 +366,24 @@ int TwoWire::peek(void)
 
 void TwoWire::flush(void)
 {
-	if (!isMaster()) {
-		// If this is a slave, let flush make sure
-		//	any pending onRequestService has completed
-		//	so we can turn around and reconfigure as a
-		//	master for multi-master bus transmission:
-		wait_for_state_change(sel_hard, I2C_STATE_IDLE, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
+	if (sel_hard->state != I2C_STATE_DISABLED) {		// Can't flush if we are disabled
+		if (!isMaster()) {
+			// If this is a slave, let flush make sure
+			//	any pending onRequestService has completed
+			//	so we can turn around and reconfigure as a
+			//	master for multi-master bus transmission:
+			wait_for_state_change(sel_hard, I2C_STATE_IDLE, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
 
-		// Since this function has no return value and is
-		//	an override of the underlying flush() function
-		//	then force-transistion our state to idle to
-		//	cover error and timeout conditions:
-		sel_hard->state = I2C_STATE_IDLE;
+			// Since this function has no return value and is
+			//	an override of the underlying flush() function,
+			//	then force-change our state to idle to cover
+			//	error and timeout conditions:
+			sel_hard->state = I2C_STATE_IDLE;
+		} else {
+			// If this is a master, finish any transmission
+			//	that hasn't been ended:
+			endTransmission(true);
+		}
 	}
 }
 
