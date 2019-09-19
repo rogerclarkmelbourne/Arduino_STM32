@@ -44,33 +44,33 @@
 
 /* return codes from endTransmission() */
 typedef enum EndTranmissionCodes {
-	SUCCESS = 0, /* transmission was successful */
-	EDATA = 1, /* too much data */
-	ENACKADDR = 2, /* received nack on transmit of address */
-	ENACKTRNS = 3, /* received nack on transmit of data */
-	EOTHER = 4, /* other error */
+	SUCCESS = 0,	/* transmission was successful */
+	EDATA = 1,		/* too much data */
+	ENACKADDR = 2,	/* received nack on transmit of address */
+	ENACKTRNS = 3,	/* received nack on transmit of data */
+	EOTHER = 4,		/* other error */
 } EndTranmissionCodes;
 
 class TwoWire: public Stream
 {
 private:
-	i2c_dev* sel_hard;
+	i2c_dev* sel_hard;			// Pointer to the I2C device for this interface
 
-	uint8_t *rxBuffer;		// lazy allocation
-	size_t rxBufferAllocated;
-	size_t rxBufferIndex;
-	size_t rxBufferLength;
+	uint8_t *rxBuffer;			// Receive Buffer -- lazily allocated
+	size_t rxBufferAllocated;	// Receive Buffer bytes allocated
+	size_t rxBufferIndex;		// Receive Buffer index for next byte to read
+	size_t rxBufferLength;		// Receive Buffer bytes stored within the space allocated
 
-	uint8_t *txBuffer;		// lazy allocation
-	size_t txBufferAllocated;
-	size_t txBufferIndex;
-	size_t txBufferLength;
+	uint8_t *txBuffer;			// Transmit Buffer -- lazily allocated
+	size_t txBufferAllocated;	// Transmit Buffer bytes allocated
+	size_t txBufferIndex;		// Transmit Buffer index of next byte to write (will always equal txBufferLength since we aren't doing random access, kept in case random access is added)
+	size_t txBufferLength;		// Transmit Buffer bytes stored within the space allocated
 
-	bool transmitting;
+	bool transmitting;			// Flag indicating a transmitting master (doesn't track slave transmissions)
 	bool haveReset;				// Flag indicating initial power-on I2C reset status
 	bool useGeneralCall;		// Flag indicating if I2C General Call slave address will be processed by slave
 
-	uint32_t dev_flags;
+	uint32_t dev_flags;			// Flags used for enabling master or slave
 	i2c_msg itc_msg;			// Master Tx/Rx Message and Slave Tx Message
 	i2c_msg itc_slave_msg;		// Slave Rx Message (since it's completely asynchronous)
 
@@ -121,27 +121,27 @@ public:
 	}
 #endif
 
-	void begin();	// master mode
-	void begin(uint16_t myAddress);	//slave mode
-	void begin(uint16_t myAddress1, uint16_t myAddress2);		// Dual-Address slave mode
-	void end();
-	void setClock(uint32_t frequencyHz);
-	void beginTransmission(uint16_t slaveAddress);
-	uint8_t endTransmission(bool sendStop = true);
+	void begin();											// Master mode
+	void begin(uint16_t myAddress);							// Single-Adddress Slave mode
+	void begin(uint16_t myAddress1, uint16_t myAddress2);	// Dual-Address Slave mode
+	void end();												// End either Master or Slave
+	void setClock(uint32_t frequencyHz);					// Set Master clock speed
+	void beginTransmission(uint16_t slaveAddress);			// Master transmission start
+	uint8_t endTransmission(bool sendStop = true);			// Master transmission end
 
-	uint8_t requestFrom(uint16_t slaveAddress, uint8_t quantity);
-	uint8_t requestFrom(uint16_t slaveAddress, uint8_t quantity, bool sendStop);
-	uint8_t requestFrom(uint16_t slaveAddress, uint8_t num_bytes, uint32_t iaddress, uint8_t isize, bool sendStop);
+	uint8_t requestFrom(uint16_t slaveAddress, uint8_t quantity);	// Master Request From Slave
+	uint8_t requestFrom(uint16_t slaveAddress, uint8_t quantity, bool sendStop);	// Master Request From Slave
+	uint8_t requestFrom(uint16_t slaveAddress, uint8_t num_bytes, uint32_t iaddress, uint8_t isize, bool sendStop);		// Master Request From Slave
 
-	virtual size_t write(uint8_t data) override;
+	virtual size_t write(uint8_t data) override;	// Write functions for either Master transmission or Slave onRequest handler
 	virtual size_t write(const void *data, uint32_t quantity) override;	// Note: this is the signature of the base Print::write function
 
-	virtual int available(void) override;
-	virtual int read(void) override;
-	virtual int peek(void) override;
-	virtual void flush(void) override;
-	void onReceive(void (*)(int quantity));
-	void onRequest(void (*)(void));
+	virtual int available(void) override;		// Bytes available in the receive buffer from either Master Request From or Slave onReceive handler
+	virtual int read(void) override;			// Read byte from receive buffer from either Master Request From or Slave onReceive handler
+	virtual int peek(void) override;			// Peek at next byte in receive buffer from either Master Request From or Slave onReceive handler
+	virtual void flush(void) override;			// Finish the last transmission and wait for I2C to go idle.   Used to switch Master->Slave or Slave->Master modes
+	void onReceive(void (*)(int quantity));		// Set Slave Receive Handler function
+	void onRequest(void (*)(void));				// Set Slave Request Handler function
 
 	// recvSlaveAddress : Can be called from the user-defined onReceive handler
 	//	function to provide the slave address that the message was sent to.
@@ -169,7 +169,7 @@ public:
 	static constexpr size_t BUFFER_LENGTH  = 36;		// Use 36 instead of 32 for minimum size so we can transfer 32 bytes of data in addition to addresses for EEPROM, etc.
 
 private:
-	uint8_t slaveRxBuffer[BUFFER_LENGTH];			// Fixed length slave IRQ receive buffer
+	uint8_t slaveRxBuffer[BUFFER_LENGTH];				// Fixed length slave IRQ receive buffer
 };
 
 extern TwoWire& Wire;

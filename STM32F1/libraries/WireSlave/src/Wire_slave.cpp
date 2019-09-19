@@ -209,7 +209,7 @@ uint8 TwoWire::requestFrom(uint16_t address, uint8_t num_bytes, uint32_t iaddres
 	rxBufferLength += itc_msg.xferred;
 	itc_msg.flags = 0;
 
-	return rxBufferLength;
+	return itc_msg.xferred;
 }
 
 uint8_t TwoWire::requestFrom(uint16_t address, uint8_t quantity, bool sendStop)
@@ -293,7 +293,7 @@ size_t TwoWire::write(uint8_t data)
 		txBuffer[txBufferIndex] = data;
 		++txBufferIndex;
 		// update amount in buffer
-		txBufferLength = txBufferIndex;				// TODO : What's the point??  in Index vs Length
+		txBufferLength = txBufferIndex;
 	}
 	return 1;
 }
@@ -321,7 +321,7 @@ size_t TwoWire::write(const void *data, uint32_t quantity)
 		memcpy(&txBuffer[txBufferIndex], data, quantity);
 		txBufferIndex = txBufferIndex + quantity;
 		// update amount in buffer
-		txBufferLength = txBufferIndex;				// TODO : What's the point??  in Index vs Length
+		txBufferLength = txBufferIndex;
 		return quantity;
 	}
 }
@@ -443,9 +443,10 @@ void TwoWire::onRequest(void (*function)(void))
  */
 inline void TwoWire::allocateRxBuffer(size_t length)
 {
-	// TODO : allocate in increments of BUFFER_LENGTh so we don't fragment the heap
 	// By default we allocate BUFFER_LENGTH bytes. It is the min size of the buffer.
 	if (length < BUFFER_LENGTH) length = BUFFER_LENGTH;
+	// Allocate in increments of BUFFER_LENGTH so we don't fragment the heap:
+	if ((length % BUFFER_LENGTH) != 0) length += (BUFFER_LENGTH - (length % BUFFER_LENGTH));
 	if (rxBufferAllocated < length) {
 		rxBuffer = (uint8_t *) realloc(rxBuffer, length * sizeof(uint8_t));
 		rxBufferAllocated = (rxBuffer != nullptr) ? length : 0;
@@ -454,9 +455,10 @@ inline void TwoWire::allocateRxBuffer(size_t length)
 
 inline void TwoWire::allocateTxBuffer(size_t length)
 {
-	// TODO : allocate in increments of BUFFER_LENGTh so we don't fragment the heap
 	// By default we allocate BUFFER_LENGTH bytes. It is the min size of the buffer.
 	if (length < BUFFER_LENGTH) length = BUFFER_LENGTH;
+	// Allocate in increments of BUFFER_LENGTH so we don't fragment the heap:
+	if ((length % BUFFER_LENGTH) != 0) length += (BUFFER_LENGTH - (length % BUFFER_LENGTH));
 	if (txBufferAllocated < length) {
 		txBuffer = (uint8_t *) realloc(txBuffer, length * sizeof(uint8_t));
 		txBufferAllocated = (txBuffer != nullptr) ? length : 0;
