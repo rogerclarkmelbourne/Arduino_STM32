@@ -163,7 +163,7 @@ void TwoWire::setClock(uint32_t frequencyHz)
 uint8 TwoWire::process(bool stop)
 {
 	if (!stop) itc_msg.flags |= I2C_MSG_NOSTOP;
-	int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
+	int8 res = i2c_master_xfer(sel_hard, &itc_msg, 1, getTimeout());
 	itc_msg.flags &= ~I2C_MSG_NOSTOP;
 
 	if (res == I2C_ERROR_PROTOCOL) {
@@ -372,7 +372,7 @@ void TwoWire::flush(void)
 			//	any pending onRequestService has completed
 			//	so we can turn around and reconfigure as a
 			//	master for multi-master bus transmission:
-			wait_for_state_change(sel_hard, I2C_STATE_IDLE, 0);		// <<< TODO : Proper timeout so we don't get stuck!!!
+			wait_for_state_change(sel_hard, I2C_STATE_IDLE, getTimeout());
 
 			// Since this function has no return value and is
 			//	an override of the underlying flush() function,
