@@ -83,7 +83,7 @@ void setup() {
   * general call (accepts data writes to 0x00 on a broadcast basis)
   * 
   */
-  i2c_slave_enable(I2C1, I2C_FAST_MODE | I2C_SLAVE_DUAL_ADDRESS | I2C_SLAVE_GENERAL_CALL);
+  i2c_slave_enable(I2C1, I2C_FAST_MODE | I2C_SLAVE_DUAL_ADDRESS | I2C_SLAVE_GENERAL_CALL, 400000);
 
   // attach  receive handler
   i2c_slave_attach_recv_handler(I2C1, &rxMsg, funcrx);
