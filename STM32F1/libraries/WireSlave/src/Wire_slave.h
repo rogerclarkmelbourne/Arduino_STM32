@@ -96,7 +96,7 @@ protected:
 	static void onReceiveService2(i2c_msg*);
 #endif
 
-	TwoWire(i2c_dev* i2cDevice);
+	TwoWire(i2c_dev* i2cDevice, uint32_t flags = I2C_SLAVE_GENERAL_CALL, uint32_t frequencyHz = 100000);
 	TwoWire() = delete;
 	TwoWire(const TwoWire&) = delete;
 	TwoWire& operator=(const TwoWire&) = delete;

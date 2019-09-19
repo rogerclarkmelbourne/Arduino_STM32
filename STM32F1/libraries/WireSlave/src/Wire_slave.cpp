@@ -36,7 +36,7 @@ static constexpr uint16_t MASTER_ADDRESS = 0x01;			// Use 0x01 since it's an inv
 
 // Constructors ////////////////////////////////////////////////////////////////
 
-TwoWire::TwoWire(i2c_dev* i2cDevice)
+TwoWire::TwoWire(i2c_dev* i2cDevice, uint32_t flags, uint32_t frequencyHz)
 	:	sel_hard(i2cDevice),
 		rxBuffer(nullptr),
 		rxBufferAllocated(0),
@@ -48,11 +48,11 @@ TwoWire::TwoWire(i2c_dev* i2cDevice)
 		txBufferLength(0),
 		transmitting(false),
 		haveReset(false),
-		useGeneralCall(true),
-		dev_flags(0),
+		useGeneralCall((flags & I2C_SLAVE_GENERAL_CALL) ? true : false),
+		dev_flags(flags),
 		itc_msg({}),
 		itc_slave_msg({}),
-		frequency(100000),
+		frequency((flags & I2C_FAST_MODE) ? 400000 : frequencyHz),
 		user_onRequest(nullptr),
 		user_onReceive(nullptr)
 {
