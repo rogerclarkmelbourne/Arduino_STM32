@@ -30,7 +30,7 @@
  * @brief Private USART routines.
  */
 
-#include "usart_private.h"
+#include <libmaple/usart.h>
 #include <libmaple/rcc.h>
 #include <libmaple/stm32.h>
 
