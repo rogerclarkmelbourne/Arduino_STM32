@@ -106,7 +106,7 @@ void detachInterrupt(uint8 pin);
  *
  * @see noInterrupts()
  */
-static __always_inline void interrupts() {
+inline void interrupts() {
     nvic_globalirq_enable();
 }
 
@@ -120,7 +120,7 @@ static __always_inline void interrupts() {
  *
  * @see interrupts()
  */
-static __always_inline void noInterrupts() {
+inline void noInterrupts() {
     nvic_globalirq_disable();
 }
 
