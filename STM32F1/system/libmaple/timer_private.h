@@ -121,7 +121,7 @@
  * line may be shared with another timer. For example, the timer 1
  * update interrupt shares an IRQ line with the timer 10 interrupt on
  * STM32F1 (XL-density), STM32F2, and STM32F4. */
-inline void dispatch_single_irq(timer_dev *dev,
+__attribute__((always_inline)) void dispatch_single_irq(timer_dev *dev,
                                 timer_interrupt_id iid,
                                 uint32 irq_mask) {
     timer_bas_reg_map *regs = (dev->regs).bas;
@@ -145,15 +145,15 @@ inline void dispatch_single_irq(timer_dev *dev,
         }                                                               \
     } while (0)
 
-inline void dispatch_adv_brk(timer_dev *dev) {
+__attribute__((always_inline)) void dispatch_adv_brk(timer_dev *dev) {
     dispatch_single_irq(dev, TIMER_BREAK_INTERRUPT, TIMER_SR_BIF);
 }
 
-inline void dispatch_adv_up(timer_dev *dev) {
+__attribute__((always_inline)) void dispatch_adv_up(timer_dev *dev) {
     dispatch_single_irq(dev, TIMER_UPDATE_INTERRUPT, TIMER_SR_UIF);
 }
 
-inline void dispatch_adv_trg_com(timer_dev *dev) {
+__attribute__((always_inline)) void dispatch_adv_trg_com(timer_dev *dev) {
     timer_adv_reg_map *regs = (dev->regs).adv;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -168,7 +168,7 @@ inline void dispatch_adv_trg_com(timer_dev *dev) {
     regs->SR = ~handled;
 }
 
-inline void dispatch_adv_cc(timer_dev *dev) {
+__attribute__((always_inline)) void dispatch_adv_cc(timer_dev *dev) {
     timer_adv_reg_map *regs = (dev->regs).adv;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
@@ -182,7 +182,7 @@ inline void dispatch_adv_cc(timer_dev *dev) {
     regs->SR = ~handled;
 }
 
-inline void dispatch_general(timer_dev *dev) {
+__attribute__((always_inline)) void dispatch_general(timer_dev *dev) {
     timer_gen_reg_map *regs = (dev->regs).gen;
     uint32 dsr = regs->DIER & regs->SR;
     void (**hs)(void) = dev->handlers;
