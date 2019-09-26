@@ -33,7 +33,7 @@ uint32_t pulseIn( uint32_t pin, uint32_t state, uint32_t timeout )
    // pulse width measuring loop and achieve finer resolution.  calling
    // digitalRead() instead yields much coarser resolution.
  
-   __io uint32_t * const idr = portInputRegister(digitalPinToPort(pin));
+   __IO uint32_t * const idr = portInputRegister(digitalPinToPort(pin));
    const uint32_t bit = digitalPinToBitMask(pin);
    const uint32_t stateMask = (state ? bit:0);
 

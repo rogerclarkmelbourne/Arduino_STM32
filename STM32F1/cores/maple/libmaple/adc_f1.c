@@ -72,7 +72,7 @@ adc_dev *ADC3 = &adc3;
     adc irq routine. 
     Added by bubulindo. 
 */
-void __irq_adc() {
+__weak void __irq_adc() {
     //get status
     uint32 adc_sr = ADC1->regs->SR;
 //End Of Conversion
@@ -107,7 +107,7 @@ void __irq_adc() {
     added by bubulindo
 */
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-void __irq_adc3() {
+__weak void __irq_adc3() {
     //get status
     uint32 adc_sr = ADC3->regs->SR;
 //End Of Conversion
@@ -175,8 +175,8 @@ void adc_attach_interrupt(adc_dev *dev,
  * @param dev adc device
  */
 void adc_calibrate(adc_dev *dev) {
-    __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
-    __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
+    __IO uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
+    __IO uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
 
     *rstcal_bit = 1;
     while (*rstcal_bit)

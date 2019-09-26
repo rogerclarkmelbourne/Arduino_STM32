@@ -35,8 +35,6 @@
 #include <libmaple/nvic.h>
 #include <libmaple/bitband.h>
 
-static inline void dispatch_single_exti(uint32 exti_num);
-static inline void dispatch_extis(uint32 start, uint32 stop);
 
 /*
  * Internal state
@@ -47,7 +45,7 @@ typedef struct exti_channel {
     void *arg;
 } exti_channel;
 
-static exti_channel exti_channels[] = {
+exti_channel exti_channels[] = {
     { .handler = NULL, .arg = NULL },  // EXTI0
     { .handler = NULL, .arg = NULL },  // EXTI1
     { .handler = NULL, .arg = NULL },  // EXTI2
@@ -200,7 +198,7 @@ void exti_detach_interrupt(exti_num num) {
  * Private routines
  */
 
-void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
+void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port) {
     uint32 shift = 4 * (num % 4);
     uint32 cr = *exti_cr;
     cr &= ~(0xF << shift);
@@ -208,57 +206,9 @@ void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
     *exti_cr = cr;
 }
 
-/*
- * Interrupt handlers
- */
-
-void __irq_exti0(void) {
-    dispatch_single_exti(EXTI0);
-}
-
-void __irq_exti1(void) {
-    dispatch_single_exti(EXTI1);
-}
-
-void __irq_exti2(void) {
-    dispatch_single_exti(EXTI2);
-}
-
-void __irq_exti3(void) {
-    dispatch_single_exti(EXTI3);
-}
-
-void __irq_exti4(void) {
-    dispatch_single_exti(EXTI4);
-}
-
-void __irq_exti9_5(void) {
-    dispatch_extis(5, 9);
-}
-
-void __irq_exti15_10(void) {
-    dispatch_extis(10, 15);
-}
-
-/*
- * Auxiliary functions
- */
-
-/* Clear the pending bits for EXTIs whose bits are set in exti_msk.
- *
- * If a pending bit is cleared as the last instruction in an ISR, it
- * won't actually be cleared in time and the ISR will fire again.  To
- * compensate, this function NOPs for 2 cycles after clearing the
- * pending bits to ensure it takes effect. */
-static inline __always_inline void clear_pending_msk(uint32 exti_msk) {
-    EXTI_BASE->PR = exti_msk;
-    asm volatile("nop");
-    asm volatile("nop");
-}
-
 /* This dispatch routine is for non-multiplexed EXTI lines only; i.e.,
  * it doesn't check EXTI_PR. */
-static inline __always_inline void dispatch_single_exti(uint32 exti) {
+__attribute__((always_inline)) void dispatch_single_exti(uint32 exti) {
     voidArgumentFuncPtr handler = exti_channels[exti].handler;
 
     if (!handler) {
@@ -266,11 +216,13 @@ static inline __always_inline void dispatch_single_exti(uint32 exti) {
     }
 
     handler(exti_channels[exti].arg);
-    clear_pending_msk(1U << exti);
+    EXTI_BASE->PR = (1U << exti);
+    asm volatile("nop");
+    asm volatile("nop");
 }
 
 /* Dispatch routine for EXTIs which share an IRQ. */
-static inline __always_inline void dispatch_extis(uint32 start, uint32 stop) {
+__attribute__((always_inline)) void dispatch_extis(uint32 start, uint32 stop) {
     uint32 pr = EXTI_BASE->PR;
     uint32 handled_msk = 0;
     uint32 exti;
@@ -288,5 +240,45 @@ static inline __always_inline void dispatch_extis(uint32 start, uint32 stop) {
     }
 
     /* Clear the pending bits for handled EXTIs. */
-    clear_pending_msk(handled_msk);
+    EXTI_BASE->PR = (handled_msk);
+    asm volatile("nop");
+    asm volatile("nop");
 }
+
+
+/*
+ * Interrupt handlers
+ */
+
+__weak void __irq_exti0(void) {
+    dispatch_single_exti(EXTI0);
+}
+
+__weak void __irq_exti1(void) {
+    dispatch_single_exti(EXTI1);
+}
+
+__weak void __irq_exti2(void) {
+    dispatch_single_exti(EXTI2);
+}
+
+__weak void __irq_exti3(void) {
+    dispatch_single_exti(EXTI3);
+}
+
+__weak void __irq_exti4(void) {
+    dispatch_single_exti(EXTI4);
+}
+
+__weak void __irq_exti9_5(void) {
+    dispatch_extis(5, 9);
+}
+
+__weak void __irq_exti15_10(void) {
+    dispatch_extis(10, 15);
+}
+
+/*
+ * Auxiliary functions
+ */
+

@@ -53,15 +53,15 @@ extern "C" {
 
 /** SPI register map type. */
 typedef struct spi_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 CRCPR;          /**< CRC polynomial register */
-    __io uint32 RXCRCR;         /**< RX CRC register */
-    __io uint32 TXCRCR;         /**< TX CRC register */
-    __io uint32 I2SCFGR;        /**< I2S configuration register */
-    __io uint32 I2SPR;          /**< I2S prescaler register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 SR;             /**< Status register */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 CRCPR;          /**< CRC polynomial register */
+    __IO uint32 RXCRCR;         /**< RX CRC register */
+    __IO uint32 TXCRCR;         /**< TX CRC register */
+    __IO uint32 I2SCFGR;        /**< I2S configuration register */
+    __IO uint32 I2SPR;          /**< I2S prescaler register */
 } spi_reg_map;
 
 /*

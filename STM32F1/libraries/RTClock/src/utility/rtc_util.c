@@ -168,8 +168,10 @@ uint32 rtc_get_count() {
 	rtc_clear_sync();
 	rtc_wait_sync();
 	rtc_wait_finished();
-	h = RTC->regs->CNTH & 0xffff;
-	l = RTC->regs->CNTL & 0xffff;
+	do {
+		h = RTC->regs->CNTH & 0xffff;
+		l = RTC->regs->CNTL & 0xffff;
+	} while (h != (RTC->regs->CNTH & 0xffff));
 	return (h << 16) | l;
 }
 
@@ -211,8 +213,10 @@ uint32 rtc_get_divider() {
 	rtc_clear_sync();
 	rtc_wait_sync();
 	rtc_wait_finished();
-	h = RTC->regs->DIVH & 0x000f;
-	l = RTC->regs->DIVL & 0xffff;
+	do {
+		h = RTC->regs->DIVH & 0x000f;
+		l = RTC->regs->DIVL & 0xffff;
+	} while (h != (RTC->regs->DIVH & 0x000f));
 	return (h << 16) | l;
 }
 

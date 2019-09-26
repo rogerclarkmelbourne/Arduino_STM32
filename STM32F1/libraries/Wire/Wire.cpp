@@ -50,7 +50,7 @@ uint8 TwoWire::process(uint8 stop) {
             res = EOTHER;
         }
         i2c_disable(sel_hard);
-        i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags));
+        i2c_master_enable(sel_hard, dev_flags, frequency);
     }
     return res;
 }
@@ -60,8 +60,9 @@ uint8 TwoWire::process(){
 }
 
 // TODO: Add in Error Handling if devsel is out of range for other Maples
-TwoWire::TwoWire(uint8 dev_sel, uint8 flags) {
-    if (dev_sel == 1) {
+TwoWire::TwoWire(uint8 dev_sel, uint8 flags, uint32 freq) {
+    
+	if (dev_sel == 1) {
         sel_hard = I2C1;
     } else if (dev_sel == 2) {
         sel_hard = I2C2;
@@ -69,6 +70,12 @@ TwoWire::TwoWire(uint8 dev_sel, uint8 flags) {
         ASSERT(1);
     }
     dev_flags = flags;
+
+	if (freq == 100000 && (flags & I2C_FAST_MODE))  // compatibility patch
+		frequency = 400000;
+	else
+		frequency = freq;
+
 }
 
 TwoWire::~TwoWire() {
@@ -77,7 +84,7 @@ TwoWire::~TwoWire() {
 }
 
 void TwoWire::begin(uint8 self_addr) {
-    i2c_master_enable(sel_hard, dev_flags);
+    i2c_master_enable(sel_hard, dev_flags, frequency);
 }
 
 void TwoWire::end() {
@@ -87,19 +94,11 @@ void TwoWire::end() {
 
 void TwoWire::setClock(uint32_t frequencyHz)
 {
-	switch(frequencyHz)
-	{
-		case 400000:
-			dev_flags |= I2C_FAST_MODE;// set FAST_MODE bit
-			break;
-		case 100000:
-		default:
-			dev_flags &= ~I2C_FAST_MODE;// clear FAST_MODE bit
-			break;
-	}
+	
 	if (sel_hard->regs->CR1 & I2C_CR1_PE){
+		frequency = frequencyHz;
 	    i2c_disable(sel_hard);
-	    i2c_master_enable(sel_hard, dev_flags);
+	    i2c_master_enable(sel_hard, dev_flags, frequency);
 	}
 }
 

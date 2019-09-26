@@ -44,46 +44,46 @@ extern "C"{
 
 /** STM32F2 RCC register map type */
 typedef struct rcc_reg_map {
-    __io uint32 CR;             /**< Clock control register */
-    __io uint32 PLLCFGR;        /**< PLL configuration register */
-    __io uint32 CFGR;           /**< Clock configuration register */
-    __io uint32 CIR;            /**< Clock interrupt register */
-    __io uint32 AHB1RSTR;       /**< AHB1 peripheral reset register */
-    __io uint32 AHB2RSTR;       /**< AHB2 peripheral reset register */
-    __io uint32 AHB3RSTR;       /**< AHB3 peripheral reset register */
+    __IO uint32 CR;             /**< Clock control register */
+    __IO uint32 PLLCFGR;        /**< PLL configuration register */
+    __IO uint32 CFGR;           /**< Clock configuration register */
+    __IO uint32 CIR;            /**< Clock interrupt register */
+    __IO uint32 AHB1RSTR;       /**< AHB1 peripheral reset register */
+    __IO uint32 AHB2RSTR;       /**< AHB2 peripheral reset register */
+    __IO uint32 AHB3RSTR;       /**< AHB3 peripheral reset register */
     const uint32 RESERVED1;     /**< Reserved */
-    __io uint32 APB1RSTR;       /**< APB1 peripheral reset register */
-    __io uint32 APB2RSTR;       /**< APB2 peripheral reset register */
+    __IO uint32 APB1RSTR;       /**< APB1 peripheral reset register */
+    __IO uint32 APB2RSTR;       /**< APB2 peripheral reset register */
     const uint32 RESERVED2;     /**< Reserved */
     const uint32 RESERVED3;     /**< Reserved */
-    __io uint32 AHB1ENR;        /**< AHB1 peripheral clock enable register */
-    __io uint32 AHB2ENR;        /**< AHB2 peripheral clock enable register */
-    __io uint32 AHB3ENR;        /**< AHB3 peripheral clock enable register */
+    __IO uint32 AHB1ENR;        /**< AHB1 peripheral clock enable register */
+    __IO uint32 AHB2ENR;        /**< AHB2 peripheral clock enable register */
+    __IO uint32 AHB3ENR;        /**< AHB3 peripheral clock enable register */
     const uint32 RESERVED4;     /**< Reserved */
-    __io uint32 APB1ENR;        /**< APB1 peripheral clock enable register */
-    __io uint32 APB2ENR;        /**< APB2 peripheral clock enable register */
+    __IO uint32 APB1ENR;        /**< APB1 peripheral clock enable register */
+    __IO uint32 APB2ENR;        /**< APB2 peripheral clock enable register */
     const uint32 RESERVED5;     /**< Reserved */
     const uint32 RESERVED6;     /**< Reserved */
-    __io uint32 AHB1LPENR;      /**< AHB1 peripheral clock enable in
+    __IO uint32 AHB1LPENR;      /**< AHB1 peripheral clock enable in
                                    low power mode register */
-    __io uint32 AHB2LPENR;      /**< AHB2 peripheral clock enable in
+    __IO uint32 AHB2LPENR;      /**< AHB2 peripheral clock enable in
                                    low power mode register */
-    __io uint32 AHB3LPENR;      /**< AHB3 peripheral clock enable in
+    __IO uint32 AHB3LPENR;      /**< AHB3 peripheral clock enable in
                                    low power mode register */
     const uint32 RESERVED7;     /**< Reserved */
-    __io uint32 APB1LPENR;      /**< APB1 peripheral clock enable in
+    __IO uint32 APB1LPENR;      /**< APB1 peripheral clock enable in
                                    low power mode register */
-    __io uint32 APB2LPENR;      /**< APB2 peripheral clock enable in
+    __IO uint32 APB2LPENR;      /**< APB2 peripheral clock enable in
                                    low power mode register */
     const uint32 RESERVED8;     /**< Reserved */
     const uint32 RESERVED9;     /**< Reserved */
-    __io uint32 BDCR;           /**< Backup domain control register */
-    __io uint32 CSR;            /**< Clock control and status register */
+    __IO uint32 BDCR;           /**< Backup domain control register */
+    __IO uint32 CSR;            /**< Clock control and status register */
     const uint32 RESERVED10;     /**< Reserved */
     const uint32 RESERVED11;    /**< Reserved */
-    __io uint32 SSCGR;          /**< Spread spectrum clock generation
+    __IO uint32 SSCGR;          /**< Spread spectrum clock generation
                                    register */
-    __io uint32 PLLI2SCFGR;     /**< PLLI2S configuration register */
+    __IO uint32 PLLI2SCFGR;     /**< PLLI2S configuration register */
 } rcc_reg_map;
 
 #define RCC_BASE                        ((struct rcc_reg_map*)0x40023800)

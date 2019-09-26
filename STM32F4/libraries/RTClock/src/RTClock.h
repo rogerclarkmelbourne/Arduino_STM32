@@ -45,26 +45,26 @@ static  const unsigned char monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31}; /
 
 
 typedef struct rtc_reg_map {
-	__io uint32 TR;			/**< Time register */
-	__io uint32 DR;			/**< Date register */
-	__io uint32 CR;			/**< Control register */
-	__io uint32 ISR;		/**< Init Status register */
-	__io uint32 PRER;		/**< Prescaler register */
-	__io uint32 WUTR;		/**< Wakeup Timer register */
-	__io uint32 CALIBR;		/**< Calibration register */
-	__io uint32 ALRMAR;		/**< Alarm A register */
-	__io uint32 ALRMBR;		/**< Alarm B register */
-	__io uint32 WPR;		/**< Write Protect register */
-	__io uint32 SSR;		/**< SubSecond register */
-	__io uint32 SHIFTR;		/**< Shift Control register */
-	__io uint32 TSTR;		/**< TimeStamp Time register */
-	__io uint32 TSDR;		/**< TimeStamp Date register */
-	__io uint32 TSSSR;		/**< TimeStamp SubSecond register */
-	__io uint32 CALR;		/**< Calibration register */
-	__io uint32 TAFCR;		/**< Tamper and Alternate Function Config register */
-	__io uint32 ALRMASSR;		/**< Alarm A subSecond register */
-	__io uint32 ALRMBSSR;		/**< Alarm B subSecond register */
-	__io uint32 BKPxR;		/**< Backup registers */
+	__IO uint32 TR;			/**< Time register */
+	__IO uint32 DR;			/**< Date register */
+	__IO uint32 CR;			/**< Control register */
+	__IO uint32 ISR;		/**< Init Status register */
+	__IO uint32 PRER;		/**< Prescaler register */
+	__IO uint32 WUTR;		/**< Wakeup Timer register */
+	__IO uint32 CALIBR;		/**< Calibration register */
+	__IO uint32 ALRMAR;		/**< Alarm A register */
+	__IO uint32 ALRMBR;		/**< Alarm B register */
+	__IO uint32 WPR;		/**< Write Protect register */
+	__IO uint32 SSR;		/**< SubSecond register */
+	__IO uint32 SHIFTR;		/**< Shift Control register */
+	__IO uint32 TSTR;		/**< TimeStamp Time register */
+	__IO uint32 TSDR;		/**< TimeStamp Date register */
+	__IO uint32 TSSSR;		/**< TimeStamp SubSecond register */
+	__IO uint32 CALR;		/**< Calibration register */
+	__IO uint32 TAFCR;		/**< Tamper and Alternate Function Config register */
+	__IO uint32 ALRMASSR;		/**< Alarm A subSecond register */
+	__IO uint32 ALRMBSSR;		/**< Alarm B subSecond register */
+	__IO uint32 BKPxR;		/**< Backup registers */
 } rtc_reg_map;
 		
 /** RTC register map base pointer */
@@ -184,7 +184,9 @@ class RTClock {
 	
 	time_t getTime();
 	void getTime(tm_t & tm);
-	#define now getTime
+
+	time_t now() { return getTime(); }
+	void now(tm_t & tmm ) { getTime(tmm); }  // non-standard use of now() function, added for compatibility with previous versions of the library
 
 	uint8_t year(void)    { getTime(tm); return tm.year; }
 	uint8_t month(void)   { getTime(tm); return tm.month; }

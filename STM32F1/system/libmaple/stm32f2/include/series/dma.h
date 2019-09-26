@@ -51,66 +51,66 @@ typedef struct dma_reg_map {
     /* Isn't it nice how on F1, it's CCR1, but on F2, it's S1CR? */
 
     /* Global DMA registers */
-    __io uint32 LISR;   /**< Low interrupt status register */
-    __io uint32 HISR;   /**< High interrupt status register */
-    __io uint32 LIFCR;  /**< Low interrupt flag clear register */
-    __io uint32 HIFCR;  /**< High interrupt flag clear register */
+    __IO uint32 LISR;   /**< Low interrupt status register */
+    __IO uint32 HISR;   /**< High interrupt status register */
+    __IO uint32 LIFCR;  /**< Low interrupt flag clear register */
+    __IO uint32 HIFCR;  /**< High interrupt flag clear register */
     /* Stream 0 registers */
-    __io uint32 S0CR;   /**< Stream 0 control register */
-    __io uint32 S0NDTR; /**< Stream 0 number of data register */
-    __io uint32 S0PAR;  /**< Stream 0 peripheral address register */
-    __io uint32 S0M0AR; /**< Stream 0 memory 0 address register */
-    __io uint32 S0M1AR; /**< Stream 0 memory 1 address register */
-    __io uint32 S0FCR;  /**< Stream 0 FIFO control register */
+    __IO uint32 S0CR;   /**< Stream 0 control register */
+    __IO uint32 S0NDTR; /**< Stream 0 number of data register */
+    __IO uint32 S0PAR;  /**< Stream 0 peripheral address register */
+    __IO uint32 S0M0AR; /**< Stream 0 memory 0 address register */
+    __IO uint32 S0M1AR; /**< Stream 0 memory 1 address register */
+    __IO uint32 S0FCR;  /**< Stream 0 FIFO control register */
     /* Stream 1 registers */
-    __io uint32 S1CR;   /**< Stream 1 control register */
-    __io uint32 S1NDTR; /**< Stream 1 number of data register */
-    __io uint32 S1PAR;  /**< Stream 1 peripheral address register */
-    __io uint32 S1M0AR; /**< Stream 1 memory 0 address register */
-    __io uint32 S1M1AR; /**< Stream 1 memory 1 address register */
-    __io uint32 S1FCR;  /**< Stream 1 FIFO control register */
+    __IO uint32 S1CR;   /**< Stream 1 control register */
+    __IO uint32 S1NDTR; /**< Stream 1 number of data register */
+    __IO uint32 S1PAR;  /**< Stream 1 peripheral address register */
+    __IO uint32 S1M0AR; /**< Stream 1 memory 0 address register */
+    __IO uint32 S1M1AR; /**< Stream 1 memory 1 address register */
+    __IO uint32 S1FCR;  /**< Stream 1 FIFO control register */
     /* Stream 2 registers */
-    __io uint32 S2CR;   /**< Stream 2 control register */
-    __io uint32 S2NDTR; /**< Stream 2 number of data register */
-    __io uint32 S2PAR;  /**< Stream 2 peripheral address register */
-    __io uint32 S2M0AR; /**< Stream 2 memory 0 address register */
-    __io uint32 S2M1AR; /**< Stream 2 memory 1 address register */
-    __io uint32 S2FCR;  /**< Stream 2 FIFO control register */
+    __IO uint32 S2CR;   /**< Stream 2 control register */
+    __IO uint32 S2NDTR; /**< Stream 2 number of data register */
+    __IO uint32 S2PAR;  /**< Stream 2 peripheral address register */
+    __IO uint32 S2M0AR; /**< Stream 2 memory 0 address register */
+    __IO uint32 S2M1AR; /**< Stream 2 memory 1 address register */
+    __IO uint32 S2FCR;  /**< Stream 2 FIFO control register */
     /* Stream 3 registers */
-    __io uint32 S3CR;   /**< Stream 3 control register */
-    __io uint32 S3NDTR; /**< Stream 3 number of data register */
-    __io uint32 S3PAR;  /**< Stream 3 peripheral address register */
-    __io uint32 S3M0AR; /**< Stream 3 memory 0 address register */
-    __io uint32 S3M1AR; /**< Stream 3 memory 1 address register */
-    __io uint32 S3FCR;  /**< Stream 3 FIFO control register */
+    __IO uint32 S3CR;   /**< Stream 3 control register */
+    __IO uint32 S3NDTR; /**< Stream 3 number of data register */
+    __IO uint32 S3PAR;  /**< Stream 3 peripheral address register */
+    __IO uint32 S3M0AR; /**< Stream 3 memory 0 address register */
+    __IO uint32 S3M1AR; /**< Stream 3 memory 1 address register */
+    __IO uint32 S3FCR;  /**< Stream 3 FIFO control register */
     /* Stream 4 registers */
-    __io uint32 S4CR;   /**< Stream 4 control register */
-    __io uint32 S4NDTR; /**< Stream 4 number of data register */
-    __io uint32 S4PAR;  /**< Stream 4 peripheral address register */
-    __io uint32 S4M0AR; /**< Stream 4 memory 0 address register */
-    __io uint32 S4M1AR; /**< Stream 4 memory 1 address register */
-    __io uint32 S4FCR;  /**< Stream 4 FIFO control register */
+    __IO uint32 S4CR;   /**< Stream 4 control register */
+    __IO uint32 S4NDTR; /**< Stream 4 number of data register */
+    __IO uint32 S4PAR;  /**< Stream 4 peripheral address register */
+    __IO uint32 S4M0AR; /**< Stream 4 memory 0 address register */
+    __IO uint32 S4M1AR; /**< Stream 4 memory 1 address register */
+    __IO uint32 S4FCR;  /**< Stream 4 FIFO control register */
     /* Stream 5 registers */
-    __io uint32 S5CR;   /**< Stream 5 control register */
-    __io uint32 S5NDTR; /**< Stream 5 number of data register */
-    __io uint32 S5PAR;  /**< Stream 5 peripheral address register */
-    __io uint32 S5M0AR; /**< Stream 5 memory 0 address register */
-    __io uint32 S5M1AR; /**< Stream 5 memory 1 address register */
-    __io uint32 S5FCR;  /**< Stream 5 FIFO control register */
+    __IO uint32 S5CR;   /**< Stream 5 control register */
+    __IO uint32 S5NDTR; /**< Stream 5 number of data register */
+    __IO uint32 S5PAR;  /**< Stream 5 peripheral address register */
+    __IO uint32 S5M0AR; /**< Stream 5 memory 0 address register */
+    __IO uint32 S5M1AR; /**< Stream 5 memory 1 address register */
+    __IO uint32 S5FCR;  /**< Stream 5 FIFO control register */
     /* Stream 6 registers */
-    __io uint32 S6CR;   /**< Stream 6 control register */
-    __io uint32 S6NDTR; /**< Stream 6 number of data register */
-    __io uint32 S6PAR;  /**< Stream 6 peripheral address register */
-    __io uint32 S6M0AR; /**< Stream 6 memory 0 address register */
-    __io uint32 S6M1AR; /**< Stream 6 memory 1 address register */
-    __io uint32 S6FCR;  /**< Stream 6 FIFO control register */
+    __IO uint32 S6CR;   /**< Stream 6 control register */
+    __IO uint32 S6NDTR; /**< Stream 6 number of data register */
+    __IO uint32 S6PAR;  /**< Stream 6 peripheral address register */
+    __IO uint32 S6M0AR; /**< Stream 6 memory 0 address register */
+    __IO uint32 S6M1AR; /**< Stream 6 memory 1 address register */
+    __IO uint32 S6FCR;  /**< Stream 6 FIFO control register */
     /* Stream 7 registers */
-    __io uint32 S7CR;   /**< Stream 7 control register */
-    __io uint32 S7NDTR; /**< Stream 7 number of data register */
-    __io uint32 S7PAR;  /**< Stream 7 peripheral address register */
-    __io uint32 S7M0AR; /**< Stream 7 memory 0 address register */
-    __io uint32 S7M1AR; /**< Stream 7 memory 1 address register */
-    __io uint32 S7FCR;  /**< Stream 7 FIFO control register */
+    __IO uint32 S7CR;   /**< Stream 7 control register */
+    __IO uint32 S7NDTR; /**< Stream 7 number of data register */
+    __IO uint32 S7PAR;  /**< Stream 7 peripheral address register */
+    __IO uint32 S7M0AR; /**< Stream 7 memory 0 address register */
+    __IO uint32 S7M1AR; /**< Stream 7 memory 1 address register */
+    __IO uint32 S7FCR;  /**< Stream 7 FIFO control register */
 } dma_reg_map;
 
 /** DMA controller 1 register map base pointer */
@@ -124,12 +124,12 @@ typedef struct dma_reg_map {
  * @see dma_tube_regs()
  */
 typedef struct dma_tube_reg_map {
-    __io uint32 SCR;   /**< Stream configuration register */
-    __io uint32 SNDTR; /**< Stream number of data register */
-    __io uint32 SPAR;  /**< Stream peripheral address register */
-    __io uint32 SM0AR; /**< Stream memory 0 address register */
-    __io uint32 SM1AR; /**< Stream memory 1 address register */
-    __io uint32 SFCR;  /**< Stream FIFO control register */
+    __IO uint32 SCR;   /**< Stream configuration register */
+    __IO uint32 SNDTR; /**< Stream number of data register */
+    __IO uint32 SPAR;  /**< Stream peripheral address register */
+    __IO uint32 SM0AR; /**< Stream memory 0 address register */
+    __IO uint32 SM1AR; /**< Stream memory 1 address register */
+    __IO uint32 SFCR;  /**< Stream FIFO control register */
 } dma_tube_reg_map;
 
 /** DMA1 stream 0 register map base pointer */
@@ -697,7 +697,7 @@ static inline uint8 dma_is_enabled(dma_dev *dev, dma_tube tube) {
 
 /* F2-only; available because of double-buffering. */
 void dma_set_mem_n_addr(dma_dev *dev, dma_tube tube, int n,
-                        __io void *address);
+                        __IO void *address);
 
 /**
  * @brief Set memory 0 address.
@@ -707,8 +707,7 @@ void dma_set_mem_n_addr(dma_dev *dev, dma_tube tube, int n,
  * @param tube Tube whose memory 0 address to set
  * @param addr Address to use as memory 0
  */
-static inline __always_inline void
-dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
+inline void dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
     dma_set_mem_n_addr(dev, tube, 0, addr);
 }
 
@@ -720,30 +719,29 @@ dma_set_mem0_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
  * @param tube Tube whose memory 1 address to set
  * @param addr Address to use as memory 1
  */
-static inline __always_inline void
-dma_set_mem1_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
+inline void dma_set_mem1_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
     dma_set_mem_n_addr(dev, tube, 1, addr);
 }
 
 /* Assume the user means SM0AR in a non-double-buffered configuration. */
-static inline __always_inline void
-dma_set_mem_addr(dma_dev *dev, dma_tube tube, __io void *addr) {
+static __always_inline void
+dma_set_mem_addr(dma_dev *dev, dma_tube tube, __IO void *addr) {
     dma_set_mem0_addr(dev, tube, addr);
 }
 
 /* SM0AR and SM1AR are treated as though they have the same size */
-static inline dma_xfer_size dma_get_mem_size(dma_dev *dev, dma_tube tube) {
+inline dma_xfer_size dma_get_mem_size(dma_dev *dev, dma_tube tube) {
     return (dma_xfer_size)(dma_tube_regs(dev, tube)->SCR >> 13);
 }
 
-static inline dma_xfer_size dma_get_per_size(dma_dev *dev, dma_tube tube) {
+inline dma_xfer_size dma_get_per_size(dma_dev *dev, dma_tube tube) {
     return (dma_xfer_size)(dma_tube_regs(dev, tube)->SCR >> 11);
 }
 
 void dma_enable_fifo(dma_dev *dev, dma_tube tube);
 void dma_disable_fifo(dma_dev *dev, dma_tube tube);
 
-static inline __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
+inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tube) {
     return dma_tube_regs(dev, tube)->SFCR & DMA_SFCR_DMDIS;
 }
 
@@ -769,7 +767,7 @@ static inline __always_inline int dma_is_fifo_enabled(dma_dev *dev, dma_tube tub
  * I can't imagine why ST didn't just use a byte for each group. The
  * bits fit, and it would have made functions like these simpler and
  * faster.  Oh well. */
-static inline __always_inline uint32 _dma_sr_fcr_shift(dma_tube tube) {
+static __always_inline uint32 _dma_sr_fcr_shift(dma_tube tube) {
     switch (tube) {
     case DMA_S0:                /* fall through */
     case DMA_S4:
@@ -791,13 +789,13 @@ static inline __always_inline uint32 _dma_sr_fcr_shift(dma_tube tube) {
 
 static inline uint8 dma_get_isr_bits(dma_dev *dev, dma_tube tube) {
     dma_reg_map *regs = dev->regs;
-    __io uint32 *isr = tube > DMA_S3 ? &regs->HISR : &regs->LISR;
+    __IO uint32 *isr = tube > DMA_S3 ? &regs->HISR : &regs->LISR;
     return (*isr >> _dma_sr_fcr_shift(tube)) & 0x3D;
 }
 
 static inline void dma_clear_isr_bits(dma_dev *dev, dma_tube tube) {
     dma_reg_map *regs = dev->regs;
-    __io uint32 *ifcr = tube > DMA_S3 ? &regs->HIFCR : &regs->LIFCR;
+    __IO uint32 *ifcr = tube > DMA_S3 ? &regs->HIFCR : &regs->LIFCR;
     *ifcr = (0x3D << _dma_sr_fcr_shift(tube));
 }
 

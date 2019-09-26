@@ -52,26 +52,26 @@ extern "C"{
 
 /** ADC register map type. */
 typedef struct adc_reg_map {
-    __io uint32 SR;             ///< Status register
-    __io uint32 CR1;            ///< Control register 1
-    __io uint32 CR2;            ///< Control register 2
-    __io uint32 SMPR1;          ///< Sample time register 1
-    __io uint32 SMPR2;          ///< Sample time register 2
-    __io uint32 JOFR1;          ///< Injected channel data offset register 1
-    __io uint32 JOFR2;          ///< Injected channel data offset register 2
-    __io uint32 JOFR3;          ///< Injected channel data offset register 3
-    __io uint32 JOFR4;          ///< Injected channel data offset register 4
-    __io uint32 HTR;            ///< Watchdog high threshold register
-    __io uint32 LTR;            ///< Watchdog low threshold register
-    __io uint32 SQR1;           ///< Regular sequence register 1
-    __io uint32 SQR2;           ///< Regular sequence register 2
-    __io uint32 SQR3;           ///< Regular sequence register 3
-    __io uint32 JSQR;           ///< Injected sequence register
-    __io uint32 JDR1;           ///< Injected data register 1
-    __io uint32 JDR2;           ///< Injected data register 2
-    __io uint32 JDR3;           ///< Injected data register 3
-    __io uint32 JDR4;           ///< Injected data register 4
-    __io uint32 DR;             ///< Regular data register
+    __IO uint32 SR;             ///< Status register
+    __IO uint32 CR1;            ///< Control register 1
+    __IO uint32 CR2;            ///< Control register 2
+    __IO uint32 SMPR1;          ///< Sample time register 1
+    __IO uint32 SMPR2;          ///< Sample time register 2
+    __IO uint32 JOFR1;          ///< Injected channel data offset register 1
+    __IO uint32 JOFR2;          ///< Injected channel data offset register 2
+    __IO uint32 JOFR3;          ///< Injected channel data offset register 3
+    __IO uint32 JOFR4;          ///< Injected channel data offset register 4
+    __IO uint32 HTR;            ///< Watchdog high threshold register
+    __IO uint32 LTR;            ///< Watchdog low threshold register
+    __IO uint32 SQR1;           ///< Regular sequence register 1
+    __IO uint32 SQR2;           ///< Regular sequence register 2
+    __IO uint32 SQR3;           ///< Regular sequence register 3
+    __IO uint32 JSQR;           ///< Injected sequence register
+    __IO uint32 JDR1;           ///< Injected data register 1
+    __IO uint32 JDR2;           ///< Injected data register 2
+    __IO uint32 JDR3;           ///< Injected data register 3
+    __IO uint32 JDR4;           ///< Injected data register 4
+    __IO uint32 DR;             ///< Regular data register
 } adc_reg_map;
 
 

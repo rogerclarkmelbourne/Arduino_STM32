@@ -37,8 +37,8 @@
 /* Wrap this in an ifdef to shut up GCC. (We provide DMA_GET_HANDLER
  * in the series support files, which need dma_irq_handler().) */
 #ifdef DMA_GET_HANDLER
-static inline __always_inline void dma_irq_handler(dma_dev *dev, dma_tube tube) {
-
+__attribute__((always_inline)) void dma_irq_handler(dma_dev *dev, dma_tube tube)
+{
     void (*handler)(void) = DMA_GET_HANDLER(dev, tube);
     if (handler) {
         handler();
@@ -57,6 +57,6 @@ enum dma_atype {
     DMA_ATYPE_OTHER,
 };
 
-enum dma_atype _dma_addr_type(__io void *addr);
+enum dma_atype _dma_addr_type(__IO void *addr);
 
 #endif

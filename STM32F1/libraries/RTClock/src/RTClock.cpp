@@ -39,7 +39,7 @@
 	
 	}//end RTC
 
-	RTClock::RTClock(rtc_clk_src src, uint16 prescaler ) {
+	RTClock::RTClock(rtc_clk_src src, uint32 prescaler ) {
 		switch (src) {
 	
 		case RTCSEL_LSE : {
@@ -111,7 +111,7 @@ void RTClock::breakTime(time_t timeInput, tm_t & tmm)
 	time /= 60; // now it is hours
 	tmm.hour = time % 24;
 	time /= 24; // now it is days
-	tmm.weekday = ((time + 4) % 7); // Monday is day 1 // + 1;  // Sunday is day 1 
+	tmm.weekday = ((time + 3) % 7); // Monday is day 1
 
 	year = 0;
 	days = 0;

@@ -75,15 +75,15 @@ extern "C" {
 
 /** I2C register map type */
 typedef struct i2c_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 OAR1;           /**< Own address register 1 */
-    __io uint32 OAR2;           /**< Own address register 2 */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 SR1;            /**< Status register 1 */
-    __io uint32 SR2;            /**< Status register 2 */
-    __io uint32 CCR;            /**< Clock control register */
-    __io uint32 TRISE;          /**< TRISE (rise time) register */
+    __IO uint32 CR1;            /**< Control register 1 */
+    __IO uint32 CR2;            /**< Control register 2 */
+    __IO uint32 OAR1;           /**< Own address register 1 */
+    __IO uint32 OAR2;           /**< Own address register 2 */
+    __IO uint32 DR;             /**< Data register */
+    __IO uint32 SR1;            /**< Status register 1 */
+    __IO uint32 SR2;            /**< Status register 2 */
+    __IO uint32 CCR;            /**< Clock control register */
+    __IO uint32 TRISE;          /**< TRISE (rise time) register */
 } i2c_reg_map;
 
 /**
@@ -198,7 +198,7 @@ typedef struct i2c_msg {
 #define I2C_DUTY_16_9           0x2           // 16/9 duty ratio
 /* Flag 0x4 is reserved; DO NOT USE. */
 #define I2C_BUS_RESET           0x8           // Perform a bus reset
-void i2c_master_enable(i2c_dev *dev, uint32 flags);
+void i2c_master_enable(i2c_dev *dev, uint32 flags, uint32 freq);
 
 #define I2C_ERROR_PROTOCOL      (-1)
 #define I2C_ERROR_TIMEOUT       (-2)

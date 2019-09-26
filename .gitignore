@@ -8,3 +8,5 @@ other/maple-bootloader/*~
 *.o
 *.bak
 *.1
+platform.local.txt
+boards.local.txt

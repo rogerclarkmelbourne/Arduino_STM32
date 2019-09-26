@@ -47,7 +47,7 @@
 static inline int32 wait_for_state_change(i2c_dev *dev,
                                           i2c_state state,
                                           uint32 timeout);
-static void set_ccr_trise(i2c_dev *dev, uint32 flags);
+static void set_ccr_trise(i2c_dev *dev, uint32 flags, uint32 freq);
 
 /**
  * @brief Fill data register with slave address
@@ -165,7 +165,6 @@ void i2c_init(i2c_dev *dev) {
  * @brief Initialize an I2C device as bus master
  * @param dev Device to enable
  * @param flags Bitwise or of the following I2C options:
- *              I2C_FAST_MODE: 400 khz operation,
  *              I2C_DUTY_16_9: 16/9 Tlow/Thigh duty cycle (only applicable for
  *                             fast mode),
  *              I2C_BUS_RESET: Reset the bus and clock out any hung slaves on
@@ -174,9 +173,9 @@ void i2c_init(i2c_dev *dev) {
  *              I2C_REMAP: (deprecated, STM32F1 only) Remap I2C1 to SCL/PB8
  *                         SDA/PB9.
  */
-void i2c_master_enable(i2c_dev *dev, uint32 flags) {
-    /* PE must be disabled to configure the device */
-    ASSERT(!(dev->regs->CR1 & I2C_CR1_PE));
+void i2c_master_enable(i2c_dev *dev, uint32 flags, uint32 freq) {
+    /* If the device is already enabled, don't do it again */
+    if(dev->regs->CR1 & I2C_CR1_PE) return;
 
     /* Ugh */
     _i2c_handle_remap(dev, flags);
@@ -191,7 +190,7 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     i2c_config_gpios(dev);
 
     /* Configure clock and rise time */
-    set_ccr_trise(dev, flags);
+    set_ccr_trise(dev, flags, freq);
 
     /* Enable event and buffer interrupts */
     nvic_irq_enable(dev->ev_nvic_line);
@@ -324,7 +323,7 @@ void _i2c_irq_handler(i2c_dev *dev) {
     /*
      * EV6: Slave address sent
      */
-    if (sr1 & I2C_SR1_ADDR) {
+    if (sr1 & (I2C_SR1_ADDR|I2C_SR1_ADD10)) {
         /*
          * Special case event EV6_1 for master receiver.
          * Generate NACK and restart/stop condition after ADDR
@@ -483,7 +482,7 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
 /*
  * CCR/TRISE configuration helper
  */
-static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
+static void set_ccr_trise(i2c_dev *dev, uint32 flags, uint32 freq) {
     uint32 ccr     = 0;
     uint32 trise   = 0;
     uint32 clk_mhz = _i2c_bus_clk(dev);
@@ -491,22 +490,22 @@ static void set_ccr_trise(i2c_dev *dev, uint32 flags) {
 
     i2c_set_input_clk(dev, clk_mhz);
 
-    if (flags & I2C_FAST_MODE) {
+    if (freq > 100000) {		//FAST MODE & FAST MODE+
         ccr |= I2C_CCR_FS;
 
         if (flags & I2C_DUTY_16_9) {
             /* Tlow/Thigh = 16/9 */
             ccr |= I2C_CCR_DUTY_16_9;
-            ccr |= clk_hz / (400000 * 25);
+            ccr |= clk_hz / (freq * 25);
         } else {
             /* Tlow/Thigh = 2 */
-            ccr |= clk_hz / (400000 * 3);
+            ccr |= clk_hz / (freq * 3);
         }
 
         trise = (300 * clk_mhz / 1000) + 1;
     } else {
         /* Tlow/Thigh = 1 */
-        ccr = clk_hz / (100000 * 2);
+        ccr = clk_hz / (freq * 2);
         trise = clk_mhz + 1;
     }
 

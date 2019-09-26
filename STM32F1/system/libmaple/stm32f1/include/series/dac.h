@@ -40,28 +40,28 @@ extern "C"{
 
 /** STM32F1 DAC register map type. */
 typedef struct dac_reg_map {
-    __io uint32 CR;      /**< Control register */
-    __io uint32 SWTRIGR; /**< Software trigger register */
-    __io uint32 DHR12R1; /**< Channel 1 12-bit right-aligned data
+    __IO uint32 CR;      /**< Control register */
+    __IO uint32 SWTRIGR; /**< Software trigger register */
+    __IO uint32 DHR12R1; /**< Channel 1 12-bit right-aligned data
                               holding register */
-    __io uint32 DHR12L1; /**< Channel 1 12-bit left-aligned data
+    __IO uint32 DHR12L1; /**< Channel 1 12-bit left-aligned data
                               holding register */
-    __io uint32 DHR8R1;  /**< Channel 1 8-bit left-aligned data
+    __IO uint32 DHR8R1;  /**< Channel 1 8-bit left-aligned data
                               holding register */
-    __io uint32 DHR12R2; /**< Channel 2 12-bit right-aligned data
+    __IO uint32 DHR12R2; /**< Channel 2 12-bit right-aligned data
                               holding register */
-    __io uint32 DHR12L2; /**< Channel 2 12-bit left-aligned data
+    __IO uint32 DHR12L2; /**< Channel 2 12-bit left-aligned data
                               holding register */
-    __io uint32 DHR8R2;  /**< Channel 2 8-bit left-aligned data
+    __IO uint32 DHR8R2;  /**< Channel 2 8-bit left-aligned data
                               holding register */
-    __io uint32 DHR12RD; /**< Dual DAC 12-bit right-aligned data
+    __IO uint32 DHR12RD; /**< Dual DAC 12-bit right-aligned data
                               holding register */
-    __io uint32 DHR12LD; /**< Dual DAC 12-bit left-aligned data
+    __IO uint32 DHR12LD; /**< Dual DAC 12-bit left-aligned data
                               holding register */
-    __io uint32 DHR8RD;  /**< Dual DAC 8-bit right-aligned data holding
+    __IO uint32 DHR8RD;  /**< Dual DAC 8-bit right-aligned data holding
                               register */
-    __io uint32 DOR1;    /**< Channel 1 data output register */
-    __io uint32 DOR2;    /**< Channel 2 data output register */
+    __IO uint32 DOR1;    /**< Channel 1 data output register */
+    __IO uint32 DOR2;    /**< Channel 2 data output register */
 } dac_reg_map;
 
 #ifdef __cplusplus

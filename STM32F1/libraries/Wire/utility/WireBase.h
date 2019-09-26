@@ -98,32 +98,33 @@ public:
      * Request bytes from a slave device and process the request,
      * storing into the receiving buffer.
      */
-    uint8 requestFrom(uint8, int);
+    uint8 requestFrom(uint8, int,bool stop=false);
 
     /*
      * Allow only 8 bit addresses to be used when requesting bytes
      */
-    uint8 requestFrom(int, int);
+    uint8 requestFrom(int address, int numBytes, bool stop=true);
+	
 
     /*
      * Stack up bytes to be sent when transmitting
      */
-    void write(uint8);
+    size_t write(uint8);
 
     /*
      * Stack up bytes from the array to be sent when transmitting
      */
-    void write(uint8*, int);
+    size_t write(uint8*, int);
 
     /*
      * Ensure that a sending data will only be 8-bit bytes
      */
-    void write(int);
+    size_t write(int);
 
     /*
      * Ensure that an array sending data will only be 8-bit bytes
      */
-    void write(int*, int);
+    size_t write(int*, int);
 
     /*
      * Stack up bytes from a string to be sent when transmitting

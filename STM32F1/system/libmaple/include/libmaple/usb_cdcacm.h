@@ -129,9 +129,12 @@ uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len);
 uint32 usb_cdcacm_data_available(void); /* in RX buffer */
 uint16 usb_cdcacm_get_pending(void);
 uint8 usb_cdcacm_is_transmitting(void);
+int usb_cdcacm_tx_available();
 
 uint8 usb_cdcacm_get_dtr(void);
 uint8 usb_cdcacm_get_rts(void);
+
+
 
 typedef struct usb_cdcacm_line_coding {
     uint32 dwDTERate;           /* Baud rate */
@@ -169,7 +172,7 @@ int usb_cdcacm_get_n_data_bits(void); /* bDataBits */
 
 void usb_cdcacm_set_hooks(unsigned hook_flags, void (*hook)(unsigned, void*));
 
-static inline __always_inline void usb_cdcacm_remove_hooks(unsigned hook_flags) {
+inline void usb_cdcacm_remove_hooks(unsigned hook_flags) {
     usb_cdcacm_set_hooks(hook_flags, 0);
 }
 

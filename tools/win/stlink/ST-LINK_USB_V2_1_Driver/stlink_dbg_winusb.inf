@@ -1,0 +1,135 @@
+;
+; Installation INF for the STMicroelectronics STLINK for Windows XP SP2 or later.
+;
+
+[Version]
+Signature = "$Windows NT$"
+Class     = STLinkWinUSB
+ClassGUID = {88BAE032-5A81-49f0-BC3D-A4FF138216D6}
+Provider  = %ManufacturerName%
+CatalogFile.NTx86  = STLinkDbgWinUSB_x86.cat
+CatalogFile.NTAMD64 = STLinkDbgWinUSB_x64.cat
+DriverVer=01/21/2013,1.01
+
+; ========== Manufacturer/Models sections ===========
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTx86,NTamd64
+
+[Standard.NTx86]
+%DeviceName% =USB_Install, USB\VID_0483&PID_3748
+%DeviceName% =USB_Install, USB\VID_0483&PID_374A&MI_00
+%DeviceName% =USB_Install, USB\VID_0483&PID_374B&MI_00
+%DeviceNameRW% =USB_InstallRW, USB\VID_0483&PID_374A&MI_01
+
+[Standard.NTamd64]
+%DeviceName% =USB_Install, USB\VID_0483&PID_3748
+%DeviceName% =USB_Install, USB\VID_0483&PID_374A&MI_00
+%DeviceName% =USB_Install, USB\VID_0483&PID_374B&MI_00
+%DeviceNameRW% =USB_InstallRW, USB\VID_0483&PID_374A&MI_01
+
+; ========== Class definition ===========
+
+[ClassInstall32]
+AddReg = ClassInstall_AddReg
+
+[ClassInstall_AddReg]
+HKR,,,,%ClassName%
+HKR,,NoInstallClass,,1
+HKR,,IconPath,%REG_MULTI_SZ%,"%systemroot%\system32\setupapi.dll,-20"
+HKR,,LowerLogoVersion,,5.2
+
+; =================== Installation ===================
+
+[USB_Install]
+Include = winusb.inf
+Needs   = WINUSB.NT
+
+[USB_InstallRW]
+Include = winusb.inf
+Needs   = WINUSB.NT
+
+[USB_Install.Services]
+Include =winusb.inf
+Addservice = WinUSB, 0x00000002, WinUSB_ServiceInstall
+
+[USB_InstallRW.Services]
+Include =winusb.inf
+Addservice = WinUSB, 0x00000002, WinUSB_ServiceInstall
+
+[WinUSB_ServiceInstall]
+DisplayName    = %WinUSB_SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\WinUSB.sys
+
+[USB_Install.Wdf]
+KmdfService=WINUSB, WinUsb_Install
+
+[USB_InstallRW.Wdf]
+KmdfService=WINUSB, WinUsb_Install
+
+[WinUsb_Install]
+KmdfLibraryVersion=1.9
+
+[USB_Install.HW]
+AddReg=Dev_AddReg
+
+[USB_InstallRW.HW]
+AddReg=Dev_AddRegRW
+
+[Dev_AddReg]
+HKR,,DeviceInterfaceGUIDs,0x10000,%STLink_GUID%
+
+[Dev_AddRegRW]
+HKR,,DeviceInterfaceGUIDs,0x10000,%STLink_GUID_RW%
+
+[USB_Install.CoInstallers]
+AddReg=CoInstallers_AddReg
+CopyFiles=CoInstallers_CopyFiles
+
+[USB_InstallRW.CoInstallers]
+AddReg=CoInstallers_AddReg
+CopyFiles=CoInstallers_CopyFiles
+
+[CoInstallers_CopyFiles]
+WinUSBCoInstaller2.dll
+WdfCoInstaller01009.dll
+
+[CoInstallers_AddReg]
+HKR,,CoInstallers32,0x00010000,"WdfCoInstaller01009.dll,WdfCoInstaller","WinUSBCoInstaller2.dll"
+
+[DestinationDirs]
+; If your INF needs to copy files, you must not use the DefaultDestDir directive here.  
+; You must explicitly reference all file-list-section names in this section.
+CoInstallers_CopyFiles=11
+
+; ================= Source Media Section =====================
+
+[SourceDisksNames]
+1 = %DISK_NAME%,,,\x86
+2 = %DISK_NAME%,,,\amd64
+
+[SourceDisksFiles.x86]
+WinUSBCoInstaller2.dll=1
+WdfCoInstaller01009.dll=1
+
+[SourceDisksFiles.amd64]
+WinUSBCoInstaller2.dll=2
+WdfCoInstaller01009.dll=2
+
+; =================== Strings ===================
+
+[Strings]
+ManufacturerName="STMicroelectronics"
+ClassName="Universal Serial Bus devices"
+DeviceName="STMicroelectronics STLink dongle"
+DeviceNameRW="STMicroelectronics STLink dongle RW"
+WinUSB_SvcDesc="WinUSB Driver for STLink"
+REG_MULTI_SZ = 0x00010000
+DISK_NAME="WinUSB coinstallers sources on disk"
+
+;------------Replace GUID below with custom GUID-------------;
+STLink_GUID="{DBCE1CD9-A320-4b51-A365-A0C3F3C5FB29}"
+STLink_GUID_RW="{8326506F-7260-4854-9C03-26E416F04494}"

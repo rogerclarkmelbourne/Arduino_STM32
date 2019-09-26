@@ -52,14 +52,11 @@ typedef long long int64;
 typedef void (*voidFuncPtr)(void);
 typedef void (*voidArgumentFuncPtr)(void *);
 
-#define __io volatile
+#define __IO volatile
 #define __attr_flash __attribute__((section (".USER_FLASH")))
 #define __packed __attribute__((__packed__))
 #define __deprecated __attribute__((__deprecated__))
 #define __weak __attribute__((weak))
-#ifndef __always_inline
-#define __always_inline __attribute__((always_inline))
-#endif
 #ifndef __unused
 #define __unused __attribute__((unused))
 #endif
