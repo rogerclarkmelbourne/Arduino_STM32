@@ -66,14 +66,14 @@ static void usb_set_ep_rx_count_common(uint32 *rxc, uint16 count) {
         if ((count & 0x1F) == 0) {
             nblocks--;
         }
-        *rxc = (nblocks << 10) | 0x8000;
+        *rxc = (nblocks << 10) | 0x8000 | (count & 0x3FF);
     } else {
         /* use 2-byte memory block size */
         nblocks = count >> 1;
         if ((count & 0x1) != 0) {
             nblocks++;
         }
-        *rxc = nblocks << 10;
+        *rxc = (nblocks << 10) | (count & 0x3FF);
     }
 }
 /*
