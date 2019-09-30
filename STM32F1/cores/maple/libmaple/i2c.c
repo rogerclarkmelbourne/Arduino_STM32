@@ -400,10 +400,6 @@ int32 i2c_master_xfer(i2c_dev *dev,
 
     rc = wait_for_state_change(dev, I2C_STATE_XFER_DONE, timeout);
 
-    if ((dev->regs->SR2 & I2C_SR2_BUSY) && !(dev->regs->CR1 & I2C_CR1_STOP)) {
-        dev->regs->CR1 |= I2C_CR1_STOP;     // Send Stop to halt the busy
-    }
-
     i2c_disable_irq(dev, I2C_IRQ_BUFFER | I2C_IRQ_EVENT | I2C_IRQ_ERROR);
 
     if (rc != 0) {
