@@ -176,7 +176,15 @@ uint8 TwoWire::process(bool stop)
 		} else { /* Bus or Arbitration error */
 			res = EOTHER;
 		}
-		i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags), frequency);
+	} else if (res == I2C_ERROR_TIMEOUT) {
+		res = EOTHER;		// Arduino API spec doesn't have a special error for timeout so use EOTHER
+	} else if (res != 0) {
+		res = EOTHER;
+	}
+
+	if (sel_hard->state == I2C_STATE_ERROR) {
+		// All errors should reset the bus:
+		i2c_master_enable(sel_hard, (I2C_BUS_RESET | dev_flags), frequency);	// This will transition the state back to IDLE
 	}
 
 	return res;
@@ -370,11 +378,13 @@ void TwoWire::flush(void)
 {
 	if (sel_hard->state != I2C_STATE_DISABLED) {		// Can't flush if we are disabled
 		if (!isMaster()) {
-			// If this is a slave, let flush make sure
-			//	any pending onRequestService has completed
-			//	so we can turn around and reconfigure as a
-			//	master for multi-master bus transmission:
-			wait_for_state_change(sel_hard, I2C_STATE_IDLE, getTimeout());
+			if (sel_hard->state == I2C_STATE_BUSY) {	// It should already be in the busy state, but check in case there was an error and no timeout
+				// If this is a slave, let flush make sure
+				//	any pending onRequestService has completed
+				//	so we can turn around and reconfigure as a
+				//	master for multi-master bus transmission:
+				wait_for_state_change(sel_hard, I2C_STATE_IDLE, getTimeout());
+			}
 
 			// Since this function has no return value and is
 			//	an override of the underlying flush() function,

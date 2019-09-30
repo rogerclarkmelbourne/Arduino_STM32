@@ -278,10 +278,12 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags, uint32 freq) {
     /* Note that this call reconfigs the port pins as GPIO instead of AF */
     if (flags & I2C_BUS_RESET) {
         i2c_bus_reset(dev);
+        flags &= ~I2C_BUS_RESET;
     }
 
     if (flags & I2C_PUP_RESET) {
         i2c_clear_busy_flag_erratum(dev);
+        flags &= ~I2C_PUP_RESET;
     }
 
     /* Set GPIO modes to AF */
@@ -404,7 +406,16 @@ int32 i2c_master_xfer(i2c_dev *dev,
 
     i2c_disable_irq(dev, I2C_IRQ_BUFFER | I2C_IRQ_EVENT | I2C_IRQ_ERROR);
 
-    dev->state = I2C_STATE_IDLE;
+    if (rc != 0) {
+        // If we had an error, make sure the device state reflects that
+        // and make use of the smb I2C_SR1_TIMEOUT flag.  These have to be
+        // done here after disabling the IRQ above to avoid a race-condition
+        // with state changes in the IRQ handlers:
+        dev->state = I2C_STATE_ERROR;
+        if (rc == I2C_ERROR_TIMEOUT) dev->error_flags |= I2C_SR1_TIMEOUT;
+    } else {
+        dev->state = I2C_STATE_IDLE;
+    }
 
     return rc;
 }
@@ -425,7 +436,7 @@ int32 wait_for_state_change(i2c_dev *dev,
         tmp = dev->state;
 
         if (tmp == I2C_STATE_ERROR) {
-            return I2C_STATE_ERROR;
+            return I2C_ERROR_PROTOCOL;
         }
 
         if (tmp == state) {
@@ -433,7 +444,7 @@ int32 wait_for_state_change(i2c_dev *dev,
         }
 
         if (timeout) {
-            if ((systick_uptime() - dev->timestamp) > timeout) {
+            if ((uint32)(systick_uptime() - dev->timestamp) > timeout) {
                 return I2C_ERROR_TIMEOUT;
             }
         }
@@ -737,6 +748,8 @@ void _i2c_irq_handler(i2c_dev *dev) {
 void _i2c_irq_error_handler(i2c_dev *dev) {
     __IO uint32_t sr1 = dev->regs->SR1;
     __IO uint32_t sr2 = dev->regs->SR2;
+
+    dev->timestamp = systick_uptime();      // Reset timeout counter
 
     dev->error_flags = sr1 & (I2C_SR1_BERR |
                               I2C_SR1_ARLO |
