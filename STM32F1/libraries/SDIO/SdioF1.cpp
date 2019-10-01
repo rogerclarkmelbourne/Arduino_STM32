@@ -102,7 +102,7 @@ static uint8_t m_dir = TRX_RD;
 static bool (*m_busyFcn)() = 0;
 static bool m_initDone = false;
 //static uint32_t m_lba; // for raw non-DMA read(write)Start, read(write)Data, read(write)Stop
-//static uint32_t m_cnt; // for raw non-DMA read(write)Start, read(write)Data, read(write)Stop
+static uint32_t m_cnt; // for raw non-DMA read(write)Start, read(write)Data, read(write)Stop
 static bool m_version2;
 static bool m_highCapacity;
 static uint8_t m_errorCode = SD_CARD_ERROR_INIT_NOT_CALLED;
@@ -645,9 +645,9 @@ delay(100);
   return true;
 }
 //-----------------------------------------------------------------------------
-//uint32_t SdioCard::cardSize(void) {
-//  return sdCardCapacity(&m_csd);
-//}
+uint32_t SdioCard::cardSize(void) {
+  return sdCardCapacity(&m_csd);
+}
 /*---------------------------------------------------------------------------*/
 bool SdioCard::erase(uint32_t firstBlock, uint32_t lastBlock) {
   // check for single block erase
@@ -895,6 +895,7 @@ bool SdioCard::readData(uint8_t *dst)
 		}
 	} while ( !(STA & (SDIO_STA_DATAEND | SDIO_STA_TRX_ERROR_FLAGS)) );
 	// <---- TIME CRITICAL SECTION END ---->
+
 	// read data still available in FIFO
 	while ( (SDIO->STA & SDIO_STA_RXDAVL) && (cnt--) ) {
 		*ptr++ = SDIO->FIFO;
@@ -1011,7 +1012,7 @@ bool SdioCard::readStop()
   sdio_setup_transfer(0x00FFFFFF, 0, 0);
   // Empty SDIO FIFO
   while ( SDIO->STA & SDIO_STA_RXDAVL) {
-    volatile __attribute__((unused)) uint32 _unused = SDIO->FIFO;
+    volatile uint32 _unused = SDIO->FIFO;
   }
   //Serial.println("readStop.");
   //m_lba = 0;
