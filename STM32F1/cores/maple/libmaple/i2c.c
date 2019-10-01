@@ -426,21 +426,29 @@ int32 i2c_master_xfer(i2c_dev *dev,
 int32 wait_for_state_change(i2c_dev *dev,
                             i2c_state state,
                             uint32 timeout) {
-    i2c_state tmp;
+    volatile i2c_state devState;
+    volatile uint32 devTimestamp;
 
     while (1) {
-        tmp = dev->state;
+        // Avoid race condition with interrupt handler while reading state and timestamp
+        // Note: Since the IRQs have to be enabled in the first place for
+        // I2C to even work, we don't need to save/restore the state of IRQ
+        // enable here -- a single disable and re-enable is fine:
+        nvic_globalirq_disable();
+        devState = dev->state;
+        devTimestamp = dev->timestamp;
+        nvic_globalirq_enable();
 
-        if (tmp == I2C_STATE_ERROR) {
+        if (devState == I2C_STATE_ERROR) {
             return I2C_ERROR_PROTOCOL;
         }
 
-        if (tmp == state) {
+        if (devState == state) {
             return 0;
         }
 
         if (timeout) {
-            if ((uint32)(systick_uptime() - dev->timestamp) > timeout) {
+            if ((uint32)(systick_uptime() - devTimestamp) > timeout) {
                 return I2C_ERROR_TIMEOUT;
             }
         }
