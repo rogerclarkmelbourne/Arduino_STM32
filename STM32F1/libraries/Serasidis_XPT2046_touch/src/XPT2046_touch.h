@@ -1,6 +1,3 @@
-
-
-
 #ifndef XPT2046_touch_h
 #define XPT2046_touch_h
 #include <Arduino.h>

@@ -1,8 +1,3 @@
-/**
- *
- *
- */
-
 #include "Arduino.h"
 #include "XPT2046_touch.h"
 
@@ -55,7 +50,7 @@ uint16_t XPT2046_touch::gatherSamples(uint8_t command)
 
 TS_Point XPT2046_touch::getPoint()
 {
-    uint16_t z1, z2;
+    uint16_t z1, z2, x, y;
 
     my_SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0)); // max clock freq for XPT2046
     digitalWrite(cs_pin, LOW);

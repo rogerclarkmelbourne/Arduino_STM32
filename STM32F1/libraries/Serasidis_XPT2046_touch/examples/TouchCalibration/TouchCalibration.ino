@@ -59,7 +59,7 @@ void setup() {
   calibrationPoint(calA[0], calA[1]);   //display first calibration point
 
   ts.begin();                           //initialize touch screen
-  ts.calibrate(-.00114, -.0653, 254, -.0885, -.00125, 348, 240, 320);
+  //ts.calibrate(-.00114, -.0653, 254, -.0885, -.00125, 348, 240, 320);
 }
 
 
