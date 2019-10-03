@@ -1,9 +1,4 @@
-/**
- *
- *
- *
- *
- */
+
 
 
 #ifndef XPT2046_touch_h
@@ -69,6 +64,7 @@ class XPT2046_touch {
     uint8_t getButtonNumber();
     boolean read_XY(uint16_t *xy);
     TS_Point getPoint();
+ 
     void calibrate(float ax, float bx, int16_t dx, float ay, float by, int16_t dy, uint16_t dwidth, uint16_t dheight, uint8_t drot=0);
 };
 
