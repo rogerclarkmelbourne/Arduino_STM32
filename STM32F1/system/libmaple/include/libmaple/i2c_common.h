@@ -33,6 +33,12 @@
  * CONTENTS UNSTABLE. The existence of this file is an implementation
  * detail.  Never include it directly.  If you need something from
  * here, include <libmaple/i2c.h> instead.
+ * 
+ * I2C slave support added 2012 by Barry Carter. barry.carter@gmail.com, headfuzz.co.uk
+ *
+ * Modified 2019 by Donna Whisnant to merge WireSlave changes with the core to
+ * make slave mode work and without having conflicting data type defintions
+ * 
  */
 
 #ifndef _LIBMAPLE_I2C_COMMON_H_
@@ -54,6 +60,9 @@ typedef enum i2c_state {
     I2C_STATE_BUSY              = 3, /**< Busy */
     I2C_STATE_ERROR             = -1 /**< Error occurred */
 } i2c_state;
+
+typedef void (*i2c_slave_recv_callback_func)(struct i2c_msg *);
+typedef void (*i2c_slave_xmit_callback_func)(struct i2c_msg *);
 
 /**
  * @brief I2C device type.
@@ -88,6 +97,20 @@ typedef struct i2c_dev {
     nvic_irq_num ev_nvic_line;  /**< Event IRQ number */
     nvic_irq_num er_nvic_line;  /**< Error IRQ number */
     volatile i2c_state state;   /**< Device state */
+
+    // --------------------
+
+    uint32 config_flags;        /**< Configuration flags */
+
+    /*
+     * Slave implementation. Callback functions in this struct allow
+     * for a separate callback function for each I2C unit available onboard
+     */
+    i2c_slave_xmit_callback_func i2c_slave_xmit_callback;
+    i2c_slave_recv_callback_func i2c_slave_recv_callback;
+
+    struct i2c_msg *i2c_slave_xmit_msg;    /* the message that the i2c slave will use for transmitting */
+    struct i2c_msg *i2c_slave_recv_msg;    /* the message that the i2c slave will use for receiving */
 } i2c_dev;
 
 #endif

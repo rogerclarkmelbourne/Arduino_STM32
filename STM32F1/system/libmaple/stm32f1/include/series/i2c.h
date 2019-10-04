@@ -64,8 +64,10 @@ static inline uint32 _i2c_bus_clk(i2c_dev *dev __attribute__((unused))) {
     return STM32_PCLK1 / (1000 * 1000);
 }
 
+#ifndef _I2C_HAVE_IRQ_FIXUP     // Allow disabling of the fixup via external define
 #define _I2C_HAVE_IRQ_FIXUP 1
 void _i2c_irq_priority_fixup(i2c_dev *dev);
+#endif
 
 /*
  * Deprecated functionality
