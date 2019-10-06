@@ -124,7 +124,7 @@ tools.stlink_upload.path.linux={runtime.hardware.path}/tools/linux
 tools.stlink_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.stlink_upload.upload.params.verbose=-d
 tools.stlink_upload.upload.params.quiet=
-tools.stlink_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
+tools.stlink_upload.upload.pattern="{path}/{cmd}"  "{build.path}/{build.project_name}.bin"
 
 # HID upload 2.0 (HID bootloader 2.0 This bootloader will cover the STM32F1 and STM32F4 MCUs)
 tools.hid_upload.cmd=hid_upload
