@@ -123,6 +123,7 @@ typedef struct usb_descriptor_string {
 
 #define USB_EP_TYPE_INTERRUPT             0x03
 #define USB_EP_TYPE_BULK                  0x02
+#define USB_EP_TYPE_ISO                   0x01
 
 #define USB_DESCRIPTOR_ENDPOINT_IN        0x80
 #define USB_DESCRIPTOR_ENDPOINT_OUT       0x00
