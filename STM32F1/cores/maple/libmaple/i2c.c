@@ -491,9 +491,9 @@ void _i2c_irq_handler(i2c_dev *dev) {
                             sr2 = dev->regs->SR2;                   // Clear ADDR bit
                             dev->regs->CR1 = (cr1 |= I2C_CR1_STOP); // Stop after last byte
                         } else if (todo == 2) {
-                            dev->regs->CR1 = (cr1 &= ~I2C_CR1_ACK); // Disable ACK
                             dev->regs->CR1 = (cr1 |= I2C_CR1_POS);  // Enable POS
                             sr2 = dev->regs->SR2;                   // Clear ADDR bit
+                            dev->regs->CR1 = (cr1 &= ~I2C_CR1_ACK); // Disable ACK
                         } else {
                             dev->regs->CR1 = (cr1 |= I2C_CR1_ACK);  // Enable ACK
                             sr2 = dev->regs->SR2;                   // Clear ADDR bit
