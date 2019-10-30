@@ -36,9 +36,13 @@ enum {
 
 class Print {
 public:
-    virtual size_t write(uint8 ch) = 0;
+    virtual size_t write(uint8_t ch) = 0;
     virtual size_t write(const char *str);
-    virtual size_t write(const void *buf, uint32 len);
+    virtual size_t write(const uint8_t *buf, size_t len);
+	size_t write(const char* buffer, size_t size)
+	{
+		return write((const uint8_t*)buffer, size);
+	}
 	
 	size_t print(const String &);
     size_t print(char);

@@ -51,11 +51,10 @@ size_t Print::write(const char *str) {
 	return write((const uint8_t *)str, strlen(str));
 }
 
-size_t Print::write(const void *buffer, uint32 size) {
+size_t Print::write(const uint8_t *buffer, size_t size) {
 	size_t n = 0;
-    uint8 *ch = (uint8*)buffer;
     while (size--) {
-        write(*ch++);
+        write(*buffer++);
         n++;
     }
 	return n;
