@@ -10,3 +10,4 @@ other/maple-bootloader/*~
 *.1
 platform.local.txt
 boards.local.txt
+/.vs/*
