@@ -434,10 +434,12 @@ int32 wait_for_state_change(i2c_dev *dev,
         // Note: Since the IRQs have to be enabled in the first place for
         // I2C to even work, we don't need to save/restore the state of IRQ
         // enable here -- a single disable and re-enable is fine:
-        nvic_globalirq_disable();
+        nvic_irq_disable(dev->ev_nvic_line);
+        nvic_irq_disable(dev->er_nvic_line);
         devState = dev->state;
         devTimestamp = dev->timestamp;
-        nvic_globalirq_enable();
+        nvic_irq_enable(dev->er_nvic_line);
+        nvic_irq_enable(dev->ev_nvic_line);
 
         if (devState == I2C_STATE_ERROR) {
             return I2C_ERROR_PROTOCOL;
