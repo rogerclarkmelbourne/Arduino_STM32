@@ -782,6 +782,11 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
             dev->state = I2C_STATE_IDLE;
             return;
         }
+    } else {
+        // Master should send a STOP on NACK:
+        if (sr1 & I2C_SR1_AF) {
+            dev->regs->CR1 |= I2C_CR1_STOP;
+        }
     }
 
     /* Catch any other strange errors while in slave mode.
