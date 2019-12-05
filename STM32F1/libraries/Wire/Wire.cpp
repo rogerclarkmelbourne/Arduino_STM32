@@ -102,4 +102,12 @@ void TwoWire::setClock(uint32_t frequencyHz)
 	}
 }
 
+void TwoWire::setDevFlags(uint8 df) {
+    dev_flags = df;
+}
+
+uint8 TwoWire::getDevFlags(void) {
+    return dev_flags;
+}
+
 TwoWire Wire(1);
