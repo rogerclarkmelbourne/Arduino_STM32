@@ -358,6 +358,13 @@ genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=131072
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_data_size=20480
 
+## STM32F103FEBK6 (fake STM32F103C8T6) -------------------------
+genericSTM32F103C.menu.device_variant.STM32F103C6=STM32F103FEBK6 (10k RAM. 32k Flash)
+genericSTM32F103C.menu.device_variant.STM32F103C6.build.cpu_flags=-DMCU_STM32F103C8
+genericSTM32F103C.menu.device_variant.STM32F103C6.build.ldscript=ld/jtag_k6.ld
+genericSTM32F103C.menu.device_variant.STM32F103C6.upload.maximum_size=32768
+genericSTM32F103C.menu.device_variant.STM32F103C6.upload.maximum_data_size=10240
+
 #---------------------------- UPLOAD METHODS ---------------------------
 
 genericSTM32F103C.menu.upload_method.DFUUploadMethod=STM32duino bootloader
