@@ -434,7 +434,7 @@ genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
 
 ###################### Generic STM32F103C6 ########################################
 
-genericSTM32F103C6.name=Generic STM32F103C6 / fake STM32F103C8
+genericSTM32F103C6.name=Generic STM32F103C6/fake STM32F103C8
 genericSTM32F103C6.vid.0=0x1EAF
 genericSTM32F103C6.pid.0=0x0004
 genericSTM32F103C6.build.variant=generic_stm32f103c
@@ -448,7 +448,7 @@ genericSTM32F103C6.upload.file_type=bin
 genericSTM32F103C6.upload.auto_reset=true
 genericSTM32F103C6.upload.tool=maple_upload
 genericSTM32F103C6.upload.protocol=maple_dfu
-genericSTM32F103C6.build.cpu_flags=-DMCU_STM32F103C8
+genericSTM32F103C6.build.cpu_flags=-DMCU_STM32F103C6
 genericSTM32F103C6.build.ldscript=ld/jtag_c6.ld
 genericSTM32F103C6.upload.maximum_size=32768
 genericSTM32F103C6.upload.maximum_data_size=10240
