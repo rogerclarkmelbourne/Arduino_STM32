@@ -11,7 +11,7 @@ Serial1.begin(baud, disclipine);
 e.g. Serial1.begin(115200, 8N1);  
 presently it can't take these settings from the host, it (baud and line discipline) is hardcoded in setup()
 
-The sketch implements simulation of the DTR, RTS signals. 
+The sketch implements the handling of DTR, RTS signals from the host. 
 But do note that this disables the DTR 'LEAF' magic sequence that resets the mcu from the host. 
 You can define the DTR, RTS pins with the global variables dtrPIN, rtsPIN. This would allow controlling of these pins from the host.
 
@@ -135,5 +135,11 @@ relevant docs and utilities
 other than stm32loader there are other utilities including from ST that'd probably work. One'd just need to do a web search for them or browse ST's webs.
 
 example sketch and this readme by ag123 - mit license - 2019
+
+
+
+
+
+
 
 
