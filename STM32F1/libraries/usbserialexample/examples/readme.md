@@ -59,10 +59,10 @@ hitting enter or an unrecognised command exits 'command mode' (response <+++)
 this toggle rtsPIN low for 500ms and bring that back to high
 
 * P program mode  
-this toggles dtsPIN low
+this toggles dtrPIN low
 
 * p run mode  
-this toggles dtsPIN high
+this toggles dtrPIN high
 
 * D disconnect from AP
 
@@ -89,6 +89,11 @@ e.g. enter T0 ``<enter>``, you have 5s to type your message, transmit on timeout
 * k sendlf  
 esp8266 AT commands specifially requires ``<cr><lf>`` as end of line markers. 
 Some terminals programs cannot make that translation on the host, most send just ``<cr>``. toggling this makes it send ``<cr><lf>`` when only ``<cr>`` is received. this is a toggle (i.e. flip/flop), reverses with each toggle
+
+* b{baud} set the baud rate e.g. b115200  
+this is intended to change the baud rate after starting up. the initial baud rade is done in setup() hardcoded. 
+
+this may be useful for instance esp8266 boots in 'program' mode with a non-standard baud of 74880, while in 'run' mode it is 115200 8N1. while meddling around with a esp-01, i changed the baud to 74880 using 'b74880' command, used the 'P' command to set dtrPIN low, then 'R' to toggle a reset on esp8266. esp8266 then boots into the 'program' mode, the prompts are legible instead of garbled due to a baud mismatch. i then switch out of serial monitor on the host and run esptool to flash a rom on the esp8266. Again, this is literally beyond the scope of this document, but this note here is just a tip on how i did it successfully in one of the attempts. my guess is that the utilities would have done the same if the sketch is able to change the baud based on usb commands from the host.
 
 The AT commands are based on a version of AT rom from expressif, they may be different between versions or have changed. Refer to expressif documents for the AT comamnds reference
 [ESP8266 Non-OS AT Instruction Set](https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf)
