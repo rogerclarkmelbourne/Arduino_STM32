@@ -8,6 +8,7 @@
 void docmd();
 bool chkcmd();
 void setserial();
+void configserial();
 void bufsend();
 
 // bluepill
@@ -17,12 +18,32 @@ uint8 ledPin = LED_BUILTIN;
 uint8 dtrPin = PB12;
 uint8 rtsPin = PB13;
 
+// this is the character used for the +++ escape sequence
+// this would interfere with the escape sequence char of esp8266
+// change this to another character of your preference to prevent issues
+#define ESCSEQCHAR '+'
+
 bool bcmd;
 uint8 fsendlf;
 uint8 dtr;
 uint8 rts;
 
 #define INVERT(x) (~x)&1
+
+
+bool bsetlinecoding = false;
+
+//setup hook flags bsetlinecoding when SET_LINE_CODING is received
+static void usbSetupHook(unsigned hook __attribute__((unused)),
+		void *requestvp) {
+    uint8 request = *(uint8*)requestvp;
+
+    if (request == USB_CDCACM_SET_LINE_CODING) {
+        bsetlinecoding = true;
+    }
+    return;
+}
+
 
 // the setup() method runs once when the sketch starts
 void setup() {
@@ -32,9 +53,12 @@ void setup() {
    Serial.begin();
 
    //disable DTR checks, note this disable DTR "LEAF" magic sequence
-   usb_cdcacm_set_hooks(USB_CDCACM_HOOK_IFACE_SETUP, NULL);
+   //replace the interface setup hook
+   usb_cdcacm_set_hooks(USB_CDCACM_HOOK_IFACE_SETUP, &usbSetupHook);
 
    //AN3155: usart boot loader requires even parity
+   // but literally those parity stuff is not (yet) implemented in the core
+   // and somehow it works! ;)
    //Serial1.begin(115200,SERIAL_8E1);
    Serial1.begin(115200,SERIAL_8N1);
    //Serial1.begin(74880,SERIAL_8N1);
@@ -58,12 +82,18 @@ void setup() {
 //as long as maple has power
 void loop() {
 
-	if(usb_cdcacm_get_dtr() != dtr) {
+	if(bsetlinecoding) {
+		//configure uart based on baud and line discipline from host
+		configserial();
+		bsetlinecoding = false;
+	}
+
+	if (usb_cdcacm_get_dtr() != dtr) {
 		dtr = INVERT(dtr);
 		digitalWrite(dtrPin, INVERT(dtr));
 	}
 
-	if(usb_cdcacm_get_rts() != rts) {
+	if (usb_cdcacm_get_rts() != rts) {
 		rts = INVERT(rts);
 		digitalWrite(rtsPin, INVERT(rts));
 	}
@@ -137,7 +167,7 @@ void docmd() {
 	case 'M': //configure MDNS
 		Serial1.print("AT+MDNS=1,\"esp8266\",\"http\",80\r\n");
 		break;
-	case 'L': //logon to AP L"ssid","password"
+	case 'L': //logon to AP L"user","password"
 		Serial1.print("AT+CWJAP_CUR=");
 		Serial1.print((const char *)(cmdline + 1));
 		Serial1.print("\r\n");
@@ -188,8 +218,29 @@ void docmd() {
 	}
 }
 
+//configures serial baud and flags from configuration received from host
+void configserial() {
+	uint32 baud = usb_cdcacm_get_baud();
+//	Serial.print("baud:");
+//	Serial.print(baud);
+//	Serial.println();
+//	Serial.print("bits:");
+//	Serial.print(usb_cdcacm_get_n_data_bits());
+//	Serial.println();
+//	Serial.print("parity:");
+//	Serial.print(usb_cdcacm_get_parity());
+//	Serial.println();
+//	Serial.print("stop:");
+//	Serial.print(usb_cdcacm_get_stop_bits());
+//	Serial.println();
+	//currently the serial line discipline flags are not supported in the core
+	//hence it is hardcoded as default 8N1!
+	//only the baud rate is updated
+	Serial1.begin(baud, SERIAL_8N1);
+}
+
 void setserial() {
-	uint32_t baud = atoi((const char *) (cmdline+1));
+	uint32 baud = atoi((const char *) (cmdline+1));
 	Serial.println(baud);
 	Serial1.begin(baud, SERIAL_8N1);
 }
@@ -237,7 +288,7 @@ bool chkcmd() {
 	while(timeout < 500 && pluscount < 4) {
 		if(Serial.available()) {
 			c = Serial.read();
-			if(c == '+') {
+			if(c == ESCSEQCHAR) {
 				pluscount++;
 				timeout = 0;
 			} else {
@@ -254,8 +305,8 @@ bool chkcmd() {
 		return true;
 	} else {
 		for(uint16_t i=0; i<pluscount; i++)
-			Serial1.write('+');
-		if(c != '+') Serial1.write(c);
+			Serial1.write(ESCSEQCHAR);
+		if(c != ESCSEQCHAR) Serial1.write(c);
 		if(c == 13 && fsendlf) Serial1.write(10);
 	}
 	return false;
