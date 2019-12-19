@@ -237,6 +237,40 @@ void configserial() {
 	//hence it is hardcoded as default 8N1!
 	//only the baud rate is updated
 	Serial1.begin(baud, SERIAL_8N1);
+
+	//line discipline handling
+	uint32_t u1cr1 = USART1_BASE->CR1;
+	uint32_t u1cr2 = USART1_BASE->CR2;
+	uint8 bits = usb_cdcacm_get_n_data_bits();
+	if(bits == 9)
+		u1cr1 |= USART_CR1_M;
+	else //8 bits, and all others, zero out M bit
+		u1cr1 &= ~USART_CR1_M;
+
+	uint8 stop = usb_cdcacm_get_stop_bits();
+	//zero out the stop bits, this is 1 stop bits
+	//this is a 2 bits field
+	u1cr2 &= ~USART_CR2_STOP;
+	if(stop == 2)
+		u1cr2 |= USART_CR2_STOP_BITS_1;
+	else if (stop == 1)
+		u1cr2 |= USART_CR2_STOP_BITS_1_POINT_5;
+	//else 1 stop bits
+
+	uint8 parity = usb_cdcacm_get_parity();
+	if(parity == 1) { //odd
+		u1cr1 |= USART_CR1_PCE; //enable parity
+		u1cr1 |= USART_CR1_PS_ODD;
+	} else if (parity == 2) { //even
+		u1cr1 |= USART_CR1_PCE; //enable parity
+		u1cr1 &= ~USART_CR1_PS; //zero out PS - even parity
+	} else {
+		//zero out parity enable and parity selection
+		u1cr1 &= ~(USART_CR1_PCE||USART_CR1_PS);
+	}
+	USART1_BASE->CR1 = u1cr1;
+	USART1_BASE->CR2 = u1cr2;
+
 }
 
 void setserial() {
