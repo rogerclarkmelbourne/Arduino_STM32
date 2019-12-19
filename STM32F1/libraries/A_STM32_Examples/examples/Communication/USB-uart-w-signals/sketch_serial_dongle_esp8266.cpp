@@ -167,7 +167,7 @@ void docmd() {
 	case 'M': //configure MDNS
 		Serial1.print("AT+MDNS=1,\"esp8266\",\"http\",80\r\n");
 		break;
-	case 'L': //logon to AP L"user","password"
+	case 'L': //logon to AP L"ssid","password"
 		Serial1.print("AT+CWJAP_CUR=");
 		Serial1.print((const char *)(cmdline + 1));
 		Serial1.print("\r\n");
