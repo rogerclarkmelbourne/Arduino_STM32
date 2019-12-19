@@ -266,7 +266,7 @@ void configserial() {
 		u1cr1 &= ~USART_CR1_PS; //zero out PS - even parity
 	} else {
 		//zero out parity enable and parity selection
-		u1cr1 &= ~(USART_CR1_PCE||USART_CR1_PS);
+		u1cr1 &= ~(USART_CR1_PCE|USART_CR1_PS);
 	}
 	USART1_BASE->CR1 = u1cr1;
 	USART1_BASE->CR2 = u1cr2;
