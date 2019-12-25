@@ -89,6 +89,13 @@ extern "C" {
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
 #   define STM32_MEDIUM_DENSITY
 
+#elif defined(MCU_STM32F103C6)
+#   define STM32_NR_GPIO_PORTS          3
+#   define STM32_SRAM_END               ((void*)0x20002800)
+#   define NR_GPIO_PORTS                STM32_NR_GPIO_PORTS
+#   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
+#   define STM32_MEDIUM_DENSITY // this is actually a low density device, but it is very close to the C8
+
 #elif defined(MCU_STM32F103CB)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
     /* This STM32_NR_GPIO_PORTS is not true, but only pins 0 and

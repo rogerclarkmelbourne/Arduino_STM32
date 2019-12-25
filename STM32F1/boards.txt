@@ -358,13 +358,6 @@ genericSTM32F103C.menu.device_variant.STM32F103CB.build.ldscript=ld/jtag.ld
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_size=131072
 genericSTM32F103C.menu.device_variant.STM32F103CB.upload.maximum_data_size=20480
 
-## STM32F103FEBK6 (fake STM32F103C8T6) -------------------------
-genericSTM32F103C.menu.device_variant.STM32F103C6=STM32F103FEBK6 (10k RAM. 32k Flash)
-genericSTM32F103C.menu.device_variant.STM32F103C6.build.cpu_flags=-DMCU_STM32F103C8
-genericSTM32F103C.menu.device_variant.STM32F103C6.build.ldscript=ld/jtag_k6.ld
-genericSTM32F103C.menu.device_variant.STM32F103C6.upload.maximum_size=32768
-genericSTM32F103C.menu.device_variant.STM32F103C6.upload.maximum_data_size=10240
-
 #---------------------------- UPLOAD METHODS ---------------------------
 
 genericSTM32F103C.menu.upload_method.DFUUploadMethod=STM32duino bootloader
@@ -438,6 +431,102 @@ genericSTM32F103C.menu.opt.o3std.build.flags.ldspecs=
 genericSTM32F103C.menu.opt.ogstd=Debug (-g)
 genericSTM32F103C.menu.opt.ogstd.build.flags.optimize=-Og
 genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
+
+###################### Generic STM32F103C6 ########################################
+
+genericSTM32F103C6.name=Generic STM32F103C6/fake STM32F103C8
+genericSTM32F103C6.vid.0=0x1EAF
+genericSTM32F103C6.pid.0=0x0004
+genericSTM32F103C6.build.variant=generic_stm32f103c
+genericSTM32F103C6.build.vect=VECT_TAB_ADDR=0x8000000
+genericSTM32F103C6.build.core=maple
+genericSTM32F103C6.build.board=GENERIC_STM32F103C
+genericSTM32F103C6.build.error_led_port=GPIOC
+genericSTM32F103C6.build.error_led_pin=13
+genericSTM32F103C6.upload.use_1200bps_touch=false
+genericSTM32F103C6.upload.file_type=bin
+genericSTM32F103C6.upload.auto_reset=true
+genericSTM32F103C6.upload.tool=maple_upload
+genericSTM32F103C6.upload.protocol=maple_dfu
+genericSTM32F103C6.build.cpu_flags=-DMCU_STM32F103C6
+genericSTM32F103C6.build.ldscript=ld/jtag_c6.ld
+genericSTM32F103C6.upload.maximum_size=32768
+genericSTM32F103C6.upload.maximum_data_size=10240
+
+#---------------------------- UPLOAD METHODS ---------------------------
+
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_20_c6.ld
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.upload.altID=2
+genericSTM32F103C6.menu.upload_method.DFUUploadMethod.upload.maximum_size=24576
+
+genericSTM32F103C6.menu.upload_method.serialMethod=Serial
+genericSTM32F103C6.menu.upload_method.serialMethod.upload.protocol=maple_serial
+genericSTM32F103C6.menu.upload_method.serialMethod.upload.tool=serial_upload
+genericSTM32F103C6.menu.upload_method.serialMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+genericSTM32F103C6.menu.upload_method.STLinkMethod=STLink
+genericSTM32F103C6.menu.upload_method.STLinkMethod.upload.protocol=STLink
+genericSTM32F103C6.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+genericSTM32F103C6.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+genericSTM32F103C6.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+genericSTM32F103C6.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+genericSTM32F103C6.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+genericSTM32F103C6.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+genericSTM32F103C6.menu.upload_method.jlinkMethod=JLink
+genericSTM32F103C6.menu.upload_method.jlinkMethod.upload.protocol=jlink
+genericSTM32F103C6.menu.upload_method.jlinkMethod.upload.tool=jlink_upload
+genericSTM32F103C6.menu.upload_method.jlinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER 
+
+#genericSTM32F103C6.menu.upload_method.HIDUploadMethod=HID bootloader 2.0
+#genericSTM32F103C6.menu.upload_method.HIDUploadMethod.upload.tool=hid_upload
+#genericSTM32F103C6.menu.upload_method.HIDUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+#genericSTM32F103C6.menu.upload_method.HIDUploadMethod.build.vect=VECT_TAB_ADDR=0x8001000
+#genericSTM32F103C6.menu.upload_method.HIDUploadMethod.build.ldscript=ld/hid_bootloader_c6.ld
+
+#-- CPU Clock frequency
+genericSTM32F103C6.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
+genericSTM32F103C6.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
+
+genericSTM32F103C6.menu.cpu_speed.speed_48mhz=48Mhz (Slow - with USB)
+genericSTM32F103C6.menu.cpu_speed.speed_48mhz.build.f_cpu=48000000L
+
+genericSTM32F103C6.menu.cpu_speed.speed_128mhz=Overclocked 128Mhz NO USB SERIAL. MANUAL RESET NEEDED TO UPLOAD
+genericSTM32F103C6.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
+
+#-- Optimizations
+genericSTM32F103C6.menu.opt.osstd=Smallest (default)
+#genericSTM32F103C6.menu.opt.oslto=Smallest Code with LTO
+#genericSTM32F103C6.menu.opt.oslto.build.flags.optimize=-Os -flto
+#genericSTM32F103C6.menu.opt.oslto.build.flags.ldspecs=-flto
+genericSTM32F103C6.menu.opt.o1std=Fast (-O1)
+genericSTM32F103C6.menu.opt.o1std.build.flags.optimize=-O1
+genericSTM32F103C6.menu.opt.o1std.build.flags.ldspecs=
+#genericSTM32F103C6.menu.opt.o1lto=Fast (-O1) with LTO
+#genericSTM32F103C6.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+#genericSTM32F103C6.menu.opt.o1lto.build.flags.ldspecs=-flto
+genericSTM32F103C6.menu.opt.o2std=Faster (-O2)
+genericSTM32F103C6.menu.opt.o2std.build.flags.optimize=-O2
+genericSTM32F103C6.menu.opt.o2std.build.flags.ldspecs=
+#genericSTM32F103C6.menu.opt.o2lto=Faster (-O2) with LTO
+#genericSTM32F103C6.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+#genericSTM32F103C6.menu.opt.o2lto.build.flags.ldspecs=-flto
+genericSTM32F103C6.menu.opt.o3std=Fastest (-O3)
+genericSTM32F103C6.menu.opt.o3std.build.flags.optimize=-O3
+genericSTM32F103C6.menu.opt.o3std.build.flags.ldspecs=
+#genericSTM32F103C6.menu.opt.o3lto=Fastest (-O3) with LTO
+#genericSTM32F103C6.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+#genericSTM32F103C6.menu.opt.o3lto.build.flags.ldspecs=-flto
+genericSTM32F103C6.menu.opt.ogstd=Debug (-g)
+genericSTM32F103C6.menu.opt.ogstd.build.flags.optimize=-Og
+genericSTM32F103C6.menu.opt.ogstd.build.flags.ldspecs=
 
 ########################### Generic STM32F103R ###########################
 
