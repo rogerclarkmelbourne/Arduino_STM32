@@ -138,20 +138,7 @@ extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
  * Moved definitions for Hardware Serial devices from HardwareSerial.cpp so that each board can define which Arduino "Serial" instance
  * Maps to which hardware serial port on the microprocessor
  */
-						
-#ifdef SERIAL_USB
-	DEFINE_HWSERIAL(Serial1, 1);
 
-	DEFINE_HWSERIAL(Serial2, 2);
-
-	DEFINE_HWSERIAL(Serial3, 3);
-
-#else
-	DEFINE_HWSERIAL(Serial, 1);
-
-	DEFINE_HWSERIAL(Serial1, 2);
-
-	DEFINE_HWSERIAL(Serial2, 3);
-
-
-#endif
+DEFINE_HWSERIAL(Serial1, 1);
+DEFINE_HWSERIAL(Serial2, 2);
+DEFINE_HWSERIAL(Serial3, 3);

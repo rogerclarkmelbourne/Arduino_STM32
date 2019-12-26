@@ -35,6 +35,8 @@
 #include <libmaple/nvic.h>
 #include <libmaple/bitband.h>
 
+static inline void dispatch_single_exti(uint32 exti_num);
+static inline void dispatch_extis(uint32 start, uint32 stop);
 
 /*
  * Internal state
@@ -45,7 +47,7 @@ typedef struct exti_channel {
     void *arg;
 } exti_channel;
 
-exti_channel exti_channels[] = {
+static exti_channel exti_channels[] = {
     { .handler = NULL, .arg = NULL },  // EXTI0
     { .handler = NULL, .arg = NULL },  // EXTI1
     { .handler = NULL, .arg = NULL },  // EXTI2
@@ -206,46 +208,6 @@ void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port) {
     *exti_cr = cr;
 }
 
-/* This dispatch routine is for non-multiplexed EXTI lines only; i.e.,
- * it doesn't check EXTI_PR. */
-__attribute__((always_inline)) void dispatch_single_exti(uint32 exti) {
-    voidArgumentFuncPtr handler = exti_channels[exti].handler;
-
-    if (!handler) {
-        return;
-    }
-
-    handler(exti_channels[exti].arg);
-    EXTI_BASE->PR = (1U << exti);
-    asm volatile("nop");
-    asm volatile("nop");
-}
-
-/* Dispatch routine for EXTIs which share an IRQ. */
-__attribute__((always_inline)) void dispatch_extis(uint32 start, uint32 stop) {
-    uint32 pr = EXTI_BASE->PR;
-    uint32 handled_msk = 0;
-    uint32 exti;
-
-    /* Dispatch user handlers for pending EXTIs. */
-    for (exti = start; exti <= stop; exti++) {
-        uint32 eb = (1U << exti);
-        if (pr & eb) {
-            voidArgumentFuncPtr handler = exti_channels[exti].handler;
-            if (handler) {
-                handler(exti_channels[exti].arg);
-                handled_msk |= eb;
-            }
-        }
-    }
-
-    /* Clear the pending bits for handled EXTIs. */
-    EXTI_BASE->PR = (handled_msk);
-    asm volatile("nop");
-    asm volatile("nop");
-}
-
-
 /*
  * Interrupt handlers
  */
@@ -282,3 +244,49 @@ __weak void __irq_exti15_10(void) {
  * Auxiliary functions
  */
 
+/* Clear the pending bits for EXTIs whose bits are set in exti_msk.
+ *
+ * If a pending bit is cleared as the last instruction in an ISR, it
+ * won't actually be cleared in time and the ISR will fire again.  To
+ * compensate, this function NOPs for 2 cycles after clearing the
+ * pending bits to ensure it takes effect. */
+inline void clear_pending_msk(uint32 exti_msk) {
+    EXTI_BASE->PR = exti_msk;
+    asm volatile("nop");
+    asm volatile("nop");
+}
+
+/* This dispatch routine is for non-multiplexed EXTI lines only; i.e.,
+ * it doesn't check EXTI_PR. */
+inline void dispatch_single_exti(uint32 exti) {
+    voidArgumentFuncPtr handler = exti_channels[exti].handler;
+
+    if (!handler) {
+        return;
+    }
+
+    handler(exti_channels[exti].arg);
+    clear_pending_msk(1U << exti);
+}
+
+/* Dispatch routine for EXTIs which share an IRQ. */
+inline void dispatch_extis(uint32 start, uint32 stop) {
+    uint32 pr = EXTI_BASE->PR;
+    uint32 handled_msk = 0;
+    uint32 exti;
+
+    /* Dispatch user handlers for pending EXTIs. */
+    for (exti = start; exti <= stop; exti++) {
+        uint32 eb = (1U << exti);
+        if (pr & eb) {
+            voidArgumentFuncPtr handler = exti_channels[exti].handler;
+            if (handler) {
+                handler(exti_channels[exti].arg);
+                handled_msk |= eb;
+            }
+        }
+    }
+
+    /* Clear the pending bits for handled EXTIs. */
+    clear_pending_msk(handled_msk);
+}
