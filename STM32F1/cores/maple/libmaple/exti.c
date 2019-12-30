@@ -208,7 +208,7 @@ void exti_do_select(__IO uint32 *exti_cr, exti_num num, exti_cfg port) {
 
 /* This dispatch routine is for non-multiplexed EXTI lines only; i.e.,
  * it doesn't check EXTI_PR. */
-__attribute__((always_inline)) void dispatch_single_exti(uint32 exti) {
+void dispatch_single_exti(uint32 exti) {
     voidArgumentFuncPtr handler = exti_channels[exti].handler;
 
     if (!handler) {
@@ -222,7 +222,7 @@ __attribute__((always_inline)) void dispatch_single_exti(uint32 exti) {
 }
 
 /* Dispatch routine for EXTIs which share an IRQ. */
-__attribute__((always_inline)) void dispatch_extis(uint32 start, uint32 stop) {
+void dispatch_extis(uint32 start, uint32 stop) {
     uint32 pr = EXTI_BASE->PR;
     uint32 handled_msk = 0;
     uint32 exti;
