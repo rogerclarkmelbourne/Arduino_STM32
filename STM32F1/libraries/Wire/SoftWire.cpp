@@ -58,17 +58,15 @@ void SoftWire::set_scl(bool state) {
     I2C_DELAY(this->i2c_delay);
 
 	gpio_write_bit(sclDevice,sclBit, state);
-//    digitalWrite(this->scl_pin,state);
     //Allow for clock stretching - dangerous currently
     if (state == HIGH) {
-        while(digitalRead(this->scl_pin) == 0);
+		while (gpio_read_bit(sclDevice,sclBit) == 0);
     }
 }
 
 void SoftWire::set_sda(bool state) {
 	I2C_DELAY(this->i2c_delay);
 	gpio_write_bit(sdaDevice,sdaBit, state);
-    //digitalWrite(this->sda_pin, state);
 }
 
 void SoftWire::i2c_start() {
@@ -93,7 +91,7 @@ bool SoftWire::i2c_get_ack() {
     set_sda(HIGH);
     set_scl(HIGH);
 
-    bool ret = !digitalRead(this->sda_pin);
+    bool ret = (gpio_read_bit(sdaDevice, sdaBit) == 0);
     set_scl(LOW);
     return ret;
 }
@@ -117,7 +115,7 @@ uint8 SoftWire::i2c_shift_in() {
     int i;
     for (i = 0; i < 8; i++) {
         set_scl(HIGH);
-        data |= digitalRead(this->sda_pin) << (7-i);
+		data |= gpio_read_bit(sdaDevice, sdaBit) ? (1 << (7-i)) : 0;
         set_scl(LOW);
     }
 
