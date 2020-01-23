@@ -81,7 +81,7 @@ public:
      * Deinitialises the class interface
      */
      // Allow derived classes to overwrite end function
-    virtual void end();
+    virtual void end() {}
 
     /*
      * Sets up the transmission message to be processed
