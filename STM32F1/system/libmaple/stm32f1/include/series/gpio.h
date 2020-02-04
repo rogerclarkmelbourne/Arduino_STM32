@@ -380,6 +380,7 @@ typedef enum afio_remap_peripheral {
 } afio_remap_peripheral;
 
 void afio_remap(afio_remap_peripheral p);
+int8_t afio_is_remapped(afio_remap_peripheral p);
 
 /**
  * @brief Debug port configuration

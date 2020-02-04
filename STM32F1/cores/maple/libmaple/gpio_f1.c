@@ -180,3 +180,12 @@ void afio_remap(afio_remap_peripheral remapping) {
         AFIO_BASE->MAPR |= remapping;
     }
 }
+
+int8_t afio_is_remapped(afio_remap_peripheral remapping) {
+    if (remapping & AFIO_REMAP_USE_MAPR2) {
+        remapping &= ~AFIO_REMAP_USE_MAPR2;
+        return AFIO_BASE->MAPR2 & remapping;
+    } else {
+        return AFIO_BASE->MAPR & remapping;
+    }
+}

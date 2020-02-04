@@ -86,6 +86,15 @@ static const spi_pins board_spi_pins[] __FLASH__ = {
 #endif
 };
 
+static const spi_pins board_alt_spi_pins[] __FLASH__ = {
+#if defined(BOARD_SPI1_ALT_MOSI_PIN)
+    {BOARD_SPI1_ALT_NSS_PIN,
+     BOARD_SPI1_ALT_SCK_PIN,
+     BOARD_SPI1_ALT_MISO_PIN,
+     BOARD_SPI1_ALT_MOSI_PIN}
+#endif
+};
+
 #if BOARD_NR_SPI >= 1
 static void (*_spi1_this);
 #endif
@@ -711,7 +720,13 @@ void SPIClass::_spi3EventCallback() {
 static const spi_pins* dev_to_spi_pins(spi_dev *dev) {
     switch (dev->clk_id) {
 #if BOARD_NR_SPI >= 1
-    case RCC_SPI1: return board_spi_pins;
+    case RCC_SPI1:
+#if defined(BOARD_SPI1_ALT_MOSI_PIN)
+        if(afio_is_remapped(AFIO_REMAP_SPI1)) {
+            return board_alt_spi_pins;
+        }
+#endif
+        return board_spi_pins;
 #endif
 #if BOARD_NR_SPI >= 2
     case RCC_SPI2: return board_spi_pins + 1;
