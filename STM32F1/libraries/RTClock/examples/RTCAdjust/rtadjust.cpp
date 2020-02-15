@@ -84,13 +84,24 @@ void synctime(time_t time_now) {
  *
  *  call this function with the current accurate clock time to calibrate the rtc
  *
+ *  it is recommended to set the RTC time with the time you provide to calibratertc()
+ *  after calling this function to calibrate the RTC, that ensures a time sync after
+ *  calibratertc().
+ *
+ *  however, call rt.setTime(time_now) and not synctime() as synctime would change the
+ *  initial time sync timestamp needed by this calibratertc() function
+ *
  *  if the cumulative delay between current time and the last time when synctime()
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
  *
- *  note that this function can only be run once to compute the drift_duration
- *  this is because the time of last adjustment would have been updated
- *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  note that if you want to call calibratertc() repeatedly after an initial synctime
+ *  you need to define INCR_CALIBRATE. that would allow you to call calibratertc()
+ *  multiple times after an initial synctime() call.
+ *
+ *  without INCR_CALIBRATE this function can only be run once to compute
+ *  the drift_duration this is because the time of last adjustment would have
+ *  been updated by adjtime() after calibration and is no longer relevant for purpose of
  *  computing drift duration
  *
  *  to run it again
