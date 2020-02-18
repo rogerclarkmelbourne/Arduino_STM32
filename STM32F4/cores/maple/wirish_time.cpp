@@ -33,10 +33,17 @@
 #include "wirish_time.h"
 #include <libmaple/delay.h>
 
-void delay(unsigned long ms) {
-    uint32 i;
-    for (i = 0; i < ms; i++) {
-        delayMicroseconds(1000);
+void delay(unsigned long ms)
+{
+    uint32 start = micros();
+    while (ms > 0)
+    {
+        yield();
+        while ( (ms > 0) && ((micros() - start) >= 1000) )
+        {
+            ms--;
+            start += 1000;
+        }
     }
 }
 
