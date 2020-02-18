@@ -39,31 +39,11 @@
 #ifndef _BOARDS_H_
 #define _BOARDS_H_
 
-#include <wirish_types.h>
+
+#include <libmaple/libmaple_types.h>
 #include <stdbool.h>
 
-/* Set of all possible pin names; not all boards have all these (note
- * that we use the Dx convention since all of the Maple's pins are
- * "digital" pins (e.g. can be used with digitalRead() and
- * digitalWrite()), but not all of them are connected to ADCs. */
-enum {
-    D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16,
-    D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31,
-    D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46,
-    D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D61,
-    D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76,
-#if 0 // not available on LQFP100 package
-    D77, D78, D79, D80, D81, D82, D83, D84, D85, D86, D87, D88, D89, D90, D91,
-    D92, D93, D94, D95, D96, D97, D98, D99, D100, D101, D102, D103, D104, D105,
-    D106, D107, D108, D109, D110, D111,
-#endif // not available on LQFP100 package
-};
 
-/**
- * @brief Maps each Maple pin to a corresponding stm32_pin_info.
- * @see stm32_pin_info
- */
-extern const stm32_pin_info PIN_MAP[];
 
 /**
  * @brief Pins capable of PWM output.
@@ -121,16 +101,16 @@ extern bool boardUsesPin(uint8 pin);
 
 /* FIXME HACK put boards/ before these paths once IDE uses make. */
 
-#if defined(BOARD_aeroquad32) || defined(BOARD_aeroquad32f1)
-#include "aeroquad32.h"
-#elif defined(BOARD_aeroquad32mini)
-#include "aeroquad32mini.h"
-#elif defined(BOARD_discovery_f4)
+#if defined(VARIANT_discovery_f407)
 #include "discovery_f4.h"
-#elif defined(BOARD_generic_f407v)
+#elif defined(VARIANT_blackpill_f401)
+#include "blackpill_f401.h"
+#elif defined(VARIANT_disco_f411)
+#include "disco_f411.h"
+#elif defined(VARIANT_generic_f407v)
 #include "generic_f407v.h"
-#elif defined(BOARD_freeflight)
-#include "freeflight.h"
+#elif defined(VARIANT_arch_max)
+#include "arch_max.h"
 #else
 /*
  * TODO turn this into a warning so people can:
@@ -146,15 +126,12 @@ extern bool boardUsesPin(uint8 pin);
 
 /* Set derived definitions */
 
-#define CLOCK_SPEED_MHZ                 CYCLES_PER_MICROSECOND
+#define CYCLES_PER_MICROSECOND			CLOCK_SPEED_MHZ                 
 #define CLOCK_SPEED_HZ                  (CLOCK_SPEED_MHZ * 1000000UL)
-
-#ifndef SYSTICK_RELOAD_VAL
-#define SYSTICK_RELOAD_VAL              (1000 * CYCLES_PER_MICROSECOND - 1)
-#endif
 
 #ifndef BOARD_BUTTON_PRESSED_LEVEL
 #define BOARD_BUTTON_PRESSED_LEVEL      HIGH
 #endif
+
 
 #endif

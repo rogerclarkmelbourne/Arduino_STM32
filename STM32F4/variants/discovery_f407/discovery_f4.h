@@ -37,74 +37,67 @@
 
 #define Port2Pin(port, bit) ((port-'A')*16+bit)
 
-#define CYCLES_PER_MICROSECOND  168
+#define CLOCK_SPEED_MHZ  168
 
 
-#undef  STM32_PCLK1
-#undef  STM32_PCLK2
-#define STM32_PCLK1   (CYCLES_PER_MICROSECOND*1000000/4)
-#define STM32_PCLK2   (CYCLES_PER_MICROSECOND*1000000/2)
-
-#define SYSTICK_RELOAD_VAL      (CYCLES_PER_MICROSECOND*1000-1)
-
-#define BOARD_LED_PIN           Port2Pin('D', 12)
-#define BOARD_BUTTON_PIN        Port2Pin('A', 0)
+#define BOARD_LED_PIN           PD12
+#define BOARD_BUTTON_PIN        PA0
 
 #define BOARD_USB_DM_PIN		PA11
 #define BOARD_USB_DP_PIN		PA12
 
 #define BOARD_NR_USARTS         5
-#define BOARD_USART1_TX_PIN     Port2Pin('A', 9)
-#define BOARD_USART1_RX_PIN     Port2Pin('A',10)
-#define BOARD_USART2_TX_PIN     Port2Pin('A', 2)
-#define BOARD_USART2_RX_PIN     Port2Pin('A', 3)
-#define BOARD_USART3_TX_PIN     Port2Pin('D', 8)
-#define BOARD_USART3_RX_PIN     Port2Pin('D', 9)
-#define BOARD_UART4_TX_PIN      Port2Pin('C',10)
-#define BOARD_UART4_RX_PIN      Port2Pin('C',11)
-#define BOARD_UART5_TX_PIN      Port2Pin('C',12)
-#define BOARD_UART5_RX_PIN      Port2Pin('D', 2)
+#define BOARD_USART1_TX_PIN     PA9
+#define BOARD_USART1_RX_PIN     PA10
+#define BOARD_USART2_TX_PIN     PA2
+#define BOARD_USART2_RX_PIN     PA3
+#define BOARD_USART3_TX_PIN     PD8
+#define BOARD_USART3_RX_PIN     PD9
+#define BOARD_UART4_TX_PIN      PC10
+#define BOARD_UART4_RX_PIN      PC11
+#define BOARD_UART5_TX_PIN      PC12
+#define BOARD_UART5_RX_PIN      PD2
 
 #define BOARD_NR_SPI            3
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
-#define BOARD_SPI1_NSS_PIN      Port2Pin('C', 8)
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI1_NSS_PIN      PC8
 #else
-#define BOARD_SPI1_NSS_PIN      Port2Pin('A', 4)
+#define BOARD_SPI1_NSS_PIN      PA4
 #endif
-#define BOARD_SPI1_MOSI_PIN     Port2Pin('A', 7)
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
-#define BOARD_SPI1_MISO_PIN     Port2Pin('B', 4)
+#define BOARD_SPI1_MOSI_PIN     PA7
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI1_MISO_PIN     PB4
 #else
-#define BOARD_SPI1_MISO_PIN     Port2Pin('A', 6)
+#define BOARD_SPI1_MISO_PIN     PA6
 #endif
-#define BOARD_SPI1_SCK_PIN      Port2Pin('A', 5)
-#define BOARD_SPI2_NSS_PIN      Port2Pin('B',12)
-#define BOARD_SPI2_MOSI_PIN     Port2Pin('B',15)
-#define BOARD_SPI2_MISO_PIN     Port2Pin('B',14)
-#define BOARD_SPI2_SCK_PIN      Port2Pin('B',13)
-#define BOARD_SPI3_NSS_PIN      Port2Pin('A',15)
-#define BOARD_SPI3_MOSI_PIN     Port2Pin('B', 5)
-#define BOARD_SPI3_MISO_PIN     Port2Pin('B', 4)
-#define BOARD_SPI3_SCK_PIN      Port2Pin('B', 3)
+#define BOARD_SPI1_SCK_PIN      PA5
+#define BOARD_SPI2_NSS_PIN      PB12
+#define BOARD_SPI2_MOSI_PIN     PB15
+#define BOARD_SPI2_MISO_PIN     PB14
+#define BOARD_SPI2_SCK_PIN      PB13
+#define BOARD_SPI3_NSS_PIN      PA15
+#define BOARD_SPI3_MOSI_PIN     PB5
+#define BOARD_SPI3_MISO_PIN     PB4
+#define BOARD_SPI3_SCK_PIN      PB3
 
-#ifdef ARDUINO_STM32F4_NETDUINO2PLUS
-#define BOARD_SPI3B_NSS_PIN      Port2Pin('B', 0)
+#ifdef BOARD_STM32F4_NETDUINO2PLUS
+#define BOARD_SPI3B_NSS_PIN      PB0
 #else
-#define BOARD_SPI3B_NSS_PIN      Port2Pin('B', 8)
+#define BOARD_SPI3B_NSS_PIN      PB8
 #endif
-#define BOARD_SPI3B_MOSI_PIN     Port2Pin('C',12)
-#define BOARD_SPI3B_MISO_PIN     Port2Pin('C',11)
-#define BOARD_SPI3B_SCK_PIN      Port2Pin('C',10)
+#define BOARD_SPI3B_MOSI_PIN     PC12
+#define BOARD_SPI3B_MISO_PIN     PC11
+#define BOARD_SPI3B_SCK_PIN      PC10
 
 #define BOARD_NR_GPIO_PINS      112
 #define BOARD_NR_PWM_PINS       22
 #define BOARD_NR_ADC_PINS       16
 #define BOARD_NR_USED_PINS      43 // ala42 not set yet
-#define BOARD_JTMS_SWDIO_PIN    Port2Pin('A',13)
-#define BOARD_JTCK_SWCLK_PIN    Port2Pin('A',14)
-#define BOARD_JTDI_PIN          Port2Pin('A',15)
-#define BOARD_JTDO_PIN          Port2Pin('B', 3)
-#define BOARD_NJTRST_PIN        Port2Pin('B', 4)
+#define BOARD_JTMS_SWDIO_PIN    PA13
+#define BOARD_JTCK_SWCLK_PIN    PA14
+#define BOARD_JTDI_PIN          PA15
+#define BOARD_JTDO_PIN          PB3
+#define BOARD_NJTRST_PIN        PB4
 
 
 enum {

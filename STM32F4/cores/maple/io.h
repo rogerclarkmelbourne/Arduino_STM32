@@ -122,6 +122,8 @@ void pinMode(uint8 pin, WiringPinMode mode);
  * @see pinMode()
  */
 void digitalWrite(uint8 pin, uint8 value);
+void digitalSet(uint8 pin);
+void digitalClear(uint8 pin);
 
 /**
  * Read a digital value from a pin.  The pin must have its mode set to
@@ -143,7 +145,8 @@ uint32 digitalRead(uint8 pin);
  *         conversion).
  * @see pinMode()
  */
-uint16 analogRead(uint8 pin);
+uint16 analogReadDev(uint8 pin, const adc_dev *);
+static inline uint16 analogRead(uint8 pin) { return analogReadDev(pin, ADC1); }
 
 /**
  * Toggles the digital value at the given pin.

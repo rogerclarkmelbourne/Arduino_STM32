@@ -25,7 +25,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usb_core.h"
-//#include "stm32f4_discovery.h"
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
@@ -81,6 +80,8 @@ void USB_OTG_BSP_DisableInterrupt (USB_OTG_CORE_HANDLE *pdev);
 #ifdef USE_HOST_MODE
 void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
 void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
+void USB_OTG_BSP_Resume(USB_OTG_CORE_HANDLE *pdev) ;                                                                
+void USB_OTG_BSP_Suspend(USB_OTG_CORE_HANDLE *pdev);
 #endif
 /**
   * @}

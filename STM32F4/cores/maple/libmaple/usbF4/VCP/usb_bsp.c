@@ -140,7 +140,7 @@ void USB_OTG_BSP_DeInit(USB_OTG_CORE_HANDLE *pdev)
 	gpio_set_af_mode(GPIOA,10,GPIO_AF0) ;	// OTG_FS_ID
 #endif
 
-	rcc_clk_enable(RCC_SYSCFG);
+//	rcc_clk_disable(RCC_SYSCFG);
 	rcc_clk_disable(RCC_USBFS);
 }
 

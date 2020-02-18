@@ -27,6 +27,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <STM32_USB_Device_Library/Core/inc/usbd_def.h>
 
+
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */

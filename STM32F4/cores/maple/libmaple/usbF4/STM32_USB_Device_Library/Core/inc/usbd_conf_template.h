@@ -24,9 +24,7 @@
 #define __USBD_CONF__H__
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f2xx.h"
-
-
+#include "usb_conf.h"
 
 /** @defgroup USB_CONF_Exported_Defines
   * @{

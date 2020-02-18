@@ -22,27 +22,29 @@ void usbSuspend(void);
 void usbResumeInit(void);
 //void usbResume(RESUME_STATE);
 
-RESULT usbPowerOn(void);
+inline RESULT usbPowerOn(void) { return USB_SUCCESS; }
 RESULT usbPowerOff(void);
-
-void usbDsbISR(void);
-void usbEnbISR(void);
 
 void   usbBlockingSendByte(char ch);
 uint32_t usbSendBytes(const uint8_t* sendBuf,uint32_t len);
-uint32_t usbBytesAvailable(void);
+extern uint32_t VCPBytesAvailable(void);
+inline uint32_t usbBytesAvailable(void) { return VCPBytesAvailable(); }
 uint32_t usbReceiveBytes(uint8_t* recvBuf, uint32_t len);
-uint8_t usbGetDTR(void);
-uint8_t usbGetRTS(void);
-uint8_t usbIsConnected(void);
-uint8_t usbIsConfigured(void);
+extern uint8_t VCPGetDTR(void);
+extern uint8_t VCPGetRTS(void);
+inline uint8_t usbGetDTR(void) { return VCPGetDTR(); };
+inline uint8_t usbGetRTS(void) { return VCPGetRTS(); };
+
+extern uint8_t usb_isConnected(void);
+extern uint8_t usb_isConfigured(void);
+inline uint8_t usbIsConnected(void) { return usb_isConnected(); }
+inline uint8_t usbIsConfigured(void) { return usb_isConfigured(); }
+
 uint16_t usbGetPending(void);
-void usbEnableBlockingTx(void);
-void usbDisableBlockingTx(void);
+extern void VCP_SetUSBTxBlocking(const uint8_t mode);
+inline void usbEnableBlockingTx(void) { VCP_SetUSBTxBlocking(1); }
+inline void usbDisableBlockingTx(void) { VCP_SetUSBTxBlocking(0); }
 
-
-
-void __irq_OTG_FS_IRQHandler(void);
 
 #ifdef __cplusplus
 } // extern "C"

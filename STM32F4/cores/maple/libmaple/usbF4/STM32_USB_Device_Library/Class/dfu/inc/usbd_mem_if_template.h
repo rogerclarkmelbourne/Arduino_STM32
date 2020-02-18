@@ -24,9 +24,6 @@
 #define __MEM_IF_MAL_H
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef STM32F2XX
-  #include "stm32f2xx.h"
-#endif /* STM32F2XX */
 #include "usbd_dfu_mal.h"
 
 /* Exported types ------------------------------------------------------------*/

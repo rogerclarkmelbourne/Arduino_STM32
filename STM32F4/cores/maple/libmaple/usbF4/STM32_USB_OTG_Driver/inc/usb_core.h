@@ -63,7 +63,7 @@
 /**
   * @}
   */ 
-#define   MAX_DATA_LENGTH                        0xFF
+#define   MAX_DATA_LENGTH                        0x100
 
 /** @defgroup USB_CORE_Exported_Types
   * @{
@@ -188,7 +188,11 @@ typedef struct _Device_TypeDef
   uint8_t  *(*GetProductStrDescriptor)( uint8_t speed , uint16_t *length);  
   uint8_t  *(*GetSerialStrDescriptor)( uint8_t speed , uint16_t *length);  
   uint8_t  *(*GetConfigurationStrDescriptor)( uint8_t speed , uint16_t *length);  
-  uint8_t  *(*GetInterfaceStrDescriptor)( uint8_t speed , uint16_t *length);   
+  uint8_t  *(*GetInterfaceStrDescriptor)( uint8_t speed , uint16_t *length);
+
+#if (USBD_LPM_ENABLED == 1)
+  uint8_t  *(*GetBOSDescriptor)( uint8_t speed , uint16_t *length); 
+#endif   
 } USBD_DEVICE, *pUSBD_DEVICE;
 
 typedef struct USB_OTG_hPort
@@ -248,7 +252,10 @@ typedef struct _DCD
   uint8_t        device_config;
   uint8_t        device_state;
   uint8_t        device_status;
+  uint8_t        device_old_status;
   uint8_t        device_address;
+  uint8_t        connection_status;  
+  uint8_t        test_mode;
   uint32_t       DevRemoteWakeup;
   USB_OTG_EP     in_ep   [USB_OTG_MAX_TX_FIFOS];
   USB_OTG_EP     out_ep  [USB_OTG_MAX_TX_FIFOS];
@@ -265,6 +272,7 @@ typedef struct _HCD
 {
   uint8_t                  Rx_Buffer [MAX_DATA_LENGTH];  
   __IO uint32_t            ConnSts;
+  __IO uint32_t            PortEnabled;
   __IO uint32_t            ErrCnt[USB_OTG_MAX_TX_FIFOS];
   __IO uint32_t            XferCnt[USB_OTG_MAX_TX_FIFOS];
   __IO HC_STATUS           HC_Status[USB_OTG_MAX_TX_FIFOS];  

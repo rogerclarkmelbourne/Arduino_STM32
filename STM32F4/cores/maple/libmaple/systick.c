@@ -34,6 +34,8 @@
 volatile uint32 systick_uptime_millis;
 static void (*systick_user_callback)(void);
 
+systick_reg_map * const SYSTICK = SYSTICK_BASE;
+
 /**
  * @brief Initialize and enable SysTick.
  *
@@ -43,7 +45,7 @@ static void (*systick_user_callback)(void);
  * @param reload_val Appropriate reload counter to tick every 1 ms.
  */
 void systick_init(uint32 reload_val) {
-    SYSTICK_BASE->RVR = reload_val;
+    SYSTICK->LOAD = reload_val;
     systick_enable();
 }
 
@@ -52,7 +54,7 @@ void systick_init(uint32 reload_val) {
  * on or enable interrupt.
  */
 void systick_disable() {
-    SYSTICK_BASE->CSR = SYSTICK_CSR_CLKSOURCE_CORE;
+    SYSTICK->CTRL = SYSTICK_CTRL_CLKSOURCE_CORE;
 }
 
 /**
@@ -61,9 +63,9 @@ void systick_disable() {
  */
 void systick_enable() {
     /* re-enables init registers without changing reload val */
-    SYSTICK_BASE->CSR = (SYSTICK_CSR_CLKSOURCE_CORE   |
-                         SYSTICK_CSR_ENABLE           |
-                         SYSTICK_CSR_TICKINT_PEND);
+    SYSTICK->CTRL = (SYSTICK_CTRL_CLKSOURCE_CORE   |
+                         SYSTICK_CTRL_ENABLE           |
+                         SYSTICK_CTRL_TICKINT_PENDING);
 }
 
 /**

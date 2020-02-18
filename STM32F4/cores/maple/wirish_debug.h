@@ -41,7 +41,7 @@
  * @see enableDebugPorts()
  */
 static inline void disableDebugPorts(void) {
-    afio_cfg_debug_ports(AFIO_DEBUG_NONE);
+    gpio_cfg_debug_ports(GPIO_DEBUG_NONE);
 }
 
 /**
@@ -53,7 +53,7 @@ static inline void disableDebugPorts(void) {
  * @see disableDebugPorts()
  */
 static inline void enableDebugPorts(void) {
-    afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY); //AFIO_DEBUG_FULL_SWJ);
+    gpio_cfg_debug_ports(GPIO_DEBUG_SW_ONLY);
 }
 
 #endif

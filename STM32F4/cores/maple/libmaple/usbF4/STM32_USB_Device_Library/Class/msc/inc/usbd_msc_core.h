@@ -44,9 +44,8 @@
 #define BOT_RESET                    0xFF
 #define USB_MSC_CONFIG_DESC_SIZ      32
 
-#define MSC_EPIN_SIZE  *(uint16_t *)(((USB_OTG_CORE_HANDLE *)pdev)->dev.pConfig_descriptor + 22)
-        
-#define MSC_EPOUT_SIZE *(uint16_t *)(((USB_OTG_CORE_HANDLE *)pdev)->dev.pConfig_descriptor + 29)
+#define MSC_EPIN_SIZE                MSC_MAX_PACKET 
+#define MSC_EPOUT_SIZE               MSC_MAX_PACKET 
 
 /**
   * @}

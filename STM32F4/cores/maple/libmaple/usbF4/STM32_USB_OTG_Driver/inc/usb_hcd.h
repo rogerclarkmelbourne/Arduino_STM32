@@ -80,6 +80,8 @@ uint32_t  HCD_SubmitRequest        (USB_OTG_CORE_HANDLE *pdev ,
 uint32_t  HCD_GetCurrentSpeed      (USB_OTG_CORE_HANDLE *pdev);
 uint32_t  HCD_ResetPort            (USB_OTG_CORE_HANDLE *pdev);
 uint32_t  HCD_IsDeviceConnected    (USB_OTG_CORE_HANDLE *pdev);
+uint32_t  HCD_IsPortEnabled        (USB_OTG_CORE_HANDLE *pdev);
+
 uint32_t  HCD_GetCurrentFrame      (USB_OTG_CORE_HANDLE *pdev) ;
 URB_STATE HCD_GetURB_State         (USB_OTG_CORE_HANDLE *pdev,  uint8_t ch_num); 
 uint32_t  HCD_GetXferCnt           (USB_OTG_CORE_HANDLE *pdev,  uint8_t ch_num); 

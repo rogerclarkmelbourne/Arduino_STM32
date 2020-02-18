@@ -24,8 +24,6 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#ifdef STM32F4
- 
 /**
  * @file dmaF4.c
  * @brief Direct Memory Access peripheral support
@@ -39,48 +37,46 @@
  * Devices
  */
 
-static dma_dev dma1 = {
-    .regs     = DMA1_BASE,
-    .clk_id   = RCC_DMA1,
-    .handlers = {{ .handler = NULL, .irq_line = 11 },
-                 { .handler = NULL, .irq_line = 12 },
-                 { .handler = NULL, .irq_line = 13 },
-                 { .handler = NULL, .irq_line = 14 },
-                 { .handler = NULL, .irq_line = 15 },
-                 { .handler = NULL, .irq_line = 16 },
-                 { .handler = NULL, .irq_line = 17 },
-                 { .handler = NULL, .irq_line = 47 }}
+
+dma_handler_t dma1_handlers[8] = {
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM0 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM1 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM2 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM3 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM4 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM5 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM6 },
+	{ .handler = NULL, .irq_line = NVIC_DMA1_STREAM7 },
 };
+
+dma_handler_t dma2_handlers[8] = {
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM0 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM1 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM2 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM3 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM4 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM5 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM6 },
+	{ .handler = NULL, .irq_line = NVIC_DMA2_STREAM7 },
+};
+
 /** DMA1 device */
-dma_dev *DMA1 = &dma1;
-
-static dma_dev dma2 = {
-    .regs     = DMA2_BASE,
-    .clk_id   = RCC_DMA2,
-    .handlers = {{ .handler = NULL, .irq_line = 56 },
-                 { .handler = NULL, .irq_line = 57 },
-                 { .handler = NULL, .irq_line = 58 },
-                 { .handler = NULL, .irq_line = 59 },
-                 { .handler = NULL, .irq_line = 60 },
-                 { .handler = NULL, .irq_line = 68 },
-                 { .handler = NULL, .irq_line = 69 },
-                 { .handler = NULL, .irq_line = 70 }} /* !@#$ */
+const dma_dev dma1 = {
+    .regs      = DMA1_BASE,
+    .clk_id    = RCC_DMA1,
+    .handler_p = &dma1_handlers,
 };
-/** DMA2 device */
-dma_dev *DMA2 = &dma2;
 
+/** DMA2 device */
+const dma_dev dma2 = {
+    .regs      = DMA2_BASE,
+    .clk_id    = RCC_DMA2,
+    .handler_p = &dma2_handlers,
+};
 
 /*
  * Convenience routines
  */
-
-/**
- * @brief Initialize a DMA device.
- * @param dev Device to initialize.
- */
-void dma_init(dma_dev *dev) {
-    rcc_clk_enable(dev->clk_id);
-}
 
 /**
  * @brief Attach an interrupt to a DMA transfer.
@@ -94,11 +90,13 @@ void dma_init(dma_dev *dev) {
  * @see dma_setup_transfer()
  * @see dma_detach_interrupt()
  */
-void dma_attach_interrupt(dma_dev *dev,
+void dma_attach_interrupt(const dma_dev *dev,
                           dma_stream stream,
-                          void (*handler)(void)) {
-    dev->handlers[stream].handler = handler;
-    nvic_irq_enable(dev->handlers[stream].irq_line);
+                          void (*handler)(void))
+{
+	dma_handler_t * dma_handler_p = &(*(dev->handler_p))[stream];
+    dma_handler_p->handler = handler;
+    nvic_irq_enable(dma_handler_p->irq_line);
 }
 
 /**
@@ -112,113 +110,113 @@ void dma_attach_interrupt(dma_dev *dev,
  * @sideeffect Clears interrupt enable bits in the channel's CCR register.
  * @see dma_attach_interrupt()
  */
-void dma_detach_interrupt(dma_dev *dev, dma_stream stream) {
-    nvic_irq_disable(dev->handlers[stream].irq_line);
-    dev->handlers[stream].handler = NULL;
+void dma_detach_interrupt(const dma_dev *dev, dma_stream stream)
+{
+	dma_handler_t * dma_handler_p = &(*(dev->handler_p))[stream];
+    nvic_irq_disable(dma_handler_p->irq_line);
+    dma_handler_p->handler = NULL;
 }
 
 const uint8 dma_isr_bits_shift[] = { 0, 6, 16, 22};
 
-uint8 dma_get_isr_bit(dma_dev *dev, dma_stream stream, uint8_t mask) {
+uint8 dma_get_isr_bit(const dma_dev *dev, dma_stream stream, uint8_t mask)
+{
 	if ( stream&0xFC )	return ((dev->regs->HISR)>>dma_isr_bits_shift[stream&0x03]) & mask;
 	else				return ((dev->regs->LISR)>>dma_isr_bits_shift[stream&0x03]) & mask;
 }
 
-void dma_clear_isr_bit(dma_dev *dev, dma_stream stream, uint8_t mask) {
+void dma_clear_isr_bit(const dma_dev *dev, dma_stream stream, uint8_t mask)
+{
 	if ( stream&0xFC )	dev->regs->HIFCR = (uint32)mask << dma_isr_bits_shift[stream&0x03];
 	else				dev->regs->LIFCR = (uint32)mask << dma_isr_bits_shift[stream&0x03];
 }
+
+void dma_set_mem_addr(const dma_dev *dev, dma_stream stream, __IO void *addr)
+{
+    dma_disable(dev, stream);
+    dev->regs->STREAM[stream].M0AR = (uint32)addr;
+}
+
+void dma_set_per_addr(const dma_dev *dev, dma_stream stream, __IO void *addr)
+{
+    dma_disable(dev, stream);
+    dev->regs->STREAM[stream].PAR = (uint32)addr;
+}
+
 
 /*
  * IRQ handlers
  */
 
-static inline void dispatch_handler(dma_dev *dev, dma_stream stream) {
-    void (*handler)(void) = dev->handlers[stream].handler;
+static inline void dispatch_handler(const dma_dev *dev, dma_stream stream)
+{
+    voidFuncPtr handler = (*(dev->handler_p))[stream].handler;
     if (handler) {
         handler();
-        dma_clear_isr_bits(dev, stream); /* in case handler doesn't */
     }
+    dma_clear_isr_bits(dev, stream); // in case handler doesn't
 }
 
-//void __irq_dma1_stream0(void) {
-void __irq_dma1_channel1(void) {
+void __irq_dma1_stream0(void) {
     dispatch_handler(DMA1, DMA_STREAM0);
 }
 
-//void __irq_dma1_stream1(void) {
-void __irq_dma1_channel2(void) {
+void __irq_dma1_stream1(void) {
     dispatch_handler(DMA1, DMA_STREAM1);
 }
 
-//void __irq_dma1_stream2(void) {
-void __irq_dma1_channel3(void) {
+void __irq_dma1_stream2(void) {
     dispatch_handler(DMA1, DMA_STREAM2);
 }
 
-//void __irq_dma1_stream3(void) {
-void __irq_dma1_channel4(void) {
+void __irq_dma1_stream3(void) {
     dispatch_handler(DMA1, DMA_STREAM3);
 }
 
-//void __irq_dma1_stream4(void) {
-void __irq_dma1_channel5(void) {
+void __irq_dma1_stream4(void) {
     dispatch_handler(DMA1, DMA_STREAM4);
 }
 
-//void __irq_dma1_stream5(void) {
-void __irq_dma1_channel6(void) {
+void __irq_dma1_stream5(void) {
     dispatch_handler(DMA1, DMA_STREAM5);
 }
 
-//void __irq_dma1_stream6(void) {
-void __irq_dma1_channel7(void) {
+void __irq_dma1_stream6(void) {
     dispatch_handler(DMA1, DMA_STREAM6);
 }
 
-//void __irq_dma1_stream7(void) {
-void __irq_adc3(void) {
+void __irq_dma1_stream7(void) {
     dispatch_handler(DMA1, DMA_STREAM7);
 }
 
-//void __irq_dma2_stream0(void) {
-void __irq_dma2_channel1(void) {
+void __irq_dma2_stream0(void) {
     dispatch_handler(DMA2, DMA_STREAM0);
 }
 
-//void __irq_dma2_stream1(void) {
-void __irq_dma2_channel2(void) {
+void __irq_dma2_stream1(void) {
     dispatch_handler(DMA2, DMA_STREAM1);
 }
 
-//void __irq_dma2_stream2(void) {
-void __irq_dma2_channel3(void) {
+void __irq_dma2_stream2(void) {
     dispatch_handler(DMA2, DMA_STREAM2);
 }
 
-//void __irq_dma2_stream3(void) {
-void __irq_dma2_channel4_5(void) {
+void __irq_dma2_stream3(void) {
     dispatch_handler(DMA2, DMA_STREAM3);
 }
 
-//void __irq_dma2_stream4(void) {
-void __irq_DMA2_Stream4_IRQHandler(void) {
+void __irq_dma2_stream4(void) {
     dispatch_handler(DMA2, DMA_STREAM4);
 }
 
-//void __irq_dma2_stream5(void) {
-void __irq_DMA2_Stream5_IRQHandler(void) {
+void __irq_dma2_stream5(void) {
     dispatch_handler(DMA2, DMA_STREAM5);
 }
 
-//void __irq_dma2_stream6(void) {
-void __irq_DMA2_Stream6_IRQHandler(void) {
+void __irq_dma2_stream6(void) {
     dispatch_handler(DMA2, DMA_STREAM6);
 }
 
-//void __irq_dma2_stream7(void) {
-void __irq_DMA2_Stream7_IRQHandler(void) {
+void __irq_dma2_stream7(void) {
     dispatch_handler(DMA2, DMA_STREAM7);
 }
-
-#endif

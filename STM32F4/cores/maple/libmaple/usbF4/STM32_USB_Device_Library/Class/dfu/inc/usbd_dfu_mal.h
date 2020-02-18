@@ -24,11 +24,6 @@
 #define __DFU_MAL_H
 
 /* Includes ------------------------------------------------------------------*/
-#ifdef STM32F2XX
- #include "stm32f2xx.h"
-#elif defined(STM32F10X_CL)
- #include "stm32f10x.h"
-#endif /* STM32F2XX */
 
 #include "usbd_conf.h"
 #include "usbd_dfu_core.h"
@@ -53,7 +48,7 @@ DFU_MAL_Prop_TypeDef;
 #define MAL_OK                          0
 #define MAL_FAIL                        1
 
-/* utils macro ---------------------------------------------------------------*/
+/* useful macro ---------------------------------------------------------------*/
 #define _1st_BYTE(x)  (uint8_t)((x)&0xFF)             /* 1st addressing cycle */
 #define _2nd_BYTE(x)  (uint8_t)(((x)&0xFF00)>>8)      /* 2nd addressing cycle */
 #define _3rd_BYTE(x)  (uint8_t)(((x)&0xFF0000)>>16)   /* 3rd addressing cycle */

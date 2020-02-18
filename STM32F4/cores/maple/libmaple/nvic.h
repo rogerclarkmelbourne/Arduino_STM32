@@ -55,18 +55,18 @@ extern "C"{
 
 /** NVIC register map type. */
 typedef struct nvic_reg_map {
-    __IO uint32 ISER[8];      /**< Interrupt Set Enable Registers */
-    uint32 RESERVED0[24];     /**< Reserved */
-    __IO uint32 ICER[8];      /**< Interrupt Clear Enable Registers */
-    uint32 RSERVED1[24];      /**< Reserved */
-    __IO uint32 ISPR[8];      /**< Interrupt Set Pending Registers */
-    uint32 RESERVED2[24];     /**< Reserved */
-    __IO uint32 ICPR[8];      /**< Interrupt Clear Pending Registers */
-    uint32 RESERVED3[24];     /**< Reserved */
-    __IO uint32 IABR[8];      /**< Interrupt Active bit Registers */
-    uint32 RESERVED4[56];     /**< Reserved */
-    __IO uint8  IP[240];      /**< Interrupt Priority Registers */
-    uint32 RESERVED5[644];    /**< Reserved */
+    __IO uint32 ISER[3];      /**< Interrupt Set Enable Registers */
+    uint32 RESERVED0[29];     /**< Reserved */
+    __IO uint32 ICER[3];      /**< Interrupt Clear Enable Registers */
+    uint32 RSERVED1[29];      /**< Reserved */
+    __IO uint32 ISPR[3];      /**< Interrupt Set Pending Registers */
+    uint32 RESERVED2[29];     /**< Reserved */
+    __IO uint32 ICPR[3];      /**< Interrupt Clear Pending Registers */
+    uint32 RESERVED3[29];     /**< Reserved */
+    __IO uint32 IABR[3];      /**< Interrupt Active bit Registers */
+    uint32 RESERVED4[61];     /**< Reserved */
+    __IO uint8  IP[84];       /**< Interrupt Priority Registers */
+    uint32 RESERVED5[683];    /**< Reserved */
     __IO uint32 STIR;         /**< Software Trigger Interrupt Registers */
 } nvic_reg_map;
 
@@ -97,7 +97,7 @@ typedef enum nvic_irq_num {
     NVIC_SYSTICK        = -1,   /**< System tick timer */
     NVIC_WWDG           = 0,    /**< Window watchdog interrupt */
     NVIC_PVD            = 1,    /**< PVD through EXTI line detection */
-    NVIC_TAMPER         = 2,    /**< Tamper */
+    NVIC_TAMPSTAMP      = 2,    /**< Tamper and TimeStamp */
     NVIC_RTC            = 3,    /**< Real-time clock */
     NVIC_FLASH          = 4,    /**< Flash */
     NVIC_RCC            = 5,    /**< Reset and clock control */
@@ -106,18 +106,18 @@ typedef enum nvic_irq_num {
     NVIC_EXTI2          = 8,    /**< EXTI line 2 */
     NVIC_EXTI3          = 9,    /**< EXTI line 3 */
     NVIC_EXTI4          = 10,   /**< EXTI line 4 */
-    NVIC_DMA_CH1        = 11,   /**< DMA1 channel 1 */
-    NVIC_DMA_CH2        = 12,   /**< DMA1 channel 2 */
-    NVIC_DMA_CH3        = 13,   /**< DMA1 channel 3 */
-    NVIC_DMA_CH4        = 14,   /**< DMA1 channel 4 */
-    NVIC_DMA_CH5        = 15,   /**< DMA1 channel 5 */
-    NVIC_DMA_CH6        = 16,   /**< DMA1 channel 6 */
-    NVIC_DMA_CH7        = 17,   /**< DMA1 channel 7 */
-    NVIC_ADC_1_2        = 18,   /**< ADC1 and ADC2 */
-    NVIC_USB_HP_CAN_TX  = 19,   /**< USB high priority or CAN TX */
-    NVIC_USB_LP_CAN_RX0 = 20,   /**< USB low priority or CAN RX0 */
-    NVIC_CAN_RX1        = 21,   /**< CAN RX1 */
-    NVIC_CAN_SCE        = 22,   /**< CAN SCE */
+    NVIC_DMA1_STREAM0   = 11,   /**< DMA1 stream 0 */
+    NVIC_DMA1_STREAM1   = 12,   /**< DMA1 stream 1 */
+    NVIC_DMA1_STREAM2   = 13,   /**< DMA1 stream 2 */
+    NVIC_DMA1_STREAM3   = 14,   /**< DMA1 stream 3 */
+    NVIC_DMA1_STREAM4   = 15,   /**< DMA1 stream 4 */
+    NVIC_DMA1_STREAM5   = 16,   /**< DMA1 stream 5 */
+    NVIC_DMA1_STREAM6   = 17,   /**< DMA1 stream 6 */
+    NVIC_ADC_1_2_3      = 18,   /**< ADC 1-3 */
+    NVIC_CAN1_TX        = 19,   /**< CAN1 TX */
+    NVIC_CAN1_RX0       = 20,   /**< CAN1 RX0 */
+    NVIC_CAN1_RX1       = 21,   /**< CAN1 RX1 */
+    NVIC_CAN1_SCE       = 22,   /**< CAN1 SCE */
     NVIC_EXTI_9_5       = 23,   /**< EXTI line [9:5] */
     NVIC_TIMER1_BRK     = 24,   /**< Timer 1 break */
     NVIC_TIMER1_UP      = 25,   /**< Timer 1 update */
@@ -137,27 +137,54 @@ typedef enum nvic_irq_num {
     NVIC_USART3         = 39,   /**< USART3 */
     NVIC_EXTI_15_10     = 40,   /**< EXTI line [15:10] */
     NVIC_RTCALARM       = 41,   /**< RTC alarm through EXTI line */
-    NVIC_USBWAKEUP      = 42,   /**< USB wakeup from suspend through
-                                     EXTI line */
+    NVIC_USB_FS_WKUP    = 42,   /**< USB FS wakeup through EXTI line */
     NVIC_TIMER8_BRK     = 43,   /**< Timer 8 break */
     NVIC_TIMER8_UP      = 44,   /**< Timer 8 update */
     NVIC_TIMER8_TRG_COM = 45,   /**< Timer 8 trigger and commutation */
     NVIC_TIMER8_CC      = 46,   /**< Timer 8 capture/compare */
-#ifdef STM32_HIGH_DENSITY
-    NVIC_ADC3           = 47,   /**< ADC3 */
+    NVIC_DMA1_STREAM7   = 47,   /**< DMA1 stream 7 */
     NVIC_FSMC           = 48,   /**< FSMC */
     NVIC_SDIO           = 49,   /**< SDIO */
     NVIC_TIMER5         = 50,   /**< Timer 5 */
     NVIC_SPI3           = 51,   /**< SPI3 */
     NVIC_UART4          = 52,   /**< UART4 */
     NVIC_UART5          = 53,   /**< UART5 */
-    NVIC_TIMER6         = 54,   /**< Timer 6 */
+    NVIC_TIMER6_DAC     = 54,   /**< Timer 6 & DAC */
     NVIC_TIMER7         = 55,   /**< Timer 7 */
-    NVIC_DMA2_CH1       = 56,   /**< DMA2 channel 1 */
-    NVIC_DMA2_CH2       = 57,   /**< DMA2 channel 2 */
-    NVIC_DMA2_CH3       = 58,   /**< DMA2 channel 3 */
-    NVIC_DMA2_CH_4_5    = 59,   /**< DMA2 channels 4 and 5 */
-#endif
+    NVIC_DMA2_STREAM0   = 56,   /**< DMA2 stream 0 */
+    NVIC_DMA2_STREAM1   = 57,   /**< DMA2 stream 1 */
+    NVIC_DMA2_STREAM2   = 58,   /**< DMA2 stream 2 */
+    NVIC_DMA2_STREAM3   = 59,   /**< DMA2 stream 3 */
+    NVIC_DMA2_STREAM4   = 60,   /**< DMA2 stream 4 */
+    NVIC_ETH            = 61,   /**< Ethernet */
+    NVIC_ETH_WKUP       = 62,   /**< Ethernet Wakeup through EXTI line */
+    NVIC_CAN2_TX        = 63,   /**< CAN2 TX */
+    NVIC_CAN2_RX0       = 64,   /**< CAN2 RX0 */
+    NVIC_CAN2_RX1       = 65,   /**< CAN2 RX1 */
+    NVIC_CAN2_SCE       = 66,   /**< CAN2 SCE */
+    NVIC_USB_FS         = 67,   /**< USB FS global interrupt */
+    NVIC_DMA2_STREAM5   = 68,   /**< DMA2 stream 5 */
+    NVIC_DMA2_STREAM6   = 69,   /**< DMA2 stream 6 */
+    NVIC_DMA2_STREAM7   = 70,   /**< DMA2 stream 7 */
+    NVIC_USART6         = 71,   /**< USART6 */
+    NVIC_I2C3_EV        = 72,   /**< I2C3 event */
+    NVIC_I2C3_ER        = 73,   /**< I2C3 error */
+    NVIC_USB_HS_EP1_OUT = 74,
+    NVIC_USB_HS_EP1_IN  = 75,
+    NVIC_USB_HS_WKUP    = 76,
+    NVIC_USB_HS         = 77,
+    NVIC_DCMI           = 78,
+    NVIC_CRYPT          = 79,
+    NVIC_HASH_RNG       = 80,
+    NVIC_FPU            = 81,
+    NVIC_UART7          = 82,
+    NVIC_UART8          = 83,
+    NVIC_SPI4           = 84,
+    NVIC_SPI5           = 85,
+    NVIC_UART9          = 88,
+    NVIC_UART10         = 89,
+    NVIC_QUAD_SPI       = 92,
+	NVIC_LAST_IRQ_NUM,
 } nvic_irq_num;
 
 /*
@@ -221,16 +248,9 @@ static inline void nvic_irq_disable(nvic_irq_num irq_num) {
  * nvic_irq_disable() in a loop.
  */
 static inline void nvic_irq_disable_all(void) {
-    /* Note: This only works up to XL density.  The fix for
-     * connectivity line is:
-     *
-     *     NVIC_BASE->ICER[2] = 0xF;
-     *
-     * We don't support connectivity line devices (yet), so leave it
-     * alone for now.
-     */
     NVIC_BASE->ICER[0] = 0xFFFFFFFF;
     NVIC_BASE->ICER[1] = 0xFFFFFFFF;
+    NVIC_BASE->ICER[2] = 0x0001FFFF;
 }
 
 #ifdef __cplusplus

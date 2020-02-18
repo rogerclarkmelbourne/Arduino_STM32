@@ -57,7 +57,6 @@
 
 #define USB_OTG_ULPI_PHY      1
 #define USB_OTG_EMBEDDED_PHY  2
-#define USB_OTG_I2C_PHY       3
 
 /**
   * @}
@@ -216,9 +215,9 @@ typedef enum
   * @{
   */
 #define USB_OTG_READ_REG32(reg)  (*(__IO uint32_t *)(reg))
-#define USB_OTG_WRITE_REG32(reg,value) (*(__IO uint32_t *)(reg) = value)
+#define USB_OTG_WRITE_REG32(reg,value) (*(__IO uint32_t *)(reg) = (value))
 #define USB_OTG_MODIFY_REG32(reg,clear_mask,set_mask) \
-  USB_OTG_WRITE_REG32(reg, (((USB_OTG_READ_REG32(reg)) & ~clear_mask) | set_mask ) )
+  USB_OTG_WRITE_REG32((reg), (((USB_OTG_READ_REG32(reg)) & ~(clear_mask)) | (set_mask)) )
 
 /********************************************************************************
                               ENUMERATION TYPE

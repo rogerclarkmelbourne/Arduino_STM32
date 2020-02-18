@@ -57,9 +57,9 @@
 
 #define STANDARD_ENDPOINT_DESC_SIZE             0x09
 
-#define CDC_DATA_IN_PACKET_SIZE                 *(uint16_t *)(((USB_OTG_CORE_HANDLE *)pdev)->dev.pConfig_descriptor + 57)
+#define CDC_DATA_IN_PACKET_SIZE                CDC_DATA_MAX_PACKET_SIZE
         
-#define CDC_DATA_OUT_PACKET_SIZE                *(uint16_t *)(((USB_OTG_CORE_HANDLE *)pdev)->dev.pConfig_descriptor + 64)
+#define CDC_DATA_OUT_PACKET_SIZE               CDC_DATA_MAX_PACKET_SIZE
 
 /*---------------------------------------------------------------------*/
 /*  CDC definitions                                                    */
@@ -89,10 +89,10 @@
   */
 typedef struct _CDC_IF_PROP
 {
-  uint16_t (*pIf_Init)     (void);   
+  uint16_t (*pIf_Init)     (void *pdev);   
   uint16_t (*pIf_DeInit)   (void);   
   uint16_t (*pIf_Ctrl)     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
-  uint16_t (*pIf_DataTx)   (uint8_t* Buf, uint32_t Len);
+  uint32_t (*pIf_DataTx)   (const uint8_t* Buf, uint32_t Len);
   uint16_t (*pIf_DataRx)   (uint8_t* Buf, uint32_t Len);
 }
 CDC_IF_Prop_TypeDef;

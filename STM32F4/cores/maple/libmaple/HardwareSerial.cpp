@@ -38,38 +38,38 @@
 
 #define TX1 BOARD_USART1_TX_PIN
 #define RX1 BOARD_USART1_RX_PIN
-
-#ifdef BOARD_USART2_TX_PIN
-	#define TX2 BOARD_USART2_TX_PIN
-	#define RX2 BOARD_USART2_RX_PIN
-#endif
-
-#ifdef BOARD_USART3_TX_PIN
-	#define TX3 BOARD_USART3_TX_PIN
-	#define RX3 BOARD_USART3_RX_PIN
-#endif
-
-#if defined STM32_HIGH_DENSITY && !defined(BOARD_maple_RET6)
-#define TX4 BOARD_UART4_TX_PIN
-#define RX4 BOARD_UART4_RX_PIN
-#define TX5 BOARD_UART5_TX_PIN
-#define RX5 BOARD_UART5_RX_PIN
-#endif
-
 HardwareSerial Serial1(USART1, TX1, RX1);
 
-#ifdef TX2
+#ifdef BOARD_USART2_TX_PIN
+#define TX2 BOARD_USART2_TX_PIN
+#define RX2 BOARD_USART2_RX_PIN
 HardwareSerial Serial2(USART2, TX2, RX2);
 #endif
 
-#ifdef TX3
+#ifdef BOARD_USART3_TX_PIN
+#define TX3 BOARD_USART3_TX_PIN
+#define RX3 BOARD_USART3_RX_PIN
 HardwareSerial Serial3(USART3, TX3, RX3);
 #endif
 
-#if defined(STM32_HIGH_DENSITY) && !defined(BOARD_maple_RET6)
-HardwareSerial Serial4(UART4,  TX4, RX4);
-HardwareSerial Serial5(UART5,  TX5, RX5);
+#ifdef BOARD_UART4_TX_PIN
+#define TX4 BOARD_UART4_TX_PIN
+#define RX4 BOARD_UART4_RX_PIN
+HardwareSerial Serial4(UART4, TX4, RX4);
 #endif
+
+#ifdef BOARD_UART5_TX_PIN
+#define TX5 BOARD_UART5_TX_PIN
+#define RX5 BOARD_UART5_RX_PIN
+HardwareSerial Serial5(UART5, TX5, RX5);
+#endif
+
+#ifdef BOARD_USART6_TX_PIN
+#define TX6 BOARD_USART6_TX_PIN
+#define RX6 BOARD_USART6_RX_PIN
+HardwareSerial Serial6(USART6, TX6, RX6);
+#endif
+
 
 HardwareSerial::HardwareSerial(usart_dev *usart_device,
                                uint8 tx_pin,
@@ -83,37 +83,22 @@ HardwareSerial::HardwareSerial(usart_dev *usart_device,
  * Set up/tear down
  */
 
-void HardwareSerial::begin(uint32 baud) {
-    ASSERT(baud <= usart_device->max_baud);
-
+void HardwareSerial::begin(uint32 baud)
+{
     if (baud > usart_device->max_baud) {
-        return;
+        baud = usart_device->max_baud;
     }
 
-#ifdef STM32F4
-	// int af = 7<<8;
-    if (usart_device == UART4 || usart_device == UART5) {
-        gpio_set_af_mode(tx_pin, 8);
-        gpio_set_af_mode(rx_pin, 8);
+    if (usart_device == UART4 || usart_device == UART5 || usart_device == USART6) {
+        gpio_set_af_mode(tx_pin, GPIO_AFMODE_USART4_6);
+        gpio_set_af_mode(rx_pin, GPIO_AFMODE_USART4_6);
     }
     else {
-        gpio_set_af_mode(tx_pin, 7);
-        gpio_set_af_mode(rx_pin, 7);
+        gpio_set_af_mode(tx_pin, GPIO_AFMODE_USART1_3);
+        gpio_set_af_mode(rx_pin, GPIO_AFMODE_USART1_3);
     }
     gpio_set_mode(tx_pin, (gpio_pin_mode)(GPIO_AF_OUTPUT_PP_PU | 0x700));
     gpio_set_mode(rx_pin, (gpio_pin_mode)(GPIO_AF_INPUT_PU | 0x700));
-    //gpio_set_mode(txi->gpio_device, txi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
-    //gpio_set_mode(rxi->gpio_device, rxi->gpio_bit, (gpio_pin_mode)(GPIO_PUPD_INPUT_PU));
-#else
-	gpio_set_mode(tx_pin, GPIO_AF_OUTPUT_PP);
-    gpio_set_mode(rx_pin, GPIO_INPUT_FLOATING);
-#endif
-#if 0
-    if (txi->timer_device != NULL) {
-        /* Turn off any PWM if there's a conflict on this GPIO bit. */
-        timer_set_mode(txi->timer_device, txi->timer_channel, TIMER_DISABLED);
-    }
-#endif
 
     usart_init(usart_device);
     usart_set_baud_rate(usart_device, baud);

@@ -60,16 +60,15 @@ void nvic_irq_set_priority(nvic_irq_num irqn, uint8 priority) {
  *               apply to the use of nonzero offsets; see ST RM0008
  *               and the ARM Cortex M3 Technical Reference Manual.
  */
-void nvic_init(uint32 vector_table_address, uint32 offset) {
-    uint32 i;
-
+void nvic_init(uint32 vector_table_address, uint32 offset)
+{
     nvic_set_vector_table(vector_table_address, offset);
 
     /*
      * Lower priority level for all peripheral interrupts to lowest
      * possible.
      */
-    for (i = 0; i < STM32_NR_INTERRUPTS; i++) {
+    for (uint32 i = 0; i < NVIC_LAST_IRQ_NUM; i++) {
         nvic_irq_set_priority((nvic_irq_num)i, 0xF);
     }
 

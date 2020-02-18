@@ -101,8 +101,8 @@ USBD_DCD_INT_cb_TypeDef USBD_DCD_INT_cb =
   USBD_IsoINIncomplete,
   USBD_IsoOUTIncomplete,
 #ifdef VBUS_SENSING_ENABLED
-USBD_DevConnected, 
-USBD_DevDisconnected,    
+  USBD_DevConnected,
+  USBD_DevDisconnected,
 #endif  
 };
 
@@ -117,7 +117,7 @@ USBD_DCD_INT_cb_TypeDef  *USBD_DCD_INT_fops = &USBD_DCD_INT_cb;
 
 /**
 * @brief  USBD_Init
-*         Initailizes the device stack and load the class driver
+*         Initializes the device stack and load the class driver
 * @param  pdev: device instance
 * @param  core_address: USB OTG core ID
 * @param  class_cb: Class callback structure address
@@ -152,7 +152,7 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
 
 /**
 * @brief  USBD_DeInit 
-*         Re-Initialize th deviuce library
+*         Re-Initialize the device library
 * @param  pdev: device instance
 * @retval status: status
 */
@@ -247,7 +247,7 @@ static uint8_t USBD_DataOutStage(USB_OTG_CORE_HANDLE *pdev , uint8_t epnum)
           (pdev->dev.device_status == USB_OTG_CONFIGURED))
   {
     pdev->dev.class_cb->DataOut(pdev, epnum); 
-  }  
+  }
   return USBD_OK;
 }
 
@@ -305,7 +305,7 @@ static uint8_t USBD_DataInStage(USB_OTG_CORE_HANDLE *pdev , uint8_t epnum)
           (pdev->dev.device_status == USB_OTG_CONFIGURED))
   {
     pdev->dev.class_cb->DataIn(pdev, epnum); 
-  }  
+  }
   return USBD_OK;
 }
 

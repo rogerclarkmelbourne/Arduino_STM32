@@ -30,13 +30,14 @@
 /* Exported constants --------------------------------------------------------*/
 #define FLASH_START_ADD                  0x08000000
 
-#ifdef STM32F2XX
+#if defined(STM32F40_41xxx)
  #define FLASH_END_ADD                   0x08100000
  #define FLASH_IF_STRING                 "@Internal Flash   /0x08000000/03*016Ka,01*016Kg,01*064Kg,07*128Kg"
-#elif defined(STM32F10X_CL)
- #define FLASH_END_ADD                   0x08040000
- #define FLASH_IF_STRING                 "@Internal Flash   /0x08000000/06*002Ka,122*002Kg"  
-#endif /* STM32F2XX */
+
+#elif defined(STM32F429_439xx)
+ #define FLASH_END_ADD                   0x08200000
+ #define FLASH_IF_STRING                  "@Internal Flash   /0x08000000/03*016Ka,01*016Kg,01*064Kg,07*128Kg,04*016Kg,01*064Kg,07*128Kg"
+#endif
 
 
 extern DFU_MAL_Prop_TypeDef DFU_Flash_cb;

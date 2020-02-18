@@ -25,6 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_vcp.h"
+#include <libmaple/bkp.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -43,43 +44,65 @@ LINE_CODING linecoding =
 
 /* These are external variables imported from CDC core to be used for IN
    transfer management. */
-extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
+extern uint8_t  APP_Tx_Buffer []; /* Write CDC received data in this buffer.
                                      These data will be sent over USB IN endpoint
                                      in the CDC core functions. */
-extern volatile int APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
+extern volatile uint16_t APP_Tx_ptr_in;    /* Increment this pointer or roll it back to
                                      start address when writing received data
-                                     in the buffer APP_Rx_Buffer. */
-extern volatile int APP_Rx_ptr_out;
+                                     in the buffer APP_Tx_Buffer. */
+extern volatile uint16_t APP_Tx_ptr_out;
 
 #define UsbRecBufferSize 2048
-uint8_t UsbRecBuffer[UsbRecBufferSize];
+#define UsbRecBufferSizeMask (UsbRecBufferSize-1)
+uint8_t __CCMRAM__ UsbRecBuffer[UsbRecBufferSize];
 volatile int UsbRecRead = 0;
 volatile int UsbRecWrite = 0;
-volatile int VCP_DTRHIGH = 0;
+volatile uint8_t VCP_DTRHIGH = 0;
+volatile uint8_t VCP_RTSHIGH = 0;
 uint8_t UsbTXBlock = 1;
+uint8_t rxDisabled = 1;
+USB_OTG_CORE_HANDLE * usbDevice = NULL;
 
-uint32_t VCPBytesAvailable(void) {
-	return (UsbRecWrite - UsbRecRead + UsbRecBufferSize) % UsbRecBufferSize;
+uint8_t VCPGetDTR(void) { return VCP_DTRHIGH; }
+uint8_t VCPGetRTS(void) { return VCP_RTSHIGH; }
+
+uint32_t VCPBytesAvailable(void)
+{
+	return (UsbRecWrite - UsbRecRead) & UsbRecBufferSizeMask;
 }
 
-uint8_t VCPGetByte(void) {
-	if(UsbRecWrite == UsbRecRead) {
+uint32_t VCPGetBytes(uint8_t * rxBuf, uint32_t len)
+{
+	int usbRxRead = UsbRecRead; // take volatile
+	uint32_t rx_unread = (UsbRecWrite - usbRxRead) & UsbRecBufferSizeMask;
+	if (rx_unread==0) {
 		return 0;
-	} else {
-		uint8_t c = UsbRecBuffer[UsbRecRead++];
-		if(UsbRecRead == UsbRecBufferSize) {
-			UsbRecRead = 0;
-		}
-		return c;
 	}
+	if (len>rx_unread) len = rx_unread;
+	
+	for (uint32_t i = 0; i<len; i++)
+	{
+		*rxBuf++ = UsbRecBuffer[usbRxRead++];
+		usbRxRead &= UsbRecBufferSizeMask;
+	}
+	UsbRecRead = usbRxRead; // update volatile
+	// check if the OUT endpoint has to be re-enabled
+	uint32_t free_rx_space = (usbRxRead-UsbRecWrite-1) & UsbRecBufferSizeMask;
+	if ( free_rx_space>=CDC_DATA_MAX_PACKET_SIZE && rxDisabled )
+	{
+		rxDisabled = 0;
+		extern void usbd_cdc_PrepareRx (void *pdev);
+		if (usbDevice) usbd_cdc_PrepareRx(usbDevice);
+	}
+	return len;
 }
 
 /* Private function prototypes -----------------------------------------------*/
-static uint16_t VCP_Init     (void);
-static uint16_t VCP_DeInit   (void);
-static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
-uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
-static uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
+static uint16_t VCP_Init  (void *pdev);
+static uint16_t VCP_DeInit(void);
+static uint16_t VCP_Ctrl  (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
+uint32_t VCP_DataTx   (const uint8_t* Buf, uint32_t Len);
+static uint16_t VCP_DataRx(uint8_t* Buf, uint32_t Len);
 
 static uint16_t VCP_COMConfig(uint8_t Conf);
 
@@ -99,8 +122,10 @@ CDC_IF_Prop_TypeDef VCP_fops =
   * @param  None
   * @retval Result of the opeartion (USBD_OK in all cases)
   */
-static uint16_t VCP_Init(void)
+static uint16_t VCP_Init(void *pdev)
 {
+  usbDevice = pdev;
+  rxDisabled = 0;
   return USBD_OK;
 }
 
@@ -112,7 +137,8 @@ static uint16_t VCP_Init(void)
   */
 static uint16_t VCP_DeInit(void)
 {
-
+  usbDevice = NULL;
+  rxDisabled = 1;
   return USBD_OK;
 }
 
@@ -180,9 +206,8 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
 
   case SET_CONTROL_LINE_STATE:
 	linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8));
-	if(Buf[0] & 1) {
-		VCP_DTRHIGH = 1;
-	}
+	VCP_DTRHIGH = (Buf[0] & 0x1);
+	VCP_RTSHIGH = (Buf[0] & 0x2)>>1;
     /* Not  needed for this driver */
     break;
 
@@ -203,29 +228,39 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   *         this function.
   * @param  Buf: Buffer of data to be sent
   * @param  Len: Number of data to be sent (in bytes)
-  * @retval Result of the operation: USBD_OK if all operations are OK else VCP_FAIL
+  * @retval cnt: number of bytes sent
   */
-uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
+uint32_t VCP_DataTx (const uint8_t* Buf, uint32_t Len)
 {
-	while(Len-- > 0) {
-		if(UsbTXBlock) {
-			while ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE)
-				;
-		} else {
-			if ((APP_Rx_ptr_in - APP_Rx_ptr_out + APP_RX_DATA_SIZE) % APP_RX_DATA_SIZE + 1 >= APP_RX_DATA_SIZE) {
-				return USBD_BUSY;
+	uint32_t ptrIn = APP_Tx_ptr_in; // get volatile
+	uint32_t cnt = 0;
+	uint16_t cdc_buf_cnt = 0;
+	while ( cnt<Len )
+	{
+		while ( ((ptrIn+1)&APP_TX_DATA_SIZE_MASK)==APP_Tx_ptr_out )
+		{
+			if( !UsbTXBlock || !VCP_DTRHIGH )
+			{
+				goto tx_exit;
 			}
 		}
-
-
-		APP_Rx_Buffer[APP_Rx_ptr_in++] = *Buf++;
-		  /* To avoid buffer overflow */
-		  if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
-		  {
-		    APP_Rx_ptr_in = 0;
-		  }
+		APP_Tx_Buffer[ptrIn++] = *Buf++;
+		ptrIn &= APP_TX_DATA_SIZE_MASK;
+		// update volatile pointer if the nr of bytes can fill up the CDC_DATA buffer
+		if ( cdc_buf_cnt==CDC_DATA_MAX_PACKET_SIZE )
+		{
+			cdc_buf_cnt = 0;
+			APP_Tx_ptr_in = ptrIn; // update volatile
+		}
+		else
+		{
+			cdc_buf_cnt ++;
+		}
+		cnt ++;
 	}
-	return USBD_OK;
+tx_exit:
+	APP_Tx_ptr_in = ptrIn; // update volatile
+	return cnt;
 }
 
 typedef volatile unsigned long      vu32;
@@ -280,28 +315,37 @@ void systemHardReset(void) {
   * @param  Len: Number of data received (in bytes)
   * @retval Result of the opeartion: USBD_OK if all operations are OK else VCP_FAIL
   */
-static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
+static uint16_t VCP_DataRx(uint8_t* Buf, uint32_t Len)
 {
-	if(VCP_DTRHIGH) {
-		if(Len >= 4) {
-			if(Buf[0] == '1' && Buf[1] == 'E' && Buf[2] == 'A' && Buf[3] == 'F') {
-				Len = 0;
-				*(int*)0x20000BFC = 0x4AFC6BB2;
-				systemHardReset();
-			}
-		}
-	}
-	VCP_DTRHIGH = 0;
-	while(Len-- > 0) {
-		UsbRecBuffer[UsbRecWrite] = *Buf++;
-		if(UsbRecWrite == UsbRecBufferSize) {
-			UsbRecWrite = 0;
-		} else {
-			UsbRecWrite ++;
+	if (!VCP_DTRHIGH) return USBD_BUSY;
+
+	if (Len >= 4) {
+		if(Buf[0] == '1' && Buf[1] == 'E' && Buf[2] == 'A' && Buf[3] == 'F') {
+			Len = 0;
+
+			bkp_init();
+			bkp_enable_writes();
+			*(__IO uint32_t *)(BKP) = 0x424C;
+			bkp_disable_writes();
+
+			systemHardReset();
 		}
 	}
 
-  return USBD_OK;
+	uint32_t rxWr = UsbRecWrite; // get volatile
+	while(Len-- > 0) {
+		UsbRecBuffer[rxWr++] = *Buf++;
+		rxWr &= UsbRecBufferSizeMask;
+	}
+	UsbRecWrite = rxWr; // store volatile
+	// check for enough space in Rx buffer for the next Rx packet
+	uint32_t free_rx_space = (UsbRecRead-rxWr-1) & UsbRecBufferSizeMask;
+	if ( free_rx_space<CDC_DATA_MAX_PACKET_SIZE )
+	{
+		rxDisabled = 1; // disable OUT endpoint
+		return USBD_BUSY;
+	}
+	return USBD_OK;
 }
 
 /**
@@ -408,14 +452,5 @@ static uint16_t VCP_COMConfig(uint8_t Conf)
   return USBD_OK;
 }
 
-/**
-  * @brief  EVAL_COM_IRQHandler
-  *
-  * @param  None.
-  * @retval None.
-  */
-void EVAL_COM_IRQHandler(void)
-{
-}
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

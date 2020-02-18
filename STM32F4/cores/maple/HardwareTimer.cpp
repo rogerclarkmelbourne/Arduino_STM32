@@ -26,77 +26,27 @@
 
 #include "HardwareTimer.h"
 #include "boards.h"             // for CYCLES_PER_MICROSECOND
-#include "wirish_math.h"
 
-// TODO [0.1.0] Remove deprecated pieces
-
-#ifdef STM32_MEDIUM_DENSITY
-#define NR_TIMERS 4
-#elif defined(STM32_HIGH_DENSITY)
-#define NR_TIMERS 8
-#else
-#error "Unsupported density"
-#endif
 
 #define MAX_RELOAD ((1 << 16) - 1)
 
-HardwareTimer::HardwareTimer(uint8 timerNum) {
-    if (timerNum > NR_TIMERS) {
+#define NR_TIMERS 14
+
+
+/*
+ * HardwareTimer routines
+ */
+
+HardwareTimer::HardwareTimer(uint8 timerNum)
+{
+    if (timerNum > NR_TIMERS && timerNum==0) {
         ASSERT(0);
     }
-    timer_dev *devs[] = {
-        TIMER1,
-        TIMER2,
-        TIMER3,
-        TIMER4,
-#ifdef STM32_HIGH_DENSITY
-        TIMER5,
-        TIMER6,
-        TIMER7,
-        TIMER8,
-#endif
-    };
-    this->dev = devs[timerNum - 1];
+    this->dev = timer_devices[timerNum];
 }
 
-void HardwareTimer::pause(void) {
-    timer_pause(this->dev);
-}
-
-void HardwareTimer::resume(void) {
-    timer_resume(this->dev);
-}
-
-uint32 HardwareTimer::getPrescaleFactor(void) {
-    return timer_get_prescaler(this->dev) + 1;
-}
-
-uint32 HardwareTimer::getClockSpeed(void) {
-    return rcc_dev_timer_clk_speed(this->dev->clk_id);
-}
-
-void HardwareTimer::setPrescaleFactor(uint32 factor) {
-    timer_set_prescaler(this->dev, (uint16)(factor - 1));
-}
-
-uint16 HardwareTimer::getOverflow() {
-    return timer_get_reload(this->dev);
-}
-
-void HardwareTimer::setOverflow(uint16 val) {
-    timer_set_reload(this->dev, val);
-}
-
-uint16 HardwareTimer::getCount(void) {
-    return timer_get_count(this->dev);
-}
-
-void HardwareTimer::setCount(uint16 val) {
-    uint16 ovf = this->getOverflow();
-    timer_set_count(this->dev, min(val, ovf));
-}
-
-uint16 HardwareTimer::setPeriod(uint32 microseconds) {
+uint16 HardwareTimer::setPeriod(uint32 microseconds)
+{
     // Not the best way to handle this edge case?
     if (!microseconds) {
         this->setPrescaleFactor(1);
@@ -106,46 +56,32 @@ uint16 HardwareTimer::setPeriod(uint32 microseconds) {
 
     uint32 period_cyc = microseconds * CYCLES_PER_MICROSECOND;
     uint16 prescaler = (uint16)(period_cyc / MAX_RELOAD + 1);
-    uint16 overflow = (uint16)round(period_cyc / prescaler);
+    uint16 overflow = (uint16)((period_cyc + (prescaler / 2)) / prescaler);
     this->setPrescaleFactor(prescaler);
     this->setOverflow(overflow);
     return overflow;
 }
 
-void HardwareTimer::setMode(int channel, timer_mode mode) {
-    timer_set_mode(this->dev, (uint8)channel, (timer_mode)mode);
+void HardwareTimer::setMasterModeTrGo(uint32_t mode)
+{
+    this->dev->regs.bas->CR2 &= ~TIMER_CR2_MMS;
+    this->dev->regs.bas->CR2 |= mode;
 }
 
-uint16 HardwareTimer::getCompare(int channel) {
-    return timer_get_compare(this->dev, (uint8)channel);
-}
 
-void HardwareTimer::setCompare(int channel, uint16 val) {
-    uint16 ovf = this->getOverflow();
-    timer_set_compare(this->dev, (uint8)channel, min(val, ovf));
-}
-
-void HardwareTimer::attachInterrupt(int channel, voidFuncPtr handler) {
-    timer_attach_interrupt(this->dev, (uint8)channel, handler);
-}
-
-void HardwareTimer::detachInterrupt(int channel) {
-    timer_detach_interrupt(this->dev, (uint8)channel);
-}
-
-void HardwareTimer::refresh(void) {
-    timer_generate_update(this->dev);
-}
-
-/* -- Deprecated predefined instances -------------------------------------- */
+// Predefined instances
 
 HardwareTimer Timer1(1);
 HardwareTimer Timer2(2);
 HardwareTimer Timer3(3);
 HardwareTimer Timer4(4);
-#ifdef STM32_HIGH_DENSITY
 HardwareTimer Timer5(5);
 HardwareTimer Timer6(6);
 HardwareTimer Timer7(7);
 HardwareTimer Timer8(8);
-#endif
+HardwareTimer Timer9(9);
+HardwareTimer Timer10(10);
+HardwareTimer Timer11(11);
+HardwareTimer Timer12(12);
+HardwareTimer Timer13(13);
+HardwareTimer Timer14(14);

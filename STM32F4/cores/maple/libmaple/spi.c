@@ -90,17 +90,17 @@ void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags) {
  *            correctly treated as 8-bit or 16-bit quantities).
  * @param len Maximum number of elements to transmit.
  */
-void spi_tx(spi_dev *dev, void *buf, uint32 len)
+void spi_tx(spi_dev *dev, const void *buf, uint32 len)
 {
 	spi_reg_map *regs = dev->regs;
     if ( spi_dff(dev) == SPI_DFF_8_BIT ) {
-		uint8 * dp8 = (uint8*)buf;
+		const uint8 * dp8 = (const uint8*)buf;
 		while ( len-- ) {
 			while ( (regs->SR & SPI_SR_TXE)==0 ) ; //while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
 			regs->DR = *dp8++;
 		}
     } else {
-		uint16 * dp16 = (uint16*)buf;
+		const uint16 * dp16 = (const uint16*)buf;
 		while ( len-- ) {
 			while ( (regs->SR & SPI_SR_TXE)==0 ) ; //while ( spi_is_tx_empty(dev)==0 ); // wait Tx to be empty
 			regs->DR = *dp16++;
