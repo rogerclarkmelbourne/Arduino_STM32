@@ -31,6 +31,7 @@
 #ifndef _USB_SERIAL_H_
 #define _USB_SERIAL_H_
 
+#include "usb.h"
 #include "Stream.h"
 
 #ifdef SERIAL_USB
@@ -38,7 +39,8 @@
 /**
  * @brief Virtual serial terminal.
  */
-class USBSerial : public Stream {
+class USBSerial : public Stream
+{
 public:
     USBSerial(void);
 
@@ -46,25 +48,27 @@ public:
     void begin(int);
     void end(void);
 
-    virtual int available(void);
+    virtual int available(void) { return usbBytesAvailable(); }
     virtual int peek(void);
     virtual void flush(void);
 
     virtual int read(void *buf, uint32 len);
     virtual int read(void);
 
-    size_t write(uint8);
+    size_t write(const uint8);
     size_t write(const char *str);
     size_t write(const void*, uint32);
 
-    uint8 getRTS();
-    uint8 getDTR();
-	operator bool();
-	uint8 isConnected() { return (bool) *this; }
-    uint8 pending();
+    uint8 getRTS() { return usbGetRTS(); }
+    uint8 getDTR() { return usbGetDTR(); }
+	uint8 usbOK(void);
+	operator bool() { return usbOK(); }
+	uint8 isConnected() __attribute__((deprecated("Use !Serial instead"))) { return usbOK(); }
+    uint8 isConfigured() { return usbIsConfigured(); }
+    uint8 pending() { return usbGetPending(); }
 
-    void enableBlockingTx(void);
-    void disableBlockingTx(void);
+    void enableBlockingTx(void) { usbEnableBlockingTx(); }
+    void disableBlockingTx(void) { usbDisableBlockingTx(); }
 
 protected:
     static bool _hasBegun;
@@ -72,10 +76,6 @@ protected:
 
 extern USBSerial SerialUSB;
 #define Serial SerialUSB
-
-#else //  _USB_SERIAL_H_
-
-#define Serial Serial1
 
 #endif //  SERIAL_USB
 

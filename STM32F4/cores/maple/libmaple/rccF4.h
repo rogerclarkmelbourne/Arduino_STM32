@@ -75,8 +75,9 @@ typedef struct
 } rcc_reg_map;
 
 /** RCC register map base pointer */
-//#define RCC_BASE                        ((struct rcc_reg_map*)0x40021000)
-#define RCC_BASE              ((rcc_reg_map*)0x40023800)
+#define RCC              ((rcc_reg_map*)0x40023800)
+
+//extern rcc_reg_map * const RCC;
 
 /*
  * Register bit definitions
@@ -84,6 +85,7 @@ typedef struct
 
 /* Clock control register */
 
+#define RCC_CR_PLLI2SON_BIT             26
 #define RCC_CR_PLLRDY_BIT               25
 #define RCC_CR_PLLON_BIT                24
 #define RCC_CR_CSSON_BIT                19
@@ -93,6 +95,7 @@ typedef struct
 #define RCC_CR_HSIRDY_BIT               1
 #define RCC_CR_HSION_BIT                0
 
+#define RCC_CR_PLLI2SON                 BIT(RCC_CR_PLLI2SON_BIT)
 #define RCC_CR_PLLRDY                   BIT(RCC_CR_PLLRDY_BIT)
 #define RCC_CR_PLLON                    BIT(RCC_CR_PLLON_BIT)
 #define RCC_CR_CSSON                    BIT(RCC_CR_CSSON_BIT)
@@ -104,27 +107,83 @@ typedef struct
 #define RCC_CR_HSIRDY                   BIT(RCC_CR_HSIRDY_BIT)
 #define RCC_CR_HSION                    BIT(RCC_CR_HSION_BIT)
 
+#define RCC_CR_HSITRIM_4                (0x04 << 3)
+
+/********************  Bit definition for RCC_PLLCFGR register  ***************/
+#define  RCC_PLLCFGR_PLLM                    ((uint32_t)0x0000003FU)
+#define  RCC_PLLCFGR_PLLM_0                  ((uint32_t)0x00000001U)
+#define  RCC_PLLCFGR_PLLM_1                  ((uint32_t)0x00000002U)
+#define  RCC_PLLCFGR_PLLM_2                  ((uint32_t)0x00000004U)
+#define  RCC_PLLCFGR_PLLM_3                  ((uint32_t)0x00000008U)
+#define  RCC_PLLCFGR_PLLM_4                  ((uint32_t)0x00000010U)
+#define  RCC_PLLCFGR_PLLM_5                  ((uint32_t)0x00000020U)
+
+#define  RCC_PLLCFGR_PLLN                    ((uint32_t)0x00007FC0U)
+#define  RCC_PLLCFGR_PLLN_0                  ((uint32_t)0x00000040U)
+#define  RCC_PLLCFGR_PLLN_1                  ((uint32_t)0x00000080U)
+#define  RCC_PLLCFGR_PLLN_2                  ((uint32_t)0x00000100U)
+#define  RCC_PLLCFGR_PLLN_3                  ((uint32_t)0x00000200U)
+#define  RCC_PLLCFGR_PLLN_4                  ((uint32_t)0x00000400U)
+#define  RCC_PLLCFGR_PLLN_5                  ((uint32_t)0x00000800U)
+#define  RCC_PLLCFGR_PLLN_6                  ((uint32_t)0x00001000U)
+#define  RCC_PLLCFGR_PLLN_7                  ((uint32_t)0x00002000U)
+#define  RCC_PLLCFGR_PLLN_8                  ((uint32_t)0x00004000U)
+
+#define  RCC_PLLCFGR_PLLP                    ((uint32_t)0x00030000U)
+#define  RCC_PLLCFGR_PLLP_0                  ((uint32_t)0x00010000U)
+#define  RCC_PLLCFGR_PLLP_1                  ((uint32_t)0x00020000U)
+
+#define  RCC_PLLCFGR_PLLSRC                  ((uint32_t)0x00400000U)
+#define  RCC_PLLCFGR_PLLSRC_HSE              ((uint32_t)0x00400000U)
+#define  RCC_PLLCFGR_PLLSRC_HSI              ((uint32_t)0x00000000U)
+
+#define  RCC_PLLCFGR_PLLQ                    ((uint32_t)0x0F000000U)
+#define  RCC_PLLCFGR_PLLQ_0                  ((uint32_t)0x01000000U)
+#define  RCC_PLLCFGR_PLLQ_1                  ((uint32_t)0x02000000U)
+#define  RCC_PLLCFGR_PLLQ_2                  ((uint32_t)0x04000000U)
+#define  RCC_PLLCFGR_PLLQ_3                  ((uint32_t)0x08000000U)
+
 /* Clock configuration register */
 
-#define RCC_CFGR_USBPRE_BIT             22
-#define RCC_CFGR_PLLXTPRE_BIT           17
-#define RCC_CFGR_PLLSRC_BIT             16
+#define RCC_CFGR_MCO2_BIT               30
+#define RCC_CFGR_MCO2PRE_BIT            27
+#define RCC_CFGR_MCO1PRE_BIT            24
+#define RCC_CFGR_I2SSC_BIT              23
+#define RCC_CFGR_MCO1_BIT               21
+#define RCC_CFGR_RTCPRE_BIT             16
+#define RCC_CFGR_PPRE2_BIT              13
+#define RCC_CFGR_PPRE1_BIT              10
+#define RCC_CFGR_HPRE_BIT               4
+#define RCC_CFGR_SWS_BIT                2
+#define RCC_CFGR_SW_BIT                 0
 
-#define RCC_CFGR_MCO                    (0x3 << 24)
-#define RCC_CFGR_USBPRE                 BIT(RCC_CFGR_USBPRE_BIT)
-#define RCC_CFGR_PLLMUL                 (0xF << 18)
-#define RCC_CFGR_PLLXTPRE               BIT(RCC_CFGR_PLLXTPRE_BIT)
-#define RCC_CFGR_PLLSRC                 BIT(RCC_CFGR_PLLSRC_BIT)
-#define RCC_CFGR_ADCPRE                 (0x3 << 14)
-#define RCC_CFGR_PPRE2                  (0x7 << 11)
-#define RCC_CFGR_PPRE1                  (0x7 << 8)
-#define RCC_CFGR_HPRE                   (0xF << 4)
-#define RCC_CFGR_SWS                    (0x3 << 2)
-#define RCC_CFGR_SWS_PLL                (0x2 << 2)
-#define RCC_CFGR_SWS_HSE                (0x1 << 2)
-#define RCC_CFGR_SW                     0x3
-#define RCC_CFGR_SW_PLL                 0x2
-#define RCC_CFGR_SW_HSE                 0x1
+#define RCC_CFGR_MCO2                   (0x3 << RCC_CFGR_MCO2_BIT)
+#define RCC_CFGR_MCO2PRE_MASK           (0x7 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO2PRE_DIV1           (0x0 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO2PRE_DIV2           (0x4 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO2PRE_DIV3           (0x5 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO2PRE_DIV4           (0x6 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO2PRE_DIV5           (0x7 << RCC_CFGR_MCO2PRE_BIT)
+#define RCC_CFGR_MCO1PRE_MASK           (0x7 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_MCO1PRE_DIV1           (0x0 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_MCO1PRE_DIV2           (0x4 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_MCO1PRE_DIV3           (0x5 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_MCO1PRE_DIV4           (0x6 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_MCO1PRE_DIV5           (0x7 << RCC_CFGR_MCO1PRE_BIT)
+#define RCC_CFGR_I2SSC                  (0x1 << RCC_CFGR_I2SSC_BIT)
+#define RCC_CFGR_MCO1_MASK              (0x3 << RCC_CFGR_MCO1_BIT)
+#define RCC_CFGR_RTCPRE_MASK            (0x1F << RCC_CFGR_RTCPRE_BIT)
+#define RCC_CFGR_PPRE2_MASK             (0x7 << RCC_CFGR_PPRE2_BIT)
+#define RCC_CFGR_PPRE1_MASK             (0x7 << RCC_CFGR_PPRE1_BIT)
+#define RCC_CFGR_HPRE_MASK              (0xF << RCC_CFGR_HPRE_BIT)
+#define RCC_CFGR_SWS_MASK               (0x3 << RCC_CFGR_SWS_BIT)
+#define RCC_CFGR_SWS_PLL                (0x2 << RCC_CFGR_SWS_BIT)
+#define RCC_CFGR_SWS_HSE                (0x1 << RCC_CFGR_SWS_BIT)
+#define RCC_CFGR_SWS_HSI                (0x0 << RCC_CFGR_SWS_BIT)
+#define RCC_CFGR_SW_MASK                (0x3 << RCC_CFGR_SW_BIT)
+#define RCC_CFGR_SW_PLL                 (0x2 << RCC_CFGR_SW_BIT)
+#define RCC_CFGR_SW_HSE                 (0x1 << RCC_CFGR_SW_BIT)
+#define RCC_CFGR_SW_HSI                 (0x0 << RCC_CFGR_SW_BIT)
 
 #define  RCC_CFGR_MCO1Source_HSI             ((uint32_t)0x00000000)
 #define  RCC_CFGR_MCO1Source_LSE             ((uint32_t)0x00200000)
@@ -377,17 +436,18 @@ typedef struct
 
 #define RCC_BDCR_BDRST_BIT              16
 #define RCC_BDCR_RTCEN_BIT              15
+#define RCC_BDCR_RTCSEL_BIT             8
 #define RCC_BDCR_LSEBYP_BIT             2
 #define RCC_BDCR_LSERDY_BIT             1
 #define RCC_BDCR_LSEON_BIT              0
 
 #define RCC_BDCR_BDRST                  BIT(RCC_BDCR_BDRST_BIT)
-#define RCC_BDCR_RTCEN                  BIT(RCC_BDCR_RTC_BIT)
-#define RCC_BDCR_RTCSEL                 (0x3 << 8)
-#define RCC_BDCR_RTCSEL_NONE            (0x0 << 8)
-#define RCC_BDCR_RTCSEL_LSE             (0x1 << 8)
-#define RCC_BDCR_RTCSEL_LSI             (0x2 << 8)
-#define RCC_BDCR_RTCSEL_HSE             (0x3 << 8)
+#define RCC_BDCR_RTCEN                  BIT(RCC_BDCR_RTCEN_BIT)
+#define RCC_BDCR_RTCSEL_MASK            (0x3 << RCC_BDCR_RTCSEL_BIT)
+#define RCC_BDCR_RTCSEL_NONE            (0x0 << RCC_BDCR_RTCSEL_BIT)
+#define RCC_BDCR_RTCSEL_LSE             (0x1 << RCC_BDCR_RTCSEL_BIT)
+#define RCC_BDCR_RTCSEL_LSI             (0x2 << RCC_BDCR_RTCSEL_BIT)
+#define RCC_BDCR_RTCSEL_HSE             (0x3 << RCC_BDCR_RTCSEL_BIT)
 #define RCC_BDCR_LSEBYP                 BIT(RCC_BDCR_LSEBYP_BIT)
 #define RCC_BDCR_LSERDY                 BIT(RCC_BDCR_LSERDY_BIT)
 #define RCC_BDCR_LSEON                  BIT(RCC_BDCR_LSEON_BIT)
@@ -413,6 +473,23 @@ typedef struct
 #define RCC_CSR_RMVF                    BIT(RCC_CSR_RMVF_BIT)
 #define RCC_CSR_LSIRDY                  BIT(RCC_CSR_LSIRDY_BIT)
 #define RCC_CSR_LSION                   BIT(RCC_CSR_LSION_BIT)
+
+/********************  Bit definition for RCC_PLLI2SCFGR register  ************/
+#define  RCC_PLLI2SCFGR_PLLI2SN         ((uint32_t)0x00007FC0U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_0       ((uint32_t)0x00000040U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_1       ((uint32_t)0x00000080U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_2       ((uint32_t)0x00000100U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_3       ((uint32_t)0x00000200U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_4       ((uint32_t)0x00000400U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_5       ((uint32_t)0x00000800U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_6       ((uint32_t)0x00001000U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_7       ((uint32_t)0x00002000U)
+#define  RCC_PLLI2SCFGR_PLLI2SN_8       ((uint32_t)0x00004000U)
+
+#define  RCC_PLLI2SCFGR_PLLI2SR         ((uint32_t)0x70000000U)
+#define  RCC_PLLI2SCFGR_PLLI2SR_0       ((uint32_t)0x10000000U)
+#define  RCC_PLLI2SCFGR_PLLI2SR_1       ((uint32_t)0x20000000U)
+#define  RCC_PLLI2SCFGR_PLLI2SR_2       ((uint32_t)0x40000000U)
 
 /*
  * Convenience routines
@@ -470,62 +547,80 @@ typedef enum rcc_clk_id {
     RCC_GPIOB,
     RCC_GPIOC,
     RCC_GPIOD,
-//    RCC_AFIO,
-    RCC_ADC1,
-    RCC_ADC2,
-    RCC_ADC3,
-    RCC_USART1,
-    RCC_USART2,
-    RCC_USART3,
+    RCC_GPIOE,
+    RCC_GPIOF,
+    RCC_GPIOG,
+    RCC_GPIOH,
+    RCC_GPIOI,
+
+    RCC_CRC,
+//  RCC_FLITF,
+//  RCC_SRAM1,
+//  RCC_SRAM2,
+//  RCC_BKPSRAM,
+#ifdef __CCMRAM__
+    RCC_CCMRAM,
+#endif
+    RCC_DMA1,
+    RCC_DMA2,
+    RCC_ETHMAC,
+    RCC_ETHMACTX,
+    RCC_ETHMACRX,
+    RCC_ETHMACPTP,
+
+    RCC_DCMI,
+    RCC_USBFS,
+
+    RCC_FSMC,
+
     RCC_TIMER1,
     RCC_TIMER2,
     RCC_TIMER3,
     RCC_TIMER4,
-    RCC_SPI1,
-    RCC_SPI2,
-    RCC_DMA1,
-    RCC_PWR,
-    RCC_BKP,
-    RCC_I2C1,
-    RCC_I2C2,
-    RCC_CRC,
-//    RCC_FLITF,
-//    RCC_SRAM,
-    RCC_GPIOE,
-    RCC_GPIOF,
-    RCC_GPIOG,
-    RCC_UART4,
-    RCC_UART5,
     RCC_TIMER5,
     RCC_TIMER6,
     RCC_TIMER7,
     RCC_TIMER8,
-    RCC_FSMC,
-    RCC_DAC,
-    RCC_DMA2,
-    RCC_SDIO,
-    RCC_SPI3,
     RCC_TIMER9,
     RCC_TIMER10,
     RCC_TIMER11,
     RCC_TIMER12,
     RCC_TIMER13,
     RCC_TIMER14,
-    RCC_USBFS,
-    RCC_SYSCFG,
-	RCC_SPI4
+    RCC_WDG,
+    RCC_SPI1,
+    RCC_SPI2,
+    RCC_SPI3,
+    RCC_SPI4,
+    RCC_SPI5,
+
+    RCC_USART1,
+    RCC_USART2,
+    RCC_USART3,
+    RCC_UART4,
+	RCC_UART5,
+    RCC_USART6,
+	RCC_ADC1,
+	RCC_ADC2,
+	RCC_ADC3,
+	RCC_SDIO,
+	RCC_SYSCFG,
+
+	RCC_I2C1,
+	RCC_I2C2,
+	RCC_I2C3,
+	RCC_CAN1,
+	RCC_CAN2,
+	RCC_PWR,
+	RCC_DAC,
+
 } rcc_clk_id;
 
-void rcc_clk_init(rcc_sysclk_src sysclk_src,
-                  rcc_pllsrc pll_src,
-                  rcc_pll_multiplier pll_mul);
+void rcc_clk_init(void);
 void rcc_clk_disable(rcc_clk_id device);
 void rcc_clk_enable(rcc_clk_id device);
 void rcc_reset_dev(rcc_clk_id device);
 
-void SetupClock72MHz();
-void SetupClock120MHz();
-void SetupClock168MHz();
 
 typedef enum rcc_clk_domain {
     RCC_APB1,
@@ -544,35 +639,23 @@ uint32 rcc_dev_timer_clk_speed(rcc_clk_id id);
  * Prescaler identifiers
  * @see rcc_set_prescaler()
  */
-typedef enum rcc_prescaler {
-    RCC_PRESCALER_AHB,
-    RCC_PRESCALER_APB1,
-    RCC_PRESCALER_APB2,
-    RCC_PRESCALER_USB,
-    RCC_PRESCALER_ADC
+typedef enum {
+    RCC_PRESCALER_AHB  = RCC_CFGR_HPRE_MASK,
+    RCC_PRESCALER_APB1 = RCC_CFGR_PPRE1_MASK,
+    RCC_PRESCALER_APB2 = RCC_CFGR_PPRE2_MASK,
+    RCC_PRESCALER_RTC  = RCC_CFGR_RTCPRE_MASK,
 } rcc_prescaler;
-
-/**
- * ADC prescaler dividers
- * @see rcc_set_prescaler()
- */
-typedef enum rcc_adc_divider {
-    RCC_ADCPRE_PCLK_DIV_2 = 0x0 << 14,
-    RCC_ADCPRE_PCLK_DIV_4 = 0x1 << 14,
-    RCC_ADCPRE_PCLK_DIV_6 = 0x2 << 14,
-    RCC_ADCPRE_PCLK_DIV_8 = 0x3 << 14,
-} rcc_adc_divider;
 
 /**
  * APB1 prescaler dividers
  * @see rcc_set_prescaler()
  */
 typedef enum rcc_apb1_divider {
-    RCC_APB1_HCLK_DIV_1 = 0x0 << 8,
-    RCC_APB1_HCLK_DIV_2 = 0x4 << 8,
-    RCC_APB1_HCLK_DIV_4 = 0x5 << 8,
-    RCC_APB1_HCLK_DIV_8 = 0x6 << 8,
-    RCC_APB1_HCLK_DIV_16 = 0x7 << 8,
+    RCC_APB1_HCLK_DIV_1  = (0x0 << RCC_CFGR_PPRE1_BIT),
+    RCC_APB1_HCLK_DIV_2  = (0x4 << RCC_CFGR_PPRE1_BIT),
+    RCC_APB1_HCLK_DIV_4  = (0x5 << RCC_CFGR_PPRE1_BIT),
+    RCC_APB1_HCLK_DIV_8  = (0x6 << RCC_CFGR_PPRE1_BIT),
+    RCC_APB1_HCLK_DIV_16 = (0x7 << RCC_CFGR_PPRE1_BIT),
 } rcc_apb1_divider;
 
 /**
@@ -580,11 +663,11 @@ typedef enum rcc_apb1_divider {
  * @see rcc_set_prescaler()
  */
 typedef enum rcc_apb2_divider {
-    RCC_APB2_HCLK_DIV_1 = 0x0 << 11,
-    RCC_APB2_HCLK_DIV_2 = 0x4 << 11,
-    RCC_APB2_HCLK_DIV_4 = 0x5 << 11,
-    RCC_APB2_HCLK_DIV_8 = 0x6 << 11,
-    RCC_APB2_HCLK_DIV_16 = 0x7 << 11,
+    RCC_APB2_HCLK_DIV_1  = (0x0 << RCC_CFGR_PPRE2_BIT),
+    RCC_APB2_HCLK_DIV_2  = (0x4 << RCC_CFGR_PPRE2_BIT),
+    RCC_APB2_HCLK_DIV_4  = (0x5 << RCC_CFGR_PPRE2_BIT),
+    RCC_APB2_HCLK_DIV_8  = (0x6 << RCC_CFGR_PPRE2_BIT),
+    RCC_APB2_HCLK_DIV_16 = (0x7 << RCC_CFGR_PPRE2_BIT),
 } rcc_apb2_divider;
 
 /**
@@ -592,27 +675,29 @@ typedef enum rcc_apb2_divider {
  * @see rcc_set_prescaler()
  */
 typedef enum rcc_ahb_divider {
-    RCC_AHB_SYSCLK_DIV_1 = 0x0 << 4,
-    RCC_AHB_SYSCLK_DIV_2 = 0x8 << 4,
-    RCC_AHB_SYSCLK_DIV_4 = 0x9 << 4,
-    RCC_AHB_SYSCLK_DIV_8 = 0xA << 4,
-    RCC_AHB_SYSCLK_DIV_16 = 0xB << 4,
-    RCC_AHB_SYSCLK_DIV_32 = 0xC << 4,
-    RCC_AHB_SYSCLK_DIV_64 = 0xD << 4,
-    RCC_AHB_SYSCLK_DIV_128 = 0xD << 4,
-    RCC_AHB_SYSCLK_DIV_256 = 0xE << 4,
-    RCC_AHB_SYSCLK_DIV_512 = 0xF << 4,
+    RCC_AHB_SYSCLK_DIV_1   = (0x0 << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_2   = (0x8 << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_4   = (0x9 << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_8   = (0xA << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_16  = (0xB << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_32  = (0xC << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_64  = (0xD << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_128 = (0xD << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_256 = (0xE << RCC_CFGR_HPRE_BIT),
+    RCC_AHB_SYSCLK_DIV_512 = (0xF << RCC_CFGR_HPRE_BIT),
 } rcc_ahb_divider;
+
+#define RCC_RTCCLK_DIV(i) ((i)<<RCC_CFGR_RTCPRE_BIT)
 
 void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider);
 
-
+#if 0 // unused functions
 /**
  * @brief Start the low speed internal oscillatior
  */
 static inline void rcc_start_lsi(void) {
-	*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;
-	while (*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSIRDY_BIT) == 0);
+	*bb_perip(&RCC->CSR, RCC_CSR_LSION_BIT) = 1;
+	while (*bb_perip(&RCC->CSR, RCC_CSR_LSIRDY_BIT) == 0);
 }
 
 /* FIXME [0.0.13] Just have data point to an rcc_pll_multiplier! */
@@ -620,19 +705,19 @@ static inline void rcc_start_lsi(void) {
  * @brief Start the low speed external oscillatior
  */
 static inline void rcc_start_lse(void) {
-	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
-	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEON_BIT, 1);
-	while (bb_peri_get_bit(&RCC_BASE->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
+	bb_peri_set_bit(&RCC->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
+	bb_peri_set_bit(&RCC->BDCR, RCC_BDCR_LSEON_BIT, 1);
+	while (bb_peri_get_bit(&RCC->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
 }
 
 /*
  * Deprecated bits.
  */
 static inline void rcc_start_hse(void) {				// Added to support RTClock
-//	*bb_perip(&RCC_BASE->CR, RCC_CR_HSEON_BIT) = 1;
-	while (bb_peri_get_bit(&RCC_BASE->CR, RCC_CR_HSERDY_BIT) == 0);
+//	*bb_perip(&RCC->CR, RCC_CR_HSEON_BIT) = 1;
+	while (bb_peri_get_bit(&RCC->CR, RCC_CR_HSERDY_BIT) == 0);
 }
-
+#endif
 
 
 #ifdef __cplusplus

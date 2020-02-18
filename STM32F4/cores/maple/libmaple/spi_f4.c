@@ -33,22 +33,27 @@
 
 #include <libmaple/spi.h>
 #include <libmaple/gpio.h>
-#include "spi_private.h"
 
 /*
  * Devices
  */
+#define SPI_DEV(num)                \
+    {                               \
+        .regs    = SPI##num##_BASE, \
+        .clk_id  = RCC_SPI##num,    \
+        .irq_num = NVIC_SPI##num,   \
+    }
 
-static spi_dev spi1 = SPI_DEV(1);
-static spi_dev spi2 = SPI_DEV(2);
-
-spi_dev *SPI1 = &spi1;
-spi_dev *SPI2 = &spi2;
-
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-static spi_dev spi3 = SPI_DEV(3);
-spi_dev *SPI3 = &spi3;
+spi_dev spi1 = SPI_DEV(1);
+spi_dev spi2 = SPI_DEV(2);
+spi_dev spi3 = SPI_DEV(3);
+#if BOARD_NR_SPI>3
+spi_dev spi4 = SPI_DEV(4);
 #endif
+#if BOARD_NR_SPI>4
+spi_dev spi5 = SPI_DEV(5);
+#endif
+
 
 /*
  * Routines
@@ -56,35 +61,30 @@ spi_dev *SPI3 = &spi3;
 
 void spi_config_gpios(spi_dev *dev,
                       uint8 as_master,
-                      uint8 nss_pin,
-                      uint8 sck_pin,
-                      uint8 miso_pin,
-                      uint8 mosi_pin) {
+                      const spi_pins_t *pins) {
     if (as_master) {
-        gpio_set_mode(sck_pin, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(miso_pin, GPIO_AF_INPUT_PD);		
-        gpio_set_mode(mosi_pin, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(pins->sck, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(pins->miso, GPIO_AF_INPUT_PD);		
+        gpio_set_mode(pins->mosi, GPIO_AF_OUTPUT_PP);
     } else {
-        gpio_set_mode(nss_pin, GPIO_INPUT_FLOATING);
-        gpio_set_mode(sck_pin, GPIO_INPUT_FLOATING);
-        gpio_set_mode(miso_pin, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(mosi_pin, GPIO_INPUT_FLOATING);
+        gpio_set_mode(pins->nss, GPIO_INPUT_FLOATING);
+        gpio_set_mode(pins->sck, GPIO_INPUT_FLOATING);
+        gpio_set_mode(pins->miso, GPIO_AF_OUTPUT_PP);
+        gpio_set_mode(pins->mosi, GPIO_INPUT_FLOATING);
     }
 
-	uint8_t af_mode = 6;
-	if(dev->clk_id <= RCC_SPI2) { af_mode = 5; }
-	if(!as_master) {
-		gpio_set_af_mode(nss_pin, af_mode);
+	gpio_af_mode af_mode = GPIO_AFMODE_SPI1_4;
+	if ((dev->clk_id == RCC_SPI5) || (dev->clk_id == RCC_SPI3)) { af_mode = GPIO_AFMODE_SPI3_5; }
+	if (!as_master) {
+		gpio_set_af_mode(pins->nss, af_mode);
 	}
-	gpio_set_af_mode(sck_pin, af_mode);
-	gpio_set_af_mode(miso_pin, af_mode);
-	gpio_set_af_mode(mosi_pin, af_mode);
+	gpio_set_af_mode(pins->sck, af_mode);
+	gpio_set_af_mode(pins->miso, af_mode);
+	gpio_set_af_mode(pins->mosi, af_mode);
 }
 
 void spi_foreach(void (*fn)(spi_dev*)) {
     fn(SPI1);
     fn(SPI2);
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
     fn(SPI3);
-#endif
 }

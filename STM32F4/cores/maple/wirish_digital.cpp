@@ -74,12 +74,13 @@ void pinMode(uint8 pin, WiringPinMode mode) {
 
     gpio_set_mode(pin, outputMode);
 
-    if (PIN_MAP[pin].timer_device != NULL) {
-        /* Enable/disable timer channels if we're switching into or
-         * out of PWM. */
-        timer_set_mode(PIN_MAP[pin].timer_device,
-                       PIN_MAP[pin].timer_channel,
+	const timer_dev * dev = timer_devices[timer_map[pin].index];
+    if (dev != NULL) {
+        // Enable/disable timer channels if we're switching into or out of PWM.
+        timer_set_mode(dev, timer_map[pin].channel,
                        pwm ? TIMER_PWM : TIMER_DISABLED);
+        if ( pwm )
+            gpio_set_af_mode(pin, dev->af_mode);
     }
 }
 
@@ -101,6 +102,24 @@ void digitalWrite(uint8 pin, uint8 val)
     }
 
     gpio_write_pin(pin, val);
+}
+
+void digitalSet(uint8 pin)
+{
+    if (pin >= BOARD_NR_GPIO_PINS) {
+        return;
+    }
+
+    gpio_set_pin(pin);
+}
+
+void digitalClear(uint8 pin)
+{
+    if (pin >= BOARD_NR_GPIO_PINS) {
+        return;
+    }
+
+    gpio_clear_pin(pin);
 }
 
 void togglePin(uint8 pin)

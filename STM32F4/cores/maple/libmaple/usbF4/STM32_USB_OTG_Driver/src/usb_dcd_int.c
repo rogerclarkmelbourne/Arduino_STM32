@@ -131,8 +131,7 @@ uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
     if (pdev->cfg.dma_enable == 1)
     {
       deptsiz.d32 = USB_OTG_READ_REG32(&(pdev->regs.OUTEP_REGS[1]->DOEPTSIZ));
-      /*ToDo : handle more than one single MPS size packet */
-      pdev->dev.out_ep[1].xfer_count = pdev->dev.out_ep[1].maxpacket - \
+      pdev->dev.out_ep[1].xfer_count = pdev->dev.out_ep[1].xfer_len- \
         deptsiz.b.xfersize;
     }    
     /* Inform upper layer: data ready */
@@ -147,11 +146,7 @@ uint32_t USBD_OTG_EP1OUT_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
     /* Clear the bit in DOEPINTn for this interrupt */
     CLEAR_OUT_EP_INTR(1, epdisabled);
   }
-  /* AHB Error */
-  if ( doepint.b.ahberr )
-  {
-    CLEAR_OUT_EP_INTR(1, ahberr);
-  } 
+
   return 1;
 }
 
@@ -180,10 +175,6 @@ uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
     /* TX COMPLETE */
     USBD_DCD_INT_fops->DataInStage(pdev , 1);
   }
-  if ( diepint.b.ahberr )
-  {
-    CLEAR_IN_EP_INTR(1, ahberr);
-  }
   if ( diepint.b.epdisabled )
   {
     CLEAR_IN_EP_INTR(1, epdisabled);
@@ -195,10 +186,6 @@ uint32_t USBD_OTG_EP1IN_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
   if (diepint.b.intktxfemp)
   {
     CLEAR_IN_EP_INTR(1, intktxfemp);
-  }
-  if (diepint.b.intknepmis)
-  {
-    CLEAR_IN_EP_INTR(1, intknepmis);
   }
   if (diepint.b.inepnakeff)
   {
@@ -365,8 +352,7 @@ static uint32_t DCD_HandleResume_ISR(USB_OTG_CORE_HANDLE *pdev)
   if(pdev->cfg.low_power)
   {
     /* un-gate USB Core clock */
-	//power.d32 = USB_OTG_READ_REG32(&pdev->regs.PCGCCTL);
-	power.d32 = USB_OTG_READ_REG32(pdev->regs.PCGCCTL); // ala42
+    power.d32 = USB_OTG_READ_REG32(pdev->regs.PCGCCTL);
     power.b.gatehclk = 0;
     power.b.stoppclk = 0;
     USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, power.d32);
@@ -462,10 +448,6 @@ static uint32_t DCD_HandleInEP_ISR(USB_OTG_CORE_HANDLE *pdev)
           }
         }           
       }
-      if ( diepint.b.ahberr )
-      {
-        CLEAR_IN_EP_INTR(epnum, ahberr);
-      }
       if ( diepint.b.timeout )
       {
         CLEAR_IN_EP_INTR(epnum, timeout);
@@ -473,10 +455,6 @@ static uint32_t DCD_HandleInEP_ISR(USB_OTG_CORE_HANDLE *pdev)
       if (diepint.b.intktxfemp)
       {
         CLEAR_IN_EP_INTR(epnum, intktxfemp);
-      }
-      if (diepint.b.intknepmis)
-      {
-        CLEAR_IN_EP_INTR(epnum, intknepmis);
       }
       if (diepint.b.inepnakeff)
       {
@@ -488,9 +466,7 @@ static uint32_t DCD_HandleInEP_ISR(USB_OTG_CORE_HANDLE *pdev)
       }       
       if (diepint.b.emptyintr)
       {
-        
         DCD_WriteEmptyTxFifo(pdev , epnum);
-        
         CLEAR_IN_EP_INTR(epnum, emptyintr);
       }
     }
@@ -556,11 +532,6 @@ static uint32_t DCD_HandleOutEP_ISR(USB_OTG_CORE_HANDLE *pdev)
       {
         /* Clear the bit in DOEPINTn for this interrupt */
         CLEAR_OUT_EP_INTR(epnum, epdisabled);
-      }
-      /* AHB Error */
-      if ( doepint.b.ahberr )
-      {
-        CLEAR_OUT_EP_INTR(epnum, ahberr);
       }
       /* Setup Phase Done (control EPs) */
       if ( doepint.b.setup )
@@ -666,7 +637,7 @@ static uint32_t DCD_WriteEmptyTxFifo(USB_OTG_CORE_HANDLE *pdev, uint32_t epnum)
   uint32_t len32b;
   txstatus.d32 = 0;
   
-  ep = &pdev->dev.in_ep[epnum];    
+  ep = &pdev->dev.in_ep[epnum];
   
   len = ep->xfer_len - ep->xfer_count;
   
@@ -677,8 +648,6 @@ static uint32_t DCD_WriteEmptyTxFifo(USB_OTG_CORE_HANDLE *pdev, uint32_t epnum)
   
   len32b = (len + 3) / 4;
   txstatus.d32 = USB_OTG_READ_REG32( &pdev->regs.INEP_REGS[epnum]->DTXFSTS);
-  
-  
   
   while  (txstatus.b.txfspcavail > len32b &&
           ep->xfer_count < ep->xfer_len &&
@@ -753,7 +722,6 @@ static uint32_t DCD_HandleUsbReset_ISR(USB_OTG_CORE_HANDLE *pdev)
   
   doepmsk.b.setup = 1;
   doepmsk.b.xfercompl = 1;
-  doepmsk.b.ahberr = 1;
   doepmsk.b.epdisabled = 1;
   USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DOEPMSK, doepmsk.d32 );
 #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED   
@@ -762,8 +730,7 @@ static uint32_t DCD_HandleUsbReset_ISR(USB_OTG_CORE_HANDLE *pdev)
   diepmsk.b.xfercompl = 1;
   diepmsk.b.timeout = 1;
   diepmsk.b.epdisabled = 1;
-  diepmsk.b.ahberr = 1;
-  diepmsk.b.intknepmis = 1;
+
   USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DIEPMSK, diepmsk.d32 );
 #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED  
   USB_OTG_WRITE_REG32( &pdev->regs.DREGS->DINEP1MSK, diepmsk.d32 );
@@ -807,13 +774,13 @@ static uint32_t DCD_HandleEnumDone_ISR(USB_OTG_CORE_HANDLE *pdev)
   if ( USB_OTG_GetDeviceSpeed(pdev) == USB_SPEED_HIGH)
   {
     pdev->cfg.speed            = USB_OTG_SPEED_HIGH;
-    pdev->cfg.mps              = USB_OTG_HS_MAX_PACKET_SIZE ;    
+    pdev->cfg.mps              = USB_OTG_HS_MAX_PACKET_SIZE ;
     gusbcfg.b.usbtrdtim = 9;
   }
   else
   {
     pdev->cfg.speed            = USB_OTG_SPEED_FULL;
-    pdev->cfg.mps              = USB_OTG_FS_MAX_PACKET_SIZE ;  
+    pdev->cfg.mps              = USB_OTG_FS_MAX_PACKET_SIZE ;
     gusbcfg.b.usbtrdtim = 5;
   }
   
@@ -882,8 +849,6 @@ static uint32_t DCD_ReadDevInEP (USB_OTG_CORE_HANDLE *pdev, uint8_t epnum)
   v = USB_OTG_READ_REG32(&pdev->regs.INEP_REGS[epnum]->DIEPINT) & msk;
   return v;
 }
-
-
 
 /**
 * @}

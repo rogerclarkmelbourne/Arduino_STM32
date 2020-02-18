@@ -23,6 +23,7 @@
 
 #ifndef __USBD_DEF_H
 #define __USBD_DEF_H
+
 /* Includes ------------------------------------------------------------------*/
 #include <VCP/usbd_conf.h>
 
@@ -86,7 +87,7 @@
 #define  USB_DESC_TYPE_ENDPOINT                            5
 #define  USB_DESC_TYPE_DEVICE_QUALIFIER                    6
 #define  USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION           7
-
+#define  USB_DESC_TYPE_BOS                                 0x0F
 
 #define USB_CONFIG_REMOTE_WAKEUP                           2
 #define USB_CONFIG_SELF_POWERED                            1
@@ -115,8 +116,8 @@
 #define  SWAPBYTE(addr)        (((uint16_t)(*((uint8_t *)(addr)))) + \
                                (((uint16_t)(*(((uint8_t *)(addr)) + 1))) << 8))
 
-#define LOBYTE(x)  ((uint8_t)(x & 0x00FF))
-#define HIBYTE(x)  ((uint8_t)((x & 0xFF00) >>8))
+#define LOBYTE(x)  ((uint8_t)((x) & 0x00FF))
+#define HIBYTE(x)  ((uint8_t)(((x) & 0xFF00) >>8))
 /**
   * @}
   */ 

@@ -33,123 +33,142 @@
 #include "gpio.h"
 #include "dac.h"
 
-#ifdef STM32_HIGH_DENSITY
 
 /**
  * @brief DAC peripheral routines.
  */
 
-dac_dev dac = {
+/** DAC device. */
+dac_dev_t const dac_dev = {
     .regs = DAC_BASE,
 };
-/** DAC device. */
-const dac_dev *DAC = &dac;
 
 /**
  * @brief Initialize the digital to analog converter
- * @param dev DAC device
- * @param flags Flags:
- *      DAC_CH1: Enable channel 1
- *      DAC_CH2: Enable channel 2
- * @sideeffect May set PA4 or PA5 to INPUT_ANALOG
  */
-void dac_init(const dac_dev *dev, uint32 flags) {
-    /* First turn on the clock */
+void dac_init()
+{
     rcc_clk_enable(RCC_DAC);
     rcc_reset_dev(RCC_DAC);
-
-    if (flags & DAC_CH1) {
-        dac_enable_channel(dev, 1);
-    }
-
-    if (flags & DAC_CH2) {
-        dac_enable_channel(dev, 2);
-    }
 }
-
-/**
- * @brief Initialize the output buffer of the digital to analog converter
- * @param dev DAC device
- * @param flags Flags:
- *      DAC_CH1: Select channel 1
- *      DAC_CH2: Select channel 2
- * @param status Status:
- *      1:  enable buffer
- *      0: disable buffer
- */
-void dac_enable_buffer(const dac_dev *dev, uint32 flags, int status) {
-    if (flags & DAC_CH1) {
-		if(status) {
-			dev->regs->CR &= ~DAC_CR_BOFF1;
-		} else {
-			dev->regs->CR |= DAC_CR_BOFF1;
-		}        
-    }
-
-    if (flags & DAC_CH2) {
-		if(status) {
-			dev->regs->CR &= ~DAC_CR_BOFF2;
-		} else {
-			dev->regs->CR |= DAC_CR_BOFF2;
-		}        
-    }
-}
-
 
 /**
  * @brief Write a 12-bit value to the DAC to output
- * @param dev DAC device
  * @param channel channel to select (1 or 2)
  * @param val value to write
  */
-void dac_write_channel(const dac_dev *dev, uint8 channel, uint16 val) {
-    switch(channel) {
-    case 1:
-        dev->regs->DHR12R1 = DAC_DHR12R1_DACC1DHR & val;
-        break;
-    case 2:
-        dev->regs->DHR12R2 = DAC_DHR12R2_DACC2DHR & val;
-        break;
+void dac_write_channel(dac_channel_t channel, uint16 val)
+{
+    if (channel & DAC_CH1) {
+        DAC->regs->DHR12R1 = DAC_DHR12R_MASK & val;
     }
+    if (channel & DAC_CH2) {
+        DAC->regs->DHR12R2 = DAC_DHR12R_MASK & val;
+    }
+}
+
+void dac_set_mask_amplitude(dac_channel_t channel, uint16 val)
+{
+	val &= DAC_CR_MAMP_MASK;
+    if (channel & DAC_CH1) {
+        DAC->regs->CR = (DAC->regs->CR&(~DAC_CR_MAMP1)) | (val<<DAC_CR_MAMP1_SHIFT);
+    }
+    if (channel & DAC_CH2) {
+        DAC->regs->CR = (DAC->regs->CR&(~DAC_CR_MAMP2)) | (val<<DAC_CR_MAMP2_SHIFT);
+    }
+}
+
+void dac_set_wave(dac_channel_t channel, dac_wave_t val)
+{
+    val &= DAC_CR_WAVE_MASK;
+    if (channel & DAC_CH1) {
+        DAC->regs->CR = (DAC->regs->CR&(~DAC_CR_WAVE1)) | (val<<DAC_CR_WAVE1_SHIFT);
+    }
+    if (channel & DAC_CH2) {
+        DAC->regs->CR = (DAC->regs->CR&(~DAC_CR_WAVE2)) | (val<<DAC_CR_WAVE2_SHIFT);
+    }
+}
+
+void dac_set_trigger(dac_channel_t channel, dac_trigger_t val)
+{
+    val &= DAC_CR_TSEL_MASK;
+    if (channel & DAC_CH1) {
+		DAC->regs->CR &= ~DAC_CR_TSEL1;
+        DAC->regs->CR |= (val<<DAC_CR_TSEL1_SHIFT) | DAC_CR_TEN1;
+    }
+    if (channel & DAC_CH2) {
+		DAC->regs->CR &= ~DAC_CR_TSEL2;
+        DAC->regs->CR |= (val<<DAC_CR_TSEL2_SHIFT) | DAC_CR_TEN2;
+    }
+}
+
+void dac_sw_trigger(dac_channel_t channel)
+{
+	// trigger the channels simultanously
+	DAC->regs->SWTRIGR = channel & (DAC_CH1 | DAC_CH2);
+}
+
+/**
+ * @brief Enable/disable the output buffer of the digital to analog converter
+ * @param channel Flags:
+ *      DAC_CH1: Select channel 1
+ *      DAC_CH2: Select channel 2
+ */
+void dac_enable_buffer(uint8 channel)
+{
+	uint32 flags = (channel&DAC_CH1)<<1 | (channel&DAC_CH2)<<16;
+	DAC->regs->CR |= flags; // enable the buffers simultanously
+}
+
+void dac_disable_buffer(uint8 channel)
+{
+	uint32 flags = (channel&DAC_CH1)<<1 | (channel&DAC_CH2)<<16;
+	DAC->regs->CR &= ~flags; // disable the buffers simultanously
+}
+
+/**
+ * @brief Enable/disable DMA request on trigger occurance
+ * @param channel Flags:
+ *      DAC_CH1: Select channel 1
+ *      DAC_CH2: Select channel 2
+ */
+void dac_enable_dma(dac_channel_t channel)
+{
+	uint32 flags = (channel&DAC_CH1)<<12 | (channel&DAC_CH2)<<27;
+	DAC->regs->CR |= flags; // enable the channels simultanously
+}
+
+void dac_disable_dma(dac_channel_t channel)
+{
+	uint32 flags = (channel&DAC_CH1)<<12 | (channel&DAC_CH2)<<27;
+	DAC->regs->CR &= ~flags; // disable the channels simultanously
 }
 
 /**
  * @brief Enable a DAC channel
- * @param dev DAC device
- * @param channel channel to enable, either 1 or 2
- * @sideeffect May change pin mode of PA4 or PA5
+ * @param channel channel to enable, 1 and/or 2
+ * @sideeffect Changes pin mode of PA4 or PA5
  */
-void dac_enable_channel(const dac_dev *dev, uint8 channel) {
-    /*
-     * Setup ANALOG mode on PA4 and PA5. This mapping is consistent across
-     * all STM32 chips with a DAC. See RM0008 12.2.
-     */
-    switch (channel) {
-    case 1:
-        gpio_set_mode((uint8_t)PA4, GPIO_INPUT_ANALOG);
-        dev->regs->CR |= DAC_CR_EN1;
-        break;
-    case 2:
-        gpio_set_mode((uint8_t)PA5, GPIO_INPUT_ANALOG);
-        dev->regs->CR |= DAC_CR_EN2;
-        break;
+void dac_enable(dac_channel_t channel)
+{
+    // Setup ANALOG mode on PA4 and PA5. This mapping is consistent across
+    // all STM32 chips with a DAC. See RM0008 12.2.
+    if (channel & DAC_CH1) {
+        gpio_set_mode(PA4, GPIO_INPUT_ANALOG);
     }
+    if (channel & DAC_CH2) {
+        gpio_set_mode(PA5, GPIO_INPUT_ANALOG);
+    }
+	uint32 flags = (channel&DAC_CH1) | (channel&DAC_CH2)<<15;
+	DAC->regs->CR |= flags; // enable the channels simultanously
 }
 
 /**
  * @brief Disable a DAC channel
- * @param dev DAC device
- * @param channel channel to disable, either 1 or 2
+ * @param channel channel to disable, 1 and/or 2
  */
-void dac_disable_channel(const dac_dev *dev, uint8 channel) {
-    switch (channel) {
-    case 1:
-        dev->regs->CR &= ~DAC_CR_EN1;
-        break;
-    case 2:
-        dev->regs->CR &= ~DAC_CR_EN2;
-        break;
-    }
+void dac_disable(dac_channel_t channel)
+{
+	uint32 flags = (channel&DAC_CH1) | (channel&DAC_CH2)<<15;
+	DAC->regs->CR &= ~flags; // disable the channels simultanously
 }
-
-#endif  /* STM32_HIGH_DENSITY */

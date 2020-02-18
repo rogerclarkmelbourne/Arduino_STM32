@@ -169,7 +169,7 @@ USBD_Status  USBD_CtlContinueRx (USB_OTG_CORE_HANDLE  *pdev,
 }
 /**
 * @brief  USBD_CtlSendStatus
-*         send zero lzngth packet on the ctl pipe
+*         send zero length packet on the ctl pipe
 * @param  pdev: USB OTG device instance
 * @retval status
 */
@@ -189,7 +189,7 @@ USBD_Status  USBD_CtlSendStatus (USB_OTG_CORE_HANDLE  *pdev)
 
 /**
 * @brief  USBD_CtlReceiveStatus
-*         receive zero lzngth packet on the ctl pipe
+*         receive zero length packet on the ctl pipe
 * @param  pdev: USB OTG device instance
 * @retval status
 */

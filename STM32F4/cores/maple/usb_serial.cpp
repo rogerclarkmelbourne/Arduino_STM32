@@ -29,13 +29,12 @@
  */
 
 #include <string.h>
-
 #include "wirish.h"
-#include "usb.h"
+
 
 #ifdef SERIAL_USB
 
-#define USB_TIMEOUT 50
+#define USB_TIMEOUT 500
 bool USBSerial::_hasBegun = false;
 
 USBSerial::USBSerial(void) {
@@ -57,7 +56,7 @@ void USBSerial::end(void) {
 	_hasBegun = false;
 }
 
-size_t USBSerial::write(uint8 ch) {
+size_t USBSerial::write(const uint8 ch) {
     const uint8 buf[] = {ch};
     return this->write(buf, 1);
 }
@@ -66,8 +65,10 @@ size_t USBSerial::write(const char *str) {
     return this->write(str, strlen(str));
 }
 
-size_t USBSerial::write(const void *buf, uint32 len) {
-    if (!(usbIsConnected() && usbIsConfigured()) || !buf) {
+uint32 usb_tx_cnt = 0; // global Tx byte counter
+size_t USBSerial::write(const void *buf, uint32 len)
+{
+    if (!(usbOK()) || !buf) {
         return 0;
     }
 
@@ -75,21 +76,19 @@ size_t USBSerial::write(const void *buf, uint32 len) {
     uint32 old_txed = 0;
     uint32 start = millis();
 
-    while (txed < len && (millis() - start < USB_TIMEOUT)) {
+    while ( (txed < len) && ((millis() - start) < USB_TIMEOUT) ) {
         txed += usbSendBytes((const uint8*)buf + txed, len - txed);
         if (old_txed != txed) {
             start = millis();
         }
         old_txed = txed;
     }
+	usb_tx_cnt += txed;
     return txed;
 }
 
-int USBSerial::available(void) {
-    return usbBytesAvailable();
-}
-
-int USBSerial::read(void *buf, uint32 len) {
+int USBSerial::read(void *buf, uint32 len)
+{
     if (!buf) {
         return 0;
     }
@@ -103,7 +102,8 @@ int USBSerial::read(void *buf, uint32 len) {
 }
 
 /* Blocks forever until 1 byte is received */
-int USBSerial::read(void) {
+int USBSerial::read(void)
+{
     uint8 buf[1];
     this->read(buf, 1);
     return buf[0];
@@ -124,6 +124,11 @@ int USBSerial::peek(void)
     }
 }
 
+uint8 USBSerial::usbOK(void)
+{
+    return usbIsConnected() && usbIsConfigured() && usbGetDTR();
+}
+
 void USBSerial::flush(void)
 {
     /*Roger Clark. Rather slow method. Need to improve this */
@@ -135,29 +140,6 @@ void USBSerial::flush(void)
     return;
 }
 
-uint8 USBSerial::pending(void) {
-    return usbGetPending();
-}
-
-USBSerial::operator bool() {
-    return usbIsConnected() && usbIsConfigured();
-}
-
-uint8 USBSerial::getDTR(void) {
-    return usbGetDTR();
-}
-
-uint8 USBSerial::getRTS(void) {
-    return usbGetRTS();
-}
-
-void USBSerial::enableBlockingTx(void) {
-	usbEnableBlockingTx();
-}
-
-void USBSerial::disableBlockingTx(void) {
-	usbDisableBlockingTx();
-}
 
 USBSerial SerialUSB;
 

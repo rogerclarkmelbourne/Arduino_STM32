@@ -24,7 +24,6 @@
 #define __USBD_CDC_VCP_H
 
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32f4xx.h"
 
 #include <STM32_USB_Device_Library/Class/cdc/inc/usbd_cdc_core.h>
 #include "usbd_conf.h"
@@ -42,15 +41,6 @@ typedef struct
   uint8_t  datatype;
 }LINE_CODING;
 
-/* Exported constants --------------------------------------------------------*/
-/* The following define is used to route the USART IRQ handler to be used.
-   The IRQ handler function is implemented in the usbd_cdc_vcp.c file. */
-#ifdef USE_STM322xG_EVAL
- #define EVAL_COM_IRQHandler            USART3_IRQHandler
-#elif defined(USE_STM3210C_EVAL)
- #define EVAL_COM_IRQHandler            USART2_IRQHandler
-#endif /* USE_STM322xG_EVAL */
-#define EVAL_COM_IRQHandler            USART2_IRQHandler
 
 #define DEFAULT_CONFIG                  0
 #define OTHER_CONFIG                    1

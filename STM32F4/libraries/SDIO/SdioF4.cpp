@@ -23,7 +23,7 @@
 #include <libmaple/dma.h>
 #include <boards.h>
 
-#define USE_DEBUG_MODE 0
+#define USE_DEBUG_MODE 0 // set it 0 or 1
 #define USE_YIELD 0
 
 //==============================================================================
@@ -118,8 +118,12 @@ static uint32_t t = 0;
 }
 #define DBG_PIN PD0
 
+static char dbg_str[1024];
+#define PRINTF(...) { sprintf(dbg_str, __VA_ARGS__); Serial.print(dbg_str); delay(1); }
+
 #else  // USE_DEBUG_MODE
 #define DBG_PRINT()
+#define PRINTF(...)
 #endif  // USE_DEBUG_MODE
 
 /*****************************************************************************/
@@ -282,7 +286,7 @@ static bool isBusyTransferComplete(void)
 	return true;
 }
 /*---------------------------------------------------------------------------*/
-static void trxStart(uint8_t* buf, uint32_t n, uint8_t dir)
+static void trxStart(uint32_t n, uint8_t dir)
 {
 	m_dir = dir;
 	uint32_t flags = (SDIO_BLOCKSIZE_512 | SDIO_DCTRL_DTEN);
@@ -318,7 +322,6 @@ static bool dmaTrxStart(uint8_t* buf, uint32_t n, uint8_t dir)
 	// setup SDIO to transfer n blocks of 512 bytes
 	sdio_setup_transfer(0x00FFFFFF, n, flags);
 	// setup DMA2 stream 3 channel 4
-	dma_init(DMA2);
 	flags = (DMA_PERIF_CTRL | DMA_BURST_INCR4 | DMA_MINC_MODE | DMA_PRIO_VERY_HIGH);
 	if (dir==TRX_RD) flags |= DMA_FROM_PER; // read
 	else             flags |= DMA_FROM_MEM; // write
@@ -481,6 +484,7 @@ delay(100);
   m_sdClkKhz = 24000;
   sdio_set_clock(m_sdClkKhz*1000); // set clock to 24MHz
 
+  dma_init(DMA2);
   m_initDone = true;
   return true;
 }
@@ -540,9 +544,8 @@ uint32_t SdioCard::kHzSdClk() {
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readBlock(uint32_t lba, uint8_t* buf)
 {
-#if USE_DEBUG_MODE
-	Serial.print("readBlock: ");  Serial.println(lba); //Serial.print(", buf: "); Serial.println((uint32_t)buf, HEX);
-#endif
+	PRINTF("_readBlock lba: %lu\n", lba);	//Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
+
 	// prepare SDIO and DMA for data read transfer
 	dmaTrxStart((uint32_t)buf & 3 ? (uint8_t*)aligned : buf, 512, TRX_RD);
 	// send command to start data transfer
@@ -567,11 +570,8 @@ bool SdioCard::readBlock(uint32_t lba, uint8_t* buf)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readBlocks(uint32_t lba, uint8_t* buf, size_t n)
 {
-#if USE_DEBUG_MODE
-	Serial.print("readBlocks: ");  Serial.print(lba);
-	//Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
-	Serial.print(", "); Serial.println(n);
-#endif
+	PRINTF("_readBlocks lba: %lu, n: %u\n", lba, n);	//Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
+
 	if ((uint32_t)buf & 3) {
 		for (size_t i = 0; i < n; i++, lba++, buf += 512) {
 			if (!readBlock(lba, buf)) {
@@ -601,13 +601,13 @@ bool SdioCard::readCSD(void* csd) {
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readData(uint8_t *dst)
 {
-	//Serial.print("readData: "); Serial.print(m_lba); Serial.print(", m_cnt: "); Serial.println(m_cnt);
+	PRINTF("_readData m_lba: %lu, m_cnt: %lu\n", m_lba, m_cnt);
 	if ( m_cnt==0 ) return false;
 	if (yieldTimeout(isBusyCMD13)) { // wait for previous transmission end
 		return sdError(SD_CARD_ERROR_CMD13);
 	}
 	// non-DMA block read
-	trxStart(dst, 512, TRX_RD);
+	trxStart(512, TRX_RD);
 	// send command to start data transfer
 	if ( !cardCommand(CMD17_XFERTYP, (m_highCapacity ? m_lba : 512*m_lba)) ) {
 		return sdError(SD_CARD_ERROR_CMD17);
@@ -651,6 +651,7 @@ bool SdioCard::readOCR(uint32_t* ocr) {
 //-----------------------------------------------------------------------------
 bool SdioCard::readStart(uint32_t lba)
 {
+  PRINTF("_readStart lba: %lu\n", lba);
   m_lba = lba;
   m_cnt = 1024;
   return true;
@@ -659,7 +660,7 @@ bool SdioCard::readStart(uint32_t lba)
 // SDHC will do Auto CMD12 after count blocks.
 bool SdioCard::readStart(uint32_t lba, uint32_t count)
 {
-	//Serial.print("readStart: "); Serial.print(lba); Serial.print(", cnt: "); Serial.println(count);
+  PRINTF("_readStart lba: %lu, cnt: %lu\n", lba, count);
   m_lba = lba;
   m_cnt = count;
   return true;
@@ -667,30 +668,33 @@ bool SdioCard::readStart(uint32_t lba, uint32_t count)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::readStop()
 {
-	//Serial.println("readStop.");
+  PRINTF("_readStop\n");
   m_lba = 0;
   m_cnt = 0;
   return true;
 }
 //-----------------------------------------------------------------------------
-bool SdioCard::syncBlocks() {
+bool SdioCard::syncBlocks()
+{
+  PRINTF("_syncBlocks\n");
   return true;
 }
 //-----------------------------------------------------------------------------
-uint8_t SdioCard::type() {
+uint8_t SdioCard::type()
+{
   return  m_version2 ? m_highCapacity ?
           SD_CARD_TYPE_SDHC : SD_CARD_TYPE_SD2 : SD_CARD_TYPE_SD1;
 }
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeBlock(uint32_t lba, const uint8_t* buf)
 {
-#if USE_DEBUG_MODE
-	Serial.print("writeBlock: ");  Serial.println(lba); //Serial.print(", buf: "); Serial.println((uint32_t)buf, HEX);
-#endif
+	PRINTF("_writeBlock lba: %lu\n", lba); // Serial.print((uint32_t)buf, HEX);
+
 	uint8_t * ptr = (uint8_t *)buf;
-	if (3 & (uint32_t)ptr) {
-		Serial.print("writeBlock: "); Serial.print(lba);
-		Serial.print(", buf: "); Serial.print((uint32_t)ptr, HEX);
+	if (3 & (uint32_t)ptr)
+	{
+		PRINTF("_odd buf: %lX\n", (uint32_t)buf); // Serial.print((uint32_t)buf, HEX);
+
 		//memcpy(aligned, buf, 512);
 		register uint8_t * src = (uint8_t *)ptr;
 		ptr = (uint8_t *)aligned;
@@ -716,11 +720,8 @@ bool SdioCard::writeBlock(uint32_t lba, const uint8_t* buf)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeBlocks(uint32_t lba, const uint8_t* buf, size_t n)
 {
-#if USE_DEBUG_MODE
-	Serial.print("writeBlocks: ");  Serial.print(lba);
-	//Serial.print(", buf: "); Serial.print((uint32_t)buf, HEX);
-	Serial.print(", "); Serial.println(n);
-#endif
+	PRINTF("_writeBlocks lba: %lu, size: %u\n", lba, n); // Serial.print((uint32_t)buf, HEX);
+
 	if (3 & (uint32_t)buf) { // misaligned buffer address, write single blocks
 		for (size_t i = 0; i < n; i++, lba++, buf += 512) {
 			if (!writeBlock(lba, buf)) {
@@ -750,7 +751,7 @@ bool SdioCard::writeBlocks(uint32_t lba, const uint8_t* buf, size_t n)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeData(const uint8_t* src)
 {
-	//Serial.print("writeData: "); Serial.print(m_lba); Serial.print(", cnt: "); Serial.println(m_cnt);
+	PRINTF("_writeData m_lba: %lu, m_cnt: %lu\n", m_lba, m_cnt);
 	if ( !m_cnt ) return false;
 	if (yieldTimeout(isBusyCMD13)) { // wait for previous transmission end
 		return sdError(SD_CARD_ERROR_CMD13);
@@ -760,7 +761,7 @@ bool SdioCard::writeData(const uint8_t* src)
 		return sdError(SD_CARD_ERROR_CMD24);
 	}
 	// non-DMA block write
-	trxStart((uint8_t*)src, 512, TRX_WR);
+	trxStart(512, TRX_WR);
 	// Receive a data block from the SDIO
 	register uint32_t STA; // to speed up SDIO flags checking
 	register uint16_t cnt = 512;
@@ -797,6 +798,7 @@ bool SdioCard::writeData(const uint8_t* src)
 //-----------------------------------------------------------------------------
 bool SdioCard::writeStart(uint32_t lba)
 {
+  PRINTF("_writeStart lba: %lu\n", lba);
   m_lba = lba;
   m_cnt = 1024;
   return true;
@@ -805,7 +807,7 @@ bool SdioCard::writeStart(uint32_t lba)
 // SDHC will do Auto CMD12 after count blocks.
 bool SdioCard::writeStart(uint32_t lba, uint32_t count)
 {
-	//Serial.print("writeStart: "); Serial.print(lba); Serial.print(", cnt: "); Serial.println(count);
+  PRINTF("_writeStart lba: %lu, cnt: %lu\n", lba, count);
   m_lba = lba;
   m_cnt = count;
   return true;
@@ -813,7 +815,7 @@ bool SdioCard::writeStart(uint32_t lba, uint32_t count)
 /*---------------------------------------------------------------------------*/
 bool SdioCard::writeStop()
 {
-	//Serial.println("writeStop.");
+  PRINTF("writeStop\n");
   m_lba = 0;
   m_cnt = 0;
   return true;

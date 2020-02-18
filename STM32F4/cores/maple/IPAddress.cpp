@@ -34,14 +34,12 @@ IPAddress::IPAddress(uint8_t first_octet, uint8_t second_octet, uint8_t third_oc
     _address.bytes[3] = fourth_octet;
 }
 
-IPAddress::IPAddress(uint32_t address)
-{
-    _address.dword = address;
-}
-
 IPAddress::IPAddress(const uint8_t *address)
 {
-    memcpy(_address.bytes, address, sizeof(_address.bytes));
+    _address.bytes[0] = address[0];
+    _address.bytes[1] = address[1];
+    _address.bytes[2] = address[2];
+    _address.bytes[3] = address[3];
 }
 
 bool IPAddress::fromString(const char *address)
@@ -88,7 +86,10 @@ bool IPAddress::fromString(const char *address)
 
 IPAddress& IPAddress::operator=(const uint8_t *address)
 {
-    memcpy(_address.bytes, address, sizeof(_address.bytes));
+    _address.bytes[0] = address[0];
+    _address.bytes[1] = address[1];
+    _address.bytes[2] = address[2];
+    _address.bytes[3] = address[3];
     return *this;
 }
 
@@ -125,5 +126,20 @@ String IPAddress::toString()
     str += ".";
     str += String(_address.bytes[3]);
     return str;
+}
+
+//-----------------------------------------------------------------------------
+static char addr_str[20];
+//-----------------------------------------------------------------------------
+char * ip2chr(ip_addr addr)
+{
+    sprintf(addr_str, "%d.%d.%d.%d", addr.bytes[0], addr.bytes[1], addr.bytes[2], addr.bytes[3]);
+    return (char *)&addr_str;
+}
+//-----------------------------------------------------------------------------
+char * mac2chr(uint8_t * mac)
+{
+    sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    return (char *)&addr_str;
 }
 

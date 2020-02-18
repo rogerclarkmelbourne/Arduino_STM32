@@ -67,12 +67,12 @@ typedef struct usart_reg_map {
 #define USART2_BASE                     ((struct usart_reg_map*)0x40004400)
 /** USART3 register map base pointer */
 #define USART3_BASE                     ((struct usart_reg_map*)0x40004800)
-#ifdef STM32_HIGH_DENSITY
 /** UART4 register map base pointer */
 #define UART4_BASE                      ((struct usart_reg_map*)0x40004C00)
 /** UART5 register map base pointer */
 #define UART5_BASE                      ((struct usart_reg_map*)0x40005000)
-#endif
+/** USART6 register map base pointer */
+#define USART6_BASE                     ((struct usart_reg_map*)0x40011400)
 
 /*
  * Register bit definitions
@@ -152,6 +152,7 @@ typedef struct usart_reg_map {
 /* Control register 2 */
 
 #define USART_CR2_LINEN_BIT             14
+#define USART_CR2_STOP_SHIFT            12
 #define USART_CR2_CLKEN_BIT             11
 #define USART_CR2_CPOL_BIT              10
 #define USART_CR2_CPHA_BIT              9
@@ -160,13 +161,13 @@ typedef struct usart_reg_map {
 #define USART_CR2_LBDL_BIT              5
 
 #define USART_CR2_LINEN                 BIT(USART_CR2_LINEN_BIT)
-#define USART_CR2_STOP                  (0x3 << 12)
-#define USART_CR2_STOP_BITS_1           (0x0 << 12)
+#define USART_CR2_STOP                  (0x3 << USART_CR2_STOP_SHIFT)
+#define USART_CR2_STOP_BITS_1           (0x0 << USART_CR2_STOP_SHIFT)
 /* Not on UART4, UART5 */
-#define USART_CR2_STOP_BITS_POINT_5     (0x1 << 12)
+#define USART_CR2_STOP_BITS_POINT_5     (0x1 << USART_CR2_STOP_SHIFT)
 /* Not on UART4, UART5 */
-#define USART_CR2_STOP_BITS_1_POINT_5   (0x3 << 12)
-#define USART_CR2_STOP_BITS_2           (0x2 << 12)
+#define USART_CR2_STOP_BITS_1_POINT_5   (0x3 << USART_CR2_STOP_SHIFT)
+#define USART_CR2_STOP_BITS_2           (0x2 << USART_CR2_STOP_SHIFT)
 #define USART_CR2_CLKEN                 BIT(USART_CR2_CLKEN_BIT)
 /* Not on UART4, UART5 */
 #define USART_CR2_CPOL                  BIT(USART_CR2_CPOL_BIT)
@@ -241,25 +242,30 @@ typedef struct usart_reg_map {
 /** USART device type */
 typedef struct usart_dev {
     usart_reg_map *regs;             /**< Register map */
+    uint32 max_baud;                 /**< Maximum baud */
+    rcc_clk_id clk_id;               /**< RCC clock information */
+    nvic_irq_num irq_num;            /**< USART NVIC interrupt */
     ring_buffer rbRX;                 /**< RX ring buffer */
     ring_buffer rbTX;                 /**< RX ring buffer */
-    uint32 max_baud;                 /**< Maximum baud */
     uint8 rx_buf[USART_RX_BUF_SIZE]; /**< @brief Deprecated.
                                       * Actual RX buffer used by rb.
                                       * This field will be removed in
                                       * a future release. */
     uint8 tx_buf[USART_TX_BUF_SIZE];
-    rcc_clk_id clk_id;               /**< RCC clock information */
-    nvic_irq_num irq_num;            /**< USART NVIC interrupt */
 } usart_dev;
 
-extern usart_dev *USART1;
-extern usart_dev *USART2;
-extern usart_dev *USART3;
-#ifdef STM32_HIGH_DENSITY
-extern usart_dev *UART4;
-extern usart_dev *UART5;
-#endif
+extern usart_dev usart1;
+extern usart_dev usart2;
+extern usart_dev usart3;
+extern usart_dev uart4;
+extern usart_dev uart5;
+extern usart_dev usart6;
+#define USART1 (&usart1)
+#define USART2 (&usart2)
+#define USART3 (&usart3)
+#define UART4  (&uart4)
+#define UART5  (&uart5)
+#define USART6 (&usart6)
 
 void usart_init(usart_dev *dev);
 void usart_set_baud_rate(usart_dev *dev, uint32 baud);
@@ -268,6 +274,10 @@ void usart_disable(usart_dev *dev);
 void usart_foreach(void (*fn)(usart_dev *dev));
 uint32 usart_tx(usart_dev *dev, const uint8 *buf, uint32 len);
 void usart_putudec(usart_dev *dev, uint32 val);
+
+
+void usart_set_parity(usart_dev *dev, uint16_t odd);
+void usart_set_stop_bits(usart_dev *dev, uint16_t stop_bits);
 
 /**
  * @brief Disable all serial ports.
@@ -299,9 +309,8 @@ static inline void usart_putc(usart_dev* dev, uint8 byte) {
  * @param str String to send
  */
 static inline void usart_putstr(usart_dev *dev, const char* str) {
-    uint32 i = 0;
-    while (str[i] != '\0') {
-        usart_putc(dev, str[i++]);
+    while (*str != '\0') {
+        usart_putc(dev, *str++);
     }
 }
 

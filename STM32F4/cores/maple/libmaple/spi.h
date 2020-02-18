@@ -207,6 +207,13 @@ typedef struct spi_dev {
     nvic_irq_num irq_num;       /**< NVIC interrupt number */
 } spi_dev;
 
+typedef struct {
+    uint8 nss;
+    uint8 sck;
+    uint8 miso;
+    uint8 mosi;
+} spi_pins_t; // __attribute((alligned(4)));
+
 /*
  * SPI Convenience functions
  */
@@ -218,17 +225,11 @@ void spi_init(spi_dev *dev);
  *
  * @param dev SPI device
  * @param as_master If true, configure as bus master; otherwise, as slave.
- * @param nss_bit NSS pin's GPIO bit on nss_dev
- * @param sck_bit SCK pin's GPIO bit on comm_dev
- * @param miso_bit MISO pin's GPIO bit on comm_dev
- * @param mosi_bit MOSI pin's GPIO bit on comm_dev
+ * @param pins pointer to GPIO pin collection
  */
 extern void spi_config_gpios(spi_dev *dev,
                              uint8 as_master,
-                             uint8 nss_pin,
-                             uint8 sck_pin,
-                             uint8 miso_pin,
-                             uint8 mosi_pin);
+                             const spi_pins_t *pins);
 
 /**
  * @brief SPI mode configuration.
@@ -303,7 +304,7 @@ void spi_slave_enable(spi_dev *dev,
                       spi_mode mode,
                       uint32 flags);
 
-void spi_tx(spi_dev *dev, void *buf, uint32 len);
+void spi_tx(spi_dev *dev, const void *buf, uint32 len);
 
 /**
  * @brief Call a function on each SPI port

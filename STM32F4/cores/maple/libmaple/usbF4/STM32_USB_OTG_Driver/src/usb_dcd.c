@@ -101,7 +101,7 @@ void DCD_Init(USB_OTG_CORE_HANDLE *pdev ,
     ep->is_in = 1;
     ep->num = i;
     ep->tx_fifo_num = i;
-    /* Control until ep is actvated */
+    /* Control until ep is activated */
     ep->type = EP_TYPE_CTRL;
     ep->maxpacket =  USB_OTG_MAX_EP0_SIZE;
     ep->xfer_buff = 0;
@@ -123,17 +123,27 @@ void DCD_Init(USB_OTG_CORE_HANDLE *pdev ,
   }
   
   USB_OTG_DisableGlobalInt(pdev);
+
+#if defined (STM32F446xx) || defined (STM32F469_479xx)
+  
+  /* Force Device Mode*/
+  USB_OTG_SetCurrentMode(pdev, DEVICE_MODE);
   
   /*Init the Core (common init.) */
   USB_OTG_CoreInit(pdev);
 
+#else
+  
+    /*Init the Core (common init.) */
+  USB_OTG_CoreInit(pdev);
 
   /* Force Device Mode*/
   USB_OTG_SetCurrentMode(pdev, DEVICE_MODE);
+
+#endif
   
   /* Init Device */
   USB_OTG_CoreInitDev(pdev);
-  
   
   /* Enable USB Global interrupt */
   USB_OTG_EnableGlobalInt(pdev);

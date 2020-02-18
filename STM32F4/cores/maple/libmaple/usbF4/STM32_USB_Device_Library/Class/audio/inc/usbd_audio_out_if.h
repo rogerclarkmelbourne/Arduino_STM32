@@ -26,6 +26,8 @@
 
 #ifdef STM32F2XX
  #include "stm322xg_usb_audio_codec.h"
+#elif defined(STM32F4XX)
+ #include "stm324xg_usb_audio_codec.h"
 #elif defined(STM32F10X_CL)
  #include "stm3210c_usb_audio_codec.h"
 #endif /* STM32F2XX */
@@ -43,7 +45,7 @@
 /** @defgroup usbd_audio_Exported_Defines
   * @{
   */ 
-/* Audio Commands enmueration */
+/* Audio Commands enumeration */
 typedef enum
 {
   AUDIO_CMD_PLAY = 1,

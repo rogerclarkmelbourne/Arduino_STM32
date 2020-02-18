@@ -52,7 +52,7 @@ void attachInterrupt(uint8 pin, voidFuncPtr handler, ExtIntTriggerMode mode) {
     exti_trigger_mode outMode = exti_out_mode(mode);
 
     exti_attach_interrupt((afio_exti_num)(pin&0x0F),
-                          gpio_exti_port(PIN_MAP[pin].gpio_device),
+                          gpio_exti_port(digitalPinToPort(pin)),
                           handler,
                           outMode);
 }

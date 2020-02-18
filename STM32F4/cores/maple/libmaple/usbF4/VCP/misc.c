@@ -68,12 +68,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
-typedef unsigned long		uint32_t;
-typedef unsigned int		u32;
-typedef unsigned short	uint16_t;
-typedef unsigned short	u16;
-typedef unsigned char		uint8_t;
-typedef unsigned char		u8;
+
+
 #include "misc.h"
 #define assert_param(x)
 

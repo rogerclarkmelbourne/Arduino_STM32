@@ -54,6 +54,14 @@ typedef struct exti_reg_map {
 /** EXTI register map base pointer */
 #define EXTI_BASE                       ((struct exti_reg_map*)0x40013C00)
 
+
+#define EXTI_RTC_ALARM      BIT(17)
+#define EXTI_RTC_WAKEUP     BIT(22)
+#define EXTI_RTC_TAMPSTAMP  BIT(21)
+
+
+
+
 /** External interrupt trigger mode */
 typedef enum exti_trigger_mode {
     EXTI_RISING,         /**< Trigger on the rising edge */

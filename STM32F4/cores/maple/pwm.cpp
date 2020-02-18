@@ -35,10 +35,14 @@
 #include "pwm.h"
 
 void pwmWrite(uint8 pin, uint16 duty_cycle) {
-    timer_dev *dev = PIN_MAP[pin].timer_device;
-    if (pin >= BOARD_NR_GPIO_PINS || dev == NULL || dev->type == TIMER_BASIC) {
+	if ( pin >= BOARD_NR_GPIO_PINS ) return;
+	const timer_info * t_info = &timer_map[pin];
+	uint8_t index = t_info->index;
+    const timer_dev *dev = timer_devices[index];
+	
+    if (index==NO_TIM || index>=LAST_TIM || dev == NULL || dev->type == TIMER_BASIC) {
         return;
     }
 
-    timer_set_compare(dev, PIN_MAP[pin].timer_channel, duty_cycle);
+    timer_set_compare(dev, t_info->channel, duty_cycle);
 }

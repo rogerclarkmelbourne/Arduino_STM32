@@ -52,9 +52,9 @@ extern "C"{
  * One byte is left free to distinguish empty from full. */
 typedef struct ring_buffer {
     volatile uint8 *buf; /**< Buffer items are stored into */
-    uint16 head;         /**< Index of the next item to remove */
-    uint16 tail;         /**< Index where the next item will get inserted */
-    uint16 size;         /**< Buffer capacity minus one */
+    volatile uint16 head;         /**< Index of the next item to remove */
+    volatile uint16 tail;         /**< Index where the next item will get inserted */
+    volatile uint16 size;         /**< Buffer capacity minus one */
 } ring_buffer;
 
 /**
@@ -81,12 +81,8 @@ static inline void rb_init(ring_buffer *rb, uint16 size, uint8 *buf) {
  * @param rb Buffer whose elements to count.
  */
 static inline uint16 rb_full_count(ring_buffer *rb) {
-    __IO ring_buffer *arb = rb;
-    int32 size = arb->tail - arb->head;
-    if (arb->tail < arb->head) {
-        size += arb->size + 1;
-    }
-    return (uint16)size;
+    int32 size = rb->tail - rb->head;
+    return ( size<0 ) ? (uint16)(size + rb->size + 1) : (uint16)size;
 }
 
 /**
@@ -102,7 +98,7 @@ static inline int rb_is_full(ring_buffer *rb) {
  * @brief Returns true if and only if the ring buffer is empty.
  * @param rb Buffer to test.
  */
-static inline int rb_is_empty(ring_buffer *rb) {
+static inline int16 rb_is_empty(ring_buffer *rb) {
     return rb->head == rb->tail;
 }
 
@@ -112,8 +108,8 @@ static inline int rb_is_empty(ring_buffer *rb) {
  * @param element Value to append.
  */
 static inline void rb_insert(ring_buffer *rb, uint8 element) {
-    rb->buf[rb->tail] = element;
-    rb->tail = (rb->tail == rb->size) ? 0 : rb->tail + 1;
+    rb->buf[rb->tail++] = element;
+    if (rb->tail > rb->size) rb->tail = 0;
 }
 
 /**
@@ -121,8 +117,8 @@ static inline void rb_insert(ring_buffer *rb, uint8 element) {
  * @param rb Buffer to remove from, must contain at least one element.
  */
 static inline uint8 rb_remove(ring_buffer *rb) {
-    uint8 ch = rb->buf[rb->head];
-    rb->head = (rb->head == rb->size) ? 0 : rb->head + 1;
+    uint8 ch = rb->buf[rb->head++];
+    if (rb->head > rb->size) rb->head = 0;
     return ch;
 }
 
@@ -132,7 +128,7 @@ static inline uint8 rb_remove(ring_buffer *rb) {
  * @brief Return the first item from a ring buffer, without removing it
  * @param rb Buffer to remove from, must contain at least one element.
  */
-static inline int rb_peek(ring_buffer *rb) 
+static inline int16 rb_peek(ring_buffer *rb) 
 {  
     if (rb->head == rb->tail)
     {
@@ -140,7 +136,7 @@ static inline int rb_peek(ring_buffer *rb)
     }
     else
     {
-	return rb->buf[rb->head];
+        return rb->buf[rb->head];
     }
 }
 
@@ -164,7 +160,7 @@ static inline int16 rb_safe_remove(ring_buffer *rb) {
  * @param element Value to insert into rb.
  * @sideeffect If rb is not full, appends element onto buffer.
  * @return If element was appended, then true; otherwise, false. */
-static inline int rb_safe_insert(ring_buffer *rb, uint8 element) {
+static inline int16 rb_safe_insert(ring_buffer *rb, uint8 element) {
     if (rb_is_full(rb)) {
         return 0;
     }
@@ -183,7 +179,7 @@ static inline int rb_safe_insert(ring_buffer *rb, uint8 element) {
  * @return On success, returns -1.  If an element was popped, returns
  *         the popped value.
  */
-static inline int rb_push_insert(ring_buffer *rb, uint8 element) {
+static inline int16 rb_push_insert(ring_buffer *rb, uint8 element) {
     int ret = -1;
     if (rb_is_full(rb)) {
         ret = rb_remove(rb);

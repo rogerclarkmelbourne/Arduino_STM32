@@ -37,53 +37,53 @@
 /*
  * Devices
  */
-
-static usart_dev usart1 = {
+/** USART1 device */
+usart_dev usart1 = {
     .regs     = USART1_BASE,
-    .max_baud = 4500000UL,
+    .max_baud = 5250000UL,
     .clk_id   = RCC_USART1,
     .irq_num  = NVIC_USART1
 };
-/** USART1 device */
-usart_dev *USART1 = &usart1;
 
-static usart_dev usart2 = {
+/** USART2 device */
+usart_dev usart2 = {
     .regs     = USART2_BASE,
-    .max_baud = 2250000UL,
+    .max_baud = 2620000UL,
     .clk_id   = RCC_USART2,
     .irq_num  = NVIC_USART2
 };
-/** USART2 device */
-usart_dev *USART2 = &usart2;
 
-static usart_dev usart3 = {
+/** USART3 device */
+usart_dev usart3 = {
     .regs     = USART3_BASE,
-    .max_baud = 2250000UL,
+    .max_baud = 2620000UL,
     .clk_id   = RCC_USART3,
     .irq_num  = NVIC_USART3
 };
-/** USART3 device */
-usart_dev *USART3 = &usart3;
 
-#ifdef STM32_HIGH_DENSITY
-static usart_dev uart4 = {
+/** UART4 device */
+usart_dev uart4 = {
     .regs     = UART4_BASE,
-    .max_baud = 2250000UL,
+    .max_baud = 2620000UL,
     .clk_id   = RCC_UART4,
     .irq_num  = NVIC_UART4
 };
-/** UART4 device */
-usart_dev *UART4 = &uart4;
 
-static usart_dev uart5 = {
+/** UART5 device */
+usart_dev uart5 = {
     .regs     = UART5_BASE,
-    .max_baud = 2250000UL,
+    .max_baud = 2620000UL,
     .clk_id   = RCC_UART5,
     .irq_num  = NVIC_UART5
 };
-/** UART5 device */
-usart_dev *UART5 = &uart5;
-#endif
+
+/** USART6 device */
+usart_dev usart6 = {
+    .regs     = USART6_BASE,
+    .max_baud = 5250000UL,
+    .clk_id   = RCC_USART6,
+    .irq_num  = NVIC_USART6
+};
 
 /**
  * @brief Initialize a serial port.
@@ -94,6 +94,19 @@ void usart_init(usart_dev *dev) {
     rb_init(&dev->rbTX, USART_TX_BUF_SIZE, dev->tx_buf);
     rcc_clk_enable(dev->clk_id);
     nvic_irq_enable(dev->irq_num);
+}
+
+void usart_set_parity(usart_dev *dev, uint16_t odd)
+{
+	uint32_t cr1 = dev->regs->CR1 & (~USART_CR1_PS);
+	if (odd) cr1 |= USART_CR1_PS_ODD;
+	dev->regs->CR1 = cr1 | USART_CR1_PCE;
+}
+
+void usart_set_stop_bits(usart_dev *dev, uint16_t stop_bits)
+{
+	uint32_t cr2 = dev->regs->CR2 & (~USART_CR2_STOP);
+	dev->regs->CR2 = cr2 | (stop_bits)<<USART_CR2_STOP_SHIFT;
 }
 
 /**
@@ -186,10 +199,9 @@ void usart_foreach(void (*fn)(usart_dev*)) {
     fn(USART1);
     fn(USART2);
     fn(USART3);
-#ifdef STM32_HIGH_DENSITY
     fn(UART4);
     fn(UART5);
-#endif
+    fn(USART6);
 }
 
 /**
@@ -267,7 +279,6 @@ static inline void usart_irq(usart_dev *dev) {
 		    asm volatile("nop");
 		}
 #endif
-
 	}
 }
 
@@ -283,7 +294,6 @@ void __irq_usart3(void) {
     usart_irq(USART3);
 }
 
-#ifdef STM32_HIGH_DENSITY
 void __irq_uart4(void) {
     usart_irq(UART4);
 }
@@ -291,4 +301,8 @@ void __irq_uart4(void) {
 void __irq_uart5(void) {
     usart_irq(UART5);
 }
-#endif
+
+void __irq_usart6(void) {
+    usart_irq(USART6);
+}
+

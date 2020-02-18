@@ -40,29 +40,24 @@
 #include <libmaple/gpio.h>
 #include <libmaple/adc.h>
 #include <libmaple/timer.h>
+#include <libmaple/fpu.h>
 #include "usb.h"
 #include "usb_serial.h"
 
 
-static void setupFlash(void);
 static void setupClocks(void);
 static void setupNVIC(void);
 static void setupADC(void);
 static void setupTimers(void);
 
-void init(void) {
-	setupFlash();
-
-	setupClocks();
+void init(void)
+{
+    setupClocks(); // will setup the FLASH
     setupNVIC();
-	systick_init(SYSTICK_RELOAD_VAL);
-	gpio_init_all();
+    systick_init(SYSTICK_RELOAD_VAL);
+    gpio_init_all();
 
-#ifdef STM32F4
-	rcc_clk_enable(RCC_SYSCFG);
-#else
-    afio_init();
-#endif
+    rcc_clk_enable(RCC_SYSCFG);
 
     boardInit();
     setupADC();
@@ -71,27 +66,20 @@ void init(void) {
 #ifdef SERIAL_USB
     SerialUSB.begin(); // includes { setupUSB(); }
 #endif
+
+    fpu_enable();
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes
  * too long to test on Maple Native (all those FSMC pins...). */
-bool boardUsesPin(uint8 pin) {
+bool boardUsesPin(uint8 pin)
+{
     for (int i = 0; i < BOARD_NR_USED_PINS; i++) {
         if (pin == boardUsedPins[i]) {
             return true;
         }
     }
     return false;
-}
-
-static void setupFlash(void) {
-/*
-#ifndef STM32F2
-	// for F2 and F4 CPUs this is done in SetupClock...(), e.g. in SetupClock168MHz()
-    flash_enable_prefetch();
-    flash_set_latency(FLASH_WAIT_STATE_2);
-#endif
-*/
 }
 
 /*
@@ -102,54 +90,39 @@ static void setupFlash(void) {
  * If you change this function, you MUST change the file-level Doxygen
  * comment above.
  */
-static void setupClocks() {
-    rcc_clk_init(RCC_CLKSRC_PLL, RCC_PLLSRC_HSE, RCC_PLLMUL_9);
-    rcc_set_prescaler(RCC_PRESCALER_AHB, RCC_AHB_SYSCLK_DIV_1);
-    rcc_set_prescaler(RCC_PRESCALER_APB1, RCC_APB1_HCLK_DIV_2);
-    rcc_set_prescaler(RCC_PRESCALER_APB2, RCC_APB2_HCLK_DIV_1);
+static void setupClocks()
+{
+    rcc_clk_init();
 }
 
-static void setupNVIC() {
-#ifdef VECT_TAB_FLASH
-    nvic_init(USER_ADDR_ROM, 0);
-#elif defined VECT_TAB_RAM
+static void setupNVIC()
+{
+#ifdef USER_ADDR_RAM
     nvic_init(USER_ADDR_RAM, 0);
-#elif defined VECT_TAB_BASE
-    nvic_init((uint32)0x08000000, 0);
+#elif defined USER_ADDR_ROM
+    nvic_init(USER_ADDR_ROM, 0);
 #else
 #error "You must select a base address for the vector table."
 #endif
 }
 
-static void adcDefaultConfig(const adc_dev* dev);
+static void adcDefaultConfig(const adc_dev *dev)
+{
+    adc_init(dev);
+    adc_set_exttrig(dev, ADC_EXT_TRIGGER_DISABLE);
+    adc_set_sampling_time(dev, ADC_SMPR_144); // 1 µs sampling+conversion time
+    adc_enable(dev);
+}
 
-static void setupADC() {
-#ifdef STM32F4
-	setupADC_F4();
-#else
-	rcc_set_prescaler(RCC_PRESCALER_ADC, RCC_ADCPRE_PCLK_DIV_6);
-#endif
+static void setupADC()
+{
+    setupADC_F4();
     adc_foreach(adcDefaultConfig);
 }
 
-static void timerDefaultConfig(timer_dev*);
-
-static void setupTimers() {
-    timer_foreach(timerDefaultConfig);
-}
-
-static void adcDefaultConfig(const adc_dev *dev) {
-    adc_init(dev);
-
-    adc_set_extsel(dev, ADC_SWSTART);
-    adc_set_exttrig(dev, true);
-
-    adc_enable(dev);
-    adc_calibrate(dev);
-    adc_set_sample_rate(dev, ADC_SMPR_55_5);
-}
-
-static void timerDefaultConfig(timer_dev *dev) {
+static void timerDefaultConfig(const timer_dev *dev)
+{
+return;
     timer_adv_reg_map *regs = (dev->regs).adv;
     const uint16 full_overflow = 0xFFFF;
     const uint16 half_duty = 0x8FFF;
@@ -180,4 +153,9 @@ static void timerDefaultConfig(timer_dev *dev) {
 
     regs->EGR = TIMER_EGR_UG;
     timer_resume(dev);
+}
+
+static void setupTimers()
+{
+    timer_foreach(timerDefaultConfig);
 }

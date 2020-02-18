@@ -78,7 +78,6 @@ typedef struct i2c_msg {
  */
 typedef struct i2c_dev {
     i2c_reg_map *regs;          /**< Register map */
-    //gpio_dev *gpio_port;        /**< SDA, SCL pins' GPIO port */
     uint8 sda_pin;              /**< SDA bit on gpio_port */
     uint8 scl_pin;              /**< SCL bit on gpio_port */
     rcc_clk_id clk_id;          /**< RCC clock information */
@@ -95,8 +94,12 @@ typedef struct i2c_dev {
  * Devices
  */
 
-extern i2c_dev* const I2C1;
-extern i2c_dev* const I2C2;
+extern i2c_dev i2c_dev1;
+#define I2C1 (&i2c_dev1)
+#if BOARD_NR_I2C>1
+extern i2c_dev i2c_dev2;
+#define I2C2 (&i2c_dev2)
+#endif
 
 /*
  * Register map base pointers
@@ -118,8 +121,8 @@ extern i2c_dev* const I2C2;
 #define I2C_CR1_PEC             BIT(12)       // Packet error checking
 #define I2C_CR1_POS             BIT(11)       // Acknowledge/PEC position
 #define I2C_CR1_ACK             BIT(10)       // Acknowledge enable
-#define I2C_CR1_START           BIT(8)        // Start generation
 #define I2C_CR1_STOP            BIT(9)        // Stop generation
+#define I2C_CR1_START           BIT(8)        // Start generation
 #define I2C_CR1_PE              BIT(0)        // Peripheral Enable
 
 /* Control register 2 */
@@ -129,7 +132,7 @@ extern i2c_dev* const I2C2;
 #define I2C_CR2_ITBUFEN         BIT(10)       // Buffer interrupt enable
 #define I2C_CR2_ITEVTEN         BIT(9)        // Event interupt enable
 #define I2C_CR2_ITERREN         BIT(8)        // Error interupt enable
-#define I2C_CR2_FREQ            0xFFF         // Peripheral input frequency
+#define I2C_CR2_FREQ            0x003F        // Peripheral input frequency
 
 /* Clock control register */
 
@@ -189,19 +192,6 @@ int32 i2c_master_xfer(i2c_dev *dev, i2c_msg *msgs, uint16 num, uint32 timeout);
 void i2c_bus_reset(const i2c_dev *dev);
 
 /**
- * @brief Disable an I2C device
- *
- * This function disables the corresponding peripheral and marks dev's
- * state as I2C_STATE_DISABLED.
- *
- * @param dev Device to disable.
- */
-static inline void i2c_disable(i2c_dev *dev) {
-    dev->regs->CR1 &= ~I2C_CR1_PE;
-    dev->state = I2C_STATE_DISABLED;
-}
-
-/**
  * @brief Turn on an I2C peripheral
  * @param dev Device to enable
  */
@@ -215,6 +205,19 @@ static inline void i2c_peripheral_enable(i2c_dev *dev) {
  */
 static inline void i2c_peripheral_disable(i2c_dev *dev) {
     dev->regs->CR1 &= ~I2C_CR1_PE;
+}
+
+/**
+ * @brief Disable an I2C device
+ *
+ * This function disables the corresponding peripheral and marks dev's
+ * state as I2C_STATE_DISABLED.
+ *
+ * @param dev Device to disable.
+ */
+static inline void i2c_disable(i2c_dev *dev) {
+    i2c_peripheral_disable(dev);
+    dev->state = I2C_STATE_DISABLED;
 }
 
 /**

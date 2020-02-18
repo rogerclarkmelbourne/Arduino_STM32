@@ -42,7 +42,7 @@ typedef struct pwr_reg_map {
 } pwr_reg_map;
 
 /** Power peripheral register map base pointer. */
-#define PWR_BASE                        ((struct pwr_reg_map*)0x40007000)
+#define PWR                        ((struct pwr_reg_map*)0x40007000)
 
 /*
  * Register bit definitions
@@ -51,28 +51,34 @@ typedef struct pwr_reg_map {
 /* Control register */
 
 /** Disable backup domain write protection bit */
-#define PWR_CR_DBP  8
+#define PWR_CR_VOS_BIT    14
+/** Disable backup domain write protection bit */
+#define PWR_CR_DBP_BIT     8
 /** Power voltage detector enable bit */
-#define PWR_CR_PVDE 4
+#define PWR_CR_PVDE_BIT    4
 /** Clear standby flag bit */
-#define PWR_CR_CSBF 3
+#define PWR_CR_CSBF_BIT    3
 /** Clear wakeup flag bit */
-#define PWR_CR_CWUF 2
+#define PWR_CR_CWUF_BIT    2
 /** Power down deepsleep bit */
-#define PWR_CR_PDDS 1
+#define PWR_CR_PDDS_BIT    1
 /** Low-power deepsleep bit */
-#define PWR_CR_LPDS 0
+#define PWR_CR_LPDS_BIT    0
 
 /* Control and status register */
 
+/** Backup regulator enable bit */
+#define PWR_CSR_BRE    BIT(9)
 /** Enable wakeup pin bit */
-#define PWR_CSR_EWUP 8
+#define PWR_CSR_EWUP_BIT   8
+/** Backup regulator ready bit */
+#define PWR_CSR_BRR    BIT(3)
 /** PVD output bit */
-#define PWR_CSR_PVDO 2
+#define PWR_CSR_PVDO_BIT   2
 /** Standby flag bit */
-#define PWR_CSR_SBF  1
+#define PWR_CSR_SBF_BIT    1
 /** Wakeup flag bit */
-#define PWR_CSR_WUF  0
+#define PWR_CSR_WUF_BIT    0
 
 /*
  * Convenience functions

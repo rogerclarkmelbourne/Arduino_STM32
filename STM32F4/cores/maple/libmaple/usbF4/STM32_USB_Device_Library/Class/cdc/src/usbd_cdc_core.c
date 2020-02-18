@@ -129,21 +129,21 @@ static uint8_t  *USBD_cdc_GetOtherCfgDesc (uint8_t speed, uint16_t *length);
   * @{
   */ 
 extern CDC_IF_Prop_TypeDef  APP_FOPS;
-extern uint8_t USBD_DeviceDesc   [USB_SIZ_DEVICE_DESC];
+extern uint8_t USBD_DeviceDesc[USB_SIZ_DEVICE_DESC];
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc  [USB_CDC_CONFIG_DESC_SIZ] __ALIGN_END ;
+__ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_CDC_CONFIG_DESC_SIZ] __ALIGN_END ;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc  [USB_CDC_CONFIG_DESC_SIZ] __ALIGN_END ;
+__ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ] __ALIGN_END ;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
@@ -157,14 +157,17 @@ __ALIGN_BEGIN static __IO uint32_t  usbd_cdc_AltSet  __ALIGN_END = 0;
     #pragma data_alignment=4   
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t USB_Rx_Buffer   [CDC_DATA_MAX_PACKET_SIZE] __ALIGN_END ;
+__ALIGN_BEGIN uint8_t __CCMRAM__ USB_Rx_Buffer[CDC_DATA_MAX_PACKET_SIZE] __ALIGN_END ;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4   
   #endif
+__ALIGN_BEGIN uint8_t APP_Tx_Buffer   [APP_TX_DATA_SIZE] __ALIGN_END ;
+#else 
+__ALIGN_BEGIN uint8_t __CCMRAM__ APP_Tx_Buffer[APP_TX_DATA_SIZE] __ALIGN_END ;
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ; 
+ 
 
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
@@ -174,9 +177,8 @@ __ALIGN_BEGIN uint8_t APP_Rx_Buffer   [APP_RX_DATA_SIZE] __ALIGN_END ;
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 __ALIGN_BEGIN uint8_t CmdBuff[CDC_CMD_PACKET_SZE] __ALIGN_END ;
 
-volatile int APP_Rx_ptr_in  = 0;
-volatile int APP_Rx_ptr_out = 0;
-uint32_t APP_Rx_length  = 0;
+volatile uint16_t APP_Tx_ptr_in  = 0;
+volatile uint16_t APP_Tx_ptr_out = 0;
 
 uint8_t  USB_Tx_State = 0;
 
@@ -315,7 +317,7 @@ __ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_END =
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */ 
 __ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_END =
 { 
-  0x09,   /* bLength: Configuation Descriptor size */
+  0x09,   /* bLength: Configuration Descriptor size */
   USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION,   
   USB_CDC_CONFIG_DESC_SIZ,
   0x00,
@@ -416,7 +418,7 @@ __ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __ALIGN_EN
 
 /**
   * @brief  usbd_cdc_Init
-  *         Initilaize the CDC interface
+  *         Initialize the CDC interface
   * @param  pdev: device instance
   * @param  cfgidx: Configuration index
   * @retval status
@@ -449,7 +451,7 @@ static uint8_t  usbd_cdc_Init (void  *pdev,
   pbuf[5] = DEVICE_SUBCLASS_CDC;
   
   /* Initialize the Interface physical components */
-  APP_FOPS.pIf_Init();
+  APP_FOPS.pIf_Init(pdev);
 
   /* Prepare Out endpoint to receive next packet */
   DCD_EP_PrepareRx(pdev,
@@ -498,9 +500,6 @@ static uint8_t  usbd_cdc_DeInit (void  *pdev,
 static uint8_t  usbd_cdc_Setup (void  *pdev, 
                                 USB_SETUP_REQ *req)
 {
-  uint16_t len;
-  uint8_t  *pbuf;
-  
   switch (req->bmRequest & USB_REQ_TYPE_MASK)
   {
     /* CDC Class Requests -------------------------------*/
@@ -519,7 +518,7 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
                             CmdBuff,
                             req->wLength);          
         }
-        else /* Host-to-Device requeset */
+        else /* Host-to-Device request */
         {
           /* Set the value of the current command to be processed */
           cdcCmd = req->bRequest;
@@ -545,8 +544,6 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
       USBD_CtlError (pdev, req);
       return USBD_FAIL;
     
-      
-      
     /* Standard Requests -------------------------------*/
   case USB_REQ_TYPE_STANDARD:
     switch (req->bRequest)
@@ -554,16 +551,17 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
     case USB_REQ_GET_DESCRIPTOR: 
       if( (req->wValue >> 8) == CDC_DESCRIPTOR_TYPE)
       {
+        uint8_t  *pbuf;
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
         pbuf = usbd_cdc_Desc;   
 #else
         pbuf = usbd_cdc_CfgDesc + 9 + (9 * USBD_ITF_MAX_NUM);
 #endif 
-        len = MIN(USB_CDC_DESC_SIZ , req->wLength);
+        uint16_t len = MIN(USB_CDC_DESC_SIZ , req->wLength);
       
-      USBD_CtlSendData (pdev, 
-                        pbuf,
-                        len);
+        USBD_CtlSendData (pdev, 
+                          pbuf,
+                          len);
       }
       break;
       
@@ -592,7 +590,7 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
 /**
   * @brief  usbd_cdc_EP0_RxReady
   *         Data received on control endpoint
-  * @param  pdev: device device instance
+  * @param  pdev: device instance
   * @retval status
   */
 static uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
@@ -616,139 +614,86 @@ static uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
   * @param  epnum: endpoint number
   * @retval status
   */
-#if 0
-static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
-{
-  uint16_t USB_Tx_ptr;
-  uint16_t USB_Tx_length;
-
-  if (USB_Tx_State == 1)
-  {
-    if (APP_Rx_length == 0) 
-    {
-      USB_Tx_State = 0;
-    }
-    else 
-    {
-      if (APP_Rx_length > CDC_DATA_IN_PACKET_SIZE){
-        USB_Tx_ptr = APP_Rx_ptr_out;
-        USB_Tx_length = CDC_DATA_IN_PACKET_SIZE;
-        
-        APP_Rx_ptr_out += CDC_DATA_IN_PACKET_SIZE;
-        APP_Rx_length -= CDC_DATA_IN_PACKET_SIZE;    
-      }
-      else 
-      {
-        USB_Tx_ptr = APP_Rx_ptr_out;
-        USB_Tx_length = APP_Rx_length;
-        
-        APP_Rx_ptr_out += APP_Rx_length;
-        APP_Rx_length = 0;
-      }
-      
-      /* Prepare the available data buffer to be sent on IN endpoint */
-      DCD_EP_Tx (pdev,
-                 CDC_IN_EP,
-                 (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr],
-                 USB_Tx_length);
-    }
-  }  
-  
-  return USBD_OK;
-}
-#endif
-
 // ala42: applied fix from
 //https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/Flat.aspx?RootFolder=%2fpublic%2f
 //STe2ecommunities%2fmcu%2fLists%2fcortex_mx_stm32%2fUSB%20CDC%20Device%20hung%20fix&
 //FolderCTID=0x01200200770978C69A1141439FE559EB459D7580009C4E14902C3CDE46A77F0FFD06506F5B&currentviews=75
 static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
 {
-  uint16_t USB_Tx_ptr;
-  uint16_t USB_Tx_length;
+  if (USB_Tx_State == 0) return USBD_OK;
 
-  if (USB_Tx_State == 1)
-  {
-    if (APP_Rx_length == 0)
+    uint16_t USB_Tx_ptr = APP_Tx_ptr_out;
+    uint16_t USB_Tx_length = (APP_Tx_ptr_in - USB_Tx_ptr) & APP_TX_DATA_SIZE_MASK;
+    if (USB_Tx_length == 0)
     {
-    	if (((USB_OTG_CORE_HANDLE*)pdev)->dev.in_ep[epnum].xfer_len != CDC_DATA_IN_PACKET_SIZE)
-    	{
-    		USB_Tx_State = 0;
-    		return USBD_OK;
-    	}
-    	/* Transmit zero sized packet in case the last one has maximum allowed size. Otherwise
-    	 * the recipient may expect more data coming soon and not return buffered data to app.
-    	 * See section 5.8.3 Bulk Transfer Packet Size Constraints
-    	 * of the USB Specification document.
-    	*/
-    	USB_Tx_ptr = APP_Rx_ptr_out;
-    	USB_Tx_length = 0;
+        //USB_Tx_State = 0;
+        if (((USB_OTG_CORE_HANDLE*)pdev)->dev.in_ep[epnum].xfer_len != CDC_DATA_IN_PACKET_SIZE)
+        {
+            USB_Tx_State = 0;
+            return USBD_OK;
+        }
+        /* Transmit zero sized packet in case the last one has maximum allowed size. Otherwise
+         * the recipient may expect more data coming soon and not return buffered data to app.
+         * See section 5.8.3 Bulk Transfer Packet Size Constraints
+         * of the USB Specification document.
+        */
     }
-    else
+
+    if (USB_Tx_length > CDC_DATA_IN_PACKET_SIZE)
     {
-      if (APP_Rx_length > CDC_DATA_IN_PACKET_SIZE){
-        USB_Tx_ptr = APP_Rx_ptr_out;
-        USB_Tx_length = CDC_DATA_IN_PACKET_SIZE;
-
-        APP_Rx_ptr_out += CDC_DATA_IN_PACKET_SIZE;
-        APP_Rx_length -= CDC_DATA_IN_PACKET_SIZE;
-      }
-      else
-      {
-        USB_Tx_ptr = APP_Rx_ptr_out;
-        USB_Tx_length = APP_Rx_length;
-
-        APP_Rx_ptr_out += APP_Rx_length;
-        APP_Rx_length = 0;
-      }
+       USB_Tx_length = CDC_DATA_IN_PACKET_SIZE;
     }
+    if ( USB_Tx_length > (APP_TX_DATA_SIZE - USB_Tx_ptr) )
+    {
+       USB_Tx_length = (APP_TX_DATA_SIZE - USB_Tx_ptr);
+    }
+
+    APP_Tx_ptr_out = (USB_Tx_ptr + USB_Tx_length) & APP_TX_DATA_SIZE_MASK;
 
     /* Prepare the available data buffer to be sent on IN endpoint */
     DCD_EP_Tx (pdev,
                  CDC_IN_EP,
-                 (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr],
+                 (uint8_t*)&APP_Tx_Buffer[USB_Tx_ptr],
                  USB_Tx_length);
-  }
 
   return USBD_OK;
 }
 
+void usbd_cdc_PrepareRx (void *pdev)
+{
+    DCD_EP_PrepareRx(pdev, CDC_OUT_EP, USB_Rx_Buffer, CDC_DATA_OUT_PACKET_SIZE);
+}
 
 /**
-  * @brief  usbd_audio_DataOut
+  * @brief  usbd_cdc_DataOut
   *         Data received on non-control Out endpoint
   * @param  pdev: device instance
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
+static uint8_t usbd_cdc_DataOut(void *pdev, uint8_t epnum)
 {      
-  uint16_t USB_Rx_Cnt;
-  
   /* Get the received data buffer and update the counter */
-  USB_Rx_Cnt = ((USB_OTG_CORE_HANDLE*)pdev)->dev.out_ep[epnum].xfer_count;
+  uint16_t USB_Rx_Cnt = ((USB_OTG_CORE_HANDLE*)pdev)->dev.out_ep[epnum].xfer_count;
   
   /* USB data will be immediately processed, this allow next USB traffic being 
      NAKed till the end of the application Xfer */
-  APP_FOPS.pIf_DataRx(USB_Rx_Buffer, USB_Rx_Cnt);
-  
-  /* Prepare Out endpoint to receive next packet */
-  DCD_EP_PrepareRx(pdev,
-                   CDC_OUT_EP,
-                   (uint8_t*)(USB_Rx_Buffer),
-                   CDC_DATA_OUT_PACKET_SIZE);
-
+  if ( APP_FOPS.pIf_DataRx(USB_Rx_Buffer, USB_Rx_Cnt)==USBD_OK )
+  {
+    /* Prepare Out endpoint to receive next packet */
+    DCD_EP_PrepareRx(pdev, CDC_OUT_EP, USB_Rx_Buffer, CDC_DATA_OUT_PACKET_SIZE);
+  }
   return USBD_OK;
 }
 
 /**
-  * @brief  usbd_audio_SOF
+  * @brief  usbd_cdc_SOF
   *         Start Of Frame event management
   * @param  pdev: instance
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_SOF (void *pdev)
+static uint8_t  usbd_cdc_SOF(void *pdev)
 {      
   static uint32_t FrameCount = 0;
   
@@ -770,62 +715,34 @@ static uint8_t  usbd_cdc_SOF (void *pdev)
   * @param  pdev: instance
   * @retval None
   */
-static void Handle_USBAsynchXfer (void *pdev)
+static void Handle_USBAsynchXfer(void *pdev)
 {
-  uint16_t USB_Tx_ptr;
-  uint16_t USB_Tx_length;
-  
-  if(USB_Tx_State != 1)
+  if ( USB_Tx_State ) return;
+
+  uint16_t USB_Tx_ptr = APP_Tx_ptr_out;
+  uint16_t USB_Tx_length = (APP_Tx_ptr_in - USB_Tx_ptr) & APP_TX_DATA_SIZE_MASK;
+  if ( USB_Tx_length==0 )
   {
-    if (APP_Rx_ptr_out == APP_RX_DATA_SIZE)
+    return; // nothing to send
+  }
+
+    USB_Tx_State = 1;
+
+    if (USB_Tx_length > CDC_DATA_IN_PACKET_SIZE)
     {
-      APP_Rx_ptr_out = 0;
+       USB_Tx_length = CDC_DATA_IN_PACKET_SIZE;
     }
-    
-    if(APP_Rx_ptr_out == APP_Rx_ptr_in) 
+    if ( USB_Tx_length > (APP_TX_DATA_SIZE - USB_Tx_ptr) )
     {
-      USB_Tx_State = 0; 
-      return;
+       USB_Tx_length = (APP_TX_DATA_SIZE - USB_Tx_ptr);
     }
-    
-    if(APP_Rx_ptr_out > APP_Rx_ptr_in) /* rollback */
-    { 
-      APP_Rx_length = APP_RX_DATA_SIZE - APP_Rx_ptr_out;
-    
-    }
-    else 
-    {
-      APP_Rx_length = APP_Rx_ptr_in - APP_Rx_ptr_out;
-     
-    }
-#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
-     APP_Rx_length &= ~0x03;
-#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-    
-    if (APP_Rx_length > CDC_DATA_IN_PACKET_SIZE)
-    {
-      USB_Tx_ptr = APP_Rx_ptr_out;
-      USB_Tx_length = CDC_DATA_IN_PACKET_SIZE;
-      
-      APP_Rx_ptr_out += CDC_DATA_IN_PACKET_SIZE;	
-      APP_Rx_length -= CDC_DATA_IN_PACKET_SIZE;
-    }
-    else
-    {
-      USB_Tx_ptr = APP_Rx_ptr_out;
-      USB_Tx_length = APP_Rx_length;
-      
-      APP_Rx_ptr_out += APP_Rx_length;
-      APP_Rx_length = 0;
-    }
-    USB_Tx_State = 1; 
+
+    APP_Tx_ptr_out = (USB_Tx_ptr+USB_Tx_length)&APP_TX_DATA_SIZE_MASK;
 
     DCD_EP_Tx (pdev,
                CDC_IN_EP,
-               (uint8_t*)&APP_Rx_Buffer[USB_Tx_ptr],
+               (uint8_t*)&APP_Tx_Buffer[USB_Tx_ptr],
                USB_Tx_length);
-  }  
-  
 }
 
 /**

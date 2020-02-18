@@ -46,12 +46,9 @@
 #define ERROR_TX_PIN           2
 #endif
 
-/* If you define ERROR_LED_PORT and ERROR_LED_PIN, then a failed
+/* If you define ERROR_LED_PIN, then a failed
  * ASSERT() will also throb() an LED connected to that port and pin.
  */
-#if defined(ERROR_LED_PORT) && defined(ERROR_LED_PIN)
-#define HAVE_ERROR_LED
-#endif
 
 /**
  * @brief Disables all peripheral interrupts except USB and fades the
@@ -80,8 +77,7 @@ void __error(int num) {
     usart_disable_all();
 
     /* Turn the USB interrupt back on so the bootloader keeps on functioning */
-    nvic_irq_enable(NVIC_USB_HP_CAN_TX);
-    nvic_irq_enable(NVIC_USB_LP_CAN_RX0);
+    nvic_irq_enable(NVIC_USB_FS);
 
     /* Reenable global interrupts */
     nvic_globalirq_enable();
@@ -122,7 +118,7 @@ void _fail(const char* file, int line, const char* exp) {
  * @sideeffect Sets output push-pull on ERROR_LED_PIN.
  */
 void throb(void) {
-#ifdef HAVE_ERROR_LED
+#ifdef ERROR_LED_PIN
     int32  slope   = 1;
     uint32 CC      = 0x0000;
     uint32 TOP_CNT = 0x0800;
@@ -155,3 +151,6 @@ void throb(void) {
         ;
 #endif
 }
+
+static void __empty() { }
+__weak void yield() { __empty(); };

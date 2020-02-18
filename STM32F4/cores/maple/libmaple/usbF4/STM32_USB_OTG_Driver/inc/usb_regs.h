@@ -58,7 +58,7 @@
 #define USB_OTG_DATA_FIFO_SIZE               0x1000
 
 
-#define USB_OTG_MAX_TX_FIFOS                 15
+#define USB_OTG_MAX_TX_FIFOS                 7
 
 #define USB_OTG_HS_MAX_PACKET_SIZE           512
 #define USB_OTG_FS_MAX_PACKET_SIZE           64
@@ -88,8 +88,7 @@ typedef struct _USB_OTG_GREGS  //000h
   __IO uint32_t GRXFSIZ;      /* Receive FIFO Size Register         024h*/
   __IO uint32_t DIEPTXF0_HNPTXFSIZ;   /* EP0 / Non Periodic Tx FIFO Size Register 028h*/
   __IO uint32_t HNPTXSTS;     /* Non Periodic Tx FIFO/Queue Sts reg 02Ch*/
-  __IO uint32_t GI2CCTL;      /* I2C Access Register                030h*/
-  uint32_t Reserved34;  /* PHY Vendor Control Register        034h*/
+  uint32_t Reserved30[2];     /* Reserved                           030h*/
   __IO uint32_t GCCFG;        /* General Purpose IO Register        038h*/
   __IO uint32_t CID;          /* User ID Register                   03Ch*/
   uint32_t  Reserved40[48];   /* Reserved                      040h-0FFh*/
@@ -160,12 +159,12 @@ USB_OTG_INEPREGS;
 typedef struct _USB_OTG_OUTEPREGS
 {
   __IO uint32_t DOEPCTL;       /* dev OUT Endpoint Control Reg  B00h + (ep_num * 20h) + 00h*/
-  __IO uint32_t DOUTEPFRM;   /* dev OUT Endpoint Frame number B00h + (ep_num * 20h) + 04h*/
-  __IO uint32_t DOEPINT;              /* dev OUT Endpoint Itr Reg      B00h + (ep_num * 20h) + 08h*/
-  uint32_t Reserved0C;                    /* Reserved                         B00h + (ep_num * 20h) + 0Ch*/
-  __IO uint32_t DOEPTSIZ; /* dev OUT Endpoint Txfer Size   B00h + (ep_num * 20h) + 10h*/
-  __IO uint32_t DOEPDMA;              /* dev OUT Endpoint DMA Address  B00h + (ep_num * 20h) + 14h*/
-  uint32_t Reserved18[2];                 /* Reserved B00h + (ep_num * 20h) + 18h - B00h + (ep_num * 20h) + 1Ch*/
+  uint32_t Reserved04;         /* Reserved                      B00h + (ep_num * 20h) + 04h*/
+  __IO uint32_t DOEPINT;       /* dev OUT Endpoint Itr Reg      B00h + (ep_num * 20h) + 08h*/
+  uint32_t Reserved0C;         /* Reserved                      B00h + (ep_num * 20h) + 0Ch*/
+  __IO uint32_t DOEPTSIZ;      /* dev OUT Endpoint Txfer Size   B00h + (ep_num * 20h) + 10h*/
+  __IO uint32_t DOEPDMA;       /* dev OUT Endpoint DMA Address  B00h + (ep_num * 20h) + 14h*/
+  uint32_t Reserved18[2];      /* Reserved B00h + (ep_num * 20h) + 18h - B00h + (ep_num * 20h) + 1Ch*/
 }
 USB_OTG_OUTEPREGS;
 /**
@@ -200,7 +199,7 @@ typedef struct _USB_OTG_HC_REGS
   __IO uint32_t HCCHAR;
   __IO uint32_t HCSPLT;
   __IO uint32_t HCINT;
-  __IO uint32_t HCGINTMSK;
+  __IO uint32_t HCINTMSK;
   __IO uint32_t HCTSIZ;
   __IO uint32_t HCDMA;
   uint32_t Reserved[2];
@@ -227,7 +226,7 @@ typedef struct USB_OTG_core_regs //000h
   __IO uint32_t         *PCGCCTL;
 }
 USB_OTG_CORE_REGS , *PUSB_OTG_CORE_REGS;
-typedef union _USB_OTG_OTGCTL_TypeDef 
+typedef union _USB_OTG_GOTGCTL_TypeDef 
 {
   uint32_t d32;
   struct
@@ -250,19 +249,18 @@ uint32_t Reserved12_15 :
     4;
 uint32_t conidsts :
     1;
-uint32_t Reserved17 :
+uint32_t dbct :
     1;
 uint32_t asesvld :
     1;
 uint32_t bsesvld :
     1;
-uint32_t currmod :
-    1;
-uint32_t Reserved21_31 :
-    11;
+uint32_t Reserved20_31 :
+    12;
   }
   b;
-} USB_OTG_OTGCTL_TypeDef ;
+} USB_OTG_GOTGCTL_TypeDef ;
+
 typedef union _USB_OTG_GOTGINT_TypeDef 
 {
   uint32_t d32;
@@ -320,15 +318,11 @@ typedef union _USB_OTG_GUSBCFG_TypeDef
   {
 uint32_t toutcal :
     3;
-uint32_t phyif :
-    1;
-uint32_t ulpi_utmi_sel :
-    1;
-uint32_t fsintf :
-    1;
+uint32_t Reserved3_5 :
+    3;
 uint32_t physel :
     1;
-uint32_t ddrsel :
+uint32_t Reserved7 :
     1;
 uint32_t srpcap :
     1;
@@ -336,11 +330,11 @@ uint32_t hnpcap :
     1;
 uint32_t usbtrdtim :
     4;
-uint32_t nptxfrwnden :
+uint32_t Reserved14 :
     1;
 uint32_t phylpwrclksel :
     1;
-uint32_t otgutmifssel :
+uint32_t Reserved16 :
     1;
 uint32_t ulpi_fsls :
     1;
@@ -350,12 +344,18 @@ uint32_t ulpi_clk_sus_m :
     1;
 uint32_t ulpi_ext_vbus_drv :
     1;
-uint32_t ulpi_int_vbus_indicator :
+uint32_t ulpi_int_vbus_ind :
     1;
 uint32_t term_sel_dl_pulse :
     1;
-uint32_t Reserved :
-    6;
+uint32_t ulpi_ind_cpl :
+    1;
+uint32_t ulpi_passthrough :
+    1;       
+uint32_t ulpi_protect_disable :
+    1; 
+uint32_t Reserved26_28 :
+    3;     
 uint32_t force_host :
     1;
 uint32_t force_dev :
@@ -376,7 +376,7 @@ uint32_t hsftrst :
     1;
 uint32_t hstfrm :
     1;
-uint32_t intknqflsh :
+uint32_t Reserved3 :
     1;
 uint32_t rxfflsh :
     1;
@@ -414,10 +414,8 @@ uint32_t ginnakeff :
     1;
 uint32_t goutnakeff :
     1;
-uint32_t Reserved8 :
-    1;
-uint32_t i2cintr :
-    1;
+uint32_t Reserved8_9 :
+    2;
 uint32_t erlysuspend :
     1;
 uint32_t usbsuspend :
@@ -484,10 +482,8 @@ uint32_t ginnakeff :
     1;
 uint32_t goutnakeff :
     1;
-uint32_t Reserved8 :
-    1;
-uint32_t i2cintr :
-    1;
+uint32_t Reserved8_9 :
+    2;
 uint32_t erlysuspend :
     1;
 uint32_t usbsuspend :
@@ -500,10 +496,8 @@ uint32_t isooutdrop :
     1;
 uint32_t eopframe :
     1;
-uint32_t intimerrx :
-    1;
-uint32_t epmismatch :
-    1;
+uint32_t Reserved16_17 :
+    2;
 uint32_t inepint:
     1;
 uint32_t outepintr :
@@ -592,14 +586,15 @@ uint32_t nptxfspcavail :
     16;
 uint32_t nptxqspcavail :
     8;
-uint32_t nptxqtop_terminate :
+    struct
+    {
+  uint32_t terminate :
     1;
-uint32_t nptxqtop_timer :
+  uint32_t token :
     2;
-uint32_t nptxqtop :
-    2;
-uint32_t chnum :
-    2;    
+  uint32_t chnum :
+    4; 
+    } nptxqtop;
 uint32_t Reserved :
     1;
   }
@@ -617,36 +612,7 @@ uint32_t Reserved :
   }
   b;
 } USB_OTG_DTXFSTSn_TypeDef ;
-typedef union _USB_OTG_GI2CCTL_TypeDef 
-{
-  uint32_t d32;
-  struct
-  {
-uint32_t rwdata :
-    8;
-uint32_t regaddr :
-    8;
-uint32_t addr :
-    7;
-uint32_t i2cen :
-    1;
-uint32_t ack :
-    1;
-uint32_t i2csuspctl :
-    1;
-uint32_t i2cdevaddr :
-    2;
-uint32_t dat_se0:
-    1;
-uint32_t Reserved :
-    1;
-uint32_t rw :
-    1;
-uint32_t bsydne :
-    1;
-  }
-  b;
-} USB_OTG_GI2CCTL_TypeDef ;
+
 typedef union _USB_OTG_GCCFG_TypeDef 
 {
   uint32_t d32;
@@ -656,7 +622,7 @@ uint32_t Reserved_in :
     16;
 uint32_t pwdn :
     1;
-uint32_t i2cifen :
+uint32_t Reserved_17 :
     1;
 uint32_t vbussensingA :
     1;
@@ -687,10 +653,8 @@ uint32_t devaddr :
     7;
 uint32_t perfrint :
     2;
-uint32_t Reserved13_17 :
-    5;
-uint32_t epmscnt :
-    4;
+uint32_t Reserved13_31 :
+    19;
   }
   b;
 } USB_OTG_DCFG_TypeDef ;
@@ -717,8 +681,10 @@ uint32_t sgoutnak :
     1;
 uint32_t cgoutnak :
     1;
+uint32_t poprg_done :
+    1;    
 uint32_t Reserved :
-    21;
+    20;
   }
   b;
 } USB_OTG_DCTL_TypeDef ;
@@ -751,13 +717,13 @@ uint32_t xfercompl :
     1;
 uint32_t epdisabled :
     1;
-uint32_t ahberr :
+uint32_t Reserved2 :
     1;
 uint32_t timeout :
     1;
 uint32_t intktxfemp :
     1;
-uint32_t intknepmis :
+uint32_t Reserved5 :
     1;
 uint32_t inepnakeff :
     1;
@@ -765,7 +731,7 @@ uint32_t emptyintr :
     1;
 uint32_t txfifoundrn :
     1;
-uint32_t Reserved08_31 :
+uint32_t Reserved9_31 :
     23;
   }
   b;
@@ -780,7 +746,7 @@ uint32_t xfercompl :
     1;
 uint32_t epdisabled :
     1;
-uint32_t ahberr :
+uint32_t Reserved2 :
     1;
 uint32_t setup :
     1;
@@ -821,8 +787,12 @@ uint32_t rx_thr_en :
     1;
 uint32_t rx_thr_len :
     9;
-uint32_t Reserved26_31 :
-    6;
+uint32_t Reserved26 : 
+    1;
+uint32_t arp_en :  
+    1;
+uint32_t Reserved28_31 :
+    4;   
   }
   b;
 } USB_OTG_DTHRCTL_TypeDef ;
@@ -890,12 +860,13 @@ uint32_t xfersize :
 uint32_t Reserved7_18 :
     12;
 uint32_t pktcnt :
-    2;
+    1;
 uint32_t Reserved20_28 :
     9;
 uint32_t supcnt :
     2;
-    uint32_t Reserved31;
+uint32_t Reserved31 :
+    1;
   }
   b;
 } USB_OTG_DEP0XFRSIZ_TypeDef ;
@@ -945,16 +916,17 @@ uint32_t ptxfspcavail :
     16;
 uint32_t ptxqspcavail :
     8;
-uint32_t ptxqtop_terminate :
-    1;
-uint32_t ptxqtop_timer :
-    2;
-uint32_t ptxqtop :
-    2;
-uint32_t chnum :
-    2;
-uint32_t ptxqtop_odd :
-    1;
+    struct
+    {
+  uint32_t terminate :
+      1;
+  uint32_t token :
+      2;
+  uint32_t chnum :
+      4; 
+  uint32_t odd_even :
+      1;            
+    } ptxqtop;    
   }
   b;
 } USB_OTG_HPTXSTS_TypeDef ;
@@ -1118,7 +1090,7 @@ uint32_t dopng :
   }
   b;
 } USB_OTG_HCTSIZn_TypeDef ;
-typedef union _USB_OTG_HCGINTMSK_TypeDef 
+typedef union _USB_OTG_HCINTMSK_TypeDef 
 {
   uint32_t d32;
   struct
@@ -1149,7 +1121,8 @@ uint32_t Reserved :
     21;
   }
   b;
-} USB_OTG_HCGINTMSK_TypeDef ;
+} USB_OTG_HCINTMSK_TypeDef ;
+
 typedef union _USB_OTG_PCGCCTL_TypeDef 
 {
   uint32_t d32;
@@ -1159,8 +1132,12 @@ uint32_t stoppclk :
     1;
 uint32_t gatehclk :
     1;
-uint32_t Reserved :
-    30;
+uint32_t Reserved2_3 :
+    2;
+uint32_t phy_susp :
+    1;    
+uint32_t Reserved5_31 :
+    27;
   }
   b;
 } USB_OTG_PCGCCTL_TypeDef ;

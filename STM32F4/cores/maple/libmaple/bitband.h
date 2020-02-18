@@ -40,10 +40,10 @@
 #define BB_PERI_REF      0x40000000
 #define BB_PERI_BASE     0x42000000
 
-static inline volatile uint32* __bb_addr(volatile void*,
-                                         uint32,
-                                         uint32,
-                                         uint32);
+
+#define __bb_addr(addr, bit, bb_base, bb_ref) \
+	(volatile uint32*)((bb_base) + (((uint32)((uint32)(address) - (bb_ref))) * 32) + ((bit) * 4))
+
 
 /**
  * @brief Obtain a pointer to the bit-band address corresponding to a
@@ -51,7 +51,7 @@ static inline volatile uint32* __bb_addr(volatile void*,
  * @param address Address in the bit-banded SRAM region
  * @param bit     Bit in address to bit-band
  */
-static inline volatile uint32* bb_sramp(volatile void *address, uint32 bit) {
+inline volatile uint32* bb_sramp(volatile void *address, uint32 bit) {
     return __bb_addr(address, bit, BB_SRAM_BASE, BB_SRAM_REF);
 }
 
@@ -61,7 +61,7 @@ static inline volatile uint32* bb_sramp(volatile void *address, uint32 bit) {
  * @param bit Bit in address to read
  * @return bit's value in address.
  */
-static inline uint8 bb_sram_get_bit(volatile void *address, uint32 bit) {
+inline uint8 bb_sram_get_bit(volatile void *address, uint32 bit) {
     return *bb_sramp(address, bit);
 }
 
@@ -71,7 +71,7 @@ static inline uint8 bb_sram_get_bit(volatile void *address, uint32 bit) {
  * @param bit Bit in address to write to
  * @param val Value to write for bit, either 0 or 1.
  */
-static inline void bb_sram_set_bit(volatile void *address,
+inline void bb_sram_set_bit(volatile void *address,
                                    uint32 bit,
                                    uint8 val) {
     *bb_sramp(address, bit) = val;
@@ -83,7 +83,7 @@ static inline void bb_sram_set_bit(volatile void *address,
  * @param address Address in the bit-banded peripheral region
  * @param bit     Bit in address to bit-band
  */
-static inline volatile uint32* bb_perip(volatile void *address, uint32 bit) {
+inline volatile uint32* bb_perip(volatile void *address, uint32 bit) {
     return __bb_addr(address, bit, BB_PERI_BASE, BB_PERI_REF);
 }
 
@@ -93,7 +93,7 @@ static inline volatile uint32* bb_perip(volatile void *address, uint32 bit) {
  * @param bit Bit in address to read
  * @return bit's value in address.
  */
-static inline uint8 bb_peri_get_bit(volatile void *address, uint32 bit) {
+inline uint8 bb_peri_get_bit(volatile void *address, uint32 bit) {
     return *bb_perip(address, bit);
 }
 
@@ -107,14 +107,6 @@ static inline void bb_peri_set_bit(volatile void *address,
                                    uint32 bit,
                                    uint8 val) {
     *bb_perip(address, bit) = val;
-}
-
-static inline volatile uint32* __bb_addr(volatile void *address,
-                                         uint32 bit,
-                                         uint32 bb_base,
-                                         uint32 bb_ref) {
-    return (volatile uint32*)(bb_base + ((uint32)address - bb_ref) * 32 +
-                              bit * 4);
 }
 
 #endif  /* _BITBAND_H_ */
