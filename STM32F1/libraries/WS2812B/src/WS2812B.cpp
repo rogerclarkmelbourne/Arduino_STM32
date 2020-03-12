@@ -30,7 +30,7 @@
 
 // Constructor when n is the number of LEDs in the strip
 WS2812B::WS2812B(uint16_t number_of_leds) :
-  brightness(0), pixels(NULL)
+  brightness(0), pixels(NULL), doubleBuffer(NULL), begun(false)
 {
   updateLength(number_of_leds);
 }
