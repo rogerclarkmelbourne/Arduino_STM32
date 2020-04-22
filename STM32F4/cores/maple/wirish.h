@@ -67,6 +67,8 @@
                                                    bitClear(value, bit))
 #define bit(b)                         (1UL << (b))
 
+#define digitalPinToInterrupt(pin)     (pin)
+
 typedef uint8 boolean;
 typedef uint8 byte;
 
