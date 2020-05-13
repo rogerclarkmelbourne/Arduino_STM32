@@ -167,9 +167,9 @@
     0x09, 0x30,                    /*        Usage (X) */ \
     0x09, 0x31,                    /*        Usage (Y) */ \
     0x16, 0x00, 0x00,              /*        Logical Minimum (0) */ \
-    0x26, 0xFF, 0x3F,              /*        Logical Maximum (16383) */ \
+    0x26, 0xFF, 0x0F,              /*        Logical Maximum (4095) */ \
     0x36, 0x00, 0x00,              /*        Physical Minimum (0) */ \
-    0x46, 0xFF, 0x3F,              /*        Physical Maximum (16383) */ \
+    0x46, 0xFF, 0x0F,              /*        Physical Maximum (4095) */ \
     0x66, 0x00, 0x00,              /*        UNIT (None) */ \
     0x75, 0x0C,                    /*        Report Size (12), */ \
     0x95, 0x02,                    /*        Report Count (2), */ \
@@ -180,8 +180,8 @@
     0xc0                           /* END_COLLECTION */
 // With this declaration a data packet must be sent as:
 // bits 0-7  -> "touch" state          (bit 0 = pen up/down, bit 1 = In Range)
-// bits 8-19 -> absolute X coordinate (0...16383)
-// bits 20-31-> absolute Y coordinate (0...16383)
+// bits 8-19 -> absolute X coordinate (0...4095)
+// bits 20-31-> absolute Y coordinate (0...4095)
 
 #define HID_KEYBOARD_REPORT_DESCRIPTOR(...) \
     0x05, 0x01,						/*  USAGE_PAGE (Generic Desktop)	// 47 */ \
