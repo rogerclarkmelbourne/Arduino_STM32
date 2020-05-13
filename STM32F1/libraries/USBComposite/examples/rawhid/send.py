@@ -6,7 +6,7 @@ SIZE=300
 def sample_handler(data):
     print("Raw data: {0}".format(data))
     
-device = hid.HidDeviceFilter(vendor_id = 0x1EAF, product_id = 0x0004).get_devices()[0]
+device = hid.HidDeviceFilter(vendor_id = 0x1EAF, product_id = 0x24).get_devices()[0]
 print(device)
 device.open()
 device.set_raw_data_handler(sample_handler)

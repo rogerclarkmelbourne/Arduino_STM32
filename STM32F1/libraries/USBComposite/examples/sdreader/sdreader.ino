@@ -38,6 +38,7 @@ void initReader() {
   MassStorage.registerComponent();
   CompositeSerial.registerComponent();
   USBComposite.begin();
+  while (!USBComposite);
   enabled=true;
 }
 

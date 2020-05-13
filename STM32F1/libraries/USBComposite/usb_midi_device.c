@@ -35,13 +35,13 @@
  */
 
 #include <string.h>
+
 #include "usb_generic.h"
 #include "usb_midi_device.h"
 #include <MidiSpecs.h>
 #include <MinSysex.h>
 
 #include <libmaple/usb.h>
-#include <libmaple/nvic.h>
 #include <libmaple/delay.h>
 
 /* Private headers */
@@ -57,15 +57,15 @@ static void midiDataTxCb(void);
 static void midiDataRxCb(void);
 
 static void usbMIDIReset(void);
-static RESULT usbMIDIDataSetup(uint8 request);
-static RESULT usbMIDINoDataSetup(uint8 request);
 
 #define MIDI_ENDPOINT_RX 0
 #define MIDI_ENDPOINT_TX 1
 #define USB_MIDI_RX_ENDP (midiEndpoints[MIDI_ENDPOINT_RX].address)
 #define USB_MIDI_TX_ENDP (midiEndpoints[MIDI_ENDPOINT_TX].address)
-#define USB_MIDI_RX_ADDR (midiEndpoints[MIDI_ENDPOINT_RX].pmaAddress)
-#define USB_MIDI_TX_ADDR (midiEndpoints[MIDI_ENDPOINT_TX].pmaAddress)
+#define USB_MIDI_RX_ENDPOINT_INFO (&midiEndpoints[MIDI_ENDPOINT_RX])
+#define USB_MIDI_TX_ENDPOINT_INFO (&midiEndpoints[MIDI_ENDPOINT_TX])
+#define USB_MIDI_RX_PMA_PTR (midiEndpoints[MIDI_ENDPOINT_RX].pma)
+#define USB_MIDI_TX_PMA_PTR (midiEndpoints[MIDI_ENDPOINT_TX].pma)
 
 /*
  * Descriptors
@@ -200,7 +200,7 @@ static const usb_descriptor_config usbMIDIDescriptor_Config = {
         .bLength            = sizeof(usb_descriptor_endpoint),
         .bDescriptorType    = USB_DESCRIPTOR_TYPE_ENDPOINT,
         .bEndpointAddress   = (USB_DESCRIPTOR_ENDPOINT_OUT |
-                             MIDI_ENDPOINT_RX), // PATCH
+                             0), // PATCH: USB_MIDI_RX_ENDP
         .bmAttributes       = USB_EP_TYPE_BULK,
         .wMaxPacketSize     = 64, // PATCH
         .bInterval          = 0x00,
@@ -217,7 +217,7 @@ static const usb_descriptor_config usbMIDIDescriptor_Config = {
     .DataInEndpoint = {
         .bLength          = sizeof(usb_descriptor_endpoint),
         .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
-        .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | MIDI_ENDPOINT_TX), // PATCH
+        .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | 0), // PATCH: USB_MIDI_TX_ENDP
         .bmAttributes     = USB_EP_TYPE_BULK,
         .wMaxPacketSize   = 64, // PATCH
         .bInterval        = 0x00,
@@ -262,32 +262,34 @@ volatile uint8 myMidiID[] = { LEAFLABS_MMA_VENDOR_1,LEAFLABS_MMA_VENDOR_2,LEAFLA
 #define OUT_BYTE(s,v) out[(uint8*)&(s.v)-(uint8*)&s]
 #define OUT_16(s,v) *(uint16_t*)&OUT_BYTE(s,v) // OK on Cortex which can handle unaligned writes
 
+static USBEndpointInfo midiEndpoints[2] = {
+    {
+        .callback = midiDataRxCb,
+        .pmaSize = 64, // patch
+        .type = USB_GENERIC_ENDPOINT_TYPE_BULK, 
+        .tx = 0,
+        .align = 1,
+    },
+    {
+        .callback = midiDataTxCb,
+        .pmaSize = 64, // patch
+        .type = USB_GENERIC_ENDPOINT_TYPE_BULK, 
+        .tx = 1,
+        .exclusive = 0,
+    }
+};
+
 static void getMIDIPartDescriptor(uint8* out) {
     memcpy(out, &usbMIDIDescriptor_Config, sizeof(usbMIDIDescriptor_Config));
     // patch to reflect where the part goes in the descriptor
     OUT_BYTE(usbMIDIDescriptor_Config, AC_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, MS_Interface.bInterfaceNumber) += usbMIDIPart.startInterface;
     OUT_BYTE(usbMIDIDescriptor_Config, AC_CS_Interface.baInterfaceNr) += usbMIDIPart.startInterface;
-    OUT_BYTE(usbMIDIDescriptor_Config, DataOutEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
-    OUT_BYTE(usbMIDIDescriptor_Config, DataInEndpoint.bEndpointAddress) += usbMIDIPart.startEndpoint;
+    OUT_BYTE(usbMIDIDescriptor_Config, DataOutEndpoint.bEndpointAddress) += USB_MIDI_RX_ENDP;
+    OUT_BYTE(usbMIDIDescriptor_Config, DataInEndpoint.bEndpointAddress) += USB_MIDI_TX_ENDP;
     OUT_16(usbMIDIDescriptor_Config, DataInEndpoint.wMaxPacketSize) = usb_midi_txEPSize;
-    OUT_16(usbMIDIDescriptor_Config, DataOutEndpoint.wMaxPacketSize) = usb_midi_txEPSize;
+    OUT_16(usbMIDIDescriptor_Config, DataOutEndpoint.wMaxPacketSize) = rxEPSize;
 }
-
-static USBEndpointInfo midiEndpoints[2] = {
-    {
-        .callback = midiDataRxCb,
-        .bufferSize = 64, // patch
-        .type = USB_EP_EP_TYPE_BULK, 
-        .tx = 0
-    },
-    {
-        .callback = midiDataTxCb,
-        .bufferSize = 64, // patch
-        .type = USB_EP_EP_TYPE_BULK, 
-        .tx = 1,
-    }
-};
 
 USBCompositePart usbMIDIPart = {
     .numInterfaces = 2,
@@ -296,8 +298,8 @@ USBCompositePart usbMIDIPart = {
     .getPartDescriptor = getMIDIPartDescriptor,
     .usbInit = NULL,
     .usbReset = usbMIDIReset,
-    .usbDataSetup = usbMIDIDataSetup,
-    .usbNoDataSetup = usbMIDINoDataSetup,
+    .usbDataSetup = NULL,
+    .usbNoDataSetup = NULL,
     .endpoints = midiEndpoints
 };
 
@@ -305,7 +307,7 @@ void usb_midi_setTXEPSize(uint32_t size) {
     size = (size+3)/4*4;
     if (size == 0 || size > 64)
         size = 64;
-    midiEndpoints[1].bufferSize = size;
+    midiEndpoints[1].pmaSize = size;
     usb_midi_txEPSize = size;
 }
 
@@ -313,7 +315,7 @@ void usb_midi_setRXEPSize(uint32_t size) {
     size = (size+3)/4*4;
     if (size == 0 || size > 64)
         size = 64;
-    midiEndpoints[0].bufferSize = size;
+    midiEndpoints[0].pmaSize = size;
     rxEPSize = size;
 }
 
@@ -342,15 +344,14 @@ uint32 usb_midi_tx(const uint32* buf, uint32 packets) {
 
     /* Queue bytes for sending. */
     if (packets) {
-        usb_copy_to_pma((uint8 *)buf, bytes, USB_MIDI_TX_ADDR);
+        usb_copy_to_pma_ptr((uint8 *)buf, bytes, USB_MIDI_TX_PMA_PTR);
     }
     // We still need to wait for the interrupt, even if we're sending
     // zero bytes. (Sending zero-size packets is useful for flushing
     // host-side buffers.)
-    usb_set_ep_tx_count(USB_MIDI_TX_ENDP, bytes);
     n_unsent_packets = packets;
     transmitting = 1;
-    usb_set_ep_tx_stat(USB_MIDI_TX_ENDP, USB_EP_STAT_TX_VALID);
+    usb_generic_set_tx(USB_MIDI_TX_ENDPOINT_INFO, bytes);
 
     return packets;
 }
@@ -382,8 +383,7 @@ uint32 usb_midi_rx(uint32* buf, uint32 packets) {
     /* If all bytes have been read, re-enable the RX endpoint, which
      * was set to NAK when the current batch of bytes was received. */
     if (n_unread_packets == 0) {
-        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, rxEPSize);
-        usb_set_ep_rx_stat(USB_MIDI_RX_ENDP, USB_EP_STAT_RX_VALID);
+        usb_generic_enable_rx(USB_MIDI_RX_ENDPOINT_INFO);
         rx_offset = 0;
     }
 
@@ -416,21 +416,20 @@ static void midiDataTxCb(void) {
 }
 
 static void midiDataRxCb(void) {
-    usb_set_ep_rx_stat(USB_MIDI_RX_ENDP, USB_EP_STAT_RX_NAK);
+    usb_generic_pause_rx(USB_MIDI_RX_ENDPOINT_INFO);
     n_unread_packets = usb_get_ep_rx_count(USB_MIDI_RX_ENDP) / 4;
     /* This copy won't overwrite unread bytes, since we've set the RX
      * endpoint to NAK, and will only set it to VALID when all bytes
      * have been read. */
     
-    usb_copy_from_pma((uint8*)midiBufferRx, n_unread_packets * 4,
-                      USB_MIDI_RX_ADDR);
+    usb_copy_from_pma_ptr((uint8*)midiBufferRx, n_unread_packets * 4,
+                      USB_MIDI_RX_PMA_PTR);
     
     // discard volatile
     LglSysexHandler((uint32*)midiBufferRx,(uint32*)&rx_offset,(uint32*)&n_unread_packets);
     
     if (n_unread_packets == 0) {
-        usb_set_ep_rx_count(USB_MIDI_RX_ENDP, rxEPSize);
-        usb_set_ep_rx_stat(USB_MIDI_RX_ENDP, USB_EP_STAT_RX_VALID);
+        usb_generic_enable_rx(USB_MIDI_RX_ENDPOINT_INFO);
         rx_offset = 0;
     }
 
@@ -443,37 +442,6 @@ static void usbMIDIReset(void) {
     rx_offset = 0;
 }
 
-static RESULT usbMIDIDataSetup(uint8 request) {
-    (void)request;//unused
-#if 0
-    uint8* (*CopyRoutine)(uint16) = 0;
-
-    if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) {
-    }
-
-    if (CopyRoutine == NULL) {
-        return USB_UNSUPPORT;
-    }
-
-    pInformation->Ctrl_Info.CopyData = CopyRoutine;
-    pInformation->Ctrl_Info.Usb_wOffset = 0;
-    (*CopyRoutine)(0);
-    return USB_SUCCESS;
-#endif
-    return USB_UNSUPPORT;
-}
-
-static RESULT usbMIDINoDataSetup(uint8 request) {
-    (void)request;//unused
-#if 0    
-    RESULT ret = USB_UNSUPPORT;
-
-    if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT)) {
-    }
-    return ret;
-#endif    
-    return USB_UNSUPPORT;
-}
 
 // .............THIS IS NOT WORKING YET................
 // send debugging information to 

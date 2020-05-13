@@ -6,22 +6,11 @@
 #include "usb_generic.h"
 //#include <libmaple/usb.h>
 
-#include <USBCompositeSerial.h>
-#include <USBHID.h>
-#include <USBXBox360.h>
-#include <USBMassStorage.h>
-#include <USBMIDI.h>
-
-#define USB_MAX_PRODUCT_LENGTH 32
-#define USB_MAX_MANUFACTURER_LENGTH 32
-#define USB_MAX_SERIAL_NUMBER_LENGTH  20
-
+#define USB_COMPOSITE_MAX_PARTS 6
 
 // You could use this for a serial number, but you'll be revealing the device ID to the host,
 // and hence burning it for cryptographic purposes.
-const char* getDeviceIDString();
-
-#define USB_COMPOSITE_MAX_PARTS 6
+char* getDeviceIDString();
 
 class USBCompositeDevice;
 
@@ -32,20 +21,19 @@ typedef void(*USBPartStopper)(void*);
 
 class USBCompositeDevice {
 private:
-	bool enabled = false;
-    bool haveSerialNumber = false;
-    uint8_t iManufacturer[USB_DESCRIPTOR_STRING_LEN(USB_MAX_MANUFACTURER_LENGTH)];
-    uint8_t iProduct[USB_DESCRIPTOR_STRING_LEN(USB_MAX_PRODUCT_LENGTH)];
-    uint8_t iSerialNumber[USB_DESCRIPTOR_STRING_LEN(USB_MAX_SERIAL_NUMBER_LENGTH)]; 
+    const char* iManufacturer = NULL;
+    const char* iProduct = NULL;
+    const char* iSerialNumber = NULL;
     uint16 vendorId;
     uint16 productId;
     USBCompositePart* parts[USB_COMPOSITE_MAX_PARTS];
-	USBPartInitializer init[USB_COMPOSITE_MAX_PARTS];
-	USBPartStopper stop[USB_COMPOSITE_MAX_PARTS];
-	void* plugin[USB_COMPOSITE_MAX_PARTS];
+    USBPartInitializer init[USB_COMPOSITE_MAX_PARTS];
+    USBPartStopper stop[USB_COMPOSITE_MAX_PARTS];
+    void* plugin[USB_COMPOSITE_MAX_PARTS];
     uint32 numParts;
+    bool enabled = false;
 public:
-	USBCompositeDevice(void); 
+    USBCompositeDevice(void); 
     void setVendorId(uint16 vendor=0);
     void setProductId(uint16 product=0);
     void setManufacturerString(const char* manufacturer=NULL);
@@ -54,12 +42,26 @@ public:
     bool begin(void);
     void end(void);
     void clear();
+    void setDisconnectDelay(uint32 delay=500) { // in microseconds
+        usb_generic_set_disconnect_delay(delay);
+    }
     bool isReady() {
         return enabled && usb_is_connected(USBLIB) && usb_is_configured(USBLIB);    
+    }   
+    operator bool() { 
+        return isReady(); 
     }
     bool add(USBCompositePart* part, void* plugin, USBPartInitializer init = NULL, USBPartStopper stop = NULL);
 };
 
 extern USBCompositeDevice USBComposite;
+
+#include <USBCompositeSerial.h>
+#include <USBHID.h>
+#include <USBMassStorage.h>
+#include <USBMIDI.h>
+#include <USBAudio.h>
+#include <USBMultiSerial.h>
+#include <USBXBox360.h>
 #endif
         

@@ -46,7 +46,7 @@
 #define HID_BUFFER_MODE_OUTPUT  2
 
 #define HID_BUFFER_EMPTY    0 
-#define HID_BUFFER_UNREAD   1
+#define HID_BUFFER_UNREAD   USB_CONTROL_DONE
 #define HID_BUFFER_READ     2
 
 extern USBCompositePart usbHIDPart;
@@ -56,7 +56,6 @@ typedef struct HIDBuffer_t {
     uint16_t bufferSize; // this should match HID_BUFFER_SIZE
     uint8_t  reportID;
     uint8_t  mode;
-    uint16_t currentDataSize;
     uint8_t  state; // HID_BUFFER_EMPTY, etc.
 #ifdef __cplusplus
     inline HIDBuffer_t(volatile uint8_t* _buffer=NULL, uint16_t _bufferSize=0, uint8_t _reportID=0, uint8_t _mode=0) {
@@ -72,13 +71,14 @@ typedef struct HIDBuffer_t {
 extern "C" {
 #endif
 
-void usb_hid_set_report_descriptor(const uint8* report_descriptor, uint16 report_descriptor_length);
+void usb_hid_set_report_descriptor(struct usb_chunk* chunks);
 void usb_hid_clear_buffers(uint8_t type);
 uint8_t usb_hid_add_buffer(uint8_t type, volatile HIDBuffer_t* buf);
 void usb_hid_set_buffers(uint8_t type, volatile HIDBuffer_t* featureBuffers, int count);    
 uint16_t usb_hid_get_data(uint8_t type, uint8_t reportID, uint8_t* out, uint8_t poll);
 void usb_hid_set_feature(uint8_t reportID, uint8_t* data);
 void usb_hid_setTXEPSize(uint32_t size); 
+uint32 usb_hid_get_pending(void);
 
 /*
  * HID Requests
@@ -126,8 +126,6 @@ typedef struct
 } HIDDescriptor;
 
 
-#define USB_ENDPOINT_TYPE_INTERRUPT     0x03
-
 #define USB_INTERFACE_CLASS_HID           0x03
 #define USB_INTERFACE_SUBCLASS_HID		  0x01
 
@@ -135,12 +133,10 @@ typedef struct
  * HID interface
  */
 
-void   usb_hid_putc(char ch);
 uint32 usb_hid_tx(const uint8* buf, uint32 len);
 uint32 usb_hid_tx_mod(const uint8* buf, uint32 len);
 
 uint32 usb_hid_data_available(void); /* in RX buffer */
-uint16 usb_hid_get_pending(void);
 
 
 #ifdef __cplusplus

@@ -11,7 +11,7 @@ HIDMouse Mouse(HID);
  
 void setup() {
   HID.begin(HID_KEYBOARD_MOUSE);
-  delay(2000);
+  while(!USBComposite);
 }
 
 void loop() {

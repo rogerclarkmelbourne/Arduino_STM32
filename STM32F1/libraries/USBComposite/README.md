@@ -1,4 +1,4 @@
-# USB Composite library for STM32F1
+# USB Composite library for Roger's Melbourne's STM32F1 core: https://github.com/rogerclarkmelbourne/Arduino_STM32/
 
 ## Protocols supported
 
@@ -6,9 +6,11 @@
 
 - MIDI over USB
 
-- XBox360 controller (only controller-to-host is currently supported)
+- XBox360 wired/wireless controllers
 
 - Mass storage
+
+- USB Audio (unidirectional, but both directions are supported)
 
 ## Basic concepts
 
@@ -30,12 +32,16 @@ Plugin classes included in the library:
 ```
 USBHID
 USBMIDI
-USBXBox360
+USBMultiXBox360<n> / USBXBox360 / USBXBox360W<n>
 USBMassStorage
 USBCompositeSerial
+USBMultiSerial<n>
 ```
 
-To use them, you need to create instances of them. Currently, only one instance of each plugin class
+**NOTE:** Only one of USBMultiXBox360<n> / USBXBox360 / USBXBox360W<n> can be registered at a time:
+they cannot be composited together.
+
+To use the plugins, you need to create instances of them. NOTE: Only one instance of each plugin class
 can be created.
 
 If you want to make a simple (non-composite) USB device, you can create an instance of the plugin class
@@ -50,8 +56,14 @@ plugin2.registerComponent();
 USBComposite.begin();
 ```
 
-Of course, you may need to do some further configuring of the plugins or the `USBComposite` device
+Of course, you may need to do some further configuring of the plugins (e.g., if plugin1 is USBHID, then
+you may want to do `USBHID.setReportDescriptor(HID_KEYBOARD)`) or of the `USBComposite` device
 before the `USBComposite.begin()` call.
+
+After starting up USBComposite, it's a good idea to wait for it to become ready before sending any data:
+```
+while(!USBComposite);
+```
 
 Finally, there are a number of classes that implement particular protocols for the `USBHID` class plugin.
 These are:
@@ -73,6 +85,19 @@ combinations will be supported by all operating systems.
 I recommend calling `USBComposite.setDeviceId(device)` with a different device number for each combination
 of plugins and profiles to prevent problems with cached configurations on the host computer.
 
+## Uploading with STM32duino bootloader
+
+Normally, the STM32duino bootloader upload method in the Roger Melbourne STM32F1 core sends a command 
+to reset the board via the USB serial port, and thereby put it in bootloader mode, just prior to uploading. 
+If you have installed a sketch that includes a USB serial port in the composite device, this should still
+work. But if the sketch you've installed doesn't include a USB serial port, then you need to manually activate 
+the bootloader mode next time you want to upload a sketch.
+
+The bootloader mode is active for a short period after the board powers up or resets. So just initiate
+the upload in the Arduino IDE as usual, but when "Searching for DFU device [1EAF:0003]" is displayed,
+hit the reset button (or if the device is USB-powered, keep it unplugged from USB and plug it in when you 
+get this message).
+
 ## Simple USB device configuration
 
 A simple USB device uses a single plugin. You need to create an instance of the plugin class,
@@ -83,20 +108,36 @@ to inject keyboard data, you should do:
 USBHID HID; // create instance of USBHID plugin
 HIDKeyboard Keyboard(HID); // create a profile
 
-HID.begin(HID_KEYBOARD);
+HID.begin();
 ```
 
 and then call `Keyboard.print("TextToInject")` to inject keyboard data. Some plugin configurations
 may require further initialization code or further code that needs to be called inside the Arduino
 `loop()` function.
 
-See the `BootKeyboard`, `midiout` and `x360` example code for this procedure.
+See the `BootKeyboard`, `midiout` and `x360` example code for variants on this procedure.
 
 (Additionally, the `USBHID` plugin has a convenience `begin()` method that lets you include an
 instance of a `USBCompositeSerial` plugin class, and that creates a composite HID-Serial device.)
 
 However, if you want a USB device using more than one plugin, then you will NOT call the plugin's
 `begin()` method.
+
+Note that a single HID plugin can support a device with multiple report profiles including a keyboard, several joysticks,
+a mouse, etc.:
+```
+USBHID HID; // create instance of USBHID plugin
+HIDKeyboard Keyboard(HID); // create a profile
+HIDJoystick Joystick1(HID); // create a profile
+HIDJoystick Joystick2(HID); // create a profile
+HIDMouse Mouse(HID); // create a profile
+
+HID.begin();
+```
+
+Each of the profiles (e.g., Joystick1) contributes a part of the HID report descriptor to USBHID which automatically stitches
+them together and assigns report IDs. However, you can also make a single overarching custom HID report descriptor and include 
+it in the HID.begin() call. The `softjoystick` example does this.
 
 ## Memory limitations
 
@@ -132,25 +173,32 @@ MIDI.setTXPacketSize(size);
 ```
 The maximum and default packet size is 64. Smaller packet sizes have not been thoroughly tested and may slow things down. In 
 particular, for HID you should make sure your packet size is sufficient for your largest HID report. The CompositeSerial 
-device also has a control channel whose 16 byte packet size is not adjustable.
+device also has a control channel whose 16 byte packet size is not adjustable. Note that for reasons that I do not currently
+understand, CompositeSerial RX packets must be a power of two in size.
 
-Note that in the above, RX and TX are from the point of view of the MCU, not the host (i.e., RX corresponds to USB Out and TX
+Note also that in the above, RX and TX are from the point of view of the MCU, not the host (i.e., RX corresponds to USB Out and TX
 to USB In).
 
 ## Endpoint limitations
 
-There is one bidirectional endpoint 0 that all endpoints share, and the hardware allows for seven more. Here are 
-how many endpoints besides endpoint 0 are needed for each plugin:
+There is one bidirectional endpoint 0 that all endpoints share, and the hardware allows for seven more in each direction,
+but there are some complications in that the same endpoint number when used in different directions must have some
+of the same parameters. The USBComposite library takes care of these complications when allocating endpoints, but if you
+have too many plugins, you USBComposite.begin() will return `false` to indicate that you've used up too many.
 
-* USB Serial: 3
+This is pretty complicated, but a rule of thumb for having enough endpoints is to make sure that when you add up the 
+following contributions for the plugins you use, your total is at most seven.
 
-* USB HID: 1
+* USB Serial: 2 (= 2 TX, 1 RX)
 
-* USB Mass Storage: 2
+* USB HID: 1 (= 1 TX)
 
-* USB MIDI: 2
+* USB Mass Storage: 1 (= 1 TX, 1 RX)
 
-* XBox360 Controller: 2
+* USB MIDI: 1 (= 1 TX, 1 RX)
 
-When combining plugins, make sure the count of these endpoints does not exceed 7. For instance, USB Serial + USB Mass Storage + 
-USB MIDI + USB HID adds up to 8, which is too much.
+* XBox360 Controller: 1 per controller (= 1 TX, 1 RX)
+
+* USB Audio: 1 (= 1 TX or 1 RX depending on mode)
+
+* USB Multi Serial: 2 per port (= 2 TX, 1 RX)

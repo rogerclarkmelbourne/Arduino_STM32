@@ -14,7 +14,7 @@ public:
 	static bool init(USBCompositeSerial* me);
 	bool registerComponent();
 
-	operator bool() { return true; } // Roger Clark. This is needed because in cardinfo.ino it does if (!Serial) . It seems to be a work around for the Leonardo that we needed to implement just to be compliant with the API
+	operator bool() { return USBComposite.isReady(); } // Roger Clark. This is needed because in cardinfo.ino it does if (!Serial) . It seems to be a work around for the Leonardo that we needed to implement just to be compliant with the API
 
     virtual int available(void);// Changed to virtual
 

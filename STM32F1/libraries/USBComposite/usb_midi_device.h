@@ -169,7 +169,6 @@ typedef struct {
 
 void usb_midi_setTXEPSize(uint32_t size);
 void usb_midi_setRXEPSize(uint32_t size);
-void usb_midi_putc(char ch);
 uint32 usb_midi_tx(const uint32* buf, uint32 len);
 uint32 usb_midi_rx(uint32* buf, uint32 len);
 uint32 usb_midi_peek(uint32* buf, uint32 len);
