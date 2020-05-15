@@ -88,7 +88,7 @@ recipe.objcopy.eep.pattern=
 recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
 
 ## Create assembly S file
-recipe.objcopy.lst.pattern=cmd /C "{compiler.path}{compiler.elf2lst.cmd}" {compiler.elf2lst.flags} "{build.path}/{build.project_name}.elf" > "{build.path}/{build.project_name}.lst"
+#recipe.objcopy.lst.pattern=cmd /C "{compiler.path}{compiler.elf2lst.cmd}" {compiler.elf2lst.flags} "{build.path}/{build.project_name}.elf" > "{build.path}/{build.project_name}.lst"
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
