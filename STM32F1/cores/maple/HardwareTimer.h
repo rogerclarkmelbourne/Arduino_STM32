@@ -56,7 +56,6 @@ public:
      */
     HardwareTimer(uint8 timerNum);
 
-    init(void) { timer_init(this->dev); timer_pause(this->dev); }
     /**
      * @brief Stop the counter, without affecting its configuration.
      *
