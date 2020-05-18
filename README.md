@@ -22,11 +22,10 @@ This repo contains the "Hardware" files to support STM32 based boards on Arduino
 * **NEW: Main support site for using STM32 boards with the Arduino IDE: http://www.stm32duino.com/**
 * Original LeafLabs "Docs:" http://docs.leaflabs.com/docs.leaflabs.com/index.html
 
+## Known issues
+* Use of static variables inside functions greatly increase the code size becuase additional code is needed for thread-safe handling of these statics.
+If this is a problem for your application, please edit platform.txt and add -fno-threadsafe-statics the compiler.cpp.flags 
 
-**YouTube Videos:**
-* 20141116: [Arduino 1.5.8 IDE with STM32 board](https://www.youtube.com/watch?v=-zwGnytGT8M)
-* 20150413: [STM32 for Arduino 1.6.2 or newer (update)](https://www.youtube.com/watch?v=TePglhSkghg)
-* 20150419: [Uploading via USB to Serial to STM32F103 boards](https://www.youtube.com/watch?v=G_RF0a0hrak)
 
 ## Additional Links & Info:
 * https://www.hackster.io/rayburne/4-dollar-90-mips-32-bit-72-mhz-arm-arduino
