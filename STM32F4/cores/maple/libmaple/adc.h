@@ -72,6 +72,7 @@ typedef enum {
     ADC_EOC,     // End Of Conversion interrupt.
     ADC_AWD ,    // Analog WatchDog interrupt
     ADC_JEOC,    // Injected End Of Conversion interrupt.
+	ADC_OVR,	 // overrun interrupt
 	ADC_LAST_IRQ_ID
 } adc_irq_id;
 
@@ -92,9 +93,10 @@ typedef struct adc_dev
 extern const adc_dev adc1;
 extern const adc_dev adc2;
 extern const adc_dev adc3;
-#define ADC1 (&adc1)
-#define ADC2 (&adc2)
-#define ADC3 (&adc3)
+
+#define ADC1 ((adc_dev*) &adc1)
+#define ADC2 ((adc_dev*) &adc2)
+#define ADC3 ((adc_dev*) &adc3)
 
 typedef struct adc_common_reg_map {
 	__IO uint32 CSR;            ///< Common status register
@@ -303,6 +305,7 @@ extern adc_common_reg_map* const ADC_COMMON;
 #define ADC_CCR_DELAY_SHIFT             8
 #define ADC_CCR_MULTI_SHIFT             0
 
+
 #define ADC_CCR_TSVREFE                 (0x1 << ADC_CCR_TSVREFE_BIT)
 #define ADC_CCR_VBATE                   (0x1 << ADC_CCR_VBATE_BIT)
 #define ADC_CCR_ADCPRE                  (0x3 << ADC_CCR_ADCPRE_SHIFT)
@@ -310,6 +313,20 @@ extern adc_common_reg_map* const ADC_COMMON;
 #define ADC_CCR_DDS                     (0x1 << ADC_CCR_DDS_BIT)
 #define ADC_CCR_DELAY                   (0xF << ADC_CCR_DELAY_SHIFT)
 #define ADC_CCR_MULTI                   (0x1F << ADC_CCR_MULTI_SHIFT)
+
+/**
+ * @brief STM32F1/F4 ADC prescalers, as divisors of PCLK2.
+ */
+typedef enum adc_prescaler {
+    /** PCLK2 divided by 2 */
+    ADC_PRE_PCLK2_DIV_2 = 0,
+    /** PCLK2 divided by 4 */
+    ADC_PRE_PCLK2_DIV_4 = 1,
+    /** PCLK2 divided by 6 */
+    ADC_PRE_PCLK2_DIV_6 = 2,
+    /** PCLK2 divided by 8 */
+    ADC_PRE_PCLK2_DIV_8 = 3,
+} adc_prescaler;
 
 /* Common regular data register */
 
@@ -384,6 +401,7 @@ typedef enum {
     ADC_SMPR_480,              /**< 480 ADC cycles */
 } adc_smp_rate;
 
+void adc_set_prescaler(adc_prescaler pre);
 void adc_set_sampling_time(const adc_dev *dev, adc_smp_rate smp_rate);
 void adc_set_exttrig(const adc_dev *dev, adc_ext_trigger trigger);
 void adc_set_jextrig(const adc_dev *dev, adc_ext_trigger trigger);
@@ -392,6 +410,7 @@ void adc_set_jextsel(const adc_dev *dev, adc_jextsel_event event);
 void adc_foreach(void (*fn)(const adc_dev*));
 void adc_enable_irq(const adc_dev* dev);
 void adc_disable_irq(const adc_dev* dev);
+void adc_ovr_enable_irq(const adc_dev* dev);
 void adc_attach_interrupt(const adc_dev *dev, adc_irq_id irq_id, voidFuncPtr handler);
 void adc_set_reg_sequence(const adc_dev * dev, uint8 * channels, uint8 len);
 void adc_enable_tsvref(void);
@@ -478,6 +497,11 @@ static inline void adc_awd_enable(const adc_dev * dev)
 	dev->regs->CR1 |= ADC_CR1_AWDEN;
 }
 
+static inline void adc_awd_disable(const adc_dev * dev)
+{
+	dev->regs->CR1 &= ~ADC_CR1_AWDEN;
+}
+
 static inline void adc_set_scan_mode(const adc_dev * dev)
 {
 	dev->regs->CR1 |= ADC_CR1_SCAN;
@@ -532,6 +556,7 @@ static inline void adc_start_convert(const adc_dev * dev)
 {
 	dev->regs->CR2 |= ADC_CR2_SWSTART;
 }
+
 
 
 #ifdef __cplusplus
