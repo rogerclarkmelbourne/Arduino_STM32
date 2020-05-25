@@ -152,7 +152,7 @@ void adc_awd_enable_irq(const adc_dev * dev)
 void adc_ovr_enable_irq(const adc_dev* dev)
 {
     dev->regs->CR1 |= ADC_CR1_OVRIE;
-    //nvic_irq_enable(NVIC_ADC_1_2_3);
+    nvic_irq_enable(NVIC_ADC_1_2_3);
 }
 
 /*
