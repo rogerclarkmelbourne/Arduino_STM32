@@ -5,6 +5,7 @@ menu.bootloader_version=Bootloader version
 menu.upload_method=Upload method
 menu.cpu_speed=CPU Speed(MHz)
 menu.opt=Optimize
+menu.rtlib=C Runtime Library
 
 ##############################################################
 mapleMini.name=Maple Mini
@@ -51,29 +52,31 @@ mapleMini.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 mapleMini.menu.opt.osstd=Smallest (default)
 #mapleMini.menu.opt.oslto=Smallest Code with LTO
 #mapleMini.menu.opt.oslto.build.flags.optimize=-Os -flto
-#mapleMini.menu.opt.oslto.build.flags.ldspecs=-flto
 mapleMini.menu.opt.o1std=Fast (-O1)
 mapleMini.menu.opt.o1std.build.flags.optimize=-O1
-mapleMini.menu.opt.o1std.build.flags.ldspecs=
 #mapleMini.menu.opt.o1lto=Fast (-O1) with LTO
 #mapleMini.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#mapleMini.menu.opt.o1lto.build.flags.ldspecs=-flto
 mapleMini.menu.opt.o2std=Faster (-O2)
 mapleMini.menu.opt.o2std.build.flags.optimize=-O2
-mapleMini.menu.opt.o2std.build.flags.ldspecs=
 #mapleMini.menu.opt.o2lto=Faster (-O2) with LTO
 #mapleMini.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#mapleMini.menu.opt.o2lto.build.flags.ldspecs=-flto
 mapleMini.menu.opt.o3std=Fastest (-O3)
 mapleMini.menu.opt.o3std.build.flags.optimize=-O3
-mapleMini.menu.opt.o3std.build.flags.ldspecs=
 #mapleMini.menu.opt.o3lto=Fastest (-O3) with LTO
 #mapleMini.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#mapleMini.menu.opt.o3lto.build.flags.ldspecs=-flto
 mapleMini.menu.opt.ogstd=Debug (-g)
 mapleMini.menu.opt.ogstd.build.flags.optimize=-Og
-mapleMini.menu.opt.ogstd.build.flags.ldspecs=
 
+# C Runtime library
+mapleMini.menu.rtlib.nano=Newlib Nano (default)
+mapleMini.menu.rtlib.nanofp=Newlib Nano + Float Printf
+mapleMini.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+mapleMini.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+mapleMini.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+mapleMini.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+mapleMini.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+mapleMini.menu.rtlib.full=Newlib Standard
+mapleMini.menu.rtlib.full.build.flags.ldspecs=
 
 ##############################################################
 maple.name=Maple (Rev 3)
@@ -111,28 +114,31 @@ maple.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 maple.menu.opt.osstd=Smallest (default)
 #maple.menu.opt.oslto=Smallest Code with LTO
 #maple.menu.opt.oslto.build.flags.optimize=-Os -flto
-#maple.menu.opt.oslto.build.flags.ldspecs=-flto
 maple.menu.opt.o1std=Fast (-O1)
 maple.menu.opt.o1std.build.flags.optimize=-O1
-maple.menu.opt.o1std.build.flags.ldspecs=
 #maple.menu.opt.o1lto=Fast (-O1) with LTO
 #maple.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#maple.menu.opt.o1lto.build.flags.ldspecs=-flto
 maple.menu.opt.o2std=Faster (-O2)
 maple.menu.opt.o2std.build.flags.optimize=-O2
-maple.menu.opt.o2std.build.flags.ldspecs=
 #maple.menu.opt.o2lto=Faster (-O2) with LTO
 #maple.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#maple.menu.opt.o2lto.build.flags.ldspecs=-flto
 maple.menu.opt.o3std=Fastest (-O3)
 maple.menu.opt.o3std.build.flags.optimize=-O3
-maple.menu.opt.o3std.build.flags.ldspecs=
 #maple.menu.opt.o3lto=Fastest (-O3) with LTO
 #maple.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#maple.menu.opt.o3lto.build.flags.ldspecs=-flto
 maple.menu.opt.ogstd=Debug (-g)
 maple.menu.opt.ogstd.build.flags.optimize=-Og
-maple.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+maple.menu.rtlib.nano=Newlib Nano (default)
+maple.menu.rtlib.nanofp=Newlib Nano + Float Printf
+maple.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+maple.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+maple.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+maple.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+maple.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+maple.menu.rtlib.full=Newlib Standard
+maple.menu.rtlib.full.build.flags.ldspecs=
 
 ##############################################################
 mapleRET6.name=Maple (RET6)
@@ -172,28 +178,31 @@ mapleRET6.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 mapleRET6.menu.opt.osstd=Smallest (default)
 #mapleRET6.menu.opt.oslto=Smallest Code with LTO
 #mapleRET6.menu.opt.oslto.build.flags.optimize=-Os -flto
-#mapleRET6.menu.opt.oslto.build.flags.ldspecs=-flto
 mapleRET6.menu.opt.o1std=Fast (-O1)
 mapleRET6.menu.opt.o1std.build.flags.optimize=-O1
-mapleRET6.menu.opt.o1std.build.flags.ldspecs=
 #mapleRET6.menu.opt.o1lto=Fast (-O1) with LTO
 #mapleRET6.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#mapleRET6.menu.opt.o1lto.build.flags.ldspecs=-flto
 mapleRET6.menu.opt.o2std=Faster (-O2)
 mapleRET6.menu.opt.o2std.build.flags.optimize=-O2
-mapleRET6.menu.opt.o2std.build.flags.ldspecs=
 #mapleRET6.menu.opt.o2lto=Faster (-O2) with LTO
 #mapleRET6.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#mapleRET6.menu.opt.o2lto.build.flags.ldspecs=-flto
 mapleRET6.menu.opt.o3std=Fastest (-O3)
 mapleRET6.menu.opt.o3std.build.flags.optimize=-O3
-mapleRET6.menu.opt.o3std.build.flags.ldspecs=
 #mapleRET6.menu.opt.o3lto=Fastest (-O3) with LTO
 #mapleRET6.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#mapleRET6.menu.opt.o3lto.build.flags.ldspecs=-flto
 mapleRET6.menu.opt.ogstd=Debug (-g)
 mapleRET6.menu.opt.ogstd.build.flags.optimize=-Og
-mapleRET6.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+mapleRET6.menu.rtlib.nano=Newlib Nano (default)
+mapleRET6.menu.rtlib.nanofp=Newlib Nano + Float Printf
+mapleRET6.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+mapleRET6.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+mapleRET6.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+mapleRET6.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+mapleRET6.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+mapleRET6.menu.rtlib.full=Newlib Standard
+mapleRET6.menu.rtlib.full.build.flags.ldspecs=
 
 ##############################################################
 
@@ -240,28 +249,31 @@ microduino32_flash.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 microduino32_flash.menu.opt.osstd=Smallest (default)
 #microduino32_flash.menu.opt.oslto=Smallest Code with LTO
 #microduino32_flash.menu.opt.oslto.build.flags.optimize=-Os -flto
-#microduino32_flash.menu.opt.oslto.build.flags.ldspecs=-flto
 microduino32_flash.menu.opt.o1std=Fast (-O1)
 microduino32_flash.menu.opt.o1std.build.flags.optimize=-O1
-microduino32_flash.menu.opt.o1std.build.flags.ldspecs=
 #microduino32_flash.menu.opt.o1lto=Fast (-O1) with LTO
 #microduino32_flash.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#microduino32_flash.menu.opt.o1lto.build.flags.ldspecs=-flto
 microduino32_flash.menu.opt.o2std=Faster (-O2)
 microduino32_flash.menu.opt.o2std.build.flags.optimize=-O2
-microduino32_flash.menu.opt.o2std.build.flags.ldspecs=
 #microduino32_flash.menu.opt.o2lto=Faster (-O2) with LTO
 #microduino32_flash.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#microduino32_flash.menu.opt.o2lto.build.flags.ldspecs=-flto
 microduino32_flash.menu.opt.o3std=Fastest (-O3)
 microduino32_flash.menu.opt.o3std.build.flags.optimize=-O3
-microduino32_flash.menu.opt.o3std.build.flags.ldspecs=
 #microduino32_flash.menu.opt.o3lto=Fastest (-O3) with LTO
 #microduino32_flash.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#microduino32_flash.menu.opt.o3lto.build.flags.ldspecs=-flto
 microduino32_flash.menu.opt.ogstd=Debug (-g)
 microduino32_flash.menu.opt.ogstd.build.flags.optimize=-Og
-microduino32_flash.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+microduino32_flash.menu.rtlib.nano=Newlib Nano (default)
+microduino32_flash.menu.rtlib.nanofp=Newlib Nano + Float Printf
+microduino32_flash.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+microduino32_flash.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+microduino32_flash.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+microduino32_flash.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+microduino32_flash.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+microduino32_flash.menu.rtlib.full=Newlib Standard
+microduino32_flash.menu.rtlib.full.build.flags.ldspecs=
 
 ##############################################################
 nucleo_f103rb.name=STM Nucleo F103RB (STLink)
@@ -304,28 +316,31 @@ nucleo_f103rb.menu.device_variant.NucleoF103_HSE.build.extra_flags=-DNUCLEO_HSE_
 nucleo_f103rb.menu.opt.osstd=Smallest (default)
 #nucleo_f103rb.menu.opt.oslto=Smallest Code with LTO
 #nucleo_f103rb.menu.opt.oslto.build.flags.optimize=-Os -flto
-#nucleo_f103rb.menu.opt.oslto.build.flags.ldspecs=-flto
 nucleo_f103rb.menu.opt.o1std=Fast (-O1)
 nucleo_f103rb.menu.opt.o1std.build.flags.optimize=-O1
-nucleo_f103rb.menu.opt.o1std.build.flags.ldspecs=
 #nucleo_f103rb.menu.opt.o1lto=Fast (-O1) with LTO
 #nucleo_f103rb.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#nucleo_f103rb.menu.opt.o1lto.build.flags.ldspecs=-flto
 nucleo_f103rb.menu.opt.o2std=Faster (-O2)
 nucleo_f103rb.menu.opt.o2std.build.flags.optimize=-O2
-nucleo_f103rb.menu.opt.o2std.build.flags.ldspecs=
 #nucleo_f103rb.menu.opt.o2lto=Faster (-O2) with LTO
 #nucleo_f103rb.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#nucleo_f103rb.menu.opt.o2lto.build.flags.ldspecs=-flto
 nucleo_f103rb.menu.opt.o3std=Fastest (-O3)
 nucleo_f103rb.menu.opt.o3std.build.flags.optimize=-O3
-nucleo_f103rb.menu.opt.o3std.build.flags.ldspecs=
 #nucleo_f103rb.menu.opt.o3lto=Fastest (-O3) with LTO
 #nucleo_f103rb.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#nucleo_f103rb.menu.opt.o3lto.build.flags.ldspecs=-flto
 nucleo_f103rb.menu.opt.ogstd=Debug (-g)
 nucleo_f103rb.menu.opt.ogstd.build.flags.optimize=-Og
-nucleo_f103rb.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+nucleo_f103rb.menu.rtlib.nano=Newlib Nano (default)
+nucleo_f103rb.menu.rtlib.nanofp=Newlib Nano + Float Printf
+nucleo_f103rb.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+nucleo_f103rb.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+nucleo_f103rb.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+nucleo_f103rb.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+nucleo_f103rb.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+nucleo_f103rb.menu.rtlib.full=Newlib Standard
+nucleo_f103rb.menu.rtlib.full.build.flags.ldspecs=
 
 ###################### Generic STM32F103C ########################################
 
@@ -409,28 +424,31 @@ genericSTM32F103C.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103C.menu.opt.osstd=Smallest (default)
 #genericSTM32F103C.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103C.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103C.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103C.menu.opt.o1std=Fast (-O1)
 genericSTM32F103C.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103C.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103C.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103C.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103C.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103C.menu.opt.o2std=Faster (-O2)
 genericSTM32F103C.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103C.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103C.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103C.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103C.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103C.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103C.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103C.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103C.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103C.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103C.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103C.menu.opt.ogstd=Debug (-g)
 genericSTM32F103C.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103C.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103C.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103C.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103C.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103C.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103C.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103C.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103C.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103C.menu.rtlib.full=Newlib Standard
+genericSTM32F103C.menu.rtlib.full.build.flags.ldspecs=
 
 ###################### Generic STM32F103C6 ########################################
 
@@ -505,28 +523,31 @@ genericSTM32F103C6.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103C6.menu.opt.osstd=Smallest (default)
 #genericSTM32F103C6.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103C6.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103C6.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103C6.menu.opt.o1std=Fast (-O1)
 genericSTM32F103C6.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103C6.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103C6.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103C6.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103C6.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103C6.menu.opt.o2std=Faster (-O2)
 genericSTM32F103C6.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103C6.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103C6.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103C6.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103C6.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103C6.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103C6.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103C6.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103C6.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103C6.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103C6.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103C6.menu.opt.ogstd=Debug (-g)
 genericSTM32F103C6.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103C6.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103C6.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103C6.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103C6.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103C6.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103C6.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103C6.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103C6.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103C6.menu.rtlib.full=Newlib Standard
+genericSTM32F103C6.menu.rtlib.full.build.flags.ldspecs=
 
 ########################### Generic STM32F103R ###########################
 
@@ -614,28 +635,31 @@ genericSTM32F103R.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103R.menu.opt.osstd=Smallest (default)
 #genericSTM32F103R.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103R.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103R.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103R.menu.opt.o1std=Fast (-O1)
 genericSTM32F103R.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103R.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103R.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103R.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103R.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103R.menu.opt.o2std=Faster (-O2)
 genericSTM32F103R.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103R.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103R.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103R.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103R.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103R.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103R.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103R.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103R.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103R.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103R.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103R.menu.opt.ogstd=Debug (-g)
 genericSTM32F103R.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103R.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103R.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103R.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103R.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103R.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103R.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103R.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103R.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103R.menu.rtlib.full=Newlib Standard
+genericSTM32F103R.menu.rtlib.full.build.flags.ldspecs=
 
 ###################### Generic STM32F103T ########################################
 
@@ -706,28 +730,31 @@ genericSTM32F103T.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103T.menu.opt.osstd=Smallest (default)
 #genericSTM32F103T.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103T.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103T.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103T.menu.opt.o1std=Fast (-O1)
 genericSTM32F103T.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103T.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103T.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103T.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103T.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103T.menu.opt.o2std=Faster (-O2)
 genericSTM32F103T.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103T.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103T.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103T.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103T.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103T.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103T.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103T.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103T.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103T.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103T.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103T.menu.opt.ogstd=Debug (-g)
 genericSTM32F103T.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103T.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103T.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103T.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103T.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103T.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103T.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103T.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103T.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103T.menu.rtlib.full=Newlib Standard
+genericSTM32F103T.menu.rtlib.full.build.flags.ldspecs=
 
 ########################### Generic STM32F103V ###########################
 
@@ -815,28 +842,31 @@ genericSTM32F103V.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103V.menu.opt.osstd=Smallest (default)
 #genericSTM32F103V.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103V.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103V.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103V.menu.opt.o1std=Fast (-O1)
 genericSTM32F103V.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103V.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103V.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103V.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103V.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103V.menu.opt.o2std=Faster (-O2)
 genericSTM32F103V.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103V.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103V.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103V.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103V.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103V.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103V.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103V.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103V.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103V.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103V.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103V.menu.opt.ogstd=Debug (-g)
 genericSTM32F103V.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103V.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103V.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103V.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103V.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103V.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103V.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103V.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103V.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103V.menu.rtlib.full=Newlib Standard
+genericSTM32F103V.menu.rtlib.full.build.flags.ldspecs=
 
 ########################### Generic STM32F103Z ###########################
 
@@ -911,28 +941,31 @@ genericSTM32F103Z.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 genericSTM32F103Z.menu.opt.osstd=Smallest (default)
 #genericSTM32F103Z.menu.opt.oslto=Smallest Code with LTO
 #genericSTM32F103Z.menu.opt.oslto.build.flags.optimize=-Os -flto
-#genericSTM32F103Z.menu.opt.oslto.build.flags.ldspecs=-flto
 genericSTM32F103Z.menu.opt.o1std=Fast (-O1)
 genericSTM32F103Z.menu.opt.o1std.build.flags.optimize=-O1
-genericSTM32F103Z.menu.opt.o1std.build.flags.ldspecs=
 #genericSTM32F103Z.menu.opt.o1lto=Fast (-O1) with LTO
 #genericSTM32F103Z.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#genericSTM32F103Z.menu.opt.o1lto.build.flags.ldspecs=-flto
 genericSTM32F103Z.menu.opt.o2std=Faster (-O2)
 genericSTM32F103Z.menu.opt.o2std.build.flags.optimize=-O2
-genericSTM32F103Z.menu.opt.o2std.build.flags.ldspecs=
 #genericSTM32F103Z.menu.opt.o2lto=Faster (-O2) with LTO
 #genericSTM32F103Z.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#genericSTM32F103Z.menu.opt.o2lto.build.flags.ldspecs=-flto
 genericSTM32F103Z.menu.opt.o3std=Fastest (-O3)
 genericSTM32F103Z.menu.opt.o3std.build.flags.optimize=-O3
-genericSTM32F103Z.menu.opt.o3std.build.flags.ldspecs=
 #genericSTM32F103Z.menu.opt.o3lto=Fastest (-O3) with LTO
 #genericSTM32F103Z.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#genericSTM32F103Z.menu.opt.o3lto.build.flags.ldspecs=-flto
 genericSTM32F103Z.menu.opt.ogstd=Debug (-g)
 genericSTM32F103Z.menu.opt.ogstd.build.flags.optimize=-Og
-genericSTM32F103Z.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+genericSTM32F103Z.menu.rtlib.nano=Newlib Nano (default)
+genericSTM32F103Z.menu.rtlib.nanofp=Newlib Nano + Float Printf
+genericSTM32F103Z.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+genericSTM32F103Z.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+genericSTM32F103Z.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+genericSTM32F103Z.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+genericSTM32F103Z.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+genericSTM32F103Z.menu.rtlib.full=Newlib Standard
+genericSTM32F103Z.menu.rtlib.full.build.flags.ldspecs=
 
 ###################### HYTiny STM32F103T ########################################
 
@@ -999,28 +1032,31 @@ hytiny-stm32f103t.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 hytiny-stm32f103t.menu.opt.osstd=Smallest (default)
 #hytiny-stm32f103t.menu.opt.oslto=Smallest Code with LTO
 #hytiny-stm32f103t.menu.opt.oslto.build.flags.optimize=-Os -flto
-#hytiny-stm32f103t.menu.opt.oslto.build.flags.ldspecs=-flto
 hytiny-stm32f103t.menu.opt.o1std=Fast (-O1)
 hytiny-stm32f103t.menu.opt.o1std.build.flags.optimize=-O1
-hytiny-stm32f103t.menu.opt.o1std.build.flags.ldspecs=
 #hytiny-stm32f103t.menu.opt.o1lto=Fast (-O1) with LTO
 #hytiny-stm32f103t.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#hytiny-stm32f103t.menu.opt.o1lto.build.flags.ldspecs=-flto
 hytiny-stm32f103t.menu.opt.o2std=Faster (-O2)
 hytiny-stm32f103t.menu.opt.o2std.build.flags.optimize=-O2
-hytiny-stm32f103t.menu.opt.o2std.build.flags.ldspecs=
 #hytiny-stm32f103t.menu.opt.o2lto=Faster (-O2) with LTO
 #hytiny-stm32f103t.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#hytiny-stm32f103t.menu.opt.o2lto.build.flags.ldspecs=-flto
 hytiny-stm32f103t.menu.opt.o3std=Fastest (-O3)
 hytiny-stm32f103t.menu.opt.o3std.build.flags.optimize=-O3
-hytiny-stm32f103t.menu.opt.o3std.build.flags.ldspecs=
 #hytiny-stm32f103t.menu.opt.o3lto=Fastest (-O3) with LTO
 #hytiny-stm32f103t.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#hytiny-stm32f103t.menu.opt.o3lto.build.flags.ldspecs=-flto
 hytiny-stm32f103t.menu.opt.ogstd=Debug (-g)
 hytiny-stm32f103t.menu.opt.ogstd.build.flags.optimize=-Og
-hytiny-stm32f103t.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+hytiny-stm32f103t.menu.rtlib.nano=Newlib Nano (default)
+hytiny-stm32f103t.menu.rtlib.nanofp=Newlib Nano + Float Printf
+hytiny-stm32f103t.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+hytiny-stm32f103t.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+hytiny-stm32f103t.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+hytiny-stm32f103t.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+hytiny-stm32f103t.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+hytiny-stm32f103t.menu.rtlib.full=Newlib Standard
+hytiny-stm32f103t.menu.rtlib.full.build.flags.ldspecs=
 
 ########################### STM32VLD to FLASH ###########################
 
@@ -1064,27 +1100,30 @@ STM32VLD.menu.cpu_speed.speed_128mhz.build.f_cpu=128000000L
 STM32VLD.menu.opt.osstd=Smallest (default)
 #STM32VLD.menu.opt.oslto=Smallest Code with LTO
 #STM32VLD.menu.opt.oslto.build.flags.optimize=-Os -flto
-#STM32VLD.menu.opt.oslto.build.flags.ldspecs=-flto
 STM32VLD.menu.opt.o1std=Fast (-O1)
 STM32VLD.menu.opt.o1std.build.flags.optimize=-O1
-STM32VLD.menu.opt.o1std.build.flags.ldspecs=
 #STM32VLD.menu.opt.o1lto=Fast (-O1) with LTO
 #STM32VLD.menu.opt.o1lto.build.flags.optimize=-O1 -flto
-#STM32VLD.menu.opt.o1lto.build.flags.ldspecs=-flto
 STM32VLD.menu.opt.o2std=Faster (-O2)
 STM32VLD.menu.opt.o2std.build.flags.optimize=-O2
-STM32VLD.menu.opt.o2std.build.flags.ldspecs=
 #STM32VLD.menu.opt.o2lto=Faster (-O2) with LTO
 #STM32VLD.menu.opt.o2lto.build.flags.optimize=-O2 -flto
-#STM32VLD.menu.opt.o2lto.build.flags.ldspecs=-flto
 STM32VLD.menu.opt.o3std=Fastest (-O3)
 STM32VLD.menu.opt.o3std.build.flags.optimize=-O3
-STM32VLD.menu.opt.o3std.build.flags.ldspecs=
 #STM32VLD.menu.opt.o3lto=Fastest (-O3) with LTO
 #STM32VLD.menu.opt.o3lto.build.flags.optimize=-O3 -flto
-#STM32VLD.menu.opt.o3lto.build.flags.ldspecs=-flto
 STM32VLD.menu.opt.ogstd=Debug (-g)
 STM32VLD.menu.opt.ogstd.build.flags.optimize=-Og
-STM32VLD.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+STM32VLD.menu.rtlib.nano=Newlib Nano (default)
+STM32VLD.menu.rtlib.nanofp=Newlib Nano + Float Printf
+STM32VLD.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+STM32VLD.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+STM32VLD.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+STM32VLD.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+STM32VLD.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+STM32VLD.menu.rtlib.full=Newlib Standard
+STM32VLD.menu.rtlib.full.build.flags.ldspecs=
 
 ################################################################################

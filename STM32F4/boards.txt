@@ -3,6 +3,7 @@
 menu.usb_cfg=USB configuration
 menu.opt=Optimize
 menu.upload_method=Upload method
+menu.rtlib=C Runtime Library
 
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
@@ -62,6 +63,18 @@ discovery_f407.menu.opt.o3lto.build.flags.ldspecs=-flto
 discovery_f407.menu.opt.ogstd=Debug (-g)
 discovery_f407.menu.opt.ogstd.build.flags.optimize=-Og
 discovery_f407.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+discovery_f407.menu.rtlib.nano=Newlib Nano (default)
+discovery_f407.menu.rtlib.nanofp=Newlib Nano + Float Printf
+discovery_f407.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+discovery_f407.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+discovery_f407.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+discovery_f407.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+discovery_f407.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+discovery_f407.menu.rtlib.full=Newlib Standard
+discovery_f407.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 blackpill_f401.name=Blackpill STM32F401CCU6
 
@@ -115,6 +128,18 @@ blackpill_f401.menu.opt.o3lto.build.flags.ldspecs=-flto
 blackpill_f401.menu.opt.ogstd=Debug (-g)
 blackpill_f401.menu.opt.ogstd.build.flags.optimize=-Og
 blackpill_f401.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+blackpill_f401.menu.rtlib.nano=Newlib Nano (default)
+blackpill_f401.menu.rtlib.nanofp=Newlib Nano + Float Printf
+blackpill_f401.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+blackpill_f401.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+blackpill_f401.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+blackpill_f401.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+blackpill_f401.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+blackpill_f401.menu.rtlib.full=Newlib Standard
+blackpill_f401.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 disco_f411.name=STM32 Discovery F411E
 
@@ -168,6 +193,18 @@ disco_f411.menu.opt.o3lto.build.flags.ldspecs=-flto
 disco_f411.menu.opt.ogstd=Debug (-g)
 disco_f411.menu.opt.ogstd.build.flags.optimize=-Og
 disco_f411.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+disco_f411.menu.rtlib.nano=Newlib Nano (default)
+disco_f411.menu.rtlib.nanofp=Newlib Nano + Float Printf
+disco_f411.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+disco_f411.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+disco_f411.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+disco_f411.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+disco_f411.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+disco_f411.menu.rtlib.full=Newlib Standard
+disco_f411.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 generic_f407v.name=Generic STM32F407V series
 
@@ -234,6 +271,18 @@ generic_f407v.menu.opt.o3lto.build.flags.ldspecs=-flto
 generic_f407v.menu.opt.ogstd=Debug (-g)
 generic_f407v.menu.opt.ogstd.build.flags.optimize=-Og
 generic_f407v.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+generic_f407v.menu.rtlib.nano=Newlib Nano (default)
+generic_f407v.menu.rtlib.nanofp=Newlib Nano + Float Printf
+generic_f407v.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+generic_f407v.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+generic_f407v.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+generic_f407v.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+generic_f407v.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+generic_f407v.menu.rtlib.full=Newlib Standard
+generic_f407v.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 generic_f407v_mini.name=Generic STM32F407V mini series
 
@@ -302,6 +351,18 @@ generic_f407v_mini.menu.opt.o3lto.build.flags.ldspecs=-flto
 generic_f407v_mini.menu.opt.ogstd=Debug (-g)
 generic_f407v_mini.menu.opt.ogstd.build.flags.optimize=-Og
 generic_f407v_mini.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+generic_f407v_mini.menu.rtlib.nano=Newlib Nano (default)
+generic_f407v_mini.menu.rtlib.nanofp=Newlib Nano + Float Printf
+generic_f407v_mini.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+generic_f407v_mini.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+generic_f407v_mini.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+generic_f407v_mini.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+generic_f407v_mini.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+generic_f407v_mini.menu.rtlib.full=Newlib Standard
+generic_f407v_mini.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 arch_max.name=Seeed Arch Max 1.1
 
@@ -364,5 +425,17 @@ arch_max.menu.opt.o3lto.build.flags.ldspecs=-flto
 arch_max.menu.opt.ogstd=Debug (-g)
 arch_max.menu.opt.ogstd.build.flags.optimize=-Og
 arch_max.menu.opt.ogstd.build.flags.ldspecs=
+
+# C Runtime library
+arch_max.menu.rtlib.nano=Newlib Nano (default)
+arch_max.menu.rtlib.nanofp=Newlib Nano + Float Printf
+arch_max.menu.rtlib.nanofp.build.flags.ldspecs=--specs=nano.specs -u _printf_float
+arch_max.menu.rtlib.nanofs=Newlib Nano + Float Scanf
+arch_max.menu.rtlib.nanofs.build.flags.ldspecs=--specs=nano.specs -u _scanf_float
+arch_max.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
+arch_max.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
+arch_max.menu.rtlib.full=Newlib Standard
+arch_max.menu.rtlib.full.build.flags.ldspecs=
+
 ##############################################################
 

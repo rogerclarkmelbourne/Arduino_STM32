@@ -8,7 +8,7 @@ version=0.1.0
 
 # compiler variables
 # ----------------------
-compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+compiler.path={runtime.tools.xpack-arm-none-eabi-gcc-9.2.1-1.1.path}/bin/
 compiler.c.cmd=arm-none-eabi-gcc
 compiler.c.flags=-c -g {build.flags.optimize} -Wall -MMD -std=gnu11 -ffunction-sections -fdata-sections -nostdlib --param max-inline-insns-single=500 -DERROR_LED_PIN={build.error_led_pin}
 compiler.c.elf.cmd=arm-none-eabi-g++
@@ -36,7 +36,7 @@ build.hs_flag=
 build.common_flags=-mthumb -D__STM32F4__ -DSTM32F4
 build.extra_flags= {build.cpu_flags} {build.hs_flag} {build.common_flags}
 build.flags.optimize=-Os
-build.flags.ldspecs=
+build.flags.ldspecs=--specs=nano.specs
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
