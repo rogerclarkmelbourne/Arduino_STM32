@@ -6,6 +6,7 @@ menu.upload_method=Upload method
 menu.cpu_speed=CPU Speed(MHz)
 menu.opt=Optimize
 menu.rtlib=C Runtime Library
+menu.tchain=Toolchain
 
 ##############################################################
 mapleMini.name=Maple Mini
@@ -78,6 +79,12 @@ mapleMini.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_f
 mapleMini.menu.rtlib.full=Newlib Standard
 mapleMini.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+genericSTM32F103C.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103C.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103C.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103C.menu.tchain.eabi.build.flags.ldspecs=
+
 ##############################################################
 maple.name=Maple (Rev 3)
 
@@ -139,6 +146,12 @@ maple.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 maple.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 maple.menu.rtlib.full=Newlib Standard
 maple.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+maple.menu.tchain.xpack=xPack GCC 9 (default)
+maple.menu.tchain.eabi=Arm none eabi GCC
+maple.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+maple.menu.tchain.eabi.build.flags.ldspecs=
 
 ##############################################################
 mapleRET6.name=Maple (RET6)
@@ -203,6 +216,12 @@ mapleRET6.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 mapleRET6.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 mapleRET6.menu.rtlib.full=Newlib Standard
 mapleRET6.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+mapleRET6.menu.tchain.xpack=xPack GCC 9 (default)
+mapleRET6.menu.tchain.eabi=Arm none eabi GCC
+mapleRET6.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+mapleRET6.menu.tchain.eabi.build.flags.ldspecs=
 
 ##############################################################
 
@@ -275,6 +294,12 @@ microduino32_flash.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u 
 microduino32_flash.menu.rtlib.full=Newlib Standard
 microduino32_flash.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+microduino32_flash.menu.tchain.xpack=xPack GCC 9 (default)
+microduino32_flash.menu.tchain.eabi=Arm none eabi GCC
+microduino32_flash.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+microduino32_flash.menu.tchain.eabi.build.flags.ldspecs=
+
 ##############################################################
 nucleo_f103rb.name=STM Nucleo F103RB (STLink)
 
@@ -341,6 +366,12 @@ nucleo_f103rb.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 nucleo_f103rb.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 nucleo_f103rb.menu.rtlib.full=Newlib Standard
 nucleo_f103rb.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+nucleo_f103rb.menu.tchain.xpack=xPack GCC 9 (default)
+nucleo_f103rb.menu.tchain.eabi=Arm none eabi GCC
+nucleo_f103rb.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+nucleo_f103rb.menu.tchain.eabi.build.flags.ldspecs=
 
 ###################### Generic STM32F103C ########################################
 
@@ -450,6 +481,12 @@ genericSTM32F103C.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _
 genericSTM32F103C.menu.rtlib.full=Newlib Standard
 genericSTM32F103C.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+genericSTM32F103C.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103C.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103C.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103C.menu.tchain.eabi.build.flags.ldspecs=
+
 ###################### Generic STM32F103C6 ########################################
 
 genericSTM32F103C6.name=Generic STM32F103C6/fake STM32F103C8
@@ -548,6 +585,12 @@ genericSTM32F103C6.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 genericSTM32F103C6.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 genericSTM32F103C6.menu.rtlib.full=Newlib Standard
 genericSTM32F103C6.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+genericSTM32F103C6.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103C6.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103C6.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103C6.menu.tchain.eabi.build.flags.ldspecs=
 
 ########################### Generic STM32F103R ###########################
 
@@ -661,6 +704,12 @@ genericSTM32F103R.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _
 genericSTM32F103R.menu.rtlib.full=Newlib Standard
 genericSTM32F103R.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+genericSTM32F103R.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103R.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103R.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103R.menu.tchain.eabi.build.flags.ldspecs=
+
 ###################### Generic STM32F103T ########################################
 
 genericSTM32F103T.name=Generic STM32F103T series
@@ -755,6 +804,12 @@ genericSTM32F103T.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 genericSTM32F103T.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 genericSTM32F103T.menu.rtlib.full=Newlib Standard
 genericSTM32F103T.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+genericSTM32F103T.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103T.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103T.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103T.menu.tchain.eabi.build.flags.ldspecs=
 
 ########################### Generic STM32F103V ###########################
 
@@ -868,6 +923,12 @@ genericSTM32F103V.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _
 genericSTM32F103V.menu.rtlib.full=Newlib Standard
 genericSTM32F103V.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+genericSTM32F103V.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103V.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103V.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103V.menu.tchain.eabi.build.flags.ldspecs=
+
 ########################### Generic STM32F103Z ###########################
 
 genericSTM32F103Z.name=Generic STM32F103Z series
@@ -967,6 +1028,12 @@ genericSTM32F103Z.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _
 genericSTM32F103Z.menu.rtlib.full=Newlib Standard
 genericSTM32F103Z.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+genericSTM32F103Z.menu.tchain.xpack=xPack GCC 9 (default)
+genericSTM32F103Z.menu.tchain.eabi=Arm none eabi GCC
+genericSTM32F103Z.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+genericSTM32F103Z.menu.tchain.eabi.build.flags.ldspecs=
+
 ###################### HYTiny STM32F103T ########################################
 
 hytiny-stm32f103t.name=HYTiny STM32F103TB
@@ -1058,6 +1125,12 @@ hytiny-stm32f103t.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _
 hytiny-stm32f103t.menu.rtlib.full=Newlib Standard
 hytiny-stm32f103t.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+hytiny-stm32f103t.menu.tchain.xpack=xPack GCC 9 (default)
+hytiny-stm32f103t.menu.tchain.eabi=Arm none eabi GCC
+hytiny-stm32f103t.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+hytiny-stm32f103t.menu.tchain.eabi.build.flags.ldspecs=
+
 ########################### STM32VLD to FLASH ###########################
 
 STM32VLD.name=STM32VLD to FLASH
@@ -1125,5 +1198,11 @@ STM32VLD.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 STM32VLD.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 STM32VLD.menu.rtlib.full=Newlib Standard
 STM32VLD.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+STM32VLD.menu.tchain.xpack=xPack GCC 9 (default)
+STM32VLD.menu.tchain.eabi=Arm none eabi GCC
+STM32VLD.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+STM32VLD.menu.tchain.eabi.build.flags.ldspecs=
 
 ################################################################################

@@ -4,6 +4,7 @@ menu.usb_cfg=USB configuration
 menu.opt=Optimize
 menu.upload_method=Upload method
 menu.rtlib=C Runtime Library
+menu.tchain=Toolchain
 
 ##############################################################
 discovery_f407.name=STM32 Discovery F407
@@ -75,6 +76,12 @@ discovery_f407.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _pri
 discovery_f407.menu.rtlib.full=Newlib Standard
 discovery_f407.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+discovery_f407.menu.tchain.xpack=xPack GCC 9 (default)
+discovery_f407.menu.tchain.eabi=Arm none eabi GCC
+discovery_f407.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+discovery_f407.menu.tchain.eabi.build.flags.ldspecs=
+
 ##############################################################
 blackpill_f401.name=Blackpill STM32F401CCU6
 
@@ -140,6 +147,12 @@ blackpill_f401.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _pri
 blackpill_f401.menu.rtlib.full=Newlib Standard
 blackpill_f401.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+blackpill_f401.menu.tchain.xpack=xPack GCC 9 (default)
+blackpill_f401.menu.tchain.eabi=Arm none eabi GCC
+blackpill_f401.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+blackpill_f401.menu.tchain.eabi.build.flags.ldspecs=
+
 ##############################################################
 disco_f411.name=STM32 Discovery F411E
 
@@ -204,6 +217,12 @@ disco_f411.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 disco_f411.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 disco_f411.menu.rtlib.full=Newlib Standard
 disco_f411.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+disco_f411.menu.tchain.xpack=xPack GCC 9 (default)
+disco_f411.menu.tchain.eabi=Arm none eabi GCC
+disco_f411.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+disco_f411.menu.tchain.eabi.build.flags.ldspecs=
 
 ##############################################################
 generic_f407v.name=Generic STM32F407V series
@@ -282,6 +301,12 @@ generic_f407v.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 generic_f407v.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 generic_f407v.menu.rtlib.full=Newlib Standard
 generic_f407v.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+generic_f407v.menu.tchain.xpack=xPack GCC 9 (default)
+generic_f407v.menu.tchain.eabi=Arm none eabi GCC
+generic_f407v.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+generic_f407v.menu.tchain.eabi.build.flags.ldspecs=
 
 ##############################################################
 generic_f407v_mini.name=Generic STM32F407V mini series
@@ -363,6 +388,12 @@ generic_f407v_mini.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u 
 generic_f407v_mini.menu.rtlib.full=Newlib Standard
 generic_f407v_mini.menu.rtlib.full.build.flags.ldspecs=
 
+# Toolchain
+generic_f407v_mini.menu.tchain.xpack=xPack GCC 9 (default)
+generic_f407v_mini.menu.tchain.eabi=Arm none eabi GCC
+generic_f407v_mini.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+generic_f407v_mini.menu.tchain.eabi.build.flags.ldspecs=
+
 ##############################################################
 arch_max.name=Seeed Arch Max 1.1
 
@@ -436,6 +467,12 @@ arch_max.menu.rtlib.nanofps=Newlib Nano + Float Printf/Scanf
 arch_max.menu.rtlib.nanofps.build.flags.ldspecs=--specs=nano.specs -u _printf_float -u _scanf_float
 arch_max.menu.rtlib.full=Newlib Standard
 arch_max.menu.rtlib.full.build.flags.ldspecs=
+
+# Toolchain
+arch_max.menu.tchain.xpack=xPack GCC 9 (default)
+arch_max.menu.tchain.eabi=Arm none eabi GCC
+arch_max.menu.tchain.eabi.compiler.path={runtime.tools.arm-none-eabi-gcc.path}/bin/
+arch_max.menu.tchain.eabi.build.flags.ldspecs=
 
 ##############################################################
 
