@@ -24,8 +24,8 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#ifndef _USB_X360_H
-#define _USB_X360_H
+#ifndef _USB_X360_GENERIC_H
+#define _USB_X360_GENERIC_H
 
 #include <libmaple/libmaple_types.h>
 #include <libmaple/gpio.h>
@@ -46,27 +46,37 @@ extern "C" {
  * Endpoint configuration
  */
 
+#define USB_X360_MAX_CONTROLLERS         4
 #define USB_X360_TX_EPSIZE            0x20
 #define USB_X360_RX_EPSIZE            0x20
+#define USB_X360_BUFFER_SIZE_PER_CONTROLLER USB_X360_RX_EPSIZE 
 
+extern USBEndpointInfo x360Endpoints[];
+extern uint32 x360_num_controllers;
+extern USBCompositePart usbX360Part;
 /*
  * HID interface
  */
 
-extern USBCompositePart usbX360Part;
-void x360_enable();
-void x360_disable();
+uint32 x360_tx(uint32 controller, const uint8* buf, uint32 len);
+uint8 x360_is_transmitting(uint32 controller);
+void x360_set_rumble_callback(uint32 controller, void (*callback)(uint8 left, uint8 right));
+void x360_set_led_callback(uint32 controller, void (*callback)(uint8 pattern));
+void x360_generic_initialize_controller_data(uint32 _numControllers, uint8* buffers);
 
-void   x360_putc(char ch);
-uint32 x360_tx(const uint8* buf, uint32 len);
-uint32 x360_rx(uint8* buf, uint32 len);
-uint32 x360_hid_peek(uint8* buf, uint32 len);
-uint32 x360_data_available(void); /* in RX buffer */
-uint16 x360_get_pending(void);
-uint8 x360_is_transmitting(void);
-void x360_set_rx_callback(void (*callback)(const uint8* buffer, uint32 size));
-void x360_set_rumble_callback(void (*callback)(uint8 left, uint8 right));
-void x360_set_led_callback(void (*callback)(uint8 pattern));
+#define X360_INTERFACE_OFFSET 0
+#define X360_INTERFACE_NUMBER (X360_INTERFACE_OFFSET+usbX360Part.startInterface)
+#define X360_NUM_INTERFACES 1
+#define X360_ENDPOINT_TX 0
+#define X360_ENDPOINT_RX 1
+#define X360_NUM_ENDPOINTS 2
+
+#define USB_X360_RX_ENDPOINT_INFO(i) &x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_RX]
+#define USB_X360_TX_ENDPOINT_INFO(i) &x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_TX]
+#define USB_X360_RX_PMA_PTR(i) x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_RX].pma
+#define USB_X360_TX_PMA_PTR(i) x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_TX].pma
+#define USB_X360_RX_ENDP(i) x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_RX].address
+#define USB_X360_TX_ENDP(i) x360Endpoints[(i)*X360_NUM_ENDPOINTS+X360_ENDPOINT_TX].address
 
 #ifdef __cplusplus
 }

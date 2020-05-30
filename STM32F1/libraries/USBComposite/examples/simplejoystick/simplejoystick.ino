@@ -5,6 +5,7 @@ HIDJoystick Joystick(HID);
 
 void setup() {
   HID.begin(HID_JOYSTICK);
+  while (!USBComposite);
 }
 
 void loop() {

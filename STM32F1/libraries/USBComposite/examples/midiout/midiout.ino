@@ -8,7 +8,7 @@ USBMIDI midi;
 void setup() {
     USBComposite.setProductId(0x0031);
     midi.begin();
-    delay(1000);
+    while (!USBComposite);
 }
 
 void loop() {

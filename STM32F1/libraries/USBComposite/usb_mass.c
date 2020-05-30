@@ -6,7 +6,6 @@
 #include "usb_mass_internal.h"
 
 #include <libmaple/usb.h>
-#include <libmaple/nvic.h>
 #include <libmaple/delay.h>
 
 /* Private headers */
@@ -23,8 +22,8 @@ static void usb_mass_bot_cbw_decode();
 
 static void usb_mass_set_configuration();
 static void usb_mass_clear_feature();
-static RESULT usb_mass_data_setup(uint8 request);
-static RESULT usb_mass_no_data_setup(uint8 request);
+static RESULT usb_mass_data_setup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex, uint16 wLength);
+static RESULT usb_mass_no_data_setup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex);
 static void usb_mass_reset();
 static uint8_t* usb_mass_get_max_lun(uint16_t Length);
 static void usb_mass_in(void);
@@ -32,9 +31,8 @@ static void usb_mass_out(void);
 uint32_t usb_mass_sil_write(uint8_t* pBufferPointer, uint32_t wBufferSize);
 uint32_t usb_mass_sil_read(uint8_t* pBufferPointer);
 
-#define MASS_INTERFACE_OFFSET 	0x00
-#define MASS_INTERFACE_NUMBER (MASS_INTERFACE_OFFSET+usbMassPart.startInterface)
-
+//#define MASS_INTERFACE_OFFSET 	0x00
+//#define MASS_INTERFACE_NUMBER (MASS_INTERFACE_OFFSET+usbMassPart.startInterface)
 
 #define LUN_DATA_LENGTH            1
 
@@ -87,7 +85,7 @@ const mass_descriptor_config usbMassConfigDescriptor = {
   {
     .bLength = sizeof (usb_descriptor_endpoint),
     .bDescriptorType = USB_DESCRIPTOR_TYPE_ENDPOINT,
-    .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | MASS_ENDPOINT_TX), // PATCH
+    .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | 0), // PATCH: USB_MASS_TX_ENDP
     .bmAttributes = USB_EP_TYPE_BULK,
     .wMaxPacketSize = MAX_BULK_PACKET_SIZE,
     .bInterval = 0,
@@ -97,7 +95,7 @@ const mass_descriptor_config usbMassConfigDescriptor = {
   {
     .bLength = sizeof (usb_descriptor_endpoint),
     .bDescriptorType = USB_DESCRIPTOR_TYPE_ENDPOINT,
-    .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_OUT | MASS_ENDPOINT_RX), // PATCH
+    .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_OUT | 0), // PATCH: USB_MASS_RX_ENDP
     .bmAttributes = USB_EP_TYPE_BULK,
     .wMaxPacketSize = MAX_BULK_PACKET_SIZE,
     .bInterval = 1,
@@ -107,14 +105,14 @@ const mass_descriptor_config usbMassConfigDescriptor = {
 USBEndpointInfo usbMassEndpoints[2] = {
     {
         .callback = usb_mass_in,
-        .bufferSize = MAX_BULK_PACKET_SIZE,
-        .type = USB_EP_EP_TYPE_BULK, 
+        .pmaSize = MAX_BULK_PACKET_SIZE,
+        .type = USB_GENERIC_ENDPOINT_TYPE_BULK, 
         .tx = 1,
     },
     {
         .callback = usb_mass_out,
-        .bufferSize = MAX_BULK_PACKET_SIZE,
-        .type = USB_EP_EP_TYPE_BULK, 
+        .pmaSize = MAX_BULK_PACKET_SIZE,
+        .type = USB_GENERIC_ENDPOINT_TYPE_BULK, 
         .tx = 0,
     },
 };
@@ -125,8 +123,8 @@ static void getMassPartDescriptor(uint8* out) {
     memcpy(out, &usbMassConfigDescriptor, sizeof(mass_descriptor_config));
     // patch to reflect where the part goes in the descriptor
     OUT_BYTE(usbMassConfigDescriptor, MASS_Interface.bInterfaceNumber) += usbMassPart.startInterface;
-    OUT_BYTE(usbMassConfigDescriptor, DataInEndpoint.bEndpointAddress) += usbMassPart.startEndpoint;
-    OUT_BYTE(usbMassConfigDescriptor, DataOutEndpoint.bEndpointAddress) += usbMassPart.startEndpoint;
+    OUT_BYTE(usbMassConfigDescriptor, DataInEndpoint.bEndpointAddress) += USB_MASS_TX_ENDP;
+    OUT_BYTE(usbMassConfigDescriptor, DataOutEndpoint.bEndpointAddress) += USB_MASS_RX_ENDP;
 }
 
 
@@ -161,8 +159,6 @@ static void usb_mass_reset(void) {
 static void usb_mass_set_configuration(void) {
   if (pInformation->Current_Configuration != 0) {
     deviceState = USB_CONFIGURED;
-    ClearDTOG_TX(USB_MASS_TX_ENDP);
-    ClearDTOG_RX(USB_MASS_RX_ENDP);
     usb_mass_botState = BOT_STATE_IDLE;
   }
 }
@@ -175,13 +171,13 @@ static void usb_mass_clear_feature(void) {
   }
 }
 
-static RESULT usb_mass_data_setup(uint8 request) {
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+static RESULT usb_mass_data_setup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex, uint16 wLength) {
+    (void)interface; // only one interface
   uint8_t * (*copy_routine)(uint16_t);
 
   copy_routine = NULL;
-  if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-          && (request == REQUEST_GET_MAX_LUN) && (pInformation->USBwValue == 0)
-          && (pInformation->USBwIndex == MASS_INTERFACE_NUMBER) && (pInformation->USBwLength == 0x01)) {
+  if ((requestType & (REQUEST_TYPE | RECIPIENT)) == (CLASS_REQUEST | INTERFACE_RECIPIENT) && request == REQUEST_GET_MAX_LUN && wValue0 == 0 && wValue1 == 0 && wLength == 0x01) {
     copy_routine = usb_mass_get_max_lun;
   } else {
     return USB_UNSUPPORT;
@@ -207,16 +203,8 @@ static uint8_t* usb_mass_get_max_lun(uint16_t length) {
   }
 }
 
-static RESULT usb_mass_no_data_setup(uint8 request) {
-  if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-          && (request == REQUEST_MASS_STORAGE_RESET) && (pInformation->USBwValue == 0)
-          && (pInformation->USBwIndex == MASS_INTERFACE_NUMBER) && (pInformation->USBwLength == 0x00)) {
-
-    /* Initialize Endpoint 1 */
-    ClearDTOG_TX(USB_MASS_TX_ENDP);
-
-    /* Initialize Endpoint 2 */
-    ClearDTOG_RX(USB_MASS_RX_ENDP);
+static RESULT usb_mass_no_data_setup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex) {
+  if ((requestType & (REQUEST_TYPE | RECIPIENT)) == (CLASS_REQUEST | INTERFACE_RECIPIENT) && request == REQUEST_MASS_STORAGE_RESET && wValue0 == 0 && wValue1 == 0) {
 
     /*initialize the usb_mass_CBW signature to enable the clear feature*/
     usb_mass_CBW.dSignature = BOT_CBW_SIGNATURE;
@@ -236,7 +224,7 @@ void usb_mass_loop() {
       case BOT_STATE_CSW_Send:
       case BOT_STATE_ERROR:
         usb_mass_botState = BOT_STATE_IDLE;
-        SetEPRxStatus(USB_MASS_RX_ENDP, USB_EP_ST_RX_VAL); /* enable the Endpoint to receive the next cmd*/
+        usb_generic_enable_rx(USB_MASS_RX_ENDPOINT_INFO); /* enable the Endpoint to receive the next cmd*/
         break;
       case BOT_STATE_DATA_IN:
         switch (usb_mass_CBW.CB[0]) {
@@ -404,14 +392,14 @@ static void usb_mass_bot_cbw_decode() {
 void usb_mass_bot_abort(uint8_t direction) {
   switch (direction) {
     case BOT_DIR_IN:
-      SetEPTxStatus(USB_MASS_TX_ENDP, USB_EP_ST_TX_STL);
+      usb_generic_stall_tx(USB_MASS_TX_ENDPOINT_INFO);
       break;
     case BOT_DIR_OUT:
-      SetEPRxStatus(USB_MASS_RX_ENDP, USB_EP_ST_RX_STL);
+      usb_generic_stall_rx(USB_MASS_RX_ENDPOINT_INFO);
       break;
     case BOT_DIR_BOTH:
-      SetEPTxStatus(USB_MASS_TX_ENDP, USB_EP_ST_TX_STL);
-      SetEPRxStatus(USB_MASS_RX_ENDP, USB_EP_ST_RX_STL);
+      usb_generic_stall_rx(USB_MASS_RX_ENDPOINT_INFO);
+      usb_generic_stall_tx(USB_MASS_TX_ENDPOINT_INFO);
       break;
     default:
       break;
@@ -421,7 +409,6 @@ void usb_mass_bot_abort(uint8_t direction) {
 void usb_mass_transfer_data_request(uint8_t* dataPointer, uint16_t dataLen) {
   usb_mass_sil_write(dataPointer, dataLen);
 
-  SetEPTxStatus(USB_MASS_TX_ENDP, USB_EP_ST_TX_VAL);
   usb_mass_botState = BOT_STATE_DATA_IN_LAST;
   usb_mass_CSW.dDataResidue -= dataLen;
   usb_mass_CSW.bStatus = BOT_CSW_CMD_PASSED;
@@ -431,34 +418,21 @@ void usb_mass_bot_set_csw(uint8_t status, uint8_t sendPermission) {
   usb_mass_CSW.dSignature = BOT_CSW_SIGNATURE;
   usb_mass_CSW.bStatus = status;
 
-  usb_mass_sil_write(((uint8_t *) & usb_mass_CSW), BOT_CSW_DATA_LENGTH);
-
-  usb_mass_botState = BOT_STATE_ERROR;
   if (sendPermission) {
     usb_mass_botState = BOT_STATE_CSW_Send;
-    SetEPTxStatus(USB_MASS_TX_ENDP, USB_EP_ST_TX_VAL);
+    usb_mass_sil_write(((uint8_t *) & usb_mass_CSW), BOT_CSW_DATA_LENGTH);
+  }
+  else {
+    usb_mass_botState = BOT_STATE_ERROR;
   }
 }
 
 uint32_t usb_mass_sil_write(uint8_t* pBufferPointer, uint32_t wBufferSize) {
-  /* Use the memory interface function to write to the selected endpoint */
-  usb_copy_to_pma(pBufferPointer, wBufferSize, USB_MASS_TX_ADDR);
+    usb_generic_send_from_buffer(USB_MASS_TX_ENDPOINT_INFO, pBufferPointer, wBufferSize);
 
-  /* Update the data length in the control register */
-  SetEPTxCount(USB_MASS_TX_ENDP, wBufferSize);
-
-  return 0;
+    return 0;
 }
 
 uint32_t usb_mass_sil_read(uint8_t* pBufferPointer) {
-  uint32_t usb_mass_dataLength = 0;
-
-  /* Get the number of received data on the selected Endpoint */
-  usb_mass_dataLength = GetEPRxCount(USB_MASS_RX_ENDP);
-
-  /* Use the memory interface function to write to the selected endpoint */
-  usb_copy_from_pma(pBufferPointer, usb_mass_dataLength, USB_MASS_RX_ADDR);
-
-  /* Return the number of received data */
-  return usb_mass_dataLength;
+    return usb_generic_read_to_buffer(USB_MASS_RX_ENDPOINT_INFO, pBufferPointer, USB_GENERIC_UNLIMITED_BUFFER);
 }

@@ -1,4 +1,4 @@
-/******************************************************************************
+/*****************************f*************************************************
  * The MIT License
  *
  * Copyright (c) 2011 LeafLabs LLC.
@@ -31,12 +31,11 @@
  */
 
 #include "usb_generic.h"
-#include "usb_x360.h"
+#include "usb_x360_generic.h"
 
 #include <string.h>
 
 #include <libmaple/usb.h>
-#include <libmaple/nvic.h>
 #include <libmaple/delay.h>
 
 /* Private headers */
@@ -61,9 +60,11 @@ typedef enum _HID_REQUESTS
  
 } HID_REQUESTS;
 
+#define NUM_INTERFACES                  1
+#define NUM_ENDPOINTS                   2
+
 #define USB_ENDPOINT_IN(addr)           ((addr) | 0x80)
 #define HID_ENDPOINT_INT 				1
-#define USB_ENDPOINT_TYPE_INTERRUPT     0x03
  
 #define HID_DESCRIPTOR_TYPE             0x21
  
@@ -87,24 +88,25 @@ typedef struct
 #define X360_INTERFACE_NUMBER (X360_INTERFACE_OFFSET+usbX360Part.startInterface)
 #define X360_ENDPOINT_TX 0
 #define X360_ENDPOINT_RX 1
-#define USB_X360_RX_ADDR x360Endpoints[X360_ENDPOINT_RX].pmaAddress
-#define USB_X360_TX_ADDR x360Endpoints[X360_ENDPOINT_TX].pmaAddress
-#define USB_X360_RX_ENDP x360Endpoints[X360_ENDPOINT_RX].address
-#define USB_X360_TX_ENDP x360Endpoints[X360_ENDPOINT_TX].address
 
-u16 GetEPTxAddr(u8 bEpNum);
+static void x360_clear(void);
 
-static uint32 ProtocolValue;
+uint32 x360_num_controllers = USB_X360_MAX_CONTROLLERS;
 
-static void x360DataTxCb(void);
-static void x360DataRxCb(void);
-static void (*x360_rumble_callback)(uint8 left, uint8 right);
-static void (*x360_led_callback)(uint8 pattern);
+static void x360DataRxCb(uint32 controller);
+static void x360DataTxCb(uint32 controller);
+static void x360DataTxCb0(void) { x360DataTxCb(0); }
+static void x360DataRxCb0(void) { x360DataRxCb(0); }
+static void x360DataTxCb1(void) { x360DataTxCb(1); }
+static void x360DataRxCb1(void) { x360DataRxCb(1); }
+static void x360DataTxCb2(void) { x360DataTxCb(2); }
+static void x360DataRxCb2(void) { x360DataRxCb(2); }
+static void x360DataTxCb3(void) { x360DataTxCb(3); }
+static void x360DataRxCb3(void) { x360DataRxCb(3); }
 
 static void x360Reset(void);
-static RESULT x360DataSetup(uint8 request);
-static RESULT x360NoDataSetup(uint8 request);
-static uint8 *HID_GetProtocolValue(uint16 Length);
+static RESULT x360DataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex, uint16 wLength);
+static RESULT x360NoDataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex);
 
 /*
  * Descriptors
@@ -211,149 +213,132 @@ const uint8_t hid_report_descriptor[] = {
 typedef struct {
 //    usb_descriptor_config_header Config_Header;
     usb_descriptor_interface     HID_Interface;
-    uint8                        unknown_descriptor1[17];
+    uint8                        unknown_descriptor1[20];
     usb_descriptor_endpoint      DataInEndpoint;
     usb_descriptor_endpoint      DataOutEndpoint;
 } __packed usb_descriptor_config;
 
 
-#define MAX_POWER (100 >> 1)
-static const usb_descriptor_config X360Descriptor_Config =
-{
-#if 0    
-	.Config_Header = {
-		.bLength 			  = sizeof(usb_descriptor_config_header),
-        .bDescriptorType      = USB_DESCRIPTOR_TYPE_CONFIGURATION,
-        .wTotalLength         = sizeof(usb_descriptor_config),//0,
-        .bNumInterfaces       = 0x01,
-        .bConfigurationValue  = 0x01,
-        .iConfiguration       = 0x00,
-        .bmAttributes         = (USB_CONFIG_ATTR_BUSPOWERED |
-                                 USB_CONFIG_ATTR_SELF_POWERED),
-        .bMaxPower            = MAX_POWER,
-	},
-#endif    
-	
-	.HID_Interface = {
-		.bLength            = sizeof(usb_descriptor_interface),
-        .bDescriptorType    = USB_DESCRIPTOR_TYPE_INTERFACE,
-        .bInterfaceNumber   = X360_INTERFACE_OFFSET,  // PATCH
-        .bAlternateSetting  = 0x00,
-        .bNumEndpoints      = 0x02,  
-        .bInterfaceClass    = 0xFF, 
-        .bInterfaceSubClass = 0x5D,
-        .bInterfaceProtocol = 0x01, 
-        .iInterface         = 0x00,
-	},
-    
-    .unknown_descriptor1 = {
-        17,33,0,1,1,37,129,20,0,0,0,0,19,2,8,0,0,
-    }, 
-	
-	.DataInEndpoint = {
-		.bLength          = sizeof(usb_descriptor_endpoint),
-        .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
-        .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_IN | X360_ENDPOINT_TX),//PATCH
-        .bmAttributes     = USB_EP_TYPE_INTERRUPT, 
-        .wMaxPacketSize   = 0x20, 
-        .bInterval        = 4, 
-	},
-
-    .DataOutEndpoint = {
-        .bLength          = sizeof(usb_descriptor_endpoint),
-        .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
-        .bEndpointAddress = (USB_DESCRIPTOR_ENDPOINT_OUT | X360_ENDPOINT_RX),//PATCH
-        .bmAttributes     = USB_EP_TYPE_INTERRUPT, 
-        .wMaxPacketSize   = 0x20, 
-        .bInterval        = 8, 
-    },
-};
-
-static USBEndpointInfo x360Endpoints[2] = {
+USBEndpointInfo x360Endpoints[NUM_ENDPOINTS*USB_X360_MAX_CONTROLLERS] = {
     {
-        .callback = x360DataTxCb,
-        .bufferSize = 0x20,
-        .type = USB_EP_EP_TYPE_INTERRUPT, 
+        .callback = x360DataTxCb0,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
         .tx = 1
     },
     {
-        .callback = x360DataRxCb,
-        .bufferSize = 0x20,
-        .type = USB_EP_EP_TYPE_INTERRUPT, 
+        .callback = x360DataRxCb0,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
         .tx = 0,
-    }
+    },
+    {
+        .callback = x360DataTxCb1,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 1
+    },
+    {
+        .callback = x360DataRxCb1,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 0,
+    },
+    {
+        .callback = x360DataTxCb2,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 1
+    },
+    {
+        .callback = x360DataRxCb2,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 0,
+    },
+    {
+        .callback = x360DataTxCb3,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 1
+    },
+    {
+        .callback = x360DataRxCb3,
+        .pmaSize = 0x20,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT, 
+        .tx = 0,
+    },
 };
 
-#define OUT_BYTE(s,v) out[(uint8*)&(s.v)-(uint8*)&s]
-
-static void getX360PartDescriptor(uint8* out) {
-    memcpy(out, &X360Descriptor_Config, sizeof(X360Descriptor_Config));
-    // patch to reflect where the part goes in the descriptor
-    OUT_BYTE(X360Descriptor_Config, HID_Interface.bInterfaceNumber) += usbX360Part.startInterface;
-    OUT_BYTE(X360Descriptor_Config, DataOutEndpoint.bEndpointAddress) += usbX360Part.startEndpoint;
-    OUT_BYTE(X360Descriptor_Config, DataInEndpoint.bEndpointAddress) += usbX360Part.startEndpoint;
-}
-
 USBCompositePart usbX360Part = {
-    .numInterfaces = 1,
+    .numInterfaces = USB_X360_MAX_CONTROLLERS * NUM_INTERFACES,
     .numEndpoints = sizeof(x360Endpoints)/sizeof(*x360Endpoints),
-    .descriptorSize = sizeof(X360Descriptor_Config),
-    .getPartDescriptor = getX360PartDescriptor,
+    .descriptorSize = 0, // patch
+    .getPartDescriptor = NULL, // patch
     .usbInit = NULL,
     .usbReset = x360Reset,
     .usbDataSetup = x360DataSetup,
     .usbNoDataSetup = x360NoDataSetup,
-    .endpoints = x360Endpoints
+    .endpoints = x360Endpoints,
+    .clear = x360_clear
 };
 
 
-/*
- * Etc.
- */
+static volatile struct controller_data {
+    uint32 ProtocolValue;
+    uint8* hidBufferRx;
+    uint32 n_unsent_bytes;
+    uint8 transmitting;
+    void (*rumble_callback)(uint8 left, uint8 right);
+    void (*led_callback)(uint8 pattern);
+} controllers[USB_X360_MAX_CONTROLLERS] = {{0}};
 
-/* I/O state */
+static void x360_clear(void) {
+    memset((void*)controllers, 0, sizeof controllers);
+    x360_num_controllers = USB_X360_MAX_CONTROLLERS;
+}
 
-/* Received data */
-static volatile uint8 hidBufferRx[USB_X360_RX_EPSIZE];
-
-
-/* Number of bytes left to transmit */
-static volatile uint32 n_unsent_bytes = 0;
-/* Are we currently sending an IN packet? */
-static volatile uint8 transmitting = 0;
+void x360_generic_initialize_controller_data(uint32 _numControllers, uint8* buffers) {
+    x360_num_controllers = _numControllers;
+    
+    for (uint32 i=0; i<x360_num_controllers; i++) {
+        volatile struct controller_data* c = &controllers[i];
+        c->hidBufferRx = buffers;
+        buffers += USB_X360_RX_EPSIZE;
+        c->rumble_callback = NULL;
+        c->led_callback = NULL;
+    }
+    
+    usbX360Part.numInterfaces = NUM_INTERFACES * x360_num_controllers;
+    usbX360Part.numEndpoints = NUM_ENDPOINTS * x360_num_controllers;
+}
 
 
 /*
  * HID interface
  */
 
-void x360_set_rumble_callback(void (*callback)(uint8 left, uint8 right)) {
-    x360_rumble_callback = callback;
+void x360_set_rumble_callback(uint32 controller, void (*callback)(uint8 left, uint8 right)) {
+    controllers[controller].rumble_callback = callback;
 }
 
-void x360_set_led_callback(void (*callback)(uint8 pattern)) {
-    x360_led_callback = callback;
+void x360_set_led_callback(uint32 controller, void (*callback)(uint8 pattern)) {
+    controllers[controller].led_callback = callback;
 }
 
-/*void x360_disable(void) {
-    x360_set_rumble_callback(NULL);
-    x360_set_led_callback(NULL);
-    usb_generic_disable();
-}*/
-
-void x360_putc(char ch) {
-    while (!x360_tx((uint8*)&ch, 1))
-        ;
+uint8 x360_is_transmitting(uint32 controller) {
+    return controllers[controller].transmitting;
 }
-
 
 /* This function is non-blocking.
  *
  * It copies data from a usercode buffer into the USB peripheral TX
  * buffer, and returns the number of bytes copied. */
-uint32 x360_tx(const uint8* buf, uint32 len) {
+uint32 x360_tx(uint32 controller, const uint8* buf, uint32 len) {
+    volatile struct controller_data* c = &controllers[controller];
+    
     /* Last transmission hasn't finished, so abort. */
-    if (x360_is_transmitting()) {
+    if (x360_is_transmitting(controller)) {
         return 0;
     }
 
@@ -364,123 +349,79 @@ uint32 x360_tx(const uint8* buf, uint32 len) {
 
     /* Queue bytes for sending. */
     if (len) {
-        usb_copy_to_pma(buf, len, GetEPTxAddr(USB_X360_TX_ENDP));//USB_X360_TX_ADDR);
+        usb_copy_to_pma_ptr(buf, len, USB_X360_TX_PMA_PTR(controller));
     }
     // We still need to wait for the interrupt, even if we're sending
     // zero bytes. (Sending zero-size packets is useful for flushing
     // host-side buffers.)
-    usb_set_ep_tx_count(USB_X360_TX_ENDP, len);
-    n_unsent_bytes = len;
-    transmitting = 1;
-    usb_set_ep_tx_stat(USB_X360_TX_ENDP, USB_EP_STAT_TX_VALID);
+    c->n_unsent_bytes = len;
+    c->transmitting = 1;
+    usb_generic_set_tx(USB_X360_TX_ENDPOINT_INFO(controller), len);
 
     return len;
 }
 
-uint8 x360_is_transmitting(void) {
-    return transmitting;
-}
-
-uint16 x360_get_pending(void) {
-    return n_unsent_bytes;
-}
-
-static void x360DataRxCb(void)
+static void x360DataRxCb(uint32 controller)
 {
-	uint32 ep_rx_size = usb_get_ep_rx_count(USB_X360_RX_ENDP);
-	// This copy won't overwrite unread bytes as long as there is 
-	// enough room in the USB Rx buffer for next packet
-	uint32 *src = usb_pma_ptr(USB_X360_RX_ADDR);
-    uint16 tmp = 0;
-	uint8 val;
-	uint32 i;
-	for (i = 0; i < ep_rx_size; i++) {
-		if (i&1) {
-			val = tmp>>8;
-		} else {
-			tmp = *src++;
-			val = tmp&0xFF;
-		}
-		hidBufferRx[i] = val;
-	}
+    volatile struct controller_data* c = &controllers[controller];
+    USBEndpointInfo* ep = USB_X360_RX_ENDPOINT_INFO(controller);
     
-    if (ep_rx_size == 3) {
-        if (x360_led_callback != NULL && hidBufferRx[0] == 1 && hidBufferRx[1] == 3)
-            x360_led_callback(hidBufferRx[2]);
+    volatile uint8* hidBufferRx = c->hidBufferRx;
+    
+    uint32 ep_rx_size = usb_generic_read_to_buffer(ep, hidBufferRx, USB_X360_RX_EPSIZE);
+
+    if (ep_rx_size == 3) { // wired
+        if (c->led_callback != NULL && hidBufferRx[0] == 1 && hidBufferRx[1] == 3)
+            c->led_callback(hidBufferRx[2]);
     }
-    else if (ep_rx_size == 8) {
-        if (x360_rumble_callback != NULL && hidBufferRx[0] == 0 && hidBufferRx[1] == 8)
-            x360_rumble_callback(hidBufferRx[3],hidBufferRx[4]);
+    else if (ep_rx_size == 8) { // wired
+        if (c->rumble_callback != NULL && hidBufferRx[0] == 0 && hidBufferRx[1] == 8)
+            c->rumble_callback(hidBufferRx[3],hidBufferRx[4]);
     }
-    usb_set_ep_rx_stat(USB_X360_RX_ENDP, USB_EP_STAT_RX_VALID);
+    else if (ep_rx_size == 12) { // wireless
+        if (c->led_callback != NULL && hidBufferRx[0] == 0 && hidBufferRx[1] == 0)
+            c->led_callback(hidBufferRx[3]);
+        if (c->rumble_callback != NULL && hidBufferRx[0] == 0 && hidBufferRx[1] == 1)
+            c->rumble_callback(hidBufferRx[5],hidBufferRx[6]);
+    } 
+    
+    usb_generic_enable_rx(ep);
 }
 
 /*
  * Callbacks
  */
 
-static void x360DataTxCb(void) {
-    n_unsent_bytes = 0;
-    transmitting = 0;
+static void x360DataTxCb(uint32 controller) {
+    volatile struct controller_data* c = &controllers[controller];
+    
+    c->n_unsent_bytes = 0;
+    c->transmitting = 0;
 }
 
-static RESULT x360DataSetup(uint8 request) {
-    uint8* (*CopyRoutine)(uint16) = 0;
-	
-#if 0			
-	if (request == GET_DESCRIPTOR
-        && pInformation->USBwIndex0 == X360_INTERFACE_NUMBER && 
-		&& (Type_Recipient == (STANDARD_REQUEST | INTERFACE_RECIPIENT))
-		&& (pInformation->USBwIndex0 == 0)){
-		if (pInformation->USBwValue1 == REPORT_DESCRIPTOR){
-			CopyRoutine = HID_GetReportDescriptor;
-		} else 
-        if (pInformation->USBwValue1 == HID_DESCRIPTOR_TYPE){
-			CopyRoutine = HID_GetHIDDescriptor;
-		}
-		
-	} /* End of GET_DESCRIPTOR */
-	  /*** GET_PROTOCOL ***/
-	else 
-#endif            
-        if(pInformation->USBwIndex0 == X360_INTERFACE_NUMBER && 
-            (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-			 && request == GET_PROTOCOL){
-		CopyRoutine = HID_GetProtocolValue;
-	}
-	
-	if (CopyRoutine == NULL){
-		return USB_UNSUPPORT;
-	}
-
-    pInformation->Ctrl_Info.CopyData = CopyRoutine;
-    pInformation->Ctrl_Info.Usb_wOffset = 0;
-    (*CopyRoutine)(0);
-    return USB_SUCCESS;
-}
-
-static RESULT x360NoDataSetup(uint8 request) {
-	if ((Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-		&& (request == SET_PROTOCOL)){
-		uint8 wValue0 = pInformation->USBwValue0;
-		ProtocolValue = wValue0;
-		return USB_SUCCESS;
-	}else{
-		return USB_UNSUPPORT;
-	}
-}
-
-static uint8* HID_GetProtocolValue(uint16 Length){
-	if (Length == 0){
-		pInformation->Ctrl_Info.Usb_wLength = 1;
-		return NULL;
-	} else {
-		return (uint8 *)(&ProtocolValue);
-	}
-}
 
 static void x360Reset(void) {
       /* Reset the RX/TX state */
-    n_unsent_bytes = 0;
-    transmitting = 0;
+    for (uint8 i = 0 ; i < x360_num_controllers ; i++) {
+        volatile struct controller_data* c = &controllers[i];
+        c->n_unsent_bytes = 0;
+        c->transmitting = 0;
+    }
+}
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+static RESULT x360DataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex, uint16 wLength) {
+    if((requestType & (REQUEST_TYPE | RECIPIENT)) == (CLASS_REQUEST | INTERFACE_RECIPIENT) && request == GET_PROTOCOL) {
+        usb_generic_control_tx_setup(&controllers[interface / NUM_INTERFACES].ProtocolValue, 1, NULL);
+        return USB_SUCCESS;
+	}
+    return USB_UNSUPPORT;
+}
+
+static RESULT x360NoDataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex) {
+	if ((requestType & (REQUEST_TYPE | RECIPIENT)) == (CLASS_REQUEST | INTERFACE_RECIPIENT) && request == SET_PROTOCOL) {
+		controllers[interface / NUM_INTERFACES].ProtocolValue = wValue0;
+		return USB_SUCCESS;
+    }
+    return USB_UNSUPPORT;
 }

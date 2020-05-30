@@ -9,7 +9,7 @@ HIDAbsMouse mouse(HID);
 
 void setup(){
   HID.begin(reportDescription, sizeof(reportDescription));
-  delay(1000);
+  while (!USBComposite);
   mouse.move(0,0);
   delay(1000);
   mouse.press(MOUSE_LEFT);
