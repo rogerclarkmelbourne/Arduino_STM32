@@ -31,7 +31,7 @@
 	#define TONE_TIMER 8
 	#endif
 	#ifndef TONE_CHANNEL
-	#define TONE_CHANNEL 8
+	#define TONE_CHANNEL 4
 	#endif
 
 	HardwareTimer TTimer1(1), TTimer2(2), TTimer3(3), TTimer4(4),TTimer5(5), TTimer6(6), TTimer7(7), TTimer8(8);
