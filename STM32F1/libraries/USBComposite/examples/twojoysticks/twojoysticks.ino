@@ -14,6 +14,7 @@ HIDJoystick Joystick2(HID, HID_JOYSTICK_REPORT_ID+1);
 
 void setup(){
   HID.begin(CompositeSerial, reportDescription, sizeof(reportDescription));
+  while (!USBComposite);
   Joystick.setManualReportMode(true);
   Joystick2.setManualReportMode(true);
 }

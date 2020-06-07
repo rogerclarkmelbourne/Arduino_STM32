@@ -13,6 +13,7 @@ const uint8_t reportDescription[] = {
 
 void setup(){
   HID.begin(reportDescription, sizeof(reportDescription));  
+  while (!USBComposite);
   raw.begin();
 }
 

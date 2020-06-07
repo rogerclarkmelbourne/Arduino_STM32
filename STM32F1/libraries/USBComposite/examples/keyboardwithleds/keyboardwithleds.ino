@@ -6,8 +6,8 @@ USBCompositeSerial CompositeSerial;
 
 void setup() {
   HID.begin(CompositeSerial, HID_KEYBOARD);
+  while (!USBComposite);
   Keyboard.begin(); // needed for LED support
-  delay(1000);
 }
 
 void loop() {

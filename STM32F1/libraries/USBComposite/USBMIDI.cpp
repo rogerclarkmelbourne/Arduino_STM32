@@ -42,7 +42,8 @@
 
 #include <string.h>
 #include <stdint.h>
-#include <libmaple/nvic.h>
+#undef true
+#undef false
 #include <wirish.h>
 #include "usb_midi_device.h"
 #include <libmaple/usb.h>
