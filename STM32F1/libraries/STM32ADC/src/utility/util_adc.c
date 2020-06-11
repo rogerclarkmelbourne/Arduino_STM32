@@ -7,14 +7,13 @@
     Interrupt function.
     This handles Analog watchdog and ADC1 and 2.
 */
-extern volatile unsigned int adc_result;
+//extern volatile unsigned int adc_result = 0;
 
 /*
     Starts a single conversion in one channel previously defined.
     Results must be read through interrupt or polled outside this function.
 */
 void start_single_convert(adc_dev* dev, uint8 channel) {
-//  int pinMapADCin = PIN_MAP[analogInPin].adc_channel;
   adc_set_reg_seqlen(dev, 1);
   dev->regs->SQR3 = channel;//use channels next time.
   dev->regs->CR2 |= ADC_CR2_SWSTART;
@@ -25,7 +24,6 @@ void start_single_convert(adc_dev* dev, uint8 channel) {
     Results must be read through interrupt or polled outside this function.
 */
 void start_continuous_convert(adc_dev* dev, uint8 channel){
-//  int pinMapADCin = PIN_MAP[analogInPin].adc_channel;
   adc_set_reg_seqlen(dev, 1);
   dev->regs->SQR3 = channel;
   dev->regs->CR2 |= ADC_CR2_CONT;

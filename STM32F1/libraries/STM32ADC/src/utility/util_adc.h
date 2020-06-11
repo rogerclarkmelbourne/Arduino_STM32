@@ -1,3 +1,6 @@
+#ifndef UTIL_ADC_H
+#define UTIL_ADC_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,5 +37,7 @@ uint8 poll_adc_convert(adc_dev *dev);
 void adc_dma_enable(adc_dev * dev);
 
 #ifdef __cplusplus
-}
+} // extern "C"
 #endif
+
+#endif // UTIL_ADC_H

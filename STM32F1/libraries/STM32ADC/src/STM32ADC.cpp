@@ -52,11 +52,8 @@
     Polling is being used.
 */
     float STM32ADC::readVcc(){
-        unsigned int result = 0;
-        float vcc = 0.0;
-        result = adc_read(_dev, 17);
-
-        vcc = (float)result * 1.1; //to be done later...
+        uint16_t result = adc_read(_dev, 17);
+        float vcc = (float)result * 1.1; //to be done later...
         return vcc;
     }
 
@@ -65,10 +62,9 @@
     Polling is being used.
 */
     float STM32ADC::readTemp(){
-        unsigned int result = 0;
-        float temperature = 0.0;
-        result = adc_read(_dev, 16);
-        temperature = (float)((_V25-result)/_AverageSlope)+ 25.0; 
+        uint16_t result = adc_read(_dev, 16);
+        float Vsense = (3300.0*result)/4096;
+        float temperature = ((_V25-Vsense)/_AverageSlope) + 25.0; 
         return temperature;
     }
 
@@ -80,9 +76,8 @@
         //convert pins to channels.
         uint8 channels[length];
         unsigned int records[3] = {0,0,0};
-        unsigned char i = 0, j = 0;
         
-        for (unsigned char i = 0; i < length; i++) { //convert the channels from pins to ch.
+        for (uint8_t i = 0; i < length; i++) { //convert the channels from pins to ch.
             channels[i] = PIN_MAP[pins[i]].adc_channel;
         }
 
@@ -93,7 +88,7 @@
         records[2] |= (length - 1) << 20;
 
         //i goes through records, j goes through variables.
-        for (i = 0, j = 0; i < length; i++) {//go through the channel list.
+        for (uint8_t i = 0, j = 0; i < length; i++) {//go through the channel list.
             if (i!=0 && i%6 == 0) j++;//next variable, please!!
             records[j] |= (channels[i] << ((i%6)*5));
         }
@@ -162,23 +157,27 @@
     The reason why this is a uint16 is that I am not ready for dual mode. 
 */
 
-    void STM32ADC::setDMA(uint16 * Buf, uint16 BufLen, uint32 dmaFlags, voidFuncPtr func) {
+    void STM32ADC::setDMA(uint16 * Buf, uint32 dmaFlags, voidFuncPtr func)
+	{
 //initialize DMA
         dma_init(DMA1);
+        dma_disable(DMA1, DMA_CH1);
 //if there is an int handler to be called... 
         if (func != NULL)
             dma_attach_interrupt(DMA1, DMA_CH1, func);
 //enable ADC DMA transfer
-        //adc_dma_enable(ADC1);
-        _dev->regs->CR2 |= ADC_CR2_DMA;
+        adc_dma_enable(ADC1);
+        //_dev->regs->CR2 |= ADC_CR2_DMA;
 //set it up... 
         dma_setup_transfer(DMA1, DMA_CH1, &ADC1->regs->DR, DMA_SIZE_16BITS, Buf, DMA_SIZE_16BITS, dmaFlags);// Receive buffer DMA
-//how many are we making?? 
-        dma_set_num_transfers(DMA1, DMA_CH1, BufLen);
-//enable dma.
-        dma_enable(DMA1, DMA_CH1); // Enable the channel and start the transfer.
     }
 
+    void STM32ADC::startDMA(uint16 BufLen)
+	{
+        dma_disable(DMA1, DMA_CH1);
+        dma_set_num_transfers(DMA1, DMA_CH1, BufLen);
+        dma_enable(DMA1, DMA_CH1); // Enable the channel
+	}
 /*
     This function is used to setup DMA with the ADC. 
     It will be independent of the mode used. It will either be used in continuous or scan mode
