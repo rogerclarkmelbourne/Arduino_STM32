@@ -63,7 +63,8 @@ void setup() {
   myADC.calibrate();
   myADC.setSampleRate(ADC_SMPR_1_5); // ?
   myADC.setPins(&pins, 1);
-  myADC.setDMA(buffer, maxSamples, (DMA_MINC_MODE | DMA_CIRC_MODE | DMA_HALF_TRNS | DMA_TRNS_CMPLT), DmaIRQ);
+  myADC.setDMA(buffer, (DMA_MINC_MODE | DMA_CIRC_MODE | DMA_HALF_TRNS | DMA_TRNS_CMPLT), DmaIRQ);
+  myADC.startDMA(maxSamples);
   myADC.setTrigger(ADC_EXT_EV_TIM3_TRGO);
   myADC.startConversion();
 }

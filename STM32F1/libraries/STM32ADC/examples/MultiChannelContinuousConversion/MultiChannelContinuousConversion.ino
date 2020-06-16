@@ -45,7 +45,8 @@ void setup() {
 //set the DMA transfer for the ADC. 
 //in this case we want to increment the memory side and run it in circular mode
 //By doing this, we can read the last value sampled from the channels by reading the dataPoints array
-  myADC.setDMA(dataPoints, 8, (DMA_MINC_MODE | DMA_CIRC_MODE), NULL);
+  myADC.setDMA(dataPoints, (DMA_MINC_MODE | DMA_CIRC_MODE), NULL);
+  myADC.startDMA(8);
 
 //start the conversion. 
 //because the ADC is set as continuous mode and in circular fashion, this can be done 
