@@ -26,7 +26,8 @@ void setup()
   ADC.setScanMode();
   ADC.setPins(adc_pins, 2);
   ADC.setContinuous();
-  ADC.setDMA(buffer, 2, (DMA_MINC_MODE | DMA_CIRC_MODE), NULL);
+  ADC.setDMA(buffer, (DMA_MINC_MODE | DMA_CIRC_MODE), NULL);
+  ADC.startDMA(2);
   ADC.startConversion();
 
   AUDIO.begin(CompositeSerial, MIC_STEREO | AUDIO_CLASS_1, sample_rate);
