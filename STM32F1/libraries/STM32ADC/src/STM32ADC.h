@@ -34,6 +34,11 @@ public:
 */
 	void setDMA(uint16 * Buf, uint32 dmaFlags, voidFuncPtr func);
 	void startDMA(uint16 BufLen);
+
+	void setDMA(uint16 * Buf, uint16 BufLen, uint32 dmaFlags, voidFuncPtr func) {
+		setDMA(Buf, dmaFlags, func);
+		startDMA(BufLen);
+	}
 	
 /*
     This function is used to setup DMA with the ADC. 
