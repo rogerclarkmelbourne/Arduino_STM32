@@ -107,8 +107,7 @@ long random(long min, long max);
 
 #ifdef __cplusplus
 	#include <algorithm>
-	using std::min;
-	using std::max;
+	using namespace std;
 #else // C
 	#include <stdlib.h>
 	#ifndef min
