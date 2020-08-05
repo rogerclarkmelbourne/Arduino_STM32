@@ -42,6 +42,7 @@
 #include "wirish.h"
 
 void WireBase::begin(uint8 self_addr) {
+	(void)self_addr;
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;
