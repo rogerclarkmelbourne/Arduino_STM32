@@ -160,7 +160,6 @@ private:
 /*
  * Kept for compat.
  */
-static const uint8_t ff = 0XFF;
 
 /**
  * @brief Wirish SPI interface.
@@ -297,6 +296,7 @@ public:
      * @param length Number of bytes in buffer to transmit.
 	 */
     uint8 dmaTransfer(const void * transmitBuf, void * receiveBuf, uint16 length);
+    uint8 dmaTransfer(const uint16 value, void * receiveBuf, uint16 length);
     void dmaTransferSet(const void *transmitBuf, void *receiveBuf);
     uint8 dmaTransferRepeat(uint16 length);
 
