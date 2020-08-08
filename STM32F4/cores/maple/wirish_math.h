@@ -91,7 +91,7 @@ long random(long min, long max);
 #define DEG_TO_RAD  0.017453292519943295769236907684886
 #define RAD_TO_DEG 57.295779513082320876798154814105
 
-#ifdef __cplusplus
+#if (__GNUC__ > 4) && defined(__cplusplus)
 	#include <algorithm>
 	using std::min;
 	using std::max;
