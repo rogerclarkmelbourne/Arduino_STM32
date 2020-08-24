@@ -5,6 +5,7 @@ set driverLetter=%~dp0
 set driverLetter=%driverLetter:~0,2%
 %driverLetter%
 cd %~dp0
+if exist "C:\Program Files (x86)\Arduino\java\bin" set PATH=C:\Program Files (x86)\Arduino\java\bin;%PATH%
 java -jar maple_loader.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 for /l %%x in (1, 1, 40) do (
