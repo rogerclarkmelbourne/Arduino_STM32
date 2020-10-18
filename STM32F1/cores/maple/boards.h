@@ -125,6 +125,8 @@ bool boardUsesPin(uint8 pin);
 #define BOARD_BUTTON_PRESSED_LEVEL      HIGH
 #endif
 
+#include "series\usart.h"
+
 /**
  * @brief Does the board break out a USART/UART's RX and TX pins?
  *
