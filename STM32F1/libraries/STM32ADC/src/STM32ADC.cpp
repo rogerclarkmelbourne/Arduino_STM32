@@ -3,55 +3,10 @@
 
 
 /*
-    Constructor
-    Choose which ADC to use.
-    Start it up...
-*/
-    STM32ADC::STM32ADC (adc_dev * dev){
-        _dev = dev;
-        //adc_calibrate(_dev);//get this out of the way. 
- 
-    }
-
-    uint32 STM32ADC::getData() {
-        return _dev->regs->DR;
-    };
-
-
-/*
-    Set the ADC Sampling Rate.
-    ADC_SMPR_1_5,               < 1.5 ADC cycles
-    ADC_SMPR_7_5,               < 7.5 ADC cycles
-    ADC_SMPR_13_5,              < 13.5 ADC cycles
-    ADC_SMPR_28_5,              < 28.5 ADC cycles
-    ADC_SMPR_41_5,              < 41.5 ADC cycles
-    ADC_SMPR_55_5,              < 55.5 ADC cycles
-    ADC_SMPR_71_5,              < 71.5 ADC cycles
-    ADC_SMPR_239_5,             < 239.5 ADC cycles
-*/
-    void STM32ADC::setSampleRate(adc_smp_rate SampleRate){
-        adc_set_sample_rate(_dev, SampleRate);
-    }
-
-/*
-    Attach an interrupt to the ADC completion.
-*/
-    void STM32ADC::attachInterrupt(voidFuncPtr func, uint8 interrupt){
-        adc_attach_interrupt(_dev,interrupt, func);
-    }
-
-/*
-    This will enable the internal readings. Vcc and Temperature
-*/
-    void STM32ADC::enableInternalReading(){
-        enable_internal_reading(_dev);
-    }
-
-/*
     This will read the Vcc and return something useful.
     Polling is being used.
 */
-    float STM32ADC::readVcc(){
+    float STM32ADC::readVcc() {
         uint16_t result = adc_read(_dev, 17);
         float vcc = (float)result * 1.1; //to be done later...
         return vcc;
@@ -61,7 +16,7 @@
     This will read the Temperature and return something useful.
     Polling is being used.
 */
-    float STM32ADC::readTemp(){
+    float STM32ADC::readTemp() {
         uint16_t result = adc_read(_dev, 16);
         float Vsense = (3300.0*result)/4096;
         float temperature = ((_V25-Vsense)/_AverageSlope) + 25.0; 
@@ -96,57 +51,6 @@
         _dev->regs->SQR1 = records[2];
         _dev->regs->SQR2 = records[1];
         _dev->regs->SQR3 = records[0];
-    }
-
-/*
-    This function will set the number of channels to convert
-    And which channels.
-    This is the ADC channels and not the Maple Pins!!! Important!!
-    Also, this will allow you to sample the AD and Vref channels.
-*/
-    void STM32ADC::setChannels(uint8 *channels, uint8 length){
-        adc_set_reg_seq_channel(_dev, channels, length);
-    }
-
-/*
-    This function will set the trigger to start the conversion
-    Timer, SWStart, etc...
-*/
-    void STM32ADC::setTrigger(adc_extsel_event trigger){
-      adc_set_extsel(_dev, trigger);
-    }
-
-/*
-    this function will set the continuous conversion bit.
-*/
-    void STM32ADC::setContinuous(){
-        _dev->regs->CR2 |= ADC_CR2_CONT;
-    };
-
-/*
-    this function will reset the continuous bit.
-*/
-    void STM32ADC::resetContinuous(){
-        _dev->regs->CR2 &= ~ADC_CR2_CONT;
-    };
-
-/*
-    This will be used to start conversions
-*/
-    void STM32ADC::startConversion(){
-        _dev->regs->CR2 |= ADC_CR2_SWSTART;
-    }
-
-/*
-    This will set the Scan Mode on.
-    This will use DMA.
-*/
-    void STM32ADC::setScanMode(){
-        _dev->regs->CR1 |= ADC_CR1_SCAN;
-    }
-
-    void STM32ADC::calibrate() {
-        adc_calibrate(_dev);
     }
 
 /*
@@ -194,23 +98,15 @@
     }
 
 /*
-    This will set the Scan Mode on.
-    This will use DMA.
-*/
-    void STM32ADC::attachDMAInterrupt(voidFuncPtr func){
-        _DMA_int = func;
-        dma_attach_interrupt(DMA1, DMA_CH1, func);
-    }
-
-/*
     This will set an Analog Watchdog on a channel.
     It must be used with a channel that is being converted.
 */
-    void STM32ADC::setAnalogWatchdog(uint8 channel, uint32 HighLimit, uint32 LowLimit){
-        set_awd_low_limit(_dev, LowLimit);
-        set_awd_high_limit(_dev, HighLimit);
-        set_awd_channel(_dev, channel);
-    }
+	void STM32ADC::setAnalogWatchdog(uint8 channel, uint32 HighLimit, uint32 LowLimit)
+	{
+		set_awd_low_limit(_dev, LowLimit);
+		set_awd_high_limit(_dev, HighLimit);
+		set_awd_channel(_dev, channel);
+	}
 
 /*
     check analog watchdog
@@ -218,14 +114,4 @@
 */
     uint8 STM32ADC::getAnalogWatchdog(){
         return 1;
-    }
-
-/*
-    Attach an interrupt to the Watchdog...
-    This can possibly be set together in one function and determine which peripheral
-    it relates to.
-*/
-    void STM32ADC::attachAnalogWatchdogInterrupt(voidFuncPtr func){
-        _AWD_int = func;
-
     }

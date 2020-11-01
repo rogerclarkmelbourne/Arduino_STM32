@@ -1,6 +1,5 @@
 #include "util_adc.h"
 #include<libmaple/nvic.h>
-//#include "boards.h"
 #include <libmaple/dma.h>
 
 /*
@@ -13,38 +12,40 @@
     Starts a single conversion in one channel previously defined.
     Results must be read through interrupt or polled outside this function.
 */
-void start_single_convert(adc_dev* dev, uint8 channel) {
-  adc_set_reg_seqlen(dev, 1);
-  dev->regs->SQR3 = channel;//use channels next time.
-  dev->regs->CR2 |= ADC_CR2_SWSTART;
-  }
+void start_single_convert(adc_dev* dev, uint8 channel)
+{
+	adc_set_reg_seqlen(dev, 1);
+	dev->regs->SQR3 = channel;//use channels next time.
+	dev->regs->CR2 |= ADC_CR2_SWSTART;
+}
 
 /*
     Starts the continuous mode on one channel of the AD.
     Results must be read through interrupt or polled outside this function.
 */
-void start_continuous_convert(adc_dev* dev, uint8 channel){
-  adc_set_reg_seqlen(dev, 1);
-  dev->regs->SQR3 = channel;
-  dev->regs->CR2 |= ADC_CR2_CONT;
-  dev->regs->CR2 |= ADC_CR2_SWSTART;
-  }
+void start_continuous_convert(adc_dev* dev, uint8 channel)
+{
+	adc_set_reg_seqlen(dev, 1);
+	dev->regs->SQR3 = channel;
+	dev->regs->CR2 |= ADC_CR2_CONT;
+	dev->regs->CR2 |= ADC_CR2_SWSTART;
+}
 
 /*
     Enable end of conversion interrupt on the ADC.
     This is for regular conversion, not injected.
 */
 void enable_adc_irq(adc_dev* dev) {//ADC1 for now.
-  dev->regs->CR1 |= (1U<<ADC_CR1_EOCIE_BIT);
-  nvic_irq_enable(NVIC_ADC_1_2 );
-  }
+	dev->regs->CR1 |= (1U<<ADC_CR1_EOCIE_BIT);
+	nvic_irq_enable(NVIC_ADC_1_2 );
+}
 
 /*
     Enable the reading of the internal variables (Temperature and Vref).
 */
 void enable_internal_reading(adc_dev *dev) {
-  dev->regs->CR2 |= ADC_CR2_TSVREFE;
-  }
+	dev->regs->CR2 |= ADC_CR2_TSVREFE;
+}
 
 /*
     Read internal variables.
@@ -53,52 +54,34 @@ void enable_internal_reading(adc_dev *dev) {
     17 - VrefInt
     Results must be read through interrupt or polled outside this function.
 */
-void internalRead(adc_dev *dev, uint8 channel) {
-    adc_reg_map *regs = dev->regs;
-    adc_set_reg_seqlen(dev, 1);
-    regs->SQR3 = channel;
-    regs->CR2 |= ADC_CR2_SWSTART;
-    }
+void internalRead(adc_dev *dev, uint8 channel)
+{
+	adc_reg_map *regs = dev->regs;
+	adc_set_reg_seqlen(dev, 1);
+	regs->SQR3 = channel;
+	regs->CR2 |= ADC_CR2_SWSTART;
+}
 
 /*
     Enable the Analog Watchdog interrupt
 */
-void enable_awd_irq(adc_dev * dev){
-  dev->regs->CR1 |= (1U<<ADC_CR1_AWDIE_BIT);
-  nvic_irq_enable(NVIC_ADC_1_2 );
-  }
-
-/*
-    Set Analog Watchdog Low Limit.
-    Results must be read through interrupt or polled outside this function.
-*/
-void set_awd_low_limit(adc_dev * dev, uint32 limit) {
-  dev->regs->LTR = limit;
-  }
-
-/*
-    Set Analog Watchdog High Limit.
-    Results must be read through interrupt or polled outside this function.
-*/
-void set_awd_high_limit(adc_dev * dev, uint32 limit) {
-  dev->regs->HTR = limit;
-  }
+void enable_awd_irq(adc_dev * dev)
+{
+	dev->regs->CR1 |= (1U<<ADC_CR1_AWDIE_BIT);
+	nvic_irq_enable(NVIC_ADC_1_2 );
+}
 
 /*
     Enable the Watchdog function on the ADC.
 */
-void set_awd_channel(adc_dev * dev, uint8 awd_channel){
+void set_awd_channel(adc_dev * dev, uint8 awd_channel)
+{
+	dev->regs->CR1 &= ~(ADC_CR1_AWDSGL|ADC_CR1_AWDCH); // multi channel, clear single flag
+	if ( (awd_channel&0x80)==0 )
+		dev->regs->CR1 |= (ADC_CR1_AWDSGL);  // single channel
+
     dev->regs->CR1 |= (awd_channel & ADC_CR1_AWDCH);
   }
-
-
-/*
-    Enable the Watchdog function on the ADC.
-*/
-void enable_awd(adc_dev * dev){
-  dev->regs->CR1 |= ADC_CR1_AWDEN;
-  }
-
 
 /*
     Used to configure the sequence and length of the scan mode.
