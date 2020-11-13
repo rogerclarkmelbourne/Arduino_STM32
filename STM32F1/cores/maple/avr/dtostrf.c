@@ -31,7 +31,7 @@ char *dtostrf(double val, signed char width, unsigned char prec, char *sout)
   return sout;*/
 
   // Handle negative numbers
-  uint8_t negative = 0;
+  unsigned char negative = 0;
   if (val < 0.0) {
     negative = 1;
     val = -val;
