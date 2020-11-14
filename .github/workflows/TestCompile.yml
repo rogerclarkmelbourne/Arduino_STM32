@@ -46,8 +46,8 @@ jobs:
         #############################################################################################################
         include:
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C
-            # errors: BOARD_BUTTON_PIN not defined, 'textsize' was not declared in this scope, 'A0' was not declared in this scope, 'BOARD_LED_PIN' was not declared in this scope 
-            sketches-exclude: Debounce,StateChangeDetection,Button,QASlave,InteractiveTest,WhileStatementConditional,hello_STM,MIDI_Classic_Mode,JeeUdp,multipacketSD,udpListener,etherNode,SingleChannelContinuousConversion,OLED_I2C_,coos_display_blink,rtos_blink,rtos_display_blink,Twitter_Serial_GW,XivelyClientString,XivelyClient,ssd1306_128x64_i2c_STM32,breakouttouchpaint,graphicstest,stm32_graphicstest,TFT_Rainbow_ILI9341,TFT_Clock_ILI9341,TFT_Clock_Digital_ILI9341,TFT_Show_Font_ILI9341,graphicstest,stm32_graphicstest
+            # errors: BOARD_BUTTON_PIN not defined, 'textsize' was not declared in this scope, 'A0' was not declared in this scope, 'BOARD_LED_PIN' was not declared in this scope, no matching function for call to 'SPIClass::transfer(uint8_t*&, size_t&)
+            sketches-exclude: Debounce,StateChangeDetection,Button,QASlave,InteractiveTest,WhileStatementConditional,HardwareTimerOnePulseMode,HardwareTimerPWMInput,StringEx_Parsing,hello_STM,MIDI_Classic_Mode,JeeUdp,multipacketSD,udpListener,etherNode,SingleChannelContinuousConversion,OLED_I2C,coos_display_blink,rtos_blink,rtos_display_blink,Twitter_Serial_GW,XivelyClientString,XivelyClient,ssd1306_128x64_i2c_STM32,breakouttouchpaint,graphicstest,stm32_graphicstest,TFT_Rainbow_ILI9341,TFT_Clock_ILI9341,TFT_Clock_Digital_ILI9341,TFT_Show_Font_ILI9341,graphicstest,stm32_graphicstest,onoffbutton_breakout,onoffbutton_breakout,onoffbutton,spitftbitmap,ssd1306_128x64_spi,ssd1306_128x32_i2c,ssd1306_128x32_spi,sdreader
 
           #- arduino-boards-fqbn: stm32duino:STM32F1:nucleo_f103rb
             # Examples to exclude because of ...
