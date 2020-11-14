@@ -22,7 +22,7 @@ jobs:
     env:
       # PLATFORM_DEFAULT_URL: http://dan.drown.org/stm32duino/package_STM32duino_index.json
       # Comma separated list without double quotes around the list.
-      REQUIRED_LIBRARIES:
+      REQUIRED_LIBRARIES: Adafruit GFX Library
 
     strategy:
       matrix:
@@ -46,7 +46,7 @@ jobs:
         #############################################################################################################
         include:
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C
-            sketches-exclude: Blink # All Wire examples
+            sketches-exclude: Debounce,StateChangeDetection,Button,QASlave,InteractiveTest,WhileStatementConditional,HardwareTimerOnePulseMode,HardwareTimerPWMInput,StringEx_Parsing # BOARD_BUTTON_PIN not defined, Streaming.h missing
 
           #- arduino-boards-fqbn: stm32duino:STM32F1:nucleo_f103rb
             # Examples to exclude because of ...
