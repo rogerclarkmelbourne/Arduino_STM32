@@ -1,0 +1,80 @@
+# TestCompile.yml
+# Github workflow script to test compile all examples of an Arduino core repository.
+#
+# Copyright (C) 2020  Armin Joachimsmeyer
+# https://github.com/ArminJo/Github-Actions
+#
+
+# This is the name of the workflow, visible on GitHub UI.
+name: TestCompile
+on:
+  push: # see: https://help.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-event-pull_request
+    paths:
+    - '**.ino'
+    - '**.cpp'
+    - '**.h'
+    - '**TestCompile.yml'
+  pull_request:
+jobs:
+  build:
+    name: Test compiling examples for Arduino_STM32
+    runs-on: ubuntu-latest
+    env:
+      # PLATFORM_DEFAULT_URL: http://dan.drown.org/stm32duino/package_STM32duino_index.json
+      # Comma separated list without double quotes around the list.
+      REQUIRED_LIBRARIES:
+
+    strategy:
+      matrix:
+        # The matrix will produce one job for each configuration parameter of type `arduino-boards-fqbn`
+        # In the Arduino IDE, the fqbn is printed in the first line of the verbose output for compilation as parameter -fqbn=... for the "arduino-builder -dump-prefs" command
+        #
+        # Examples: arduino:avr:uno, arduino:avr:leonardo, arduino:avr:nano, arduino:avr:mega
+        # arduino:sam:arduino_due_x, arduino:samd:arduino_zero_native"
+        # ATTinyCore:avr:attinyx5:chip=85,clock=1internal, digistump:avr:digispark-tiny, digistump:avr:digispark-pro
+        # STM32:stm32:GenF1:pnum=BLUEPILL_F103C8
+        # esp8266:esp8266:huzzah:eesz=4M3M,xtal=80, esp32:esp32:featheresp32:FlashFreq=80
+        # You may add a suffix behind the fqbn with "|" to specify one board for e.g. different compile options like arduino:avr:uno|trace
+        #############################################################################################################
+        arduino-boards-fqbn:
+          - stm32duino:STM32F1:genericSTM32F103C
+          #- stm32duino:STM32F1:nucleo_f103rb
+          #- stm32duino:STM32F1:mapleMini
+
+        # Specify parameters for each board.
+        # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
+        #############################################################################################################
+        include:
+          - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C
+            sketches-exclude: Blink # All Wire examples
+
+          #- arduino-boards-fqbn: stm32duino:STM32F1:nucleo_f103rb
+            # Examples to exclude because of ...
+            #sketches-exclude: WiiClassicJoystick,BasicUsage,DigisparkOLED,SoftPwm13Pins,TinySoftPwmDemo,DigiUSB2LCD,DigisparkUSBDemo,ArduinoNunchukDemo,DigisparkJoystickDemo
+
+      # Do not cancel all jobs / architectures if one job fails
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Use this repo as Arduino core
+        run: |
+          mkdir --parents $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7 # dummy release number
+          # cannot move, since we want to compile the examples in the library subfolder :-)
+          cp --recursive $GITHUB_WORKSPACE/digistump-avr/* $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
+          #ls -l --dereference --recursive --all $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
+
+      - name: Compile all examples
+        uses: ArminJo/arduino-test-compile@master
+        with:
+          required-libraries: ${{ env.REQUIRED_LIBRARIES }}
+          arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
+          arduino-platform: stm32duino:STM32F1,arduino:sam # we require the C compiler from it. See dependencies of package_STM32duino_index.json
+          #platform-default-url: ${{ env.PLATFORM_DEFAULT_URL }}
+          #platform-url: ${{ matrix.platform-url }}
+          sketches-exclude: ${{ matrix.sketches-exclude }}
+          build-properties: ${{ toJson(matrix.build-properties) }}
+          sketch-names: "*.ino"
+          sketch-names-find-start: STM32F1/libraries/*/examples/
+          debug-install: true
