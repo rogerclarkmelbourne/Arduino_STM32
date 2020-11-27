@@ -128,7 +128,10 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX_AS {
   uint32_t readcommand32(uint8_t);
   */
 
-#define DMA_ON_LIMIT 250 // do DMA only for more data than this
+#ifndef ILI9341_STM_DMA_ON_LIMIT
+#define ILI9341_STM_DMA_ON_LIMIT 250 // do DMA only for more data than this
+#endif
+
 #define SAFE_FREQ  24000000ul // 24MHz for reading
 
 #define writePixel drawPixel
