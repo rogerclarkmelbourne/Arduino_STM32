@@ -236,15 +236,25 @@ void dma_set_num_transfers(dma_dev *dev,
     channel_regs = dma_channel_regs(dev, channel);
     channel_regs->CNDTR = num_transfers;
 }
-
+// stevstrong: handle DMA2 ch 4 and 5 IRQ enable/disable - they share common IRQ line
+uint32 dma2Ch4_5 = 0;
 void dma_attach_interrupt(dma_dev *dev, dma_channel channel,
                           void (*handler)(void)) {
     DMA_GET_HANDLER(dev, channel) = handler;
     nvic_irq_enable(dev->handlers[channel - 1].irq_line);
+    // stevstrong: mark ch 4 or 5 IRQ set if DMA2
+    if (dev->handlers[channel - 1].irq_line==NVIC_DMA2_CH_4_5)
+        dma2Ch4_5 |= BIT(channel-1);
 }
 
 void dma_detach_interrupt(dma_dev *dev, dma_channel channel) {
-    /* Don't use nvic_irq_disable()! Think about DMA2 channels 4 and 5. */
+    // stevstrong: disable IRQ for DMA2 only if none of ch 4 or 5 is set
+    if (dev->handlers[channel - 1].irq_line==NVIC_DMA2_CH_4_5) {
+        dma2Ch4_5 &= BIT(channel-1);
+        if (dma2Ch4_5==0)
+            nvic_irq_disable(dev->handlers[channel - 1].irq_line);
+    } else
+        nvic_irq_disable(dev->handlers[channel - 1].irq_line);
     dma_channel_regs(dev, channel)->CCR &= ~0xF;
     DMA_GET_HANDLER(dev, channel) = NULL;
 }
