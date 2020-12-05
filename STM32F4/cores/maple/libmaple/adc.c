@@ -74,6 +74,7 @@ const adc_dev adc3 = {
     .handler_p = &adc3Handlers
 };
 
+
 adc_common_reg_map* const ADC_COMMON = ADC_COMMON_BASE;
 
 /**
@@ -148,6 +149,12 @@ void adc_awd_enable_irq(const adc_dev * dev)
     nvic_irq_enable(NVIC_ADC_1_2_3);
 }
 
+void adc_ovr_enable_irq(const adc_dev* dev)
+{
+    dev->regs->CR1 |= ADC_CR1_OVRIE;
+    nvic_irq_enable(NVIC_ADC_1_2_3);
+}
+
 /*
     attach interrupt functionality for ADC
     use ADC_EOC, ADC_JEOC, ADC_AWD
@@ -160,7 +167,12 @@ void adc_attach_interrupt(const adc_dev *dev,
     if (irq_id<ADC_LAST_IRQ_ID)
     {
         (*(dev->handler_p))[irq_id] = handler;
-        adc_enable_irq(dev);
+        if(irq_id == ADC_EOC)
+        	adc_enable_irq(dev);
+        else if (irq_id == ADC_AWD)
+        	adc_awd_enable_irq(dev);
+        else if (irq_id == ADC_OVR)
+        	adc_ovr_enable_irq(dev);
     }
 }
 
@@ -181,6 +193,16 @@ void adc_foreach(void (*fn)(const adc_dev*))
     fn(ADC1);
     fn(ADC2);
     fn(ADC3);
+}
+
+/*
+ *  @param pre, setup the ADC prescaler to one of PCLK /2, /4, /6, /8
+ *         the templates per adc_prescaler enum
+ */
+void adc_set_prescaler(adc_prescaler pre) {
+
+	ADC_COMMON->CCR &= ~ ADC_CCR_ADCPRE;
+	ADC_COMMON->CCR |= ((pre & 3U) << ADC_CCR_ADCPRE_SHIFT);
 }
 
 /**
@@ -303,6 +325,15 @@ void adc_irq_handler(const adc_dev * dev)
             handler();
         }
     }
+    //ADC overrun interrupt
+    if (dev->regs->SR & ADC_SR_OVR) {
+        dev->regs->SR = ~ADC_SR_OVR;
+        voidFuncPtr handler = (*(dev->handler_p))[ADC_OVR];
+        if (handler) {
+            handler();
+        }
+    }
+
 }
 
 void __irq_adc()
