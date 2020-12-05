@@ -19,6 +19,14 @@ fi
 # Get the directory where the script is running.
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+#DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
+#DFU_UTIL=/usr/bin/dfu-util
+DFU_UTIL=${DIR}/dfu-util/dfu-util
+if [ ! -x "${DFU_UTIL}" ]; then
+    echo "$0: error: cannot find ${DFU_UTIL}" >&2
+    exit 2
+fi
+
 #  ----------------- IMPORTANT -----------------
 # The 2nd parameter to upload-reset is the delay after resetting before it exits
 # This value is in milliseonds
@@ -26,18 +34,15 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 # 750ms to 1500ms seems to work on my Mac
 
 
-"${DIR}/upload-reset" ${dummy_port_fullpath} 750
+"${DIR}/upload-reset" ${dummy_port_fullpath} 750 || {
+	# ignore the error but give a useful hint
+	echo -e "\n*** autoreset failed; you need to use RESET button" 1>&2
+}
 
-
-#DFU_UTIL=$(dirname $0)/dfu-util/dfu-util
-DFU_UTIL=/usr/bin/dfu-util
-DFU_UTIL=${DIR}/dfu-util/dfu-util
-if [ ! -x "${DFU_UTIL}" ]; then
-    echo "$0: error: cannot find ${DFU_UTIL}" >&2
-    exit 2
-fi
-
-"${DFU_UTIL}" -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr} -R
+"${DFU_UTIL}" -d ${usbID} -a ${altID} -D ${binfile} ${dfuse_addr} -R || {
+	echo -e "\nUpload failed :(" 1>&2
+	exit 1
+}
 
 echo -n Waiting for ${dummy_port_fullpath} serial...
 
@@ -46,4 +51,8 @@ while [ ! -r ${dummy_port_fullpath} ] && ((COUNTER++ < 40)); do
     sleep 0.1
 done
 
-echo Done
+if [ ! -r ${dummy_port_fullpath} ]; then
+	echo " TIMEOUT :("
+else
+	echo " DONE :)"
+fi
