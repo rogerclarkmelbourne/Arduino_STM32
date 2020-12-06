@@ -44,13 +44,15 @@ uint8 TwoWire::process(uint8 stop) {
         if (sel_hard->error_flags & I2C_SR1_AF) { /* NACK */
             res = (sel_hard->error_flags & I2C_SR1_ADDR ? ENACKADDR : 
                                                           ENACKTRNS);
-        } else if (sel_hard->error_flags & I2C_SR1_OVR) { /* Over/Underrun */
-            res = EDATA;
-        } else { /* Bus or Arbitration error */
-            res = EOTHER;
+        } else {
+            if (sel_hard->error_flags & I2C_SR1_OVR) { /* Over/Underrun */
+                res = EDATA;
+            } else { /* Bus or Arbitration error */
+                res = EOTHER;
+            }
+            i2c_disable(sel_hard);
+            i2c_master_enable(sel_hard, dev_flags, frequency);
         }
-        i2c_disable(sel_hard);
-        i2c_master_enable(sel_hard, dev_flags, frequency);
     }
     return res;
 }
