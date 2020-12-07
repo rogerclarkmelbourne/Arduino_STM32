@@ -150,9 +150,10 @@ private:
 	spi_dev *spi_d;
 	dma_channel spiRxDmaChannel, spiTxDmaChannel;
 	dma_dev* spiDmaDev;
-  void (*receiveCallback)(void) = NULL;
-  void (*transmitCallback)(void) = NULL;
-	
+        void (*receiveCallback)(void *) = NULL;
+        void (*transmitCallback)(void *) = NULL;
+        void *receiveCookie=NULL;
+        void *transmitCookie=NULL;
 	friend class SPIClass;
 };
 
@@ -230,8 +231,8 @@ public:
 	* onTransmit used to set the callback in case of dmaSend (tx only). That function
 	* will NOT be called in case of TX/RX
     */
-    void onReceive(void(*)(void));
-    void onTransmit(void(*)(void));
+    void onReceive(void(*)(void *),void *cookie=NULL);
+    void onTransmit(void(*)(void *), void *cookie=NULL);
 
     /*
      * I/O

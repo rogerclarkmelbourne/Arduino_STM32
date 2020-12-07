@@ -565,8 +565,9 @@ uint8 SPIClass::dmaSendAsync(const void * transmitBuf, uint16 length, bool minc)
     Victor Perez 2017
 */
 
-void SPIClass::onReceive(void(*callback)(void)) {
+void SPIClass::onReceive(void(*callback)(void *),void *cookie) {
     _currentSetting->receiveCallback = callback;
+    _currentSetting->receiveCookie = cookie;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
             #if BOARD_NR_SPI >= 1
@@ -593,8 +594,9 @@ void SPIClass::onReceive(void(*callback)(void)) {
     }
 }
 
-void SPIClass::onTransmit(void(*callback)(void)) {
+void SPIClass::onTransmit(void(*callback)(void *),void *cookie) {
     _currentSetting->transmitCallback = callback;
+    _currentSetting->transmitCookie = cookie;
     if (callback){
         switch (_currentSetting->spi_d->clk_id) {
             #if BOARD_NR_SPI >= 1
@@ -639,7 +641,7 @@ void SPIClass::EventCallback() {
 
         if (_currentSetting->receiveCallback)
         {
-            _currentSetting->receiveCallback();
+            _currentSetting->receiveCallback(_currentSetting->receiveCookie);
         }
         break;
     case SPI_STATE_TRANSMIT:
@@ -648,7 +650,7 @@ void SPIClass::EventCallback() {
         //dma_disable(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel);
         if (_currentSetting->transmitCallback)
         {
-            _currentSetting->transmitCallback();
+            _currentSetting->transmitCallback(_currentSetting->transmitCookie);
         }
 
         break;
