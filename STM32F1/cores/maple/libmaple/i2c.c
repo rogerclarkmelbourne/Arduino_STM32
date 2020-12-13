@@ -409,6 +409,24 @@ int32 i2c_master_xfer(i2c_dev *dev,
         // with state changes in the IRQ handlers:
         dev->state = I2C_STATE_ERROR;
         if (rc == I2C_ERROR_TIMEOUT) dev->error_flags |= I2C_SR1_TIMEOUT;
+        if (!(dev->config_flags & I2C_SLAVE_MODE) &&
+            (dev->error_flags & (I2C_SR1_AF | I2C_SR1_BERR | I2C_SR1_TIMEOUT))
+            ) {    // In Master Mode, we need to abort the transmission with a STOP
+                   // for NACK, Bus Error, or Timeout
+            uint32 cr1;
+            while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
+                                             I2C_CR1_STOP  |
+                                             I2C_CR1_PEC)) {
+                ;   // Must wait for pending start/stop/pec before setting stop to avoid
+                    //  accidental restart condition. See ST RM0008 Note in 26.6.1 (I2C_CR1)
+            }
+            dev->regs->CR1 |= I2C_CR1_STOP;
+            while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
+                                             I2C_CR1_STOP  |
+                                             I2C_CR1_PEC)) {
+                ;
+            }
+        }
     } else {
         dev->state = I2C_STATE_IDLE;
     }
@@ -782,14 +800,10 @@ void _i2c_irq_error_handler(i2c_dev *dev) {
             dev->state = I2C_STATE_IDLE;
             return;
         }
-    } else {
-        // Master should send a STOP on NACK:
-        if (sr1 & I2C_SR1_AF) {
-            dev->regs->CR1 |= I2C_CR1_STOP;
-        }
     }
 
-    /* Catch any other strange errors while in slave mode.
+    /* Catch any other strange errors while in slave mode and
+     * all errors in master mode (which are handled by outer loop).
      * I have seen BERR caused by an over fast master device
      * as well as several overflows and arbitration failures.
      * We are going to reset SR flags and carry on at this point which
