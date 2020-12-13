@@ -284,6 +284,9 @@ public:
      */
     uint8 transfer(uint8 data) const;
     uint16_t transfer16(uint16_t data) const;
+    void transfer(const uint8_t * tx_buf, uint8_t * rx_buf, uint32 len);
+    void transfer(uint8_t * trx_buf, uint32 len) { transfer((const uint8_t *)trx_buf, trx_buf, len); }
+
 
 	/**
      * @brief Sets up a DMA Transfer for "length" bytes.
