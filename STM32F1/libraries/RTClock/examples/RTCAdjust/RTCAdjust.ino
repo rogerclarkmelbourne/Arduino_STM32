@@ -88,6 +88,7 @@ void processkey() {
 			else
 				buf[ind++] = c; // copy the chars into buf
 		} else {
+			Serial.println();
 			switch(cmd) {
 			case 's':
 				synctime(buf,ind);
@@ -162,6 +163,16 @@ void showtime() {
     Serial.println(buf);
     clearbuf();
 
+#ifdef INCR_CALIBRATE
+    Serial.print("init adj:");
+    rt.breakTime(getinitadjtime(), tm);
+    memset(buf,0,BUFLEN);
+    sprintf(buf, "RTC timestamp: %u-%u-%u, %02u:%02u:%02u",
+    		tm.year+1970, tm.month, tm.day, tm.hour, tm.minute, tm.second);
+    Serial.println(buf);
+    clearbuf();
+#endif
+
     Serial.print(F("drift duration, number of seconds for the stm32 rtc to drift 1 secs (faster):"));
     Serial.println(getdrift());
 
@@ -204,7 +215,7 @@ void calibrate(char *buf, int len) {
  * this function sets the rtc directly by-passing all the adjustments
  *
  * note that this function is used during tests to simulate drifts etc
- * hence it is not features in help();
+ * hence it is not featured in help();
  *
  * in a normal context use synctime() to set the RTC time so that
  * the last adjustment date/time is updated as well

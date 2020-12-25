@@ -29,6 +29,14 @@
 #include <RTClock.h>
 #include "rtadjust.h"
 
+
+#define INIT_ADJ_REG_LOW 5
+#define INIT_ADJ_REG_HIGH 6
+#define DRIFT_REG 7
+#define LAST_ADJ_REG_LOW 8
+#define LAST_ADJ_REG_HIGH 9
+
+
 /* adjust RTC time
  * call this from setup() so that the sketch updates the rtc when starting up
  */
@@ -62,7 +70,13 @@ void adjtime() {
  */
 void synctime(time_t time_now) {
 	rt.setTime(time_now);
+
+#ifdef INCR_CALIBRATE
+	setinitadjtime(time_now);
 	setbkptime(time_now);
+#else
+	setbkptime(time_now);
+#endif
 }
 
 
@@ -70,13 +84,24 @@ void synctime(time_t time_now) {
  *
  *  call this function with the current accurate clock time to calibrate the rtc
  *
+ *  it is recommended to set the RTC time with the time you provide to calibratertc()
+ *  after calling this function to calibrate the RTC, that ensures a time sync after
+ *  calibratertc().
+ *
+ *  however, call rt.setTime(time_now) and not synctime() as synctime would change the
+ *  initial time sync timestamp needed by this calibratertc() function
+ *
  *  if the cumulative delay between current time and the last time when synctime()
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
  *
- *  note that this function can only be run once to compute the drift_duration
- *  this is because the time of last adjustment would have been updated
- *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  note that if you want to call calibratertc() repeatedly after an initial synctime
+ *  you need to define INCR_CALIBRATE. that would allow you to call calibratertc()
+ *  multiple times after an initial synctime() call.
+ *
+ *  without INCR_CALIBRATE this function can only be run once to compute
+ *  the drift_duration this is because the time of last adjustment would have
+ *  been updated by adjtime() after calibration and is no longer relevant for purpose of
  *  computing drift duration
  *
  *  to run it again
@@ -92,12 +117,17 @@ void synctime(time_t time_now) {
 void calibratertc(time_t time_now) {
 
 	int cur_drift = getdrift();
+	int last = 0;
+#ifdef INCR_CALIBRATE
+	last = getinitadjtime();
+#else
 	if(cur_drift != 0) {
 		Serial.print(F("err: rtc has been calibrated prior, "));
 		Serial.println(F("zero out drift duration before calibrating again"));
 		return;
 	}
-	int last = getbkptime();
+	last = getbkptime();
+#endif
 	int now = rt.getTime();
 	int elapsed = time_now - last;
 	Serial.print(F("elapsed (s):"));
@@ -105,6 +135,8 @@ void calibratertc(time_t time_now) {
 	int drift = now - time_now ;
 	Serial.print(F("drift (s):"));
 	Serial.println(drift);
+	Serial.print("previous drift:");
+	Serial.println(cur_drift);
 	if (drift < 100) {
 		Serial.print(F("warn: drift granuity is low, 1 sec difference results in "));
 		float d = 100.0 / (drift + 1.0);
@@ -112,38 +144,67 @@ void calibratertc(time_t time_now) {
 		Serial.println(F(" % error"));
 	}
 	int drift_dur = elapsed / drift;
-    Serial.print(F("drift duration, number of seconds for the stm32 rtc to drift 1 secs (faster):"));
-    Serial.println(drift_dur);
-    int rtccr_max = 1048576 / 127;
-    if(drift_dur > rtccr_max) { //about less than 314 secs ~ 5 mins drift per month
- /* if the drift is better than 1048576 / 127 ~ 1:8256 the rtc hardware can do the
-  * adjustment, in this case just setup BKP_RTCCR register calibration value and let the
-  * RTC hardware take care of the drift adjustment. this only works if the RTC
-  * runs faster than accurate time
-  *
-  * see AN2604 STM32F101xx and STM32F103xx RTC calibration
-  * https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf
-  */
-    	uint8_t cal = drift_dur * 127 / 1048576;
-    	setrtccr(cal);
-    	//set the drift duration as zero - no software adjustments needed
-    	setbkpdrift(0);
-    } else if ( drift_dur > -32768 && drift_dur <= rtccr_max ) {
-    	setbkpdrift(drift_dur & 0xffff); //bkp register is only 16 bits
-    } else
-    	//drift duration < -32767 ! (about slower by less than 10 secs per month)
-    	//no adjustment can't store in 16 bit bkp register
-    	setbkpdrift(0);
+#ifdef INCR_CALIBRATE
+	if(cur_drift != 0)
+		drift_dur = cur_drift * drift_dur / (cur_drift + drift_dur);
+#endif
+
+	Serial.print(F("drift duration, number of seconds for the stm32 rtc to drift 1 secs (faster):"));
+	Serial.println(drift_dur);
+
+	int rtccr_max = 1048576 / 127;
+	if (drift_dur > rtccr_max) { //about less than 314 secs ~ 5 mins drift per month
+
+		/*if the drift is better than 1048576 / 127 ~ 1:8256 the rtc hardware can do the
+		 * adjustment, in this case just setup BKP_RTCCR register calibration value and let the
+		 * RTC hardware take care of the drift adjustment. this only works if the RTC
+		 * runs faster than accurate time
+		 *
+		 * see AN2604 STM32F101xx and STM32F103xx RTC calibration
+		 * https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf
+		 */
+
+		uint8_t cal = drift_dur * 127 / 1048576;
+		setrtccr(cal);
+		//set the drift duration as zero - no software adjustments needed
+		setbkpdrift(0);
+	} else if (drift_dur > -32768 && drift_dur <= rtccr_max) {
+		setbkpdrift(drift_dur & 0xffff); //bkp register is only 16 bits
+	} else
+		//drift duration < -32767 ! (about slower by less than 10 secs per month)
+		//no adjustment can't store in 16 bit bkp register
+		setbkpdrift(0);
 
 }
+
+/* set the time of init adjustment in backup register 8 and 9
+ * @param time this is the time_t value to be saved
+ */
+void setinitadjtime(time_t time) {
+	bkp_enable_writes();
+	bkp_write(INIT_ADJ_REG_LOW, time & 0xffff);
+	bkp_write(INIT_ADJ_REG_HIGH, time >> 16);
+	bkp_disable_writes();
+}
+
+/* get the time of init adjustment from backup register 8 and 9
+ * @return the time_t value of the time saved
+ */
+time_t getinitadjtime() {
+	time_t time;
+	time = bkp_read(INIT_ADJ_REG_LOW);
+	time |= bkp_read(INIT_ADJ_REG_HIGH) << 16;
+	return time;
+}
+
 
 /* set the time of last adjustment in backup register 8 and 9
  * @param time this is the time_t value to be saved
  */
 void setbkptime(time_t time) {
 	bkp_enable_writes();
-	bkp_write(8, time & 0xffff);
-	bkp_write(9, time >> 16);
+	bkp_write(LAST_ADJ_REG_LOW, time & 0xffff);
+	bkp_write(LAST_ADJ_REG_HIGH, time >> 16);
 	bkp_disable_writes();
 }
 
@@ -152,8 +213,8 @@ void setbkptime(time_t time) {
  */
 time_t getbkptime() {
 	time_t time;
-	time = bkp_read(8);
-	time |= bkp_read(9) << 16;
+	time = bkp_read(LAST_ADJ_REG_LOW);
+	time |= bkp_read(LAST_ADJ_REG_HIGH) << 16;
 	return time;
 }
 
@@ -167,7 +228,7 @@ time_t getbkptime() {
  */
 void setbkpdrift(int16_t drift_dur) {
 	bkp_enable_writes();
-	bkp_write(7, drift_dur);
+	bkp_write(DRIFT_REG, drift_dur);
 	bkp_disable_writes();
 }
 
@@ -177,14 +238,17 @@ void setbkpdrift(int16_t drift_dur) {
  *
  */
 int16_t getdrift() {
-	return bkp_read(7);
+	return bkp_read(DRIFT_REG);
 }
+
 
 /* update BKP_RTCCR register calibration value
  * see AN2604 STM32F101xx and STM32F103xx RTC calibration
  * https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf
  * as well as RM0008 reference manual for stm32f1x section 6 Backup registers (BKP) page 80
  * section 6.4.2 RTC clock calibration register (BKP_RTCCR) page 82
+ *
+ * there are reports that this freezes, reason is not clear
  *
  * @param cal the calibration value according to AN2604 STM32F101xx and STM32F103xx RTC calibration
  *
@@ -206,6 +270,7 @@ uint8_t getrtccr() {
 	return (BKP->regs->RTCCR) & 0x7f;
 }
 
+//const char * delim = " -:";
 /* utility function to parse entered timestamp
  * format yyyy-mm-dd hh:mm:ss
  * */
