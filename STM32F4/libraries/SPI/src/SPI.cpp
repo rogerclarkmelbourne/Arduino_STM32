@@ -735,6 +735,17 @@ void SPIClass::dmaTransferRepeat()
 //-----------------------------------------------------------------------------
 void SPIClass::dmaTransfer(const void *transmitBuf, void *receiveBuf, uint16 length, uint16 flags)
 {
+    if ( transmitBuf==NULL ) {
+        if ( receiveBuf!=NULL ) {
+            dmaTransfer(ff, receiveBuf, length, flags);
+        }
+        return;
+    } else {
+        if ( receiveBuf==NULL ) {
+            dmaSend(receiveBuf, length, flags);
+        }
+        return;
+    }
     PRINTF("<dTb-");
     dmaWaitCompletion();
     _currentSetting->dmaTxBuffer = transmitBuf;
@@ -747,6 +758,10 @@ void SPIClass::dmaTransfer(const void *transmitBuf, void *receiveBuf, uint16 len
 //-----------------------------------------------------------------------------
 void SPIClass::dmaTransfer(const uint16_t tx_data, void *receiveBuf, uint16 length, uint16 flags)
 {
+    if ( receiveBuf==NULL ) {
+        dmaSend(tx_data, length, flags);
+        return;
+    }
     PRINTF("<dTc-");
     dmaWaitCompletion();
     ff = tx_data;
