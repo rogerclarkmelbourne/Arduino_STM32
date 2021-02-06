@@ -742,18 +742,18 @@ void SPIClass::dmaTransfer(const void *transmitBuf, void *receiveBuf, uint16 len
         return;
     } else {
         if ( receiveBuf==NULL ) {
-            dmaSend(receiveBuf, length, flags);
+            dmaSend(transmitBuf, length, flags);
+            return;
         }
-        return;
+        PRINTF("<dTb-");
+        dmaWaitCompletion();
+        _currentSetting->dmaTxBuffer = transmitBuf;
+        _currentSetting->dmaTrxLength = length;
+        _currentSetting->dmaTrxAsync = (flags&DMA_ASYNC);
+        dmaTransferSet(receiveBuf, (flags&(DMA_CIRC_MODE|DMA_TRNS_HALF)) | DMA_MINC_MODE);
+        dmaTransferRepeat();
+        PRINTF("-dTb>\n");
     }
-    PRINTF("<dTb-");
-    dmaWaitCompletion();
-    _currentSetting->dmaTxBuffer = transmitBuf;
-    _currentSetting->dmaTrxLength = length;
-    _currentSetting->dmaTrxAsync = (flags&DMA_ASYNC);
-    dmaTransferSet(receiveBuf, (flags&(DMA_CIRC_MODE|DMA_TRNS_HALF)) | DMA_MINC_MODE);
-    dmaTransferRepeat();
-    PRINTF("-dTb>\n");
 }
 //-----------------------------------------------------------------------------
 void SPIClass::dmaTransfer(const uint16_t tx_data, void *receiveBuf, uint16 length, uint16 flags)
