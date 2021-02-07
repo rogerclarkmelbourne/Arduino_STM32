@@ -494,7 +494,7 @@ uint32 usb_cdcacm_peek(uint8* buf, uint32 len)
 {
     uint32 i;
     uint32 tail = rx_tail;
-	uint32 rx_unread = (rx_head-tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
+    uint32 rx_unread = (rx_head-tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 
     if (len > rx_unread) {
         len = rx_unread;
@@ -512,10 +512,10 @@ uint32 usb_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len)
 {
     uint32 i;
     uint32 tail = (rx_tail + offset) & CDC_SERIAL_RX_BUFFER_SIZE_MASK ;
-	uint32 rx_unread = (rx_head-rx_tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
+    uint32 rx_unread = (rx_head-rx_tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 
-    if (len + offset > rx_unread) {
-        len = rx_unread - offset;
+    if (len > rx_unread) {
+        len = rx_unread;
     }
 
     for (i = 0; i < len; i++) {
