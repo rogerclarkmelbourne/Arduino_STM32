@@ -395,7 +395,7 @@ uint32 composite_cdcacm_peek_ex(uint8* buf, uint32 offset, uint32 len)
 {
     unsigned i;
     uint32 tail = (vcom_rx_tail + offset) & CDC_SERIAL_RX_BUFFER_SIZE_MASK ;
-    uint32 rx_unread = (vcom_rx_head-vcom_rx_tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
+    uint32 rx_unread = (vcom_rx_head - tail) & CDC_SERIAL_RX_BUFFER_SIZE_MASK;
 
     if (len > rx_unread) {
         len = rx_unread;
