@@ -42,7 +42,7 @@ build.flags.ldspecs=
 compiler.c.extra_flags=
 compiler.combine.flags=-u _printf_float -u _sbrk -u link -u _close -u _fstat -u _isatty -u _lseek -u _read -u _write -u _exit -u kill -u _getpid
 #compiler.c.elf.extra_flags="-L{build.variant.path}/ld" -specs=nosys.specs -specs=nano.specs {compiler.combine.flags}
-compiler.c.elf.extra_flags="-L{build.variant.path}/ld" "-Wl,--wrap=atexit,--wrap=__cxa_atexit,--wrap=exit"
+compiler.c.elf.extra_flags="-L{build.variant.path}/ld" "-Wl,--wrap=atexit,--wrap=__cxa_atexit,--wrap=exit" -specs=nano.specs
 compiler.cpp.extra_flags= 
 compiler.S.extra_flags=
 compiler.ar.extra_flags=
