@@ -98,7 +98,7 @@ typedef struct bkp_reg_map {
 } bkp_reg_map;
 
 /** Backup peripheral register map base pointer. */
-#define BKP                        ((struct bkp_reg_map*)0x40024000)
+#define BKP                        ((struct bkp_reg_map*)0x40002800)
 
 
 /*
