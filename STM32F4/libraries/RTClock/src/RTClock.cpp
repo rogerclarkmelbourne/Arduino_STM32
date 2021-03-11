@@ -62,10 +62,14 @@ void RTClock::begin(rtc_clk_src src, uint16 sync_presc, uint16 async_presc)
 	clk_src = src;
 	sync_prescaler = sync_presc;
 	async_prescaler = async_presc;
+	bool lse_ison = false;
 
     PRINTF("> RTClock::begin\n");
-    //PRINTF("PWR->CR(1) = %08X\n", PWR->CR);
+    PRINTF("PWR->CR(1) = %08X\n", PWR->CR);
     bkp_init();		// turn on peripheral clocks to PWR and BKP and reset the backup domain via RCC registers.
+
+    //if RTC is running on LSE we'd skip initialization of RTC so that the time maintained on VBAT would not be reset
+    lse_ison = (RCC->BDCR & RCC_BDCR_LSEON == RCC_BDCR_LSEON) && (RCC->BDCR & RCC_BDCR_RTCEN == RCC_BDCR_RTCEN)
 
     PRINTF("bkp_enable_writes\n");
     bkp_enable_writes();	// enable writes to the backup registers and the RTC registers via the DBP bit in the PWR control register
@@ -77,11 +81,11 @@ void RTClock::begin(rtc_clk_src src, uint16 sync_presc, uint16 async_presc)
 	PRINTF("RTC clock source: %s\n", (clk_src==RTCSEL_LSE)?"LSE":((clk_src==RTCSEL_LSI)?"LSI":((clk_src==RTCSEL_HSE)?"HSE":"NONE")));
     switch (clk_src)
 	{
-	case RTCSEL_LSE:
-	{
+	case RTCSEL_LSE: {
 		PRINTF("Preparing RTC for LSE mode, RCC->BDCR = %08X\n", RCC->BDCR);
-	    if ((RCC->BDCR & RCC_BDCR_RTCSEL_MASK) == RCC_BDCR_RTCSEL_LSE)
+		if ((RCC->BDCR & RCC_BDCR_RTCSEL_MASK) == RCC_BDCR_RTCSEL_LSE)
 			break;
+
 		RCC->BDCR = RCC_BDCR_BDRST; // Reset the entire Backup domain
 		PRINTF("BCKP domain reset\n");
 
@@ -94,8 +98,9 @@ void RTClock::begin(rtc_clk_src src, uint16 sync_presc, uint16 async_presc)
 				break;
 			}
 		}
-	}	break;
 
+		break;
+	}
 	case RTCSEL_LSI:
 	{
 	    PRINTF("Preparing RTC for LSI mode\n");
@@ -140,14 +145,16 @@ void RTClock::begin(rtc_clk_src src, uint16 sync_presc, uint16 async_presc)
 		async_prescaler = prescalers[clk_src].as_presc;
 	}
 	PRINTF("sync_prescaler = %d, async_prescaler = %d\n", sync_prescaler, async_prescaler);
-	rtc_enter_config_mode();
-	RTC->PRER = (uint32)(async_prescaler << 16) + sync_prescaler;
-	RTC->DR = 0x00002101; // reset value
-	RTC->TR = 0x00000000; // reset value
-    //RCC->CR |= RTC_CR_BYPSHAD;
-	*bb_perip(&RTC->CR, RTC_CR_BYPSHAD_BIT) = 1; // bypass shadow regs
-	PRINTF("RTC PRER: %08X, CR: %08X\n", RTC->PRER, RTC->CR);
-    rtc_exit_config_mode();
+	if(!lse_ison && RTCSEL_LSE) {
+		rtc_enter_config_mode();
+		RTC->PRER = (uint32)(async_prescaler << 16) + sync_prescaler;
+		RTC->DR = 0x00002101; // reset value
+		RTC->TR = 0x00000000; // reset value
+		//RCC->CR |= RTC_CR_BYPSHAD;
+		*bb_perip(&RTC->CR, RTC_CR_BYPSHAD_BIT) = 1; // bypass shadow regs
+		PRINTF("RTC PRER: %08X, CR: %08X\n", RTC->PRER, RTC->CR);
+		rtc_exit_config_mode();
+	};
 
 end0:
     PRINTF("< RTClock::begin\n");
