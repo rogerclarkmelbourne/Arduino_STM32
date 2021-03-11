@@ -145,7 +145,7 @@ void RTClock::begin(rtc_clk_src src, uint16 sync_presc, uint16 async_presc)
 		async_prescaler = prescalers[clk_src].as_presc;
 	}
 	PRINTF("sync_prescaler = %d, async_prescaler = %d\n", sync_prescaler, async_prescaler);
-	if(!lse_ison && RTCSEL_LSE) {
+	if(!lse_ison) {
 		rtc_enter_config_mode();
 		RTC->PRER = (uint32)(async_prescaler << 16) + sync_prescaler;
 		RTC->DR = 0x00002101; // reset value
