@@ -274,10 +274,10 @@ void scsi_read_memory(uint8_t lun, uint32_t startSector, uint32_t numSectors) {
 
       usb_mass_sil_write(SCSI_dataBuffer, MAX_BULK_PACKET_SIZE);
     } else {
+      usb_mass_sil_write(SCSI_dataBuffer + SCSI_blockOffset, MAX_BULK_PACKET_SIZE);
+
       SCSI_blockReadCount -= MAX_BULK_PACKET_SIZE;
       SCSI_blockOffset += MAX_BULK_PACKET_SIZE;
-
-      usb_mass_sil_write(SCSI_dataBuffer + SCSI_blockOffset, MAX_BULK_PACKET_SIZE);
     }
 
     offset += MAX_BULK_PACKET_SIZE;

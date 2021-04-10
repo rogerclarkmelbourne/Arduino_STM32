@@ -48,7 +48,8 @@ uint16 GetEPTxAddr(uint8 /*bEpNum*/);
 #include <libmaple/gpio.h>
 #include <board/board.h>
 
-static uint32 ProtocolValue = 0;
+static uint8 IdleValue = 1;
+static uint8 ProtocolValue = 0;
 static uint32 txEPSize = 64;
 static volatile int8 transmitting;
 static struct usb_chunk* reportDescriptorChunks = NULL;
@@ -258,6 +259,7 @@ void usb_hid_clear_buffers(uint8 type) {
 
 static void usb_hid_clear(void) {
     ProtocolValue = 0;
+    IdleValue = 1;
     usb_hid_clear_buffers(HID_REPORT_TYPE_OUTPUT);
     usb_hid_clear_buffers(HID_REPORT_TYPE_FEATURE);
 }
@@ -371,9 +373,8 @@ static RESULT hidUSBDataSetup(uint8 request, uint8 interface, uint8 requestType,
 				} 
 				else 
 				{
-//                    buffer->state = HID_BUFFER_EMPTY;
+                    buffer->state = HID_BUFFER_EMPTY;
                     usb_generic_control_rx_setup(buffer->buffer, buffer->bufferSize, &(buffer->state));
-                    buffer->state = HID_BUFFER_UNREAD;
 				}
                 return USB_SUCCESS;
 			}
@@ -410,6 +411,10 @@ static RESULT hidUSBDataSetup(uint8 request, uint8 interface, uint8 requestType,
     		case GET_PROTOCOL:
                 usb_generic_control_tx_setup(&ProtocolValue, 1, NULL);
                 return USB_SUCCESS;
+
+            case GET_IDLE:
+                usb_generic_control_tx_setup(&IdleValue, 1, NULL);
+                return USB_SUCCESS;
 		}
 	}
 
@@ -424,6 +429,9 @@ static RESULT hidUSBNoDataSetup(uint8 request, uint8 interface, uint8 requestTyp
         switch(request) {
             case SET_PROTOCOL:
                 ProtocolValue = wValue0;
+                return USB_SUCCESS;
+            case SET_IDLE:
+                IdleValue = wValue0;
                 return USB_SUCCESS;
         }
     }

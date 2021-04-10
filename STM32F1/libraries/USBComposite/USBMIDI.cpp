@@ -180,6 +180,26 @@ void USBMIDI::dispatchPacket(uint32 p)
     e.i=p;
     
     switch (e.p.cin) {
+        case CIN_SYSEX:
+            handleSysExData(e.p.midi0);
+            handleSysExData(e.p.midi1);
+            handleSysExData(e.p.midi2);
+            break;
+        case CIN_SYSEX_ENDS_IN_1:
+            handleSysExData(e.p.midi0);
+            handleSysExEnd();
+            break;
+        case CIN_SYSEX_ENDS_IN_2:
+            handleSysExData(e.p.midi0);
+            handleSysExData(e.p.midi1);
+            handleSysExEnd();
+            break;
+        case CIN_SYSEX_ENDS_IN_3:
+            handleSysExData(e.p.midi0);
+            handleSysExData(e.p.midi1);
+            handleSysExData(e.p.midi2);
+            handleSysExEnd();
+            break;
         case CIN_3BYTE_SYS_COMMON:
             if (e.p.midi0 == MIDIv1_SONG_POSITION_PTR) {
                 handleSongPosition(((uint16)e.p.midi2)<<7|((uint16)e.p.midi1));
@@ -261,7 +281,6 @@ void USBMIDI::poll(void)
 
 static union EVENT_t outPacket; // since we only use one at a time no point in reallocating it
 
-// Send Midi NOTE OFF message to a given channel, with note 0-127 and velocity 0-127
 void USBMIDI::sendNoteOff(unsigned int channel, unsigned int note, unsigned int velocity)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
@@ -270,9 +289,8 @@ void USBMIDI::sendNoteOff(unsigned int channel, unsigned int note, unsigned int 
     outPacket.p.midi1=note;
     outPacket.p.midi2=velocity;
     writePacket(outPacket.i);
-    
-}
 
+}
 
 // Send Midi NOTE ON message to a given channel, with note 0-127 and velocity 0-127
 void USBMIDI::sendNoteOn(unsigned int channel, unsigned int note, unsigned int velocity)
@@ -438,6 +456,79 @@ void USBMIDI::sendReset(void)
     writePacket(outPacket.i);
 }
 
+void USBMIDI::sendSysex(uint8_t b0, uint8_t b1, uint8_t b2)
+{
+    outPacket.p.cable = DEFAULT_MIDI_CABLE;
+    outPacket.p.cin = CIN_SYSEX_ENDS_IN_3;
+    outPacket.p.midi0 = b0;
+    outPacket.p.midi1 = b1;
+    outPacket.p.midi2 = b2;
+    writePacket(outPacket.i);
+}
+
+void USBMIDI::sendSysexEndsIn1(uint8_t b0)
+{
+    outPacket.p.cable = DEFAULT_MIDI_CABLE;
+    outPacket.p.cin = CIN_SYSEX_ENDS_IN_1;
+    outPacket.p.midi0 = b0;
+    outPacket.p.midi1 = 0;
+    outPacket.p.midi2 = 0;
+    writePacket(outPacket.i);
+}
+
+void USBMIDI::sendSysexEndsIn2(uint8_t b0, uint8_t b1)
+{
+    outPacket.p.cable = DEFAULT_MIDI_CABLE;
+    outPacket.p.cin = CIN_SYSEX_ENDS_IN_2;
+    outPacket.p.midi0 = b0;
+    outPacket.p.midi1 = b1;
+    outPacket.p.midi2 = 0;
+    writePacket(outPacket.i);
+}
+
+void USBMIDI::sendSysexEndsIn3(uint8_t b0, uint8_t b1, uint8_t b2)
+{
+    outPacket.p.cable=DEFAULT_MIDI_CABLE;
+    outPacket.p.cin=CIN_SYSEX_ENDS_IN_3;
+    outPacket.p.midi0= b0;
+    outPacket.p.midi1= b1;
+    outPacket.p.midi2= b2;
+    writePacket(outPacket.i);
+}
+
+void USBMIDI::sendSysexPayload(uint8_t *payload, uint32 length)
+{
+    outPacket.p.cable=DEFAULT_MIDI_CABLE;
+    if (length == 1)
+    {
+        sendSysexEndsIn3(MIDIv1_SYSEX_START, payload[0], MIDIv1_SYSEX_END);
+        return;
+    }
+
+    sendSysex(MIDIv1_SYSEX_START, payload[0], payload[1]);
+
+    unsigned int offset = 2;
+    for (; offset < length - 2; offset += 3)
+    {
+        sendSysex(payload[offset], payload[offset + 1], payload[offset + 2]);
+    }
+
+    unsigned int remaining = length - offset;
+    if (remaining == 0)
+    {
+        sendSysexEndsIn1(MIDIv1_SYSEX_END);
+    }
+    else if (remaining == 1)
+    {
+        sendSysexEndsIn2(payload[offset], MIDIv1_SYSEX_END);
+    }
+    else
+    {
+        sendSysexEndsIn3(payload[offset], payload[offset + 1], MIDIv1_SYSEX_END);
+    }
+}
+
+
 const uint32 midiNoteFrequency_10ths[128] = {
 	 82, 87, 92, 97, 103, 109, 116, 122, 130, 138, 146, 154, 164, 173, 184, 194, 
 	 206, 218, 231, 245, 260, 275, 291, 309, 327, 346, 367, 389, 412, 437, 462, 490, 
@@ -468,4 +559,6 @@ void USBMIDI::handleContinue(void) {}
 void USBMIDI::handleStop(void) {}
 void USBMIDI::handleActiveSense(void) {}
 void USBMIDI::handleReset(void) {}
+void USBMIDI::handleSysExData(unsigned char) {}
+void USBMIDI::handleSysExEnd(void) {}
 #pragma GCC diagnostic pop
