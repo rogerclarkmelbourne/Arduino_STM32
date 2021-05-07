@@ -5,12 +5,12 @@
 
 
 if [ $# -lt 4 ]; then
-    echo "Usage: $0 $# <dummy_port> <altID> <usbID> <binfile>" >&2
+    echo "Usage: $0 $# <dummy_port> <altID> <usbID> <binfile> <path to ide> <dfuse address>" >&2
     exit 1
 fi
 dummy_port="$1"; altID="$2"; usbID="$3"; binfile="$4"; dummy_port_fullpath="/dev/$1"
-if [ $# -eq 5 ]; then
-    dfuse_addr="--dfuse-address $5"
+if [ $# -eq 6 ]; then
+    dfuse_addr="--dfuse-address $6"
 else
     dfuse_addr=""
 fi
