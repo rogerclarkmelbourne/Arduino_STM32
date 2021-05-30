@@ -111,7 +111,7 @@ tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux
 tools.maple_upload.path.linux64={runtime.hardware.path}/tools/linux64
 tools.maple_upload.upload.params.verbose=-d
 tools.maple_upload.upload.params.quiet=
-tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin" {upload.dfuse_addr}
+tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin" "{runtime.ide.path}" {upload.dfuse_addr}
 
 # Generic STM32 upload via serial to Serial Port 1 (pins PA9 and PA10) - note. Boot0 line needs to high on board reset to enable upload via serial
 # at the end of the upload the program is automatically run, without the board being reset
