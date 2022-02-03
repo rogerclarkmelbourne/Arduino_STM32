@@ -176,7 +176,6 @@ union EVENT_t {
 void USBMIDI::dispatchPacket(uint32 p)
 {
     union EVENT_t e;
-
     e.i=p;
     
     switch (e.p.cin) {
@@ -236,7 +235,7 @@ void USBMIDI::dispatchPacket(uint32 p)
             break;
                      
         case CIN_PITCH_WHEEL:
-            handlePitchChange(((uint16)e.p.midi2)<<7|((uint16)e.p.midi1));
+            handlePitchChange(MIDIv1_VOICE_CHANNEL(e.p.midi0), ((uint16)e.p.midi2)<<7|((uint16)e.p.midi1));
             break;
         case CIN_1BYTE:
             switch (e.p.midi0) {
@@ -356,11 +355,11 @@ void USBMIDI::sendAfterTouch(unsigned int channel, unsigned int velocity)
 }
 
 // Send a Midi PITCH CHANGE message, with a 14-bit pitch (always for all channels)
-void USBMIDI::sendPitchChange(unsigned int pitch)
+void USBMIDI::sendPitchChange(unsigned int channel, unsigned int pitch)
 {
     outPacket.p.cable=DEFAULT_MIDI_CABLE;
     outPacket.p.cin=CIN_PITCH_WHEEL;
-    outPacket.p.midi0=MIDIv1_PITCH_WHEEL;
+    outPacket.p.midi0=MIDIv1_PITCH_WHEEL |(channel & 0x0f);
     outPacket.p.midi1= (uint8) pitch & 0x07F;
     outPacket.p.midi2= (uint8)  (pitch>>7) & 0x7f;
     writePacket(outPacket.i);
@@ -549,7 +548,7 @@ void USBMIDI::handleVelocityChange(unsigned int channel, unsigned int note, unsi
 void USBMIDI::handleControlChange(unsigned int channel, unsigned int controller, unsigned int value) {}
 void USBMIDI::handleProgramChange(unsigned int channel, unsigned int program) {}
 void USBMIDI::handleAfterTouch(unsigned int channel, unsigned int velocity) {}
-void USBMIDI::handlePitchChange(unsigned int pitch) {}
+void USBMIDI::handlePitchChange(unsigned int channel, unsigned int pitch) {}
 void USBMIDI::handleSongPosition(unsigned int position) {}
 void USBMIDI::handleSongSelect(unsigned int song) {}
 void USBMIDI::handleTuneRequest(void) {}

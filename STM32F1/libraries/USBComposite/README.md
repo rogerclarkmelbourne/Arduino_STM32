@@ -66,7 +66,7 @@ while(!USBComposite);
 ```
 
 Finally, there are a number of classes that implement particular protocols for the `USBHID` class plugin.
-These are:
+These include:
 ```
 HIDMouse
 HIDKeyboard
@@ -74,6 +74,7 @@ HIDJoystick
 HIDAbsMouse
 HIDConsumer
 HIDRaw<txSize,rxSize>
+HIDSwitchController
 ```
 And you can customize with more. Moreover, the `USBHID` plugin itself allows for compositing
 multiple HID profiles, e.g., Mouse / Keyboard / three joysticks. Each of these has at least

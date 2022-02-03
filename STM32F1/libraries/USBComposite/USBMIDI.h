@@ -160,7 +160,7 @@ public:
     void sendControlChange(unsigned int channel, unsigned int controller, unsigned int value);
     void sendProgramChange(unsigned int channel, unsigned int program);
     void sendAfterTouch(unsigned int channel, unsigned int velocity);
-    void sendPitchChange(unsigned int pitch);
+    void sendPitchChange(unsigned int channel, unsigned int pitch);
     void sendSongPosition(unsigned int position);
     void sendSongSelect(unsigned int song);
     void sendTuneRequest(void);
@@ -184,7 +184,7 @@ public:
     virtual void handleControlChange(unsigned int channel, unsigned int controller, unsigned int value);
     virtual void handleProgramChange(unsigned int channel, unsigned int program);
     virtual void handleAfterTouch(unsigned int channel, unsigned int velocity);
-    virtual void handlePitchChange(unsigned int pitch);
+    virtual void handlePitchChange(unsigned int channel, unsigned int pitch);
     virtual void handleSongPosition(unsigned int position);
     virtual void handleSongSelect(unsigned int song);
     virtual void handleTuneRequest(void);

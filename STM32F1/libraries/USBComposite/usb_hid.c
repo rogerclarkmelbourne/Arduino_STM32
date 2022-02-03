@@ -48,22 +48,27 @@ uint16 GetEPTxAddr(uint8 /*bEpNum*/);
 #include <libmaple/gpio.h>
 #include <board/board.h>
 
+static uint8 numEndpoints = 1;
 static uint8 IdleValue = 1;
 static uint8 ProtocolValue = 0;
 static uint32 txEPSize = 64;
+static uint32 rxEPSize = 64;
 static volatile int8 transmitting;
 static struct usb_chunk* reportDescriptorChunks = NULL;
 
 static void hidDataTxCb(void);
+static void hidDataRxCb(void);
 static void hidUSBReset(void);
 static void usb_hid_clear(void);
 static RESULT hidUSBDataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex, uint16 wLength);
 static RESULT hidUSBNoDataSetup(uint8 request, uint8 interface, uint8 requestType, uint8 wValue0, uint8 wValue1, uint16 wIndex);
 
+static USBHIDOutputEndpointReceiver rxReceiver = NULL;
+static void* rxReceiverExtra = NULL;
 static volatile HIDBuffer_t hidBuffers[MAX_HID_BUFFERS] = {{ 0 }};
+static volatile uint8* hidBufferRx = NULL;
 
 #define HID_INTERFACE_OFFSET 	0x00
-#define NUM_HID_ENDPOINTS          1
 #define HID_INTERFACE_NUMBER (HID_INTERFACE_OFFSET+usbHIDPart.startInterface)
 
 /*
@@ -75,12 +80,16 @@ static volatile HIDBuffer_t hidBuffers[MAX_HID_BUFFERS] = {{ 0 }};
 #define USB_HID_TX_ENDPOINT_INFO (&hidEndpoints[HID_ENDPOINT_TX])
 #define USB_HID_TX_ENDP (hidEndpoints[HID_ENDPOINT_TX].address)
 
+#define HID_ENDPOINT_RX      1
+#define USB_HID_RX_ENDPOINT_INFO (&hidEndpoints[HID_ENDPOINT_RX])
+#define USB_HID_RX_ENDP (hidEndpoints[HID_ENDPOINT_RX].address)
 
 typedef struct {
     //HID
     usb_descriptor_interface     	HID_Interface;
 	HIDDescriptor			 	 	HID_Descriptor;
     usb_descriptor_endpoint      	HIDDataInEndpoint;
+    usb_descriptor_endpoint      	HIDDataOutEndpoint;
 } __packed hid_part_config;
 
 static const hid_part_config hidPartConfigData = {
@@ -89,7 +98,7 @@ static const hid_part_config hidPartConfigData = {
         .bDescriptorType    = USB_DESCRIPTOR_TYPE_INTERFACE,
         .bInterfaceNumber   = HID_INTERFACE_OFFSET, // PATCH
         .bAlternateSetting  = 0x00,
-        .bNumEndpoints      = NUM_HID_ENDPOINTS,    
+        .bNumEndpoints      = 1, // PATCH    
         .bInterfaceClass    = USB_INTERFACE_CLASS_HID,
         .bInterfaceSubClass = USB_INTERFACE_SUBCLASS_HID,
         .bInterfaceProtocol = 0x00, /* Common AT Commands */
@@ -113,20 +122,37 @@ static const hid_part_config hidPartConfigData = {
         .bmAttributes     = USB_EP_TYPE_INTERRUPT,
         .wMaxPacketSize   = 64, //PATCH
         .bInterval        = 0x0A,
-	}
+	},
+	.HIDDataOutEndpoint = {
+		.bLength          = sizeof(usb_descriptor_endpoint),
+        .bDescriptorType  = USB_DESCRIPTOR_TYPE_ENDPOINT,
+        .bEndpointAddress = USB_DESCRIPTOR_ENDPOINT_OUT | 0, // PATCH: USB_HID_RX_ENDP
+        .bmAttributes     = USB_EP_TYPE_INTERRUPT,
+        .wMaxPacketSize   = 64, //PATCH
+        .bInterval        = 0x0A,
+	},
 };
+
+#define SIZE_hidPartConfigData_ONE_ENDPOINT (sizeof(hidPartConfigData)-sizeof(hidPartConfigData.HIDDataOutEndpoint))
+#define SIZE_hidPartConfigData_TWO_ENDPOINTS (sizeof(hidPartConfigData))
 
 static ONE_DESCRIPTOR HID_Hid_Descriptor = {
     (uint8*)&hidPartConfigData.HID_Descriptor,
     sizeof(hidPartConfigData.HID_Descriptor)
 };
 
-static USBEndpointInfo hidEndpoints[1] = {
+static USBEndpointInfo hidEndpoints[2] = {
     {
         .callback = hidDataTxCb,
         .pmaSize = 64,
         .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT,
         .tx = 1,
+    },
+    {
+        .callback = hidDataRxCb,
+        .pmaSize = 64,
+        .type = USB_GENERIC_ENDPOINT_TYPE_INTERRUPT,
+        .tx = 0,
     }
 };
 
@@ -141,20 +167,24 @@ void usb_hid_setTXEPSize(uint32_t size) {
 #define OUT_16(s,v) *(uint16_t*)&OUT_BYTE(s,v) // OK on Cortex which can handle unaligned writes
 
 static void getHIDPartDescriptor(uint8* out) {
-    memcpy(out, &hidPartConfigData, sizeof(hid_part_config));
+    memcpy(out, &hidPartConfigData, numEndpoints > 1 ? SIZE_hidPartConfigData_TWO_ENDPOINTS : SIZE_hidPartConfigData_ONE_ENDPOINT);
     // patch to reflect where the part goes in the descriptor
     OUT_BYTE(hidPartConfigData, HID_Interface.bInterfaceNumber) += usbHIDPart.startInterface;
+    OUT_BYTE(hidPartConfigData, HID_Interface.bNumEndpoints) = numEndpoints;
     OUT_BYTE(hidPartConfigData, HIDDataInEndpoint.bEndpointAddress) += USB_HID_TX_ENDP;
     uint16 size = usb_generic_chunks_length(reportDescriptorChunks);
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenL) = (uint8)size;
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenH) = (uint8)(size>>8);
     OUT_16(hidPartConfigData, HIDDataInEndpoint.wMaxPacketSize) = txEPSize;
+    OUT_16(hidPartConfigData, HIDDataOutEndpoint.wMaxPacketSize) = rxEPSize;
+    if (numEndpoints > 1) 
+        OUT_BYTE(hidPartConfigData, HIDDataOutEndpoint.bEndpointAddress) += USB_HID_RX_ENDP;
 }
 
 USBCompositePart usbHIDPart = {
     .numInterfaces = 1,
     .numEndpoints = sizeof(hidEndpoints)/sizeof(*hidEndpoints),
-    .descriptorSize = sizeof(hid_part_config),
+    .descriptorSize = SIZE_hidPartConfigData_ONE_ENDPOINT,
     .getPartDescriptor = getHIDPartDescriptor,
     .usbInit = NULL,
     .usbReset = hidUSBReset,
@@ -165,6 +195,25 @@ USBCompositePart usbHIDPart = {
     .clear = usb_hid_clear,
     .endpoints = hidEndpoints
 };
+
+void usb_hid_setDedicatedRXEndpoint(void* buffer, uint16_t size, USBHIDOutputEndpointReceiver receiver, void* extra) {
+    if (buffer != NULL) {
+        numEndpoints = 2;
+        usbHIDPart.descriptorSize = SIZE_hidPartConfigData_TWO_ENDPOINTS;
+        hidEndpoints[1].pmaSize = size;
+        rxEPSize = size;
+        hidBufferRx = buffer;
+        rxReceiver = receiver;
+        rxReceiverExtra = extra;
+    }
+    else {
+        numEndpoints = 1;
+        usbHIDPart.descriptorSize = SIZE_hidPartConfigData_ONE_ENDPOINT;
+        hidBufferRx = NULL;
+        rxReceiver = NULL;
+        rxReceiverExtra = NULL;
+    }
+}
 
 
 #define HID_TX_BUFFER_SIZE	256 // must be power of 2
@@ -345,6 +394,23 @@ static void hidDataTxCb(void)
     usb_generic_send_from_circular_buffer(USB_HID_TX_ENDPOINT_INFO, 
         hidBufferTx, HID_TX_BUFFER_SIZE, hid_tx_head, &hid_tx_tail, &transmitting);
 }
+
+static void hidDataRxCb(void)
+{
+    USBEndpointInfo* ep = USB_HID_RX_ENDPOINT_INFO; 
+    
+    if (hidBufferRx != NULL) {
+        uint32 didRead = usb_generic_read_to_buffer(ep, hidBufferRx, rxEPSize);
+
+        if (didRead > 0) {
+            if (rxReceiver != NULL)
+                rxReceiver(rxReceiverExtra, hidBufferRx, didRead);
+        }
+    }
+    
+    usb_generic_enable_rx(ep);
+}
+
 
 
 static void hidUSBReset(void) {

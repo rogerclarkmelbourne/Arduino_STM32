@@ -71,7 +71,7 @@ void USBCompositeDevice::setSerialString(const char* s) {
 }
 
 bool USBCompositeDevice::begin() {
-   if (enabled)
+    if (enabled)
         return true;
     for (uint32 i = 0 ; i < numParts ; i++) {
 		if (init[i] != NULL && !init[i](plugin[i]))
