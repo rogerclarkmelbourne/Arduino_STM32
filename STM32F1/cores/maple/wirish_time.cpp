@@ -34,6 +34,8 @@
 #include <libmaple/delay.h>
 #include "Arduino.h"
 
+extern "C" {
+
 void delay(unsigned long ms)
 {
     uint32 start = micros();
@@ -51,3 +53,5 @@ void delay(unsigned long ms)
 void delayMicroseconds(uint32 us) {
     delay_us(us);
 }
+
+} // extern "C"

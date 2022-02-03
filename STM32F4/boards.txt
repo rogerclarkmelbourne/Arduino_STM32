@@ -20,6 +20,7 @@ discovery_f407.upload.maximum_data_size=131072
 #discovery_f407.upload.auto_reset=true
 
 discovery_f407.build.core=maple
+discovery_f407.build.f_cpu=168000000
 discovery_f407.build.extra_flags= -DLED_BUILTIN=PD14 -DCRYSTAL_FREQ=8
 discovery_f407.build.ldscript=ld/jtag.ld
 discovery_f407.build.variant=discovery_f407
@@ -72,6 +73,7 @@ blackpill_f401.upload.maximum_size=262144
 blackpill_f401.upload.maximum_data_size=65536
 
 blackpill_f401.build.core=maple
+blackpill_f401.build.f_cpu=84000000
 blackpill_f401.build.extra_flags=-DLED_BUILTIN=PC13 -DCRYSTAL_FREQ=25 -DNO_CCMRAM
 blackpill_f401.build.ldscript=ld/jtag.ld
 blackpill_f401.build.variant=blackpill_f401
@@ -124,6 +126,7 @@ disco_f411.upload.maximum_size=1048576
 disco_f411.upload.maximum_data_size=131072
 
 disco_f411.build.core=maple
+disco_f411.build.f_cpu=96000000
 disco_f411.build.extra_flags=-DLED_BUILTIN=PD12 -DCRYSTAL_FREQ=8 -DNO_CCMRAM
 disco_f411.build.ldscript=ld/jtag.ld
 disco_f411.build.variant=disco_f411
@@ -177,6 +180,7 @@ generic_f407v.upload.maximum_data_size=131072
 #generic_f407v.upload.auto_reset=true
 
 generic_f407v.build.core=maple
+generic_f407v.build.f_cpu=168000000
 generic_f407v.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PA6
 generic_f407v.build.variant=generic_f407v
 generic_f407v.build.variant_system_lib=lib_f407.a
@@ -242,6 +246,7 @@ generic_f407v_mini.upload.maximum_data_size=131072
 #generic_f407v_mini.upload.auto_reset=true
 
 generic_f407v_mini.build.core=maple
+generic_f407v_mini.build.f_cpu=168000000
 generic_f407v_mini.build.extra_flags= -DCRYSTAL_FREQ=25 -DLED_BUILTIN=PB9
 generic_f407v_mini.build.ldscript=ld/jtag.ld
 generic_f407v_mini.build.variant=generic_f407v
@@ -305,6 +310,7 @@ arch_max.upload.maximum_size=514288
 arch_max.upload.maximum_data_size=131072
 
 arch_max.build.core=maple
+arch_max.build..f_cpu=168000000
 arch_max.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PB3
 arch_max.build.variant=arch_max
 arch_max.build.variant_system_lib=lib_f407.a

@@ -193,6 +193,7 @@ SoftWire::SoftWire(uint8 scl, uint8 sda, uint8 delay) : i2c_delay(delay) {
 }
 
 void SoftWire::begin(uint8 self_addr) {
+	(void)self_addr;
     tx_buf_idx = 0;
     tx_buf_overflow = false;
     rx_buf_idx = 0;

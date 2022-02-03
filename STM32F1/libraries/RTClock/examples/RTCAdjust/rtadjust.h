@@ -28,6 +28,14 @@
 #define RTADJUST_H_
 #include <RTClock.h>
 
+/* allows incremental calibration by calling calibratertc() repeatedly
+ * note that this use 2 additional backup registers making it a total of 5 backup registers used
+ * without this 3 registers are used
+ * however, without incremental adjustment, you can only call calibratertc()
+ *  once after calling synctime()
+ */
+#define INCR_CALIBRATE
+
 /* adjust RTC time
  * call this from setup() so that the sketch updates the rtc when starting up
  */
@@ -46,13 +54,24 @@ void synctime(time_t time_now);
  *
  *  call this function with the current accurate clock time to calibrate the rtc
  *
+ *  it is recommended to set the RTC time with the time you provide to calibratertc()
+ *  after calling this function to calibrate the RTC, that ensures a time sync after
+ *  calibratertc().
+ *
+ *  however, call rt.setTime(time_now) and not synctime() as synctime would change the
+ *  initial time sync timestamp needed by this calibratertc() function
+ *
  *  if the cumulative delay between current time and the last time when synctime()
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
  *
- *  note that this function can only be run once to compute the drift_duration
- *  this is because the time of last adjustment would have been updated
- *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  note that if you want to call calibratertc() repeatedly after an initial synctime
+ *  you need to define INCR_CALIBRATE. that would allow you to call calibratertc()
+ *  multiple times after an initial synctime() call.
+ *
+ *  without INCR_CALIBRATE this function can only be run once to compute
+ *  the drift_duration this is because the time of last adjustment would have
+ *  been updated by adjtime() after calibration and is no longer relevant for purpose of
  *  computing drift duration
  *
  *  to run it again
@@ -67,6 +86,17 @@ void synctime(time_t time_now);
  */
 void calibratertc(time_t time_now);
 
+
+
+/* set the time of init adjustment in backup register 8 and 9
+ * @param time this is the time_t value to be saved
+ */
+void setinitadjtime(time_t time);
+
+/* get the time of init adjustment from backup register 8 and 9
+ * @return the time_t value of the time saved
+ */
+time_t getinitadjtime();
 
 /* set the time of last adjustment in backup register 8 and 9
  * @param time this is the time_t value to be saved

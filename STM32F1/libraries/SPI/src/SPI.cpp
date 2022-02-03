@@ -61,6 +61,8 @@ static void configure_gpios(spi_dev *dev, bool as_master);
 
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq);
 
+static uint16_t ff = 0XFFFF;
+
 #if (BOARD_NR_SPI >= 3) && !defined(STM32_HIGH_DENSITY)
 #error "The SPI library is misconfigured: 3 SPI ports only available on high density STM32 devices"
 #endif
@@ -270,6 +272,7 @@ If someone finds this is not the case or sees a logic error with this let me kno
 
 void SPIClass::beginTransaction(uint8_t pin, SPISettings settings)
 {
+	(void)pin; // unused
     setBitOrder(settings.bitOrder);
     setDataMode(settings.dataMode);
     setDataSize(settings.dataSize);
@@ -398,6 +401,27 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     return ret;
 }
 
+void SPIClass::transfer(const uint8_t * tx_buf, uint8_t * rx_buf, uint32 len)
+{
+    if ( len == 0 ) return;
+    spi_rx_reg(_currentSetting->spi_d);      // clear the RX buffer in case a byte is waiting on it.
+    spi_reg_map * regs = _currentSetting->spi_d->regs;
+    // start sequence: write byte 0
+    regs->DR = *tx_buf++;                    // write the first byte
+    // main loop
+    while ( (--len) ) {
+        while( !(regs->SR & SPI_SR_TXE) );   // wait for TXE flag
+        noInterrupts();                      // go atomic level - avoid interrupts to surely get the previously received data
+        regs->DR = *tx_buf++;                // write the next data item to be transmitted into the SPI_DR register. This clears the TXE flag.
+        while ( !(regs->SR & SPI_SR_RXNE) ); // wait till data is available in the DR register
+        *rx_buf++ = (uint8)(regs->DR);       // read and store the received byte. This clears the RXNE flag.
+        interrupts();                        // let systick do its job
+    }
+    // read remaining last byte
+    while ( !(regs->SR & SPI_SR_RXNE) );     // wait till data is available in the Rx register
+    *rx_buf++ = (uint8)(regs->DR);           // read and store the received byte
+}
+
 /*  Roger Clark and Victor Perez, 2015
 *	Performs a DMA SPI transfer with at least a receive buffer.
 *	If a TX buffer is not provided, FF is sent over and over for the lenght of the transfer. 
@@ -412,13 +436,13 @@ void SPIClass::dmaTransferSet(const void *transmitBuf, void *receiveBuf) {
     dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
                      receiveBuf, dma_bit_size, (DMA_MINC_MODE | DMA_TRNS_CMPLT ));// receive buffer DMA
     if (!transmitBuf) {
-    transmitBuf = &ff;
-    dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-                       (volatile void*)transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
+        transmitBuf = &ff;
+        dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
+                           (volatile void*)transmitBuf, dma_bit_size, (DMA_FROM_MEM));// Transmit FF repeatedly
     }
     else {
-    dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
-                       (volatile void*)transmitBuf, dma_bit_size, (DMA_MINC_MODE |  DMA_FROM_MEM ));// Transmit buffer DMA
+        dma_setup_transfer(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, &_currentSetting->spi_d->regs->DR, dma_bit_size,
+                           (volatile void*)transmitBuf, dma_bit_size, (DMA_MINC_MODE |  DMA_FROM_MEM ));// Transmit buffer DMA
     }
     dma_set_priority(_currentSetting->spiDmaDev, _currentSetting->spiTxDmaChannel, DMA_PRIORITY_LOW);
     dma_set_priority(_currentSetting->spiDmaDev, _currentSetting->spiRxDmaChannel, DMA_PRIORITY_VERY_HIGH);
@@ -465,6 +489,12 @@ uint8 SPIClass::dmaTransferRepeat(uint16 length) {
 
 uint8 SPIClass::dmaTransfer(const void *transmitBuf, void *receiveBuf, uint16 length) {
     dmaTransferSet(transmitBuf, receiveBuf);
+    return dmaTransferRepeat(length);
+}
+
+uint8 SPIClass::dmaTransfer(const uint16 value, void *receiveBuf, uint16 length) {
+    ff = value;
+    dmaTransferSet(NULL, receiveBuf);
     return dmaTransferRepeat(length);
 }
 
@@ -782,11 +812,11 @@ static const spi_baud_rate baud_rates[8] __FLASH__ = {
 * (CYCLES_PER_MICROSECOND == 72, APB2 at 72MHz, APB1 at 36MHz).
 */
 static spi_baud_rate determine_baud_rate(spi_dev *dev, uint32_t freq) {
-    uint32_t clock;
+    uint32_t clock = 0;
     switch (rcc_dev_clk(dev->clk_id)) {
     case RCC_APB2: clock = STM32_PCLK2; break; // 72 Mhz
     case RCC_APB1: clock = STM32_PCLK1; break; // 36 Mhz
-    case RCC_AHB:  clock = 0; break;    //There is no SPI on this bus, but it removes warning 
+    case RCC_AHB:  break;    //There is no SPI on this bus, but it removes warning 
     }
     clock /= 2;
     uint32_t i = 0;

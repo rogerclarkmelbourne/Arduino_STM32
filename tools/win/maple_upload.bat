@@ -5,7 +5,8 @@ set driverLetter=%~dp0
 set driverLetter=%driverLetter:~0,2%
 %driverLetter%
 cd %~dp0
-java -jar maple_loader.jar %1 %2 %3 %4 %5 %6 %7 %8 %9
+set PATH=%5\java\bin;%PATH%
+java -jar maple_loader.jar %1 %2 %3 %4
 
 for /l %%x in (1, 1, 40) do (
   ping -w 50 -n 1 192.0.2.1 > nul

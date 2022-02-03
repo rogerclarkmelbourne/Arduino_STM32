@@ -2,49 +2,53 @@
 
 STM32ADC myADC(ADC1); 
 
-uint8 pin = D7; 
+uint8 adc_pin = PA0;
 
-#define BOARD_LED D33 //this is for Maple Mini
-volatile static bool triggered = 0; 
-uint32 dado_adc = 0; 
+volatile static bool triggered; 
+volatile uint32 adc_value; 
 
-
-void int_func() {
-  
-  triggered = 1; 
-  dado_adc = myADC.getData();
-  }
-
-
-
-void setup() {
-  Serial.begin(19200); 
-  pinMode(BOARD_LED, OUTPUT);
-  pinMode(D32, INPUT);
-  pinMode(D11, INPUT_ANALOG);//AD pin.
-//startup blink... good idea from Pig-O-Scope
-  digitalWrite(BOARD_LED, HIGH);
-  delay(1000);
-  digitalWrite(BOARD_LED, LOW);
-  delay(1000);
-  myADC.calibrate();
-  myADC.setSampleRate(ADC_SMPR_1_5);
-  myADC.attachInterrupt(int_func, ADC_EOC);
-  myADC.setPins(&pin, 1);  
-  
+//-----------------------------------------------------------------------------
+// This function will be called after the conversion is done
+//-----------------------------------------------------------------------------
+void adc_int()
+{
+	adc_value = myADC.getData();
+	triggered = 1;
 }
 
+//-----------------------------------------------------------------------------
+void setup()
+{
+	// Serial.begin(19200); // useless for USB serial
+	pinMode(LED_BUILTIN, OUTPUT);
+	digitalWrite(LED_BUILTIN, HIGH); // LED off
 
+	while (!Serial); delay(10);
 
-void loop() {
-      if(digitalRead(D32) == 1 ) {
-      Serial.println("begin");      
-      // Take our samples
-      myADC.startConversion(); 
-      while (triggered == 0); //wait here... 
-      
-      Serial.print("Readin: ");
-      Serial.println(dado_adc);      
-      }
+	Serial.print("Setup...");
 
+	myADC.setPins(&adc_pin, 1);
+	myADC.calibrate();
+	myADC.setSampleRate(ADC_SMPR_1_5);
+	myADC.attachInterrupt(adc_int);
+
+	Serial.println("done.");
+}
+
+//-----------------------------------------------------------------------------
+void loop()
+{
+	// Take our samples
+	triggered = 0;
+	myADC.startConversion();
+
+	while (triggered == 0); // wait here till conversion is finished
+
+	Serial.print("Readin = ");
+	Serial.println(adc_value);
+
+	digitalWrite(LED_BUILTIN, LOW); // on
+	delay(500);
+	digitalWrite(LED_BUILTIN, HIGH); // off
+	delay(500);
 }

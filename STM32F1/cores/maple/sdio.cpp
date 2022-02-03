@@ -118,8 +118,8 @@ void sdio_set_clock(uint32_t clk)
 	 * limit the SDIO master clock to 8/3 of PCLK2.See RM 22.3
 	 * Also limited to no more than 48Mhz
 	 */
-    clk = min(clk,(SDIOCLK/3)*8);
-    clk = min(clk,36000000);
+    clk = min(clk,((uint32_t)SDIOCLK/3)*8);
+    clk = min(clk,(uint32_t)36000000);
 
 	if (clk<1000000) dly = DELAY_LONG;
 	else dly = DELAY_SHORT;

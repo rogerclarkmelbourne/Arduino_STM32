@@ -1,3 +1,6 @@
+#ifndef UTIL_ADC_H
+#define UTIL_ADC_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,13 +18,32 @@ void enable_internal_reading(adc_dev *dev);
 
 void internalRead(adc_dev *dev, uint8 channel);
 
-void enable_awd_irq( adc_dev * dev);
+/*
+    Enable the Watchdog function on the ADC.
+*/
+static inline void enable_awd(adc_dev * dev) {
+	dev->regs->CR1 |= ADC_CR1_AWDEN;
+}
 
-void set_awd_low_limit( adc_dev * dev, uint32 limit);
+static inline void disable_awd(adc_dev * dev) {
+	dev->regs->CR1 &= ~ADC_CR1_AWDEN;
+}
 
-void set_awd_high_limit( adc_dev * dev, uint32 limit);
+/*
+    Set Analog Watchdog Low Limit.
+    Results must be read through interrupt or polled outside this function.
+*/
+static inline void set_awd_low_limit(adc_dev * dev, uint32 limit) {
+	dev->regs->LTR = limit;
+}
 
-void enable_awd( adc_dev * dev);
+/*
+    Set Analog Watchdog High Limit.
+    Results must be read through interrupt or polled outside this function.
+*/
+static inline void set_awd_high_limit(adc_dev * dev, uint32 limit) {
+	dev->regs->HTR = limit;
+}
 
 void set_awd_channel( adc_dev * dev, uint8 awd_channel);
 
@@ -34,5 +56,7 @@ uint8 poll_adc_convert(adc_dev *dev);
 void adc_dma_enable(adc_dev * dev);
 
 #ifdef __cplusplus
-}
+} // extern "C"
 #endif
+
+#endif // UTIL_ADC_H

@@ -37,6 +37,10 @@
 
 #include <boards.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Returns time (in milliseconds) since the beginning of program
  * execution. On overflow, restarts at 0.
@@ -93,5 +97,9 @@ void delay(unsigned long ms);
  * @see delay()
  */
 void delayMicroseconds(uint32 us);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
