@@ -74,7 +74,7 @@ blackpill_f401.upload.maximum_data_size=65536
 
 blackpill_f401.build.core=maple
 blackpill_f401.build.f_cpu=84000000
-blackpill_f401.build.extra_flags=-DLED_BUILTIN=PC13 -DCRYSTAL_FREQ=25 -DNO_CCMRAM
+blackpill_f401.build.extra_flags=-DLED_BUILTIN=PC13 -DCRYSTAL_FREQ=25 -DNO_CCMRAM -DMCU_STM32F401CC
 blackpill_f401.build.ldscript=ld/jtag.ld
 blackpill_f401.build.variant=blackpill_f401
 blackpill_f401.build.variant_system_lib=lib_f407.a
@@ -115,6 +115,59 @@ blackpill_f401.menu.opt.o3lto.build.flags.ldspecs=-flto
 blackpill_f401.menu.opt.ogstd=Debug (-g)
 blackpill_f401.menu.opt.ogstd.build.flags.optimize=-Og
 blackpill_f401.menu.opt.ogstd.build.flags.ldspecs=
+##############################################################
+blackpill_f411.name=Blackpill STM32F411CEU6
+
+blackpill_f401.upload.tool=stlink_upload
+blackpill_f401.upload.protocol=stlink
+
+blackpill_f411.upload.file_type=bin
+blackpill_f411.upload.maximum_size=524288
+blackpill_f411.upload.maximum_data_size=131072
+
+blackpill_f411.build.core=maple
+blackpill_f411.build.f_cpu=96000000
+blackpill_f411.build.extra_flags=-DLED_BUILTIN=PC13 -DCRYSTAL_FREQ=25 -DNO_CCMRAM -DMCU_STM32F411CE
+blackpill_f411.build.ldscript=ld/jtag.ld
+blackpill_f411.build.variant=blackpill_f411
+blackpill_f411.build.variant_system_lib=lib_f407.a
+blackpill_f411.build.error_led_pin=PC13
+blackpill_f411.build.board=blackpill_f411
+blackpill_f411.build.vect_flags=-DUSER_ADDR_ROM=0x08000000
+
+blackpill_f411.menu.usb_cfg.usb_serial=USB serial (CDC)
+blackpill_f411.menu.usb_cfg.usb_serial.build.cpu_flags=-DSERIAL_USB
+blackpill_f411.menu.usb_cfg.usb_nc=USB inactive
+blackpill_f411.menu.usb_cfg.usb_nc.build.cpu_flags=-DUSB_NC
+blackpill_f411.menu.usb_cfg.usb_msc=USB Mass Storage (MSC)
+blackpill_f411.menu.usb_cfg.usb_msc.build.cpu_flags=-DUSB_MSC
+
+#-- Optimizations
+blackpill_f411.menu.opt.osstd=Smallest (default)
+blackpill_f411.menu.opt.oslto=Smallest Code with LTO
+blackpill_f411.menu.opt.oslto.build.flags.optimize=-Os -flto
+blackpill_f411.menu.opt.oslto.build.flags.ldspecs=-flto
+blackpill_f411.menu.opt.o1std=Fast (-O1)
+blackpill_f411.menu.opt.o1std.build.flags.optimize=-O1
+blackpill_f411.menu.opt.o1std.build.flags.ldspecs=
+blackpill_f411.menu.opt.o1lto=Fast (-O1) with LTO
+blackpill_f411.menu.opt.o1lto.build.flags.optimize=-O1 -flto
+blackpill_f411.menu.opt.o1lto.build.flags.ldspecs=-flto
+blackpill_f411.menu.opt.o2std=Faster (-O2)
+blackpill_f411.menu.opt.o2std.build.flags.optimize=-O2
+blackpill_f411.menu.opt.o2std.build.flags.ldspecs=
+blackpill_f411.menu.opt.o2lto=Faster (-O2) with LTO
+blackpill_f411.menu.opt.o2lto.build.flags.optimize=-O2 -flto
+blackpill_f411.menu.opt.o2lto.build.flags.ldspecs=-flto
+blackpill_f411.menu.opt.o3std=Fastest (-O3)
+blackpill_f411.menu.opt.o3std.build.flags.optimize=-O3
+blackpill_f411.menu.opt.o3std.build.flags.ldspecs=
+blackpill_f411.menu.opt.o3lto=Fastest (-O3) with LTO
+blackpill_f411.menu.opt.o3lto.build.flags.optimize=-O3 -flto
+blackpill_f411.menu.opt.o3lto.build.flags.ldspecs=-flto
+blackpill_f411.menu.opt.ogstd=Debug (-g)
+blackpill_f411.menu.opt.ogstd.build.flags.optimize=-Og
+blackpill_f411.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
 disco_f411.name=STM32 Discovery F411E
 
