@@ -65,8 +65,9 @@ discovery_f407.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
 blackpill_f401.name=Blackpill STM32F401CCU6
 
-blackpill_f401.upload.tool=stlink_upload
-blackpill_f401.upload.protocol=stlink
+blackpill_f401.menu.upload_method.STLinkMethod=STLink
+blackpill_f401.menu.upload_method.STLinkMethod.upload.protocol=STLink
+blackpill_f401.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
 blackpill_f401.upload.file_type=bin
 blackpill_f401.upload.maximum_size=262144
@@ -118,8 +119,9 @@ blackpill_f401.menu.opt.ogstd.build.flags.ldspecs=
 ##############################################################
 blackpill_f411.name=Blackpill STM32F411CEU6
 
-blackpill_f401.upload.tool=stlink_upload
-blackpill_f401.upload.protocol=stlink
+blackpill_f411.menu.upload_method.STLinkMethod=STLink
+blackpill_f411.menu.upload_method.STLinkMethod.upload.protocol=STLink
+blackpill_f411.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 
 blackpill_f411.upload.file_type=bin
 blackpill_f411.upload.maximum_size=524288
