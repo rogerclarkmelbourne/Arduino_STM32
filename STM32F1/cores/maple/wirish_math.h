@@ -47,7 +47,7 @@ void randomSeed(unsigned int seed);
  * @return A pseudo-random number in the range [0,max).
  * @see randomSeed()
  */
-long random(long max);
+long random(long max = __LONG_MAX__);
 
 /**
  * @brief Generate a pseudo-random number with lower and upper bounds.
