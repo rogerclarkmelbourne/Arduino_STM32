@@ -408,7 +408,7 @@ private:
     bool autoRegister = true;
 	bool enabledHID = false;
     uint32 txPacketSize = 64;
-    struct usb_chunk* chunkList;
+    struct usb_chunk* chunkList = nullptr;
     // baseChunk holds any explicitly specified report descriptor that
     // overrides any report descriptors from the chain of registered profiles
     struct usb_chunk baseChunk = { 0, 0, 0 };
@@ -448,6 +448,12 @@ public:
     }
     USBHID(bool _autoRegister=true) {
         autoRegister = _autoRegister;
+    }
+    void setTXInterval(uint8 t) {
+        usb_hid_setTXInterval(t);
+    }
+    void setRXInterval(uint8 t) {
+        usb_hid_setRXInterval(t);
     }
 };
 
@@ -650,6 +656,38 @@ public:
 #define KEY_F10				0xCB
 #define KEY_F11				0xCC
 #define KEY_F12				0xCD
+#define KEY_F13             (KEY_HID_OFFSET+0x68)
+#define KEY_F14             (KEY_HID_OFFSET+0x69)
+#define KEY_F15             (KEY_HID_OFFSET+0x6A)
+#define KEY_KP_DOT          (KEY_HID_OFFSET+0x63)
+#define KEY_KP_ASTERISK     (KEY_HID_OFFSET+0x55)
+#define KEY_KP_PLUS         (KEY_HID_OFFSET+0x57)
+#define KEY_NUM_LOCK        (KEY_HID_OFFSET+0x53)
+#define KEY_KP_SLASH        (KEY_HID_OFFSET+0x54)
+#define KEY_KP_ENTER        (KEY_HID_OFFSET+0x58)
+#define KEY_KP_MINUS        (KEY_HID_OFFSET+0x56)
+#define KEY_KP_EQUAL        (KEY_HID_OFFSET+0x86)
+#define KEY_KP_0            (KEY_HID_OFFSET+0x62)
+#define KEY_KP_1            (KEY_HID_OFFSET+0x59)
+#define KEY_KP_2            (KEY_HID_OFFSET+0x5a)
+#define KEY_KP_3            (KEY_HID_OFFSET+0x5b)
+#define KEY_KP_4            (KEY_HID_OFFSET+0x5c)
+#define KEY_KP_5            (KEY_HID_OFFSET+0x5d)
+#define KEY_KP_6            (KEY_HID_OFFSET+0x5e)
+#define KEY_KP_7            (KEY_HID_OFFSET+0x5f)
+#define KEY_KP_8            (KEY_HID_OFFSET+0x60)
+#define KEY_KP_9            (KEY_HID_OFFSET+0x61)
+#define KEY_VOLUME_UP       (KEY_HID_OFFSET+0x80)
+#define KEY_VOLUME_DOWN     (KEY_HID_OFFSET+0x81)
+#define KEY_MUTE            (KEY_HID_OFFSET+0x7f)
+#define KEY_HELP            (KEY_HID_OFFSET+0x75)
+#define KEY_POWER           (KEY_HID_OFFSET+0x66)
+#define KEY_102ND           (KEY_HID_OFFSET+0x64)
+#define KEY_PRINT_SCREEN    (KEY_HID_OFFSET+0x46)    
+#define KEY_SCROLL_LOCK     (KEY_HID_OFFSET+0x47)
+#define KEY_PAUSE           (KEY_HID_OFFSET+0x48)       
+
+
 
 typedef struct{
     uint8_t reportID;

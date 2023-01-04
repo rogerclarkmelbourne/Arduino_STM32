@@ -53,6 +53,8 @@ static uint8 IdleValue = 1;
 static uint8 ProtocolValue = 0;
 static uint32 txEPSize = 64;
 static uint32 rxEPSize = 64;
+static uint8 txInterval = 0x0A;
+static uint8 rxInterval = 0x0A;
 static volatile int8 transmitting;
 static struct usb_chunk* reportDescriptorChunks = NULL;
 
@@ -121,7 +123,7 @@ static const hid_part_config hidPartConfigData = {
         .bEndpointAddress = USB_DESCRIPTOR_ENDPOINT_IN | 0, // PATCH: USB_HID_TX_ENDP
         .bmAttributes     = USB_EP_TYPE_INTERRUPT,
         .wMaxPacketSize   = 64, //PATCH
-        .bInterval        = 0x0A,
+        .bInterval        = 0x0A, //PATCH
 	},
 	.HIDDataOutEndpoint = {
 		.bLength          = sizeof(usb_descriptor_endpoint),
@@ -129,7 +131,7 @@ static const hid_part_config hidPartConfigData = {
         .bEndpointAddress = USB_DESCRIPTOR_ENDPOINT_OUT | 0, // PATCH: USB_HID_RX_ENDP
         .bmAttributes     = USB_EP_TYPE_INTERRUPT,
         .wMaxPacketSize   = 64, //PATCH
-        .bInterval        = 0x0A,
+        .bInterval        = 0x0A, //PATCH
 	},
 };
 
@@ -140,6 +142,14 @@ static ONE_DESCRIPTOR HID_Hid_Descriptor = {
     (uint8*)&hidPartConfigData.HID_Descriptor,
     sizeof(hidPartConfigData.HID_Descriptor)
 };
+
+void usb_hid_setTXInterval(uint8_t t) {
+    txInterval = t;
+}
+
+void usb_hid_setRXInterval(uint8_t t) {
+    rxInterval = t;
+}
 
 static USBEndpointInfo hidEndpoints[2] = {
     {
@@ -176,9 +186,12 @@ static void getHIDPartDescriptor(uint8* out) {
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenL) = (uint8)size;
     OUT_BYTE(hidPartConfigData, HID_Descriptor.descLenH) = (uint8)(size>>8);
     OUT_16(hidPartConfigData, HIDDataInEndpoint.wMaxPacketSize) = txEPSize;
-    OUT_16(hidPartConfigData, HIDDataOutEndpoint.wMaxPacketSize) = rxEPSize;
-    if (numEndpoints > 1) 
+    OUT_BYTE(hidPartConfigData, HIDDataInEndpoint.bInterval) = txInterval;
+    if (numEndpoints > 1) {
         OUT_BYTE(hidPartConfigData, HIDDataOutEndpoint.bEndpointAddress) += USB_HID_RX_ENDP;
+        OUT_BYTE(hidPartConfigData, HIDDataOutEndpoint.bInterval) = rxInterval;
+        OUT_16(hidPartConfigData, HIDDataOutEndpoint.wMaxPacketSize) = rxEPSize;
+    }
 }
 
 USBCompositePart usbHIDPart = {

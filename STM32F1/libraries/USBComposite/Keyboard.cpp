@@ -179,7 +179,8 @@ uint8_t HIDKeyboard::getKeyCode(uint16_t k, uint8_t* modifiersP)
     }
     else { // shift key
         *modifiersP = 1<<(k-0x80);
-        return 0;
+        
+        return k-0x80+0xE0;
     }    
 }
 
