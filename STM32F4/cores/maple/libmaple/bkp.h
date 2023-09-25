@@ -42,12 +42,16 @@ extern "C" {
 #include "rcc.h"
 
 
-#define NR_LOW_DRS 10
-#define BKP_NR_DATA_REGS 42
+#define BKP_NR_DATA_REGS 20
 
 /** Backup peripheral register map type. */
+/*
+* there are 20 backup registers on stm32 f401, f411, f405, f407, f427, f429 devices.
+* in addition for the larger devices e.g. f405, f407, f427, f429 there is an additional
+* 4KB backup sram. bkp_reg_map mainly maps the 20 backup registers.
+*/
+
 typedef struct bkp_reg_map {
-    __IO uint32 RESERVED1;      ///< Reserved
     __IO uint32 DR1;            ///< Data register 1
     __IO uint32 DR2;            ///< Data register 2
     __IO uint32 DR3;            ///< Data register 3
@@ -58,11 +62,6 @@ typedef struct bkp_reg_map {
     __IO uint32 DR8;            ///< Data register 8
     __IO uint32 DR9;            ///< Data register 9
     __IO uint32 DR10;           ///< Data register 10
-    __IO uint32 RTCCR;          ///< RTC control register
-    __IO uint32 CR;             ///< Control register
-    __IO uint32 CSR;            ///< Control and status register
-    __IO uint32 RESERVED2;     ///< Reserved
-    __IO uint32 RESERVED3;     ///< Reserved
     __IO uint32 DR11;           ///< Data register 11
     __IO uint32 DR12;           ///< Data register 12
     __IO uint32 DR13;           ///< Data register 13
@@ -73,32 +72,15 @@ typedef struct bkp_reg_map {
     __IO uint32 DR18;           ///< Data register 18
     __IO uint32 DR19;           ///< Data register 19
     __IO uint32 DR20;           ///< Data register 20
-    __IO uint32 DR21;           ///< Data register 21
-    __IO uint32 DR22;           ///< Data register 22
-    __IO uint32 DR23;           ///< Data register 23
-    __IO uint32 DR24;           ///< Data register 24
-    __IO uint32 DR25;           ///< Data register 25
-    __IO uint32 DR26;           ///< Data register 26
-    __IO uint32 DR27;           ///< Data register 27
-    __IO uint32 DR28;           ///< Data register 28
-    __IO uint32 DR29;           ///< Data register 29
-    __IO uint32 DR30;           ///< Data register 30
-    __IO uint32 DR31;           ///< Data register 31
-    __IO uint32 DR32;           ///< Data register 32
-    __IO uint32 DR33;           ///< Data register 33
-    __IO uint32 DR34;           ///< Data register 34
-    __IO uint32 DR35;           ///< Data register 35
-    __IO uint32 DR36;           ///< Data register 36
-    __IO uint32 DR37;           ///< Data register 37
-    __IO uint32 DR38;           ///< Data register 38
-    __IO uint32 DR39;           ///< Data register 39
-    __IO uint32 DR40;           ///< Data register 40
-    __IO uint32 DR41;           ///< Data register 41
-    __IO uint32 DR42;           ///< Data register 42
 } bkp_reg_map;
 
 /** Backup peripheral register map base pointer. */
-#define BKP                        ((struct bkp_reg_map*)0x40002800)
+#define BKP                        ((struct bkp_reg_map*)(0x40002800 + 0x50))
+
+// Backup SRAM(4 KB) base address
+#define BKPSRAM_BASE 0x40024000UL
+//4KB
+#define BKPSIZE 4096
 
 
 /*
@@ -107,59 +89,11 @@ typedef struct bkp_reg_map {
 
 /* Data Registers */
 
-#define BKP_DR_D                        0xFFFF
-
-/* RTC Clock Calibration Register */
-
-#define BKP_RTCCR_ASOS_BIT              9
-#define BKP_RTCCR_ASOE_BIT              8
-#define BKP_RTCCR_CCO_BIT               7
-
-#define BKP_RTCCR_ASOS                  BIT(BKP_RTCCR_ASOS_BIT)
-#define BKP_RTCCR_ASOE                  BIT(BKP_RTCCR_ASOE_BIT)
-#define BKP_RTCCR_CCO                   BIT(BKP_RTCCR_CCO_BIT)
-#define BKP_RTCCR_CAL                   0x7F
-
-/* Backup control register */
-
-#define BKP_CR_TPAL_BIT                 1
-#define BKP_CR_TPE_BIT                  0
-
-#define BKP_CR_TPAL                     BIT(BKP_CR_TPAL_BIT)
-#define BKP_CR_TPE                      BIT(BKP_CR_TPE_BIT)
-
-/* Backup control/status register */
-
-#define BKP_CSR_TIF_BIT                 9
-#define BKP_CSR_TEF_BIT                 8
-#define BKP_CSR_TPIE_BIT                2
-#define BKP_CSR_CTI_BIT                 1
-#define BKP_CSR_CTE_BIT                 0
-
-#define BKP_CSR_TIF                     BIT(BKP_CSR_TIF_BIT)
-#define BKP_CSR_TEF                     BIT(BKP_CSR_TEF_BIT)
-#define BKP_CSR_TPIE                    BIT(BKP_CSR_TPIE_BIT)
-#define BKP_CSR_CTI                     BIT(BKP_CSR_CTI_BIT)
-#define BKP_CSR_CTE                     BIT(BKP_CSR_CTE_BIT)
+#define BKP_DR_D                        0xFFFFFFFF
 
 /*
  * Convenience functions
  */
-
-/**
- * @brief Initialize backup interface.
- *
- * Enables the power and backup interface clocks, and resets the
- * backup device.
- */
-__always_inline void bkp_init(void) {
-    /* Don't call pwr_init(), or you'll reset the device.
-	 * We just need the clock. */
-    rcc_clk_enable(RCC_PWR);
-    //rcc_clk_enable(RCC_BKP);
-    //rcc_reset_dev(RCC_BKP);
-}
-
 /**
  * Enable write access to the backup registers.  Backup interface must
  * be initialized for subsequent register writes to work.
@@ -176,8 +110,119 @@ __always_inline void bkp_disable_writes(void) {
     *bb_perip(&PWR->CR, PWR_CR_DBP_BIT) = 0;
 }
 
-uint16 bkp_read(uint8 reg);
-void bkp_write(uint8 reg, uint16 val);
+
+/**
+ * @brief Initialize backup interface.
+ *
+ * note that bkp_init() merely enables the backup domain clocks.
+ * This is not adequate to use backup domain registers and sram.
+ *
+ * to access backup registers it is necessary to initiate RTC clock
+ * e.g.
+ * RTClock rt;
+ * void setup() {
+ * 	   bkp_init();
+ *     rt.begin();
+ *
+ *     // enable writes before writing to bkp registers
+ *     // or it will hardfault, freeze
+ *     bkp_enable_writes();
+ *     bkp_write(1, 100); //write 100 in bkp register 1
+ *     bkp_disable_writes();
+ *
+ *     int32_t regval = bkp_read(1); // read register 1
+ * }
+ *
+ * if you want to access backup SRAM in addition to bkp_init()
+ * it is necessary to call bkp_initsram(), e.g:
+ *
+ * void setup() {
+ *     bkp_init();
+ *     bkp_initsram(true);
+ *     rt.begin();
+ *
+ *     ...
+ * }
+ *
+ */
+__always_inline void bkp_init(void) {
+	rcc_clk_enable(RCC_PWR);
+    /* Don't call pwr_init(), or you'll reset the device.
+	 * We just need the clock.
+    pwr_init();
+    */
+}
+
+/*
+ * enable BKPSRAM
+ * requires bkp_init() to be called prior
+ *
+ * @param bkreg
+ *   true enable the backup power regulator, runs on VBAT e.g. coin cell
+ *   false BKPSRAM is lost if VDD is lost, but preserves across a reset
+ */
+__always_inline void bkp_initsram(bool bkreg) {
+
+	bkp_enable_writes();
+
+    //enable backup sram
+    RCC->AHB1ENR |= RCC_AHB1ENR_BKPSRAMEN;
+
+    if(bkreg)
+    	PWR->CSR |= PWR_CSR_BRE;
+    else
+    	PWR->CSR &= ~PWR_CSR_BRE;
+
+}
+
+/* functions to read/write bkp registers
+ * note that prior to bkp_write() it is necessary to call
+ * bkp_enable_writes()
+ */
+
+uint32 bkp_read(uint8 reg);
+
+void bkp_write(uint8 reg, uint32 val);
+
+
+/* functions to read write bkp sram
+ *
+ * note that the offset is indexed by word sized entries
+ * zero is the first offset
+ * e.g. bkp_sramwrite32(9, data) writes to the 10th 32 bit uint32 field
+ *
+ * prior to writing bkp_sram it is necessary to call
+ * bkp_enable_writes()
+ *
+ */
+uint8_t bkp_sramread8(uint16_t offset);
+
+void bkp_sramwrite8(uint16_t offset, uint8_t data);
+
+uint16_t bkp_sramread16(uint16_t offset);
+
+void bkp_sramwrite16(uint16_t offset, uint16_t data);
+
+uint32_t bkp_sramread32(uint16_t offset);
+
+void bkp_sramwrite32(uint16_t offset, uint32_t data);
+
+/* note this simply returns a pointer to the BKPSRAM + offset
+ * BKPSRAM is normally 4KB, this does not check if you were to read beyond that 4KB
+ */
+inline uint8_t* bkp_sramread(uint16_t offset) {
+		return (uint8_t *)(BKPSRAM_BASE + offset);
+}
+
+/* copies  data to bkpsram
+ * note this truncate data that doesn't fit in BKPSIZE - offset
+ * */
+void bkp_sramwrite(uint16_t offset, uint8_t *data, uint16_t length);
+
+/*
+ * clear bkpsram entirely
+ */
+void bkpsram_clear();
 
 #ifdef __cplusplus
 } /* extern "C" */

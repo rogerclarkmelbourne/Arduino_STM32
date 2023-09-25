@@ -29,14 +29,13 @@
  * @brief Backup register support.
  */
 
-#include "bkp.h"
-#include "bitband.h"
-
+#include <libmaple/bkp.h>
+#include <libmaple/bitband.h>
+#include <string.h>
 
 /*
- * Data register memory layout is not contiguous. It's split up from
- * 1--NR_LOW_DRS, beginning at BKP->DR1, through to
- * (NR_LOW_DRS+1)--BKP_NR_DATA_REGS, beginning at BKP->DR11.
+ * returns data register address
+ * reg is 1 to BKP_NR_DATA_REGS
  */
 static __IO uint32* data_register(uint8 reg)
 {
@@ -44,15 +43,7 @@ static __IO uint32* data_register(uint8 reg)
         return 0;
     }
 
-#if BKP_NR_DATA_REGS == NR_LOW_DRS
-    return (uint32*)BKP + reg;
-#else
-    if (reg <= NR_LOW_DRS) {
-        return (uint32*)BKP + reg;
-    } else {
-        return (uint32*)&(BKP->DR11) + (reg - NR_LOW_DRS - 1);
-    }
-#endif
+    return (uint32*)BKP + reg - 1;
 }
 
 /**
@@ -60,13 +51,13 @@ static __IO uint32* data_register(uint8 reg)
  * @param reg Data register to read, from 1 to BKP_NR_DATA_REGS (10 on
  *            medium-density devices, 42 on high-density devices).
  */
-uint16 bkp_read(uint8 reg) {
+uint32 bkp_read(uint8 reg) {
     __IO uint32* dr = data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return 0;
     }
-    return (uint16)*dr;
+    return *dr;
 }
 
 /**
@@ -79,11 +70,58 @@ uint16 bkp_read(uint8 reg) {
  * @param val Value to write into the register.
  * @see bkp_enable_writes()
  */
-void bkp_write(uint8 reg, uint16 val) {
+void bkp_write(uint8 reg, uint32 val) {
     __IO uint32* dr = data_register(reg);
     if (!dr) {
         ASSERT(0);                  /* nonexistent register */
         return;
     }
-    *dr = (uint32)val;
+    *dr = val;
 }
+
+/*
+ * BKPSRAM functions
+ */
+
+uint8_t bkp_sramread8(uint16_t offset) {
+	return *((uint8_t *)(BKPSRAM_BASE) + offset);
+}
+
+void bkp_sramwrite8(uint16_t offset, uint8_t data) {
+	if (offset < BKPSIZE)
+		*((uint8_t *)(BKPSRAM_BASE) + offset) = data;
+}
+
+uint16_t bkp_sramread16(uint16_t offset) {
+	return *((uint16_t *)(BKPSRAM_BASE) + offset);
+}
+
+void bkp_sramwrite16(uint16_t offset, uint16_t data) {
+	uint16_t *p = (uint16_t *)(BKPSRAM_BASE) + offset;
+	if (offset * 2 < BKPSIZE)
+		*p = data;
+}
+
+uint32_t bkp_sramread32(uint16_t offset) {
+	return *((uint32_t *)(BKPSRAM_BASE) + offset);
+}
+
+void bkp_sramwrite32(uint16_t offset, uint32_t data) {
+	uint32_t *p = (uint32_t *)(BKPSRAM_BASE) + offset;
+	if (offset * 4 < BKPSIZE)
+		*p = data;
+}
+
+/* copies  data to bkpsram
+ *
+ */
+void bkp_sramwrite(uint16_t offset, uint8_t *data, uint16_t length) {
+	if(length > BKPSIZE - offset)
+		length = BKPSIZE - offset;
+	memcpy((void *)(BKPSRAM_BASE + offset), data, length);
+}
+
+void bkpsram_clear() {
+	memset((void*)BKPSRAM_BASE, 0, BKPSIZE);
+}
+
