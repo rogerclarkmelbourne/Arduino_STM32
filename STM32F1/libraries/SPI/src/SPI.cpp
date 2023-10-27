@@ -401,6 +401,27 @@ uint16_t SPIClass::transfer16(uint16_t data) const
     return ret;
 }
 
+void SPIClass::transfer(const uint8_t * tx_buf, uint8_t * rx_buf, uint32 len)
+{
+    if ( len == 0 ) return;
+    spi_rx_reg(_currentSetting->spi_d);      // clear the RX buffer in case a byte is waiting on it.
+    spi_reg_map * regs = _currentSetting->spi_d->regs;
+    // start sequence: write byte 0
+    regs->DR = *tx_buf++;                    // write the first byte
+    // main loop
+    while ( (--len) ) {
+        while( !(regs->SR & SPI_SR_TXE) );   // wait for TXE flag
+        noInterrupts();                      // go atomic level - avoid interrupts to surely get the previously received data
+        regs->DR = *tx_buf++;                // write the next data item to be transmitted into the SPI_DR register. This clears the TXE flag.
+        while ( !(regs->SR & SPI_SR_RXNE) ); // wait till data is available in the DR register
+        *rx_buf++ = (uint8)(regs->DR);       // read and store the received byte. This clears the RXNE flag.
+        interrupts();                        // let systick do its job
+    }
+    // read remaining last byte
+    while ( !(regs->SR & SPI_SR_RXNE) );     // wait till data is available in the Rx register
+    *rx_buf++ = (uint8)(regs->DR);           // read and store the received byte
+}
+
 /*  Roger Clark and Victor Perez, 2015
 *	Performs a DMA SPI transfer with at least a receive buffer.
 *	If a TX buffer is not provided, FF is sent over and over for the lenght of the transfer. 

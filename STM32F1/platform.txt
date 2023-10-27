@@ -3,7 +3,7 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=STM32F1 Boards (STM32duino.com)
+name=STM32F1 Boards (Arduino_STM32)
 version=0.1.2
 
 compiler.warning_flags=-w -DDEBUG_LEVEL=DEBUG_NONE
@@ -36,7 +36,7 @@ compiler.define=-DARDUINO=
 # this can be overriden in boards.txt
 build.f_cpu=72000000L
 build.mcu=cortex-m3
-build.common_flags=-mthumb  -march=armv7-m -D__STM32F1__
+build.common_flags=-mthumb -march=armv7-m -D__STM32F1__
 build.variant_system_lib=libmaple.a
 ## LED stuff is not really used but is still required in the code
 build.error_led_port=GPIOB
@@ -45,7 +45,7 @@ build.cpu_flags=
 build.hs_flag=
 build.upload_flags=
 build.flags.optimize=-Os
-build.flags.ldspecs=
+build.flags.ldspecs=--specs=nano.specs
 build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
 
 
@@ -118,7 +118,7 @@ tools.maple_upload.path.linux={runtime.hardware.path}/tools/linux
 tools.maple_upload.path.linux64={runtime.hardware.path}/tools/linux64    
 tools.maple_upload.upload.params.verbose=-d
 tools.maple_upload.upload.params.quiet=
-tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin"
+tools.maple_upload.upload.pattern="{path}/{cmd}" {serial.port.file} {upload.altID} {upload.usbID} "{build.path}/{build.project_name}.bin" "{runtime.ide.path}"
 
 #Added tool for generic STM32 upload via serial to Serial Port 1 (pins PA9 and PA10) - note. Boot0 line needs to high on board reset to enable upload via serial
 # at the end up the upload the program is automatically run, without the board being reset

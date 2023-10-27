@@ -4,7 +4,8 @@ This Arduino sketch is built based on Stm32duino libmaple core.
 It provides an example of how one could adjust for RTC (real time clock) drifts if one is using a 32k crystal that drift significantly.
 
 For drifts that is less than (304 secs ~ 5 minutes) per month. STM has published an appnote for a different means of slowing down the RTC clock
-[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf). This is possibly simpler and more accurate. *this feature has been added in this implementation*
+[AN2604 STM32F101xx and STM32F103xx RTC calibration](https://www.st.com/content/ccc/resource/technical/document/application_note/ff/c1/4f/86/4e/29/42/d1/CD00167326.pdf/files/CD00167326.pdf/jcr:content/translations/en.CD00167326.pdf). 
+This is possibly simpler and more accurate. *this feature has been added in this implementation*
 
 Due to the use of backup registers, you need to power the board/stm32 on VBAT (e.g. using a coin cell) so that the backup memory is maintained. And as the last adjusted date/time (saved in backup register 8 and 9) and drift duration (saved in backup register 7), if power is removed and the backup memory is lost, you would need to re-do the calibration again.  
 
@@ -66,9 +67,44 @@ This app/sketch itself has the commands to do the calibration. To do the calibra
    
 3. reset the device and check the time after the calibration. if setup() calls adjtime(), the RTC would show the drift adjusted/compensated date/time.
 
+## Incremental calibration mode
+
+incremental calibration is enabled by the define INCR_CALIBRATE in rtcadjust.h
+
+```
+  #define INCR_CALIBRATE
+```
+
+Incremental calibration allows you to call calibratertc() repeatedly. It works by saving the 
+initial time when you call synctime() - step 1 above, and computing the total time elapsed between
+synctime() to calibratertc() step 2 above.
+
+note that this use 2 additional backup registers making it a total of 5 backup registers used, 
+without this 3 registers are used. 
+However, without incremental calibration, you can only call calibratertc() once after the initial
+synctime() call
+
+you need to call  bkp_init() and adjtime() in setup() prior to doing incremental calibration 
+with calibratertc(). calibratertc() computes the drift adjustments by adding up the 
+cumulative adjustment each time you call calibratertc(). By doing this, it accounts for the smaller 
+differential errors detected from the initial synctime() call, and hopefully more accurate adjustments
+ over a longer time period. 
+
+``` 
+void setup() {
+	/* initialise access to backup registers,
+	 * this is necessary due to the use of backup registers */
+	bkp_init();
+
+	/* adjust rtc */
+	adjtime();
+}
+```
+
 ## How to do the adjustments and calibrations work in actual code?
 
 1. in setup() run adjtime() 
+
 ```
 void setup() {
   /* initialise access to backup registers,
@@ -82,7 +118,8 @@ void setup() {
 This would make the adjustments every time the sketch is started.
 Note that adjtime() does the adjustment no more than once in 24 hours. This design is to prevent frequent adjustments which could result in cumulative errors as the granuality of adjustments is 1 sec. if you prefer for the adjustments to be more frequent you could comment the statement in the function.
 
-2. The function to set the RTC and last adjusted date time is:  
+2. The function to set the RTC and last adjusted date time is:
+  
 ```
 /*  synctime() set the RTC clock and saves the time in backup register 8 and 9
  *  as the time of the last adjustment
@@ -95,18 +132,30 @@ void synctime(time_t time_now);
 ```
 
 3. The function to perform the RTC calibration to compute the drift duration is
+
 ```
 /*  this function calibrate the rtc by computing the drift_duration
  *
  *  call this function with the current accurate clock time to calibrate the rtc
+ *  
+ *  it is recommended to set the RTC time with the time you provide to calibratertc()
+ *  after calling this function to calibrate the RTC, that ensures a time sync after
+ *  calibratertc().
+ *  
+ *  however, call rt.setTime(time_now) and not synctime() as synctime would change the
+ *  initial time sync timestamp needed by this calibratertc() function 
  *
  *  if the cumulative delay between current time and the last time when synctime()
  *  is called is lower than 100, a warning would be displayed that the drift
  *  granulity is low and may result in inaccuracy of the rtc adjustments
  *
- *  note that this function can only be run once to compute the drift_duration
- *  this is because the time of last adjustment would have been updated
- *  by adjtime() after calibration and is no longer relevant for purpose of
+ *  note that if you want to call calibratertc() repeatedly after an initial synctime
+ *  you need to define INCR_CALIBRATE. that would allow you to call calibratertc()
+ *  multiple times after an initial synctime() call.
+ *
+ *  without INCR_CALIBRATE this function can only be run once to compute
+ *  the drift_duration this is because the time of last adjustment would have
+ *  been updated by adjtime() after calibration and is no longer relevant for purpose of
  *  computing drift duration
  *
  *  to run it again
@@ -119,10 +168,11 @@ void synctime(time_t time_now);
  *
  *  @param time the time_t value of the current accurate clock time
  */
-void calibratertc(time_t time_now);
+ void calibratertc(time_t time_now);
 ```
 
 4. Dependencies, in the main sketch:
+
 ```
 /* note that the adjustment functions needs this RTClock
  * if you rename variable rt, update rtadjust.h so that the

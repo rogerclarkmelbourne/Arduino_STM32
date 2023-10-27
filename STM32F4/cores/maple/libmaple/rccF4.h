@@ -326,6 +326,7 @@ typedef struct
 
 /* AHB peripheral clock enable register */
 
+#define RCC_AHB1ENR_BKPSRAMEN_BIT       18
 #define RCC_AHBENR_SDIOEN_BIT           10
 #define RCC_AHBENR_FSMCEN_BIT           8
 #define RCC_AHBENR_CRCEN_BIT            7
@@ -334,6 +335,7 @@ typedef struct
 #define RCC_AHBENR_DMA2EN_BIT           1
 #define RCC_AHBENR_DMA1EN_BIT           0
 
+#define RCC_AHB1ENR_BKPSRAMEN   		BIT(RCC_AHB1ENR_BKPSRAMEN_BIT)
 #define RCC_AHBENR_SDIOEN               BIT(RCC_AHBENR_SDIOEN_BIT)
 #define RCC_AHBENR_FSMCEN               BIT(RCC_AHBENR_FSMCEN_BIT)
 #define RCC_AHBENR_CRCEN                BIT(RCC_AHBENR_CRCEN_BIT)

@@ -121,6 +121,7 @@ public:
      * Stack up bytes from the array to be sent when transmitting
      */
     size_t write(uint8*, int);
+    size_t write(const uint8* buf, int nr) { return write((uint8*)buf,nr); }
 
     /*
      * Ensure that a sending data will only be 8-bit bytes
