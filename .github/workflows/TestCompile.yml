@@ -65,7 +65,8 @@ jobs:
         run: |
           mkdir --parents $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7 # dummy release number
           # cannot move, since we want to compile the examples in the library subfolder :-)
-          cp --recursive $GITHUB_WORKSPACE/STM32F1/* $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
+          ln -s $GITHUB_WORKSPACE/STM32F1 $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7
+          #cp --recursive $GITHUB_WORKSPACE/STM32F1/* $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
           #ls -l --dereference --recursive --all $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
 
       - name: Compile all examples
