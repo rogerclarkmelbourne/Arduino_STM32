@@ -1,0 +1,84 @@
+# TestCompile.yml
+# Github workflow script to test compile all examples of an Arduino core repository.
+#
+# Copyright (C) 2020  Armin Joachimsmeyer
+# https://github.com/ArminJo/Github-Actions
+#
+
+# This is the name of the workflow, visible on GitHub UI.
+name: TestCompile
+on:
+  workflow_dispatch: # To run it manually
+    description: 'manual build check'
+  push: # see: https://help.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-event-pull_request
+    paths:
+    - '**.ino'
+    - '**.cpp'
+    - '**.h'
+    - '**TestCompile.yml'
+  pull_request:
+jobs:
+  build:
+    name: Test compiling examples for Arduino_STM32
+    runs-on: ubuntu-latest
+    env:
+      # PLATFORM_DEFAULT_URL: http://dan.drown.org/stm32duino/package_STM32duino_index.json
+      # Comma separated list without double quotes around the list.
+      REQUIRED_LIBRARIES: SdFat,Streaming,Adafruit GFX Library,Adafruit SSD1306,Adafruit STMPE610,Adafruit TouchScreen,SD
+
+    strategy:
+      matrix:
+        # The matrix will produce one job for each configuration parameter of type `arduino-boards-fqbn`
+        # In the Arduino IDE, the fqbn is printed in the first line of the verbose output for compilation as parameter -fqbn=... for the "arduino-builder -dump-prefs" command
+        #
+        # Examples: arduino:avr:uno, arduino:avr:leonardo, arduino:avr:nano, arduino:avr:mega
+        # arduino:sam:arduino_due_x, arduino:samd:arduino_zero_native"
+        # ATTinyCore:avr:attinyx5:chip=85,clock=1internal, digistump:avr:digispark-tiny, digistump:avr:digispark-pro
+        # STM32:stm32:GenF1:pnum=BLUEPILL_F103C8
+        # esp8266:esp8266:huzzah:eesz=4M3M,xtal=80, esp32:esp32:featheresp32:FlashFreq=80
+        # You may add a suffix behind the fqbn with "|" to specify one board for e.g. different compile options like arduino:avr:uno|trace
+        #############################################################################################################
+        arduino-boards-fqbn:
+          - stm32duino:STM32F1:genericSTM32F103C
+          #- stm32duino:STM32F1:nucleo_f103rb
+          #- stm32duino:STM32F1:mapleMini
+
+        # Specify parameters for each board.
+        # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
+        #############################################################################################################
+        include:
+          - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C
+            # errors: BOARD_BUTTON_PIN not defined, 'textsize' was not declared in this scope, 'A0' was not declared in this scope, 'BOARD_LED_PIN' was not declared in this scope, no matching function for call to 'SPIClass::transfer(uint8_t*&, size_t&)
+            sketches-exclude: Debounce,StateChangeDetection,Button,QASlave,InteractiveTest,WhileStatementConditional,HardwareTimerOnePulseMode,HardwareTimerPWMInput,StringEx_Parsing,hello_STM,MIDI_Classic_Mode,JeeUdp,multipacketSD,udpListener,etherNode,SingleChannelContinuousConversion,OLED_I2C_NumberFonts,OLED_I2C_TinyFont_View,OLED_I2C_Scrolling_Text,OLED_I2C_Bitmap,OLED_I2C_3D_Cube,OLED_I2C_ViewFont,OLED_I2C_Graph_Demo,OLED_I2C_Brightness,OLED_I2C_NumberFonts,OLED_I2C_TinyFont_View,coos_display_blink,rtos_blink,rtos_display_blink,Twitter_Serial_GW,XivelyClientString,XivelyClient,ssd1306_128x64_i2c_STM32,breakouttouchpaint,graphicstest,stm32_graphicstest,TFT_Rainbow_ILI9341,TFT_Clock_ILI9341,TFT_Clock_Digital_ILI9341,TFT_Show_Font_ILI9341,graphicstest,stm32_graphicstest,onoffbutton_breakout,onoffbutton_breakout,onoffbutton,spitftbitmap,ssd1306_128x64_spi,ssd1306_128x32_i2c,ssd1306_128x32_spi,sdreader
+
+          #- arduino-boards-fqbn: stm32duino:STM32F1:nucleo_f103rb
+            # Examples to exclude because of ...
+            #sketches-exclude: WiiClassicJoystick,BasicUsage,DigisparkOLED,SoftPwm13Pins,TinySoftPwmDemo,DigiUSB2LCD,DigisparkUSBDemo,ArduinoNunchukDemo,DigisparkJoystickDemo
+
+      # Do not cancel all jobs / architectures if one job fails
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Use this repo as Arduino core
+        run: |
+          mkdir --parents $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7 # dummy release number
+          # cannot move, since we want to compile the examples in the library subfolder :-)
+          ln -s $GITHUB_WORKSPACE/STM32F1/* $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7
+          #cp --recursive $GITHUB_WORKSPACE/STM32F1/* $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
+          #ls -l --dereference --recursive --all $HOME/.arduino15/packages/stm32duino/hardware/STM32F1/0.0.7/
+
+      - name: Compile all examples
+        uses: ArminJo/arduino-test-compile@master
+        with:
+          required-libraries: ${{ env.REQUIRED_LIBRARIES }}
+          arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
+          arduino-platform: stm32duino:STM32F1,arduino:sam # we require the C compiler from it. See dependencies of package_STM32duino_index.json
+          #platform-default-url: ${{ env.PLATFORM_DEFAULT_URL }}
+          #platform-url: ${{ matrix.platform-url }}
+          sketches-exclude: ${{ matrix.sketches-exclude }}
+          build-properties: ${{ toJson(matrix.build-properties) }}
+          sketch-names: "*.ino"
+          sketch-names-find-start: STM32F1/libraries/*/examples/
+          #debug-install: true
