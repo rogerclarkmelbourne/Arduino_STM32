@@ -212,56 +212,71 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 	FLASH_Status FlashStatus;
 	uint32 idx, pageBase, pageEnd, newPage;
 	uint16 count;
-
+	boolean found = false;
 	// Get valid Page for write operation
+	
 	pageBase = EE_FindValidPage();
 	if (pageBase == 0)
 		return  EEPROM_NO_VALID_PAGE;
-
+	
 	// Get the valid Page end Address
 	pageEnd = pageBase + PageSize;			// Set end of page
-
-	for (idx = pageEnd - 2; idx > pageBase; idx -= 4)
+	
+	//FLASH_Unlock();
+	
+	for (idx = pageEnd - 2; idx >= pageBase; idx -= 4)
 	{
 		if ((*(__IO uint16*)idx) == Address)		// Find last value for address
 		{
+			found = false;
+			
 			count = (*(__IO uint16*)(idx - 2));	// Read last data
+			
 			if (count == Data)
 				return EEPROM_OK;
-			if (count == 0xFFFF)
+			
+			if (count == 0xFFFF || Data < count)
 			{
-				FlashStatus = FLASH_ProgramHalfWord(idx - 2, Data);	// Set variable data
-				if (FlashStatus == FLASH_COMPLETE)
-					return EEPROM_OK;
+			
+			FlashStatus = FLASH_ProgramHalfWord(idx - 2, Data);	// Set variable data
+			if (FlashStatus == FLASH_COMPLETE)
+				return EEPROM_OK;
 			}
+			
 			break;
+		} else {
+			found = true;
+			
 		}
 	}
-
-	// Check each active page address starting from begining
-	for (idx = pageBase + 4; idx < pageEnd; idx += 4)
-		if ((*(__IO uint32*)idx) == 0xFFFFFFFF)				// Verify if element 
-		{													//  contents are 0xFFFFFFFF
-			FlashStatus = FLASH_ProgramHalfWord(idx, Data);	// Set variable data
-			if (FlashStatus != FLASH_COMPLETE)
-				return FlashStatus;
-			FlashStatus = FLASH_ProgramHalfWord(idx + 2, Address);	// Set variable virtual address
-			if (FlashStatus != FLASH_COMPLETE)
-				return FlashStatus;
-			return EEPROM_OK;
+	if(found){
+		// Check each active page address starting from begining
+		for (idx = pageBase + 4; idx < pageEnd; idx += 4){
+			if ((*(__IO uint32*)idx) == 0xFFFFFFFF)				// Verify if element 
+			{													//  contents are 0xFFFFFFFF
+				FlashStatus = FLASH_ProgramHalfWord(idx, Data);	// Set variable data
+				if (FlashStatus != FLASH_COMPLETE)
+					return FlashStatus;
+					FlashStatus = FLASH_ProgramHalfWord(idx + 2, Address);	// Set variable virtual address
+					if (FlashStatus != FLASH_COMPLETE)
+						return FlashStatus;
+					return EEPROM_OK;
+			}
 		}
-
+	
+	
 	// Empty slot not found, need page transfer
 	// Calculate unique variables in page
 	count = EE_GetVariablesCount(pageBase, Address) + 1;
 	if (count >= (PageSize / 4 - 1))
 		return EEPROM_OUT_SIZE;
-
+	}
+	
 	if (pageBase == PageBase1)
 		newPage = PageBase0;		// New page address where variable will be moved to
 	else
 		newPage = PageBase1;
-
+	
 	// Set the new Page status to RECEIVE_DATA status
 	FlashStatus = FLASH_ProgramHalfWord(newPage, EEPROM_RECEIVE_DATA);
 	if (FlashStatus != FLASH_COMPLETE)
@@ -277,6 +292,7 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 		return FlashStatus;
 
 	return EE_PageTransfer(newPage, pageBase, Address);
+	
 }
 
 EEPROMClass::EEPROMClass(void)
@@ -519,28 +535,6 @@ uint16 EEPROMClass::write(uint16 Address, uint16 Data)
 	// Write the variable virtual address and value in the EEPROM
 	uint16 status = EE_VerifyPageFullWriteVariable(Address, Data);
 	return status;
-}
-
-/**
-  * @brief  Writes/upadtes variable data in EEPROM.
-            The value is written only if differs from the one already saved at the same address.
-  * @param  VirtAddress: Variable virtual address
-  * @param  Data: 16 bit data to be written
-  * @retval Success or error status:
-  *			- EEPROM_SAME_VALUE: If new Data matches existing EEPROM Data
-  *			- FLASH_COMPLETE: on success
-  *			- EEPROM_BAD_ADDRESS: if address = 0xFFFF
-  *			- EEPROM_PAGE_FULL: if valid page is full
-  *			- EEPROM_NO_VALID_PAGE: if no valid page was found
-  *			- EEPROM_OUT_SIZE: if no empty EEPROM variables
-  *			- Flash error code: on write Flash error
-  */
-uint16 EEPROMClass::update(uint16 Address, uint16 Data)
-{
-	if (read(Address) == Data)
-		return EEPROM_SAME_VALUE;
-	else
-	    return write(Address, Data);
 }
 
 /**
