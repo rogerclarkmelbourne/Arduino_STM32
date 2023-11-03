@@ -59,6 +59,8 @@ POSSIBILITY OF SUCH DAMAGE.
  #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 #endif
 
+#define textsize textsize_x
+
 Adafruit_GFX_AS::Adafruit_GFX_AS(int16_t w, int16_t h): Adafruit_GFX(w, h)
 {
 }
@@ -377,3 +379,5 @@ int16_t Adafruit_GFX_AS::drawFloat(float floatNumber, int16_t decimal, int16_t p
     }
     return sumX;
 }
+
+#undef textsize
