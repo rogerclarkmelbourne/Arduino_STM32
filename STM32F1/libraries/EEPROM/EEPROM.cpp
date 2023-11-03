@@ -10,7 +10,7 @@
   */
 uint16 EEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
 {
-	uint32 pageEnd = pageBase + (uint32)PageSize;
+	uint32 pageEnd = pageBase + (uint32)PageSize * Pages;
 
 	// Page Status not EEPROM_ERASED and not a "state"
 	if ((*(__IO uint16*)pageBase) != EEPROM_ERASED && (*(__IO uint16*)pageBase) != status)
@@ -40,6 +40,10 @@ FLASH_Status EEPROMClass::EE_ErasePage(uint32 pageBase)
 	FlashStatus = FLASH_ErasePage(pageBase);
 	if (FlashStatus == FLASH_COMPLETE)
 		FlashStatus = FLASH_ProgramHalfWord(pageBase + 2, data);
+	for (size_t i = 1; i < Pages; i++)
+	{
+		FLASH_ErasePage(pageBase + PageSize * i);
+	}
 
 	return FlashStatus;
 }
@@ -95,7 +99,7 @@ uint16 EEPROMClass::EE_GetVariablesCount(uint32 pageBase, uint16 skipAddress)
 {
 	uint16 varAddress, nextAddress;
 	uint32 idx;
-	uint32 pageEnd = pageBase + (uint32)PageSize;
+	uint32 pageEnd = pageBase + (uint32)PageSize * Pages;
 	uint16 count = 0;
 
 	for (pageBase += 6; pageBase < pageEnd; pageBase += 4)
@@ -136,7 +140,7 @@ uint16 EEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipA
 	FLASH_Status FlashStatus;
 
 	// Transfer process: transfer variables from old to the new active page
-	newEnd = newPage + ((uint32)PageSize);
+	newEnd = newPage + ((uint32)PageSize * Pages);
 
 	// Find first free element in new page
 	for (newIdx = newPage + 4; newIdx < newEnd; newIdx += 4)
@@ -146,7 +150,7 @@ uint16 EEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipA
 		return EEPROM_OUT_SIZE;
 
 	oldEnd = oldPage + 4;
-	oldIdx = oldPage + (uint32)(PageSize - 2);
+	oldIdx = oldPage + (uint32)(PageSize * Pages - 2);
 
 	for (; oldIdx > oldEnd; oldIdx -= 4)
 	{
@@ -219,7 +223,7 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 		return  EEPROM_NO_VALID_PAGE;
 
 	// Get the valid Page end Address
-	pageEnd = pageBase + PageSize;			// Set end of page
+	pageEnd = pageBase + PageSize * Pages;			// Set end of page
 
 	for (idx = pageEnd - 2; idx > pageBase; idx -= 4)
 	{
@@ -254,7 +258,7 @@ uint16 EEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 	// Empty slot not found, need page transfer
 	// Calculate unique variables in page
 	count = EE_GetVariablesCount(pageBase, Address) + 1;
-	if (count >= (PageSize / 4 - 1))
+	if (count >= (PageSize * Pages / 4 - 1))
 		return EEPROM_OUT_SIZE;
 
 	if (pageBase == PageBase1)
@@ -284,6 +288,7 @@ EEPROMClass::EEPROMClass(void)
 	PageBase0 = EEPROM_PAGE0_BASE;
 	PageBase1 = EEPROM_PAGE1_BASE;
 	PageSize = EEPROM_PAGE_SIZE;
+	Pages = 1;
 	Status = EEPROM_NOT_INIT;
 }
 
@@ -292,6 +297,16 @@ uint16 EEPROMClass::init(uint32 pageBase0, uint32 pageBase1, uint32 pageSize)
 	PageBase0 = pageBase0;
 	PageBase1 = pageBase1;
 	PageSize = pageSize;
+	Pages = 1;
+	return init();
+}
+
+uint16 EEPROMClass::init(uint32 pageBase0, uint32 pageBase1, uint32 pageSize, uint16 pages)
+{
+	PageBase0 = pageBase0;
+	PageBase1 = pageBase1;
+	PageSize = pageSize;
+	Pages = pages;
 	return init();
 }
 
@@ -481,7 +496,7 @@ uint16 EEPROMClass::read(uint16 Address, uint16 *Data)
 		return  EEPROM_NO_VALID_PAGE;
 
 	// Get the valid Page end Address
-	pageEnd = pageBase + ((uint32)(PageSize - 2));
+	pageEnd = pageBase + ((uint32)(PageSize * Pages - 2));
 	
 	// Check each active page address starting from end
 	for (pageBase += 6; pageEnd >= pageBase; pageEnd -= 4)
@@ -564,7 +579,7 @@ uint16 EEPROMClass::count(uint16 *Count)
 
 uint16 EEPROMClass::maxcount(void)
 {
-	return ((PageSize / 4)-1);
+	return ((PageSize * Pages / 4)-1);
 }
 
 EEPROMClass EEPROM;

@@ -3,8 +3,8 @@
 int ledPin =  13;    // LED connected to digital pin 13
 const char HELP_MSG[] = "Press :\r\n" \
 			" 0 display configuration\r\n" \
-			" 1 set configuration to 0x801F000 / 0x801F800 / 0x400 (RB MCU)\r\n" \
-			" 2 set configuration to 0x801F000 / 0x801F800 / 0x800 (ZE/RE MCU)\r\n" \
+			" 1 set configuration to 0x801F000 / 0x801F800 / 0x400 / 2 (RB MCU)\r\n" \
+			" 2 set configuration to 0x801F000 / 0x801F800 / 0x800 / 1 (ZE/RE MCU)\r\n" \
 			" 3 write/read variable\r\n" \
 			" 4 increment address\r\n" \
 			" 5 display pages top/bottom\r\n" \
@@ -40,6 +40,7 @@ void loop()
 			EEPROM.PageBase0 = 0x801F000;
 			EEPROM.PageBase1 = 0x801F800;
 			EEPROM.PageSize  = 0x400;
+			EEPROM.Pages  = 2;
 			DisplayConfig();
 		}
 		else if (cmd == '2')
@@ -47,6 +48,7 @@ void loop()
 			EEPROM.PageBase0 = 0x801F000;
 			EEPROM.PageBase1 = 0x801F800;
 			EEPROM.PageSize  = 0x800;
+			EEPROM.Pages  = 1;
 			DisplayConfig();
 		}
 		else if (cmd == '3')
@@ -111,6 +113,8 @@ void DisplayConfig(void)
 	Serial.print  (" (");
 	Serial.print  (EEPROM.PageSize, DEC);
 	Serial.println(")");
+	Serial.print  ("EEPROM.Pages     : ");
+	Serial.println(EEPROM.Pages, DEC);
 }
 
 void DisplayHex(uint16 value)
@@ -149,7 +153,7 @@ void DisplayPagesEnd(uint32 endIndex)
 {
 	Serial.println("Page 0     Bottom      Page 1");
 
-	for (uint32 idx = EEPROM.PageSize - endIndex; idx < EEPROM.PageSize; idx += 4)
+	for (uint32 idx = EEPROM.PageSize * EEPROM.Pages - endIndex; idx < EEPROM.PageSize * EEPROM.Pages; idx += 4)
 	{
 		Serial.print  (EEPROM.PageBase0 + idx, HEX);
 		Serial.print  (" : ");
