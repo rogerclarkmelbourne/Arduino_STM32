@@ -51,6 +51,8 @@
 
 extern USBCompositePart usbHIDPart;
 
+typedef void (*USBHIDOutputEndpointReceiver)(void* extra, volatile void* buffer, uint16_t size);
+
 typedef struct HIDBuffer_t {
     volatile uint8_t* buffer; // use HID_BUFFER_ALLOCATE_SIZE() to calculate amount of memory to allocate                            
     uint16_t bufferSize; // this should match HID_BUFFER_SIZE
@@ -79,6 +81,9 @@ uint16_t usb_hid_get_data(uint8_t type, uint8_t reportID, uint8_t* out, uint8_t 
 void usb_hid_set_feature(uint8_t reportID, uint8_t* data);
 void usb_hid_setTXEPSize(uint32_t size); 
 uint32 usb_hid_get_pending(void);
+void usb_hid_setDedicatedRXEndpoint(void* buffer, uint16_t size, USBHIDOutputEndpointReceiver receiver, void* extra);
+void usb_hid_setTXInterval(uint8_t t);
+void usb_hid_setRXInterval(uint8_t t);
 
 /*
  * HID Requests
@@ -135,7 +140,6 @@ typedef struct
 
 uint32 usb_hid_tx(const uint8* buf, uint32 len);
 uint32 usb_hid_tx_mod(const uint8* buf, uint32 len);
-
 uint32 usb_hid_data_available(void); /* in RX buffer */
 
 

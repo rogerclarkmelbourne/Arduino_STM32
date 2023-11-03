@@ -150,8 +150,13 @@ void HIDKeyboard::end(void) {
 // shift -> 0x02
 // modifiers: 128 --> bit shift
 
-uint8_t HIDKeyboard::getKeyCode(uint8_t k, uint8_t* modifiersP)
+uint8_t HIDKeyboard::getKeyCode(uint16_t k, uint8_t* modifiersP)
 {
+    if (k & 0x8000u) {
+        // backwards compatibility in case a caller has passed a signed 8-bit value
+        k &= 0xFFu;
+    }
+    
     *modifiersP = 0;
     
     if (adjustForHostCapsLock && (getLEDs() & 0x02)) { // capslock is down on host OS, so host will reverse
@@ -169,16 +174,17 @@ uint8_t HIDKeyboard::getKeyCode(uint8_t k, uint8_t* modifiersP)
         }
         return k;
     }
-    if (k >= 0x88) { // non-printing key, Arduino format
-        return k - 0x88;
+    if (k >= KEY_HID_OFFSET) { // non-printing key, Arduino format
+        return k - KEY_HID_OFFSET;
     }
     else { // shift key
         *modifiersP = 1<<(k-0x80);
-        return 0;
+        
+        return k-0x80+0xE0;
     }    
 }
 
-size_t HIDKeyboard::press(uint8_t k) {
+size_t HIDKeyboard::press(uint16_t k) {
     uint8_t modifiers;
     
     k = getKeyCode(k, &modifiers);
@@ -212,7 +218,7 @@ SEND:
 // release() takes the specified key out of the persistent key report and
 // sends the report.  This tells the OS the key is no longer pressed and that
 // it shouldn't be repeated any more.
-size_t HIDKeyboard::release(uint8_t k)
+size_t HIDKeyboard::release(uint16_t k)
 {
     uint8_t modifiers;
     k = getKeyCode(k, &modifiers);

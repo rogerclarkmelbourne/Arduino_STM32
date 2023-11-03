@@ -245,6 +245,7 @@ void HIDReporter::registerProfile(bool always) {
         else {
             reportChunks[0].data = reportDescriptor.descriptor;
             reportChunks[0].dataLength = reportIDOffset;
+            reportID = reportDescriptor.descriptor[reportIDOffset];
             reportChunks[1].data = &(reportID);
             reportChunks[1].dataLength = 1;
             reportChunks[2].data = reportDescriptor.descriptor+reportIDOffset+1;

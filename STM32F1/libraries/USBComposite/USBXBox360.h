@@ -70,6 +70,8 @@ public:
         return connected; 
     }
 	void send(void);
+    uint8* getReport(void);
+    uint16_t getReportSize(void);
 	void stop(void);
 	void button(uint8_t button, bool val);
     void buttons(uint16_t b);
@@ -92,12 +94,15 @@ template<const uint32 numControllers=4>class USBXBox360W {
 private:
     bool enabled = false;
     uint8 buffers[USB_X360_BUFFER_SIZE_PER_CONTROLLER * numControllers];
+    uint16 vendorId;
+    uint16 productId;
     
 public:    
     static bool init(USBXBox360W<numControllers>* me) {
         x360w_initialize_controller_data(numControllers, me->buffers);
-        USBComposite.setVendorId(0x045e);
-        USBComposite.setProductId(0x0719);
+        USBComposite.setVendorId(me->vendorId);
+        USBComposite.setProductId(me->productId);
+
         return true;
     };
 
@@ -124,7 +129,7 @@ public:
     
     USBXBox360WController controllers[numControllers];
 
-    USBXBox360W() {
+    USBXBox360W(uint16 _vendorId=0x045e, uint16 _productId=0x0719) : vendorId(_vendorId), productId(_productId) {
         for (uint8 i=0;i<numControllers;i++) controllers[i].setController(i);
     }
 };
@@ -150,6 +155,8 @@ private:
 	void safeSendReport(void);
 public:
 	void send(void);
+    uint8* getReport(void);
+    uint16_t getReportSize(void);
 	void stop(void);
 	void button(uint8_t button, bool val);
     void buttons(uint16_t b);
@@ -172,12 +179,14 @@ template<const uint32 numControllers=4>class USBMultiXBox360 {
 private:
     bool enabled = false;
     uint8 buffers[USB_X360_BUFFER_SIZE_PER_CONTROLLER * numControllers];
+    uint16 vendorId;
+    uint16 productId;
     
 public:    
     static bool init(USBMultiXBox360<numControllers>* me) {
         usb_multi_x360_initialize_controller_data(numControllers, me->buffers);
-        USBComposite.setVendorId(0x045e);
-        USBComposite.setProductId(0x028e);
+        USBComposite.setVendorId(me->vendorId);
+        USBComposite.setProductId(me->productId);
         return true;
     };
 
@@ -204,7 +213,7 @@ public:
     
     USBXBox360Controller controllers[numControllers];
 
-    USBMultiXBox360() {
+    USBMultiXBox360(uint16 _vendorId=0x045e, uint16 _productId=0x028e) : vendorId(_vendorId), productId(_productId) {
         for (uint8 i=0;i<numControllers;i++) controllers[i].setController(i);
     }
 };
@@ -213,12 +222,14 @@ class USBXBox360 : public USBXBox360Controller {
 private:
     bool enabled = false;
     uint8 buffers[USB_X360_BUFFER_SIZE_PER_CONTROLLER];
+    uint16 vendorId;
+    uint16 productId;
     
 public:    
     static bool init(USBXBox360* me) {
         usb_multi_x360_initialize_controller_data(1, me->buffers);
-        USBComposite.setVendorId(0x045e);
-        USBComposite.setProductId(0x028e);
+        USBComposite.setVendorId(me->vendorId);
+        USBComposite.setProductId(me->productId);
         return true;
     };
 
@@ -243,7 +254,7 @@ public:
         }
     };    
     
-    USBXBox360() : USBXBox360Controller(0) {
+    USBXBox360(uint16 _vendorId=0x045e, uint16 _productId=0x028e) : USBXBox360Controller(0), vendorId(_vendorId), productId(_productId) {
     }
 };
 

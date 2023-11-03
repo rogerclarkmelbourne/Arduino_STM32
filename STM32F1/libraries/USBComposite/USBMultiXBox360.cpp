@@ -21,6 +21,14 @@ void USBXBox360Controller::send(void){
     sendData((uint8*)&report, sizeof(report));
 }
 
+uint16_t USBXBox360Controller::getReportSize(void){
+    return sizeof(report);
+}
+
+uint8_t* USBXBox360Controller::getReport(void){
+    return (uint8_t*)&report;
+}
+
 void USBXBox360Controller::setRumbleCallback(void (*callback)(uint8 left, uint8 right)) {
     x360_set_rumble_callback(controller,callback);
 }
