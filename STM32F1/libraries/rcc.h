@@ -46,16 +46,16 @@ extern "C"{
 
 /** STM32F1 RCC register map type */
 typedef struct rcc_reg_map {
-    __IO uint32 CR;             /**< Clock control register */
-    __IO uint32 CFGR;           /**< Clock configuration register */
-    __IO uint32 CIR;            /**< Clock interrupt register */
-    __IO uint32 APB2RSTR;       /**< APB2 peripheral reset register */
-    __IO uint32 APB1RSTR;       /**< APB1 peripheral reset register */
-    __IO uint32 AHBENR;         /**< AHB peripheral clock enable register */
-    __IO uint32 APB2ENR;        /**< APB2 peripheral clock enable register */
-    __IO uint32 APB1ENR;        /**< APB1 peripheral clock enable register */
-    __IO uint32 BDCR;           /**< Backup domain control register */
-    __IO uint32 CSR;            /**< Control/status register */
+    __io uint32 CR;             /**< Clock control register */
+    __io uint32 CFGR;           /**< Clock configuration register */
+    __io uint32 CIR;            /**< Clock interrupt register */
+    __io uint32 APB2RSTR;       /**< APB2 peripheral reset register */
+    __io uint32 APB1RSTR;       /**< APB1 peripheral reset register */
+    __io uint32 AHBENR;         /**< AHB peripheral clock enable register */
+    __io uint32 APB2ENR;        /**< APB2 peripheral clock enable register */
+    __io uint32 APB1ENR;        /**< APB1 peripheral clock enable register */
+    __io uint32 BDCR;           /**< Backup domain control register */
+    __io uint32 CSR;            /**< Control/status register */
 } rcc_reg_map;
 
 #define RCC_BASE                        ((struct rcc_reg_map*)0x40021000)
@@ -353,7 +353,7 @@ typedef struct rcc_reg_map {
 #define RCC_BDCR_LSEON_BIT              0
 
 #define RCC_BDCR_BDRST                  (1U << RCC_BDCR_BDRST_BIT)
-#define RCC_BDCR_RTCEN                  (1U << RCC_BDCR_RTCEN_BIT)
+#define RCC_BDCR_RTCEN                  (1U << RCC_BDCR_RTC_BIT)
 #define RCC_BDCR_RTCSEL                 (0x3 << 8)
 #define RCC_BDCR_RTCSEL_NONE            (0x0 << 8)
 #define RCC_BDCR_RTCSEL_LSE             (0x1 << 8)

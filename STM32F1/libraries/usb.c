@@ -120,12 +120,6 @@ static void usb_suspend(void) {
     USBLIB->state = USB_SUSPENDED;
 }
 
-void usb_power_off(void) {
-    USB_BASE->CNTR = USB_CNTR_FRES;
-    USB_BASE->ISTR = 0;
-    USB_BASE->CNTR = USB_CNTR_FRES + USB_CNTR_PDWN;
-}
-
 static void usb_resume_init(void) {
     uint16 cntr;
 
@@ -202,7 +196,7 @@ uint8 __attribute__((weak)) CAN_RX0_IRQ_Handler(void)
 { return 0 ; }      // Dummy ISR 
 
 #define SUSPEND_ENABLED 1
-__weak void __irq_usb_lp_can_rx0(void) {
+void __irq_usb_lp_can_rx0(void) {
     uint16 istr = USB_BASE->ISTR;
 
 	if (CAN_RX0_IRQ_Handler())			//! JMD : Call to CAN ISR, returns 1 CAN is active
@@ -289,7 +283,6 @@ static void handle_out0(void);
 
 static void dispatch_ctr_lp() {
     uint16 istr;
-
     while (((istr = USB_BASE->ISTR) & USB_ISTR_CTR) != 0) {
         /* TODO WTF, figure this out: RM0008 says CTR is read-only,
          * but ST's firmware claims it's clear-only, and emphasizes
@@ -309,7 +302,6 @@ static void dispatch_ctr_lp() {
         }
     }
 }
-
 
 /* FIXME Dataflow on endpoint 0 RX/TX status is based off of ST's
  * code, and is ugly/confusing in its use of SaveRState/SaveTState.

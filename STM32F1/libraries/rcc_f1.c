@@ -69,12 +69,10 @@ const struct rcc_dev_info rcc_dev_table[] = {
     [RCC_FLITF]  = { .clk_domain = AHB,  .line_num = 4},
     [RCC_SRAM]   = { .clk_domain = AHB,  .line_num = 2},
     [RCC_USB]    = { .clk_domain = APB1, .line_num = 23},
-#if STM32_NR_GPIO_PORTS > 4
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
     [RCC_GPIOE]  = { .clk_domain = APB2, .line_num = 6 },
     [RCC_GPIOF]  = { .clk_domain = APB2, .line_num = 7 },
     [RCC_GPIOG]  = { .clk_domain = APB2, .line_num = 8 },
-#endif
-#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
     [RCC_UART4]  = { .clk_domain = APB1, .line_num = 19 },
     [RCC_UART5]  = { .clk_domain = APB1, .line_num = 20 },
     [RCC_TIMER5] = { .clk_domain = APB1, .line_num = 3 },
@@ -135,17 +133,11 @@ void rcc_configure_pll(rcc_pll_cfg *pll_cfg) {
     cfgr &= ~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLMUL);
     cfgr |= pll_cfg->pllsrc | pll_mul;
 
-#ifdef XTAL16M
-    // 16MHz crystal (HSE)
-    // in this case we additionally set the Bit 17 (PLLXTPRE=1)  =>  then HSE clock is divided by 2 before PLL entry
-    cfgr |= RCC_CFGR_PLLXTPRE;
-#endif	
-	
     RCC_BASE->CFGR = cfgr;
 }
 
 void rcc_clk_enable(rcc_clk_id id) {
-    static __IO uint32* enable_regs[] = {
+    static __io uint32* enable_regs[] = {
         [APB1] = &RCC_BASE->APB1ENR,
         [APB2] = &RCC_BASE->APB2ENR,
         [AHB] = &RCC_BASE->AHBENR,
@@ -154,7 +146,7 @@ void rcc_clk_enable(rcc_clk_id id) {
 }
 
 void rcc_reset_dev(rcc_clk_id id) {
-    static __IO uint32* reset_regs[] = {
+    static __io uint32* reset_regs[] = {
         [APB1] = &RCC_BASE->APB1RSTR,
         [APB2] = &RCC_BASE->APB2RSTR,
     };
@@ -173,7 +165,7 @@ void rcc_set_prescaler(rcc_prescaler prescaler, uint32 divider) {
 }
 
 void rcc_clk_disable(rcc_clk_id id) {
-    static __IO uint32* enable_regs[] = {
+    static __io uint32* enable_regs[] = {
         [APB1] = &RCC_BASE->APB1ENR,
         [APB2] = &RCC_BASE->APB2ENR,
         [AHB] = &RCC_BASE->AHBENR,
