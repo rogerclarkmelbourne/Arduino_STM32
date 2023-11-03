@@ -1,5 +1,5 @@
 #include <HardwareCAN.h>
-#include "changes.h"
+//#include "changes.h"
 /*
  * Example of use of the HardwareCAN library
  * This application receives two frames containing various data. It also produces data that are sent periodically using another two frames.
