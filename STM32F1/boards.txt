@@ -396,6 +396,15 @@ genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.vect=VECT_TAB_ADDR=0x
 genericSTM32F103C.menu.upload_method.HIDUploadMethod.build.ldscript=ld/hid_bootloader.ld
 
 #-- CPU Clock frequency
+
+genericSTM32F103C.menu.cpu_speed.speed_hsi_64mhz=64Mhz (HSI)
+genericSTM32F103C.menu.cpu_speed.speed_hsi_64mhz.build.f_cpu=64000000L
+genericSTM32F103C.menu.cpu_speed.speed_hsi_64mhz.build.hs_flag=-DUSE_HSI_CLOCK
+
+genericSTM32F103C.menu.cpu_speed.speed_hsi_48mhz=48Mhz (HSI- USB) 
+genericSTM32F103C.menu.cpu_speed.speed_hsi_48mhz.build.f_cpu=48000000L
+genericSTM32F103C.menu.cpu_speed.speed_hsi_48mhz.build.hs_flag=-DUSE_HSI_CLOCK -DHSI_USB_SPEED
+
 genericSTM32F103C.menu.cpu_speed.speed_72mhz=72Mhz (Normal)
 genericSTM32F103C.menu.cpu_speed.speed_72mhz.build.f_cpu=72000000L
 

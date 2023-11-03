@@ -59,7 +59,11 @@
 		#define BOARD_RCC_PLLMUL RCC_PLLMUL_2
 	#endif
   #else
-	#define BOARD_RCC_PLLMUL RCC_PLLMUL_16
+	#if !HSI_USB_SPEED
+	    #define BOARD_RCC_PLLMUL RCC_PLLMUL_16
+    #else
+	    #define BOARD_RCC_PLLMUL RCC_PLLMUL_12
+    #endif
   #endif
 #endif
 
