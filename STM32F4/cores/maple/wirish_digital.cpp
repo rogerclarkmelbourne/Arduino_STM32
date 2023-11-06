@@ -79,8 +79,10 @@ void pinMode(uint8 pin, WiringPinMode mode) {
         // Enable/disable timer channels if we're switching into or out of PWM.
         timer_set_mode(dev, timer_map[pin].channel,
                        pwm ? TIMER_PWM : TIMER_DISABLED);
-        if ( pwm )
+        if ( pwm ) {
             gpio_set_af_mode(pin, dev->af_mode);
+            timer_resume(dev);
+        }
     }
 }
 
