@@ -102,7 +102,7 @@ extern const uint8 boardPWMPins[BOARD_NR_PWM_PINS] __FLASH__ = {
 };
 
 extern const uint8 boardADCPins[BOARD_NR_ADC_PINS] __FLASH__ = {
-    PB0, PA7, PA6 , PA5 , PA4 , PA3 , PA2 , PA1 , PA0 
+    PA0,PA1,PA2,PA3,PA6,PA7,PA8,PA9,PA10,PA11,PB0,PB1,PB6,PB7,PB8,PB9
 };
 
 // Note. These defines are not really used by generic boards. They are for  Maple Serial USB
