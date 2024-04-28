@@ -40,7 +40,7 @@
 
 #ifndef _WIREBASE_H_
 #define _WIREBASE_H_
-
+#define UNUSED(x) (void)x;
 #include "wirish.h"
 #include <libmaple/i2c.h>
 
@@ -99,36 +99,41 @@ public:
      * storing into the receiving buffer.
      */
     uint8 requestFrom(uint8, int);
-
+    
     /*
      * Allow only 8 bit addresses to be used when requesting bytes
      */
     uint8 requestFrom(int, int);
-
+    uint8 requestFrom(int, int, uint8);
     /*
      * Stack up bytes to be sent when transmitting
      */
-    void write(uint8);
+    uint write(uint8);
 
     /*
      * Stack up bytes from the array to be sent when transmitting
      */
-    void write(uint8*, int);
+    uint write(uint8*, int);
+
+    /*
+     * Stack up bytes from the array to be sent when transmitting
+     */
+    uint write(const uint8*, int);
 
     /*
      * Ensure that a sending data will only be 8-bit bytes
      */
-    void write(int);
+    uint write(int);
 
     /*
      * Ensure that an array sending data will only be 8-bit bytes
      */
-    void write(int*, int);
+    uint write(int*, int);
 
     /*
      * Stack up bytes from a string to be sent when transmitting
      */
-    void write(char*);
+    uint write(char*);
 
     /*
      * Return the amount of bytes that is currently in the receiving buffer

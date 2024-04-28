@@ -95,35 +95,55 @@ uint8 WireBase::requestFrom(int address, int numBytes) {
     return WireBase::requestFrom((uint8)address, numBytes);
 }
 
-void WireBase::write(uint8 value) {
+uint8 WireBase::requestFrom(int address, int numBytes, uint8 stop) {
+    UNUSED(stop);
+    return WireBase::requestFrom((uint8)address, numBytes);
+}
+
+uint WireBase::write(uint8 value) {
     if (tx_buf_idx == BUFFER_LENGTH) {
         tx_buf_overflow = true;
-        return;
+        return 0;
     }
     tx_buf[tx_buf_idx++] = value;
     itc_msg.length++;
+    return 1;
 }
 
-void WireBase::write(uint8* buf, int len) {
+uint WireBase::write(uint8* buf, int len) {
+    uint result = 0;
     for (uint8 i = 0; i < len; i++) {
-        write(buf[i]);
+        result += write(buf[i]);
     }
+    return result;
 }
 
-void WireBase::write(int value) {
-    write((uint8)value);
+uint WireBase::write(const uint8* buf, int len) {
+    uint result = 0;
+    for (uint8 i = 0; i < len; i++) {
+        uint8_t v = buf[i];
+        result += write(v);
+    }
+    return result;
 }
 
-void WireBase::write(int* buf, int len) {
-    write((uint8*)buf, (uint8)len);
+
+uint WireBase::write(int value) {
+    return write((uint8)value);
 }
 
-void WireBase::write(char* buf) {
+uint WireBase::write(int* buf, int len) {
+    return write((uint8*)buf, (uint8)len);
+}
+
+uint WireBase::write(char* buf) {
     uint8 *ptr = (uint8*)buf;
+    uint result = 0;
     while (*ptr) {
-        write(*ptr);
+        result +=  write(*ptr);
         ptr++;
     }
+     return result;
 }
 
 uint8 WireBase::available() {
