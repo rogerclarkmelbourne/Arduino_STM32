@@ -276,7 +276,7 @@ public:
 
     // Some libraries (like recent Adafruit graphics libraries) require
     // the write function be availabe under the name transfer, so here it is:
-    inline void transfer(const void * buffer, size_t length) {
+    inline void transfer(const void * buffer, uint32 length) {
      write(buffer, (uint32)length);
     }
  
