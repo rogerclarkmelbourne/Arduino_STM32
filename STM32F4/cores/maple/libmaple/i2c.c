@@ -43,8 +43,16 @@
 /** I2C1 device */
 i2c_dev i2c_dev1 = {
     .regs         = I2C1_BASE,
-    .sda_pin      = PB7, // PB8
+#ifdef BOARD_I2C1_SDA_PIN    
+    .sda_pin      = BOARD_I2C1_SDA_PIN, 
+#else
+    .sda_pin      = PB7, 
+#endif    
+#ifdef BOARD_I2C1_SCL_PIN    
+    .scl_pin      = BOARD_I2C1_SCL_PIN, 
+#else
     .scl_pin      = PB6,
+#endif
     .clk_id       = RCC_I2C1,
     .ev_nvic_line = NVIC_I2C1_EV,
     .er_nvic_line = NVIC_I2C1_ER,
@@ -55,10 +63,16 @@ i2c_dev i2c_dev1 = {
 /** I2C2 device */
 i2c_dev i2c_dev2 = {
     .regs         = I2C2_BASE,
-   // .sda_pin      = PB3,
-    //.scl_pin      = PB10,
-    .sda_pin      = BOARD_I2C2_SDA_PIN,
-    .scl_pin      = BOARD_I2C2_SCL_PIN,
+#ifdef BOARD_I2C2_SDA_PIN    
+    .sda_pin      = BOARD_I2C2_SDA_PIN, 
+#else
+    .sda_pin      = PB11, 
+#endif    
+#ifdef BOARD_I2C2_SCL_PIN    
+    .scl_pin      = BOARD_I2C2_SCL_PIN, 
+#else
+    .scl_pin      = PB10,
+#endif
     .clk_id       = RCC_I2C2,
     .ev_nvic_line = NVIC_I2C2_EV,
     .er_nvic_line = NVIC_I2C2_ER,
@@ -208,6 +222,7 @@ void i2c_master_enable(i2c_dev *dev, uint32 flags) {
     delay_us(2);
     gpio_set_af_mode(dev->scl_pin, GPIO_AFMODE_I2C1_3);
     delay_us(2);
+    /* specific SDA pin remap for I2C2 on F4xx mcu*/
     if ((dev->sda_pin == PB3) || (dev->sda_pin == PB4)) {
         gpio_set_af_mode(dev->sda_pin, GPIO_AFMODE_I2C2_3);
     }
