@@ -68,6 +68,11 @@ TwoWire::TwoWire(uint8 dev_sel, uint8 flags) {
         sel_hard = I2C2;
     }
 #endif
+#if BOARD_NR_I2C>2
+	else if (dev_sel == 3) {
+        sel_hard = I2C3;
+    }
+#endif
 	else {
         ASSERT(1);
     }

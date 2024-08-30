@@ -80,6 +80,27 @@ i2c_dev i2c_dev2 = {
 };
 #endif
 
+#if BOARD_NR_I2C>2
+/** I2C2 device */
+i2c_dev i2c_dev3 = {
+    .regs         = I2C3_BASE,
+#ifdef BOARD_I2C3_SDA_PIN    
+    .sda_pin      = BOARD_I2C3_SDA_PIN, 
+#else
+    .sda_pin      = PC9, 
+#endif    
+#ifdef BOARD_I2C3_SCL_PIN    
+    .scl_pin      = BOARD_I2C3_SCL_PIN, 
+#else
+    .scl_pin      = PA8,
+#endif
+    .clk_id       = RCC_I2C3,
+    .ev_nvic_line = NVIC_I2C3_EV,
+    .er_nvic_line = NVIC_I2C3_ER,
+    .state        = I2C_STATE_DISABLED
+};
+#endif
+
 static inline int32 wait_for_state_change(i2c_dev *dev,
                                           i2c_state state,
                                           uint32 timeout);
@@ -535,6 +556,11 @@ void __irq_i2c2_ev(void) {
    i2c_irq_handler(&i2c_dev2);
 }
 #endif
+#if BOARD_NR_I2C>2
+void __irq_i2c3_ev(void) {
+   i2c_irq_handler(&i2c_dev3);
+}
+#endif
 /**
  * @brief Interrupt handler for I2C error conditions
  * @param dev I2C device
@@ -562,6 +588,11 @@ void __irq_i2c1_er(void) {
 #if BOARD_NR_I2C>1
 void __irq_i2c2_er(void) {
     i2c_irq_error_handler(&i2c_dev2);
+}
+#endif
+#if BOARD_NR_I2C>2
+void __irq_i2c3_er(void) {
+    i2c_irq_error_handler(&i2c_dev3);
 }
 #endif
 /*

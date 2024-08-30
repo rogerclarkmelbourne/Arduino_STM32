@@ -52,13 +52,15 @@
 //#define BOARD_USART6_TX_PIN     PA11 // USB_DM
 //#define BOARD_USART6_RX_PIN     PA12 // USB_DP
 
-#define BOARD_NR_I2C            2
+#define BOARD_NR_I2C            3
 #define BOARD_I2C1_SCL_PIN      PB6
 #define BOARD_I2C1_SDA_PIN      PB7
 #define BOARD_I2C1A_SCL_PIN     PB8
 #define BOARD_I2C1A_SDA_PIN     PB9
-#define BOARD_I2C2_SCL_PIN     PB10
-#define BOARD_I2C2_SDA_PIN     PB3
+#define BOARD_I2C2_SCL_PIN      PB10
+#define BOARD_I2C2_SDA_PIN      PB3
+#define BOARD_I2C3_SCL_PIN      PA8
+#define BOARD_I2C3_SDA_PIN      PB4
 
 #define BOARD_NR_SPI            3
 #define BOARD_SPI1_NSS_PIN      PA4
