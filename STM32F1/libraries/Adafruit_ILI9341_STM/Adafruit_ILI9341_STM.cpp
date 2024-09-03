@@ -215,6 +215,16 @@ void Adafruit_ILI9341_STM::begin(SPIClass & spi, uint32_t freq)
 
 }
 
+void Adafruit_ILI9341_STM::beginTransaction()
+{
+  mSPI.beginTransaction(SPISettings(_freq, MSBFIRST, SPI_MODE0, DATA_SIZE_16BIT));
+}
+
+void Adafruit_ILI9341_STM::endTransaction()
+{
+  mSPI.endTransaction();
+}
+
 
 void Adafruit_ILI9341_STM::setAddrWindow(uint16_t x0, uint16_t y0,
                                          uint16_t x1, uint16_t y1)
