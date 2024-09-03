@@ -243,6 +243,7 @@ typedef enum {
     GPIO_AFMODE_USART4_6 = 8,
     GPIO_AFMODE_CAN1_2   = 9,
     GPIO_AFMODE_TIM12_14 = 9,
+    GPIO_AFMODE_I2C2_3   = 9,
     GPIO_AFMODE_OTG_FS   = 10,
     GPIO_AFMODE_ETH      = 11,
     GPIO_AFMODE_FSMC     = 12,

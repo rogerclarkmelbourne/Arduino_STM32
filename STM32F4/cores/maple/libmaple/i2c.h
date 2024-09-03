@@ -100,6 +100,10 @@ extern i2c_dev i2c_dev1;
 extern i2c_dev i2c_dev2;
 #define I2C2 (&i2c_dev2)
 #endif
+#if BOARD_NR_I2C>2
+extern i2c_dev i2c_dev3;
+#define I2C3 (&i2c_dev3)
+#endif
 
 /*
  * Register map base pointers
@@ -109,6 +113,8 @@ extern i2c_dev i2c_dev2;
 #define I2C1_BASE               ((struct i2c_reg_map*)0x40005400)
 /** I2C2 register map base pointer */
 #define I2C2_BASE               ((struct i2c_reg_map*)0x40005800)
+/** I2C3 register map base pointer */
+#define I2C3_BASE               ((struct i2c_reg_map*)0x40005C00)
 
 /*
  * Register bit definitions
