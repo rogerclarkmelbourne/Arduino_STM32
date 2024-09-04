@@ -109,5 +109,12 @@ extern const uint8 boardUsedPins[BOARD_NR_USED_PINS] __FLASH__ = {
  * Maps to which hardware serial port on the microprocessor
  */
 						
-DEFINE_HWSERIAL(Serial1, 1);
-DEFINE_HWSERIAL(Serial2, 2);
+#ifdef SERIAL_USB
+	DEFINE_HWSERIAL(Serial1, 1);
+
+	DEFINE_HWSERIAL(Serial2, 2);
+#else
+	DEFINE_HWSERIAL(Serial, 1);
+
+	DEFINE_HWSERIAL(Serial1, 2);
+#endif
