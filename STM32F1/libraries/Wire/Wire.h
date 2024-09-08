@@ -72,6 +72,19 @@ public:
 	* Sets the hardware I2C clock
 	*/
 	void setClock(uint32_t frequencyHz);
+	
+	/*
+	* Useful to remap I2C1 to alternate pins PB8, PB9
+	* after construction by adding flag I2C_REMAP
+	*/
+	void setDevFlags(uint8 dev_flags) {
+		dev_flags = df;
+	}
+	
+	uint8 getDevFlags(void) {
+		return dev_flags;
+	}
+	
     /*
      * Disables the I2C device and remove the device address.
      */
