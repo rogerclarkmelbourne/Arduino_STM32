@@ -236,7 +236,7 @@ generic_f407v.upload.maximum_data_size=131072
 
 generic_f407v.build.core=maple
 generic_f407v.build.f_cpu=168000000
-generic_f407v.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PA6
+generic_f407v.build.extra_flags= -DCRYSTAL_FREQ=8 -DLED_BUILTIN=PA6 -DNO_CCMRAM
 generic_f407v.build.variant=generic_f407v
 generic_f407v.build.variant_system_lib=lib_f407.a
 generic_f407v.build.error_led_pin=PA7
