@@ -38,7 +38,7 @@ EXTERN(start_c)
 /* main entry point */
 EXTERN(main)
 
-/* Initial stack pointer value. Relocated to RAM */
+/* Initial stack pointer value. */
 EXTERN(__msp_init)
 PROVIDE(__msp_init = ORIGIN(ram) + LENGTH(ram));
 
@@ -140,6 +140,7 @@ SECTIONS
         . = ALIGN(4);
         _lm_rom_img_cfgp = .;
         LONG(LOADADDR(.data));
+        LONG(LOADADDR(.ccmdata));
         /*
          * Heap: Linker scripts may choose a custom heap by overriding
          * _lm_heap_start and _lm_heap_end. Otherwise, the heap is in
@@ -167,6 +168,23 @@ SECTIONS
         . = ALIGN(8);
         __data_end__ = .;
       } > REGION_DATA AT> REGION_RODATA
+
+    /* CCM-RAM section 
+    * 
+    * IMPORTANT NOTE! 
+    * The startup code is modified to copy the init-values from flash to ccmram 
+    * at startup
+    */
+    .ccmdata :
+      {
+        . = ALIGN(4);
+        __ccmdata_start__ = .;       /* create a global symbol at ccmram start */
+        *(.ccmdata)
+        *(.ccmram*)
+    
+        . = ALIGN(4);
+        __ccmdata_end__ = .;       /* create a global symbol at ccmram end */
+      } >REGION_CCMRAM AT> REGION_RODATA
 
     /*
      * .bss
