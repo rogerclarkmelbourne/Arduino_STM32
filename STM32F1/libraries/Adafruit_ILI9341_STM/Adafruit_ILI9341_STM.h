@@ -102,12 +102,21 @@ class Adafruit_ILI9341_STM : public Adafruit_GFX_AS {
   Adafruit_ILI9341_STM(int8_t _CS, int8_t _DC, int8_t _RST = -1);
 
   void     begin(SPIClass & spi, uint32_t freq=48000000);
-  void     begin(void) { begin(SPI); }
-  void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
+  void     begin(void) { begin(SPI); };
+           /** If the ILI9341 shares the SPI bus with another device, you should call this function
+            *  whenever that other device has been active, and you want to switch back to drawing
+            *  (and endTransaction(), when done). It will set the SPI mode and clock speed to values
+            *  appropriate for the ILI9341. It is @em not a replacement for begin().
+            *
+            *  If the ILI9341 is the only device on the SPI bus, you do not have to call this function. */
+  void     beginTransaction(),
+           /** @see endTransaction */
+           endTransaction(),
+           setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1),
            pushColor(uint16_t color),
            pushColors(void * colorBuffer, uint16_t nr_pixels, uint8_t async=0),
            fillScreen(uint16_t color),
-		   drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
+           drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color),
            drawPixel(int16_t x, int16_t y, uint16_t color),
            drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color),
            drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color),
