@@ -1,11 +1,3 @@
-/**
- *
- *
- *
- *
- */
-
-
 #ifndef XPT2046_touch_h
 #define XPT2046_touch_h
 #include <Arduino.h>
@@ -35,14 +27,15 @@ public:
  */
 class XPT2046_touch {
   private:
-    uint8_t  cs_pin;
+    uint8_t  cs_pin, displ_rot; 
     SPIClass my_SPI;
     uint8_t  _rowButtons = 1;
     uint8_t  _columnButtons = 1;
     uint8_t  oversampling;
-    uint16_t threshold;
+    uint16_t threshold, delta_x, delta_y, displ_width, displ_height;
     uint16_t gatherSamples(uint8_t command);
-
+    float alpha_x, beta_x, alpha_y, beta_y;
+    
   public:
       /** c'tor. Note that no IRQ pin is supported, here. You can easily do that yourself:
        *  \code if(digitalRead(irq_pin)) {
@@ -68,6 +61,8 @@ class XPT2046_touch {
     uint8_t getButtonNumber();
     boolean read_XY(uint16_t *xy);
     TS_Point getPoint();
+ 
+    void calibrate(float ax, float bx, int16_t dx, float ay, float by, int16_t dy, uint16_t dwidth, uint16_t dheight, uint8_t drot=0);
 };
 
 #endif
